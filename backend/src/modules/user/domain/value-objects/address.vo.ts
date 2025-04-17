@@ -1,0 +1,35 @@
+import { Country } from '@/modules/user/domain/enums/country.enum'
+import { FederativeUnit } from '@/modules/user/domain/enums/federative-unit.enum'
+import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
+
+export class Address {
+  constructor(
+    public readonly street: string,
+    public readonly number: number,
+    public readonly neighborhood: string,
+    public readonly city: string,
+    public readonly federativeUnit: FederativeUnit,
+    public readonly postalCode: PostalCode,
+    public readonly country: Country,
+    public readonly complement?: string
+  ) {
+    if (
+      !street ||
+      !number ||
+      !neighborhood ||
+      !city ||
+      !federativeUnit ||
+      !postalCode ||
+      !country
+    ) {
+      throw new Error('Invalid address')
+    }
+  }
+
+  toString(): string {
+    if (this.complement) {
+      return `${this.street}, ${this.number}, ${this.complement} - ${this.neighborhood}, ${this.city} - ${this.federativeUnit}, ${this.postalCode}`
+    }
+    return `${this.street}, ${this.number} - ${this.neighborhood}, ${this.city} - ${this.federativeUnit}, ${this.postalCode}`
+  }
+}
