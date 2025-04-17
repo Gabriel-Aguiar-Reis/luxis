@@ -14,10 +14,6 @@ export class CreateProductDto {
   batchId: string
 
   @IsString()
-  @IsOptional()
-  resellerId: string
-
-  @IsString()
   @IsNotEmpty()
   @IsCurrency({ allow_negatives: false, require_decimal: true })
   unitCost: string

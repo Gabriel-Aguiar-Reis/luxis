@@ -1,8 +1,10 @@
+import { UUID } from 'crypto'
+
 export class ProductModel {
   constructor(
-    public readonly id: string,
+    public readonly id: UUID,
     public name: string,
-    public categoryId: string,
+    public categoryId: UUID,
     public description?: string
   ) {}
 }
