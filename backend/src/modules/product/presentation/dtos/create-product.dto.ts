@@ -1,5 +1,4 @@
-import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
-import { IsCurrency, IsEnum, IsNotEmpty, IsString } from 'class-validator'
+import { IsCurrency, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class CreateProductDto {
   @IsString()
@@ -15,6 +14,10 @@ export class CreateProductDto {
   batchId: string
 
   @IsString()
+  @IsOptional()
+  resellerId: string
+
+  @IsString()
   @IsNotEmpty()
   @IsCurrency({ allow_negatives: false, require_decimal: true })
   unitCost: string
@@ -23,9 +26,4 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsCurrency({ allow_negatives: false, require_decimal: true })
   salePrice: string
-
-  @IsString()
-  @IsNotEmpty()
-  @IsEnum(ProductStatus)
-  status: ProductStatus
 }

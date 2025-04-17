@@ -11,7 +11,7 @@ export class CreateProductModelUseCase {
     const model = new ProductModel(
       crypto.randomUUID(),
       input.name,
-      input.category,
+      input.categoryId,
       input.description
     )
     return await this.repo.create(model)

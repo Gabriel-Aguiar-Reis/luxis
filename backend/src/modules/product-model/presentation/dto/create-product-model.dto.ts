@@ -7,7 +7,7 @@ export class CreateProductModelDto {
 
   @IsString()
   @IsNotEmpty()
-  category: string
+  categoryId: string
 
   @IsString()
   @IsOptional()

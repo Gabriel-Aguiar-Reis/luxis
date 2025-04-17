@@ -6,6 +6,7 @@ export class Product {
     public serialNumber: string,
     public modelId: string,
     public batchId: string,
+    public resellerId: string,
     public unitCost: string,
     public salePrice: string,
     public status: ProductStatus = ProductStatus.IN_STOCK
