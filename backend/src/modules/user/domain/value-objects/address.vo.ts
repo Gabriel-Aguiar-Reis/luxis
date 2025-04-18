@@ -26,7 +26,7 @@ export class Address {
     }
   }
 
-  toString(): string {
+  getValue(): string {
     if (this.complement) {
       return `${this.street}, ${this.number}, ${this.complement} - ${this.neighborhood}, ${this.city} - ${this.federativeUnit}, ${this.postalCode}`
     }
