@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core'
-import { ConfigService } from '@nestjs/config'
 // import { GlobalExceptionFilter } from '@/presentation/filters/http-exceptions.filter'
 import { Logger } from '@nestjs/common'
 import { AppModule } from '@/app.module'
+import { AppConfigService } from '@/shared/config/app-config.service'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -11,8 +11,8 @@ async function bootstrap() {
 
   // app.useGlobalFilters(new GlobalExceptionFilter())
 
-  const config = app.get(ConfigService)
-  const port = config.get<number>('PORT') ?? 3000
+  const config = app.get(AppConfigService)
+  const port = config.getPort() ?? 3000
   app.enableCors({ origin: '*' })
 
   await app.listen(port)
