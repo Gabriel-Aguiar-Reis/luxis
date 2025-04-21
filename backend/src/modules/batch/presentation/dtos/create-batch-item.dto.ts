@@ -3,11 +3,12 @@ import { ModelName } from '@/modules/product-model/domain/value-objects/model-na
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import {
   IsCurrency,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
-  IsUUID
+  IsUUID,
+  Min
 } from 'class-validator'
 import { UUID } from 'crypto'
 
@@ -20,7 +21,8 @@ export class CreateBatchItemDto {
   @IsNotEmpty()
   categoryId: UUID
 
-  @IsNumber({ maxDecimalPlaces: 0 })
+  @IsInt()
+  @Min(1)
   @IsNotEmpty()
   quantity: Unit
 
