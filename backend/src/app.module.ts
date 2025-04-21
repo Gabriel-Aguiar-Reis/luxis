@@ -1,7 +1,7 @@
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { ConfigModule } from '@/shared/config/config.module'
 import { databaseConfig } from '@/shared/config/database.config'
-import { RolesGuard } from '@/shared/infra/auth/roles.guard'
+import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
