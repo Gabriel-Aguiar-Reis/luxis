@@ -1,17 +1,18 @@
+import { SerialNumber } from '@/modules/product/domain/value-objects/serial-number.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'
-import { IsCurrency, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsCurrency, IsNotEmpty, IsString, IsUUID } from 'class-validator'
 import { UUID } from 'crypto'
 
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  serialNumber: string
+  serialNumber: SerialNumber
 
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   modelId: UUID
 
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   batchId: UUID
 

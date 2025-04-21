@@ -1,10 +1,12 @@
 import { Product } from '@/modules/product/domain/entities/product.entity'
+import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
+import { UUID } from 'crypto'
 
 export abstract class ProductRepository {
   abstract findAll(): Promise<Product[]>
-  abstract findById(id: string): Promise<Product | null>
+  abstract findById(id: UUID): Promise<Product | null>
   abstract create(product: Product): Promise<Product>
   abstract update(product: Product): Promise<Product>
-  abstract updateStatus(id: string, status: string): Promise<Product>
-  abstract delete(id: string): Promise<void>
+  abstract updateStatus(id: UUID, status: ProductStatus): Promise<Product>
+  abstract delete(id: UUID): Promise<void>
 }
