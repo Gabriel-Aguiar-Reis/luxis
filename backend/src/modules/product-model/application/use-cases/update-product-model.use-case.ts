@@ -1,17 +1,22 @@
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { ProductModelRepository } from '@/modules/product-model/domain/repository/product-model.repository'
-import { CreateProductModelDto } from '@/modules/product-model/presentation/dtos/create-product-model.dto'
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import { UUID } from 'crypto'
+import { UpdateProductModelDto } from '@/modules/product-model/presentation/dtos/update-product-model.dto'
 
 @Injectable()
-export class CreateProductModelUseCase {
+export class UpdateProductModelUseCase {
   constructor(
     @Inject('ProductModelRepository')
     private readonly productModelRepository: ProductModelRepository
   ) {}
 
-  async execute(input: CreateProductModelDto): Promise<ProductModel> {
-    const model = new ProductModel(
+  async execute(id: UUID, input: UpdateProductModelDto): Promise<ProductModel> {
+    let model = await this.productModelRepository.findById(id)
+    if (!model) {
+      throw new NotFoundException('Model not found')
+    }
+    model = new ProductModel(
       crypto.randomUUID(),
       input.name,
       input.categoryId,
