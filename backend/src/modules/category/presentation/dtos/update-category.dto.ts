@@ -1,10 +1,10 @@
 import { CategoryName } from '@/modules/category/domain/value-objects/category-name.vo'
 import { Description } from '@/shared/common/value-object/description.vo'
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 
-export class CreateCategoryDto {
+export class UpdateCategoryDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: CategoryName
 
   @IsString()
