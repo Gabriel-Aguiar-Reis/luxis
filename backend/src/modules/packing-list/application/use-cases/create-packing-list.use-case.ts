@@ -10,7 +10,7 @@ import { PackingListStatus } from '@/modules/packing-list/domain/enums/packing-l
 export class CreatePackingListUseCase {
   constructor(
     @Inject('PackingListRepository')
-    private readonly packingListRepo: PackingListRepository
+    private readonly packingListRepository: PackingListRepository
   ) {}
 
   async execute(input: CreatePackingListDto): Promise<PackingList> {
@@ -21,6 +21,6 @@ export class CreatePackingListUseCase {
       PackingListStatus.OPEN,
       input.productIds
     )
-    return await this.packingListRepo.create(packingList)
+    return await this.packingListRepository.create(packingList)
   }
 }

@@ -1,8 +1,14 @@
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from 'class-validator'
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsString,
+  IsUUID
+} from 'class-validator'
 import { UUID } from 'crypto'
 
 export class CreatePackingListDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   resellerId: UUID
 
