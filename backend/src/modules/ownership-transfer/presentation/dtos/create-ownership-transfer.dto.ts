@@ -1,5 +1,5 @@
 import { OwnershipTransferStatus } from '@/modules/ownership-transfer/domain/enums/ownership-transfer-status.enum'
-import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator'
+import { IsDate, IsEnum, IsNotEmpty, IsUUID } from 'class-validator'
 import { UUID } from 'crypto'
 
 export class CreateOwnershipTransferDto {
@@ -15,7 +15,7 @@ export class CreateOwnershipTransferDto {
   @IsNotEmpty()
   toResellerId: UUID
 
-  @IsString()
+  @IsDate()
   @IsNotEmpty()
   transferDate: Date
 

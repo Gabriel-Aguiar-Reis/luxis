@@ -22,6 +22,6 @@ export class CreateOwnershipTransferUseCase {
       OwnershipTransferStatus.PENDING
     )
 
-    return this.ownershipTransferRepository.create(ownershipTransfer)
+    return await this.ownershipTransferRepository.create(ownershipTransfer)
   }
 }

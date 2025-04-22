@@ -24,7 +24,6 @@ export class UpdatePackingListUseCase {
       input.status ?? packingList.status,
       input.productIds ?? packingList.productIds
     )
-    await this.packingListRepository.update(packingList)
-    return packingList
+    return await this.packingListRepository.update(packingList)
   }
 }
