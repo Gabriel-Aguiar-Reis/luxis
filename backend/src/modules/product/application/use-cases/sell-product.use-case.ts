@@ -16,16 +16,6 @@ export class SellProductUseCase {
     if (!product) {
       throw new NotFoundException('Product not found')
     }
-    product! = new Product(
-      product.id,
-      product.serialNumber,
-      product.modelId,
-      product.batchId,
-      product.unitCost,
-      product.salePrice,
-      ProductStatus.SOLD
-    )
-
-    return await this.productRepo.update(product)
+    return await this.productRepo.updateStatus(id, ProductStatus.SOLD)
   }
 }

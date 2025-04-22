@@ -5,10 +5,8 @@ import {
   Length,
   IsEnum,
   IsNumber,
-  IsOptional,
-  IsNotEmpty
+  IsOptional
 } from 'class-validator'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
 import { Email } from '@/modules/user/domain/value-objects/email.vo'
@@ -16,39 +14,35 @@ import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
 
-export class CreateUserDto {
+export class UpdateUserDto {
   @IsString()
   @Length(2, 50)
-  @IsNotEmpty()
+  @IsOptional()
   name: Name
 
   @IsString()
   @Length(2, 50)
-  @IsNotEmpty()
+  @IsOptional()
   surName: Name
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   phone: PhoneNumber
 
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   email: Email
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   password: Password
 
-  @IsEnum(Role)
-  @IsNotEmpty()
-  role: Role
-
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   street: string
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   number: number
 
   @IsString()
@@ -56,22 +50,22 @@ export class CreateUserDto {
   complement: string
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   neighborhood: string
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   city: string
 
   @IsEnum(FederativeUnit)
-  @IsNotEmpty()
+  @IsOptional()
   federativeUnit: FederativeUnit
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   postalCode: PostalCode
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   country: Country
 }

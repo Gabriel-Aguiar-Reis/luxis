@@ -1,4 +1,5 @@
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
+import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
 import { Email } from '@/modules/user/domain/value-objects/email.vo'
 import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { PasswordHash } from '@/modules/user/domain/value-objects/password-hash.vo'
@@ -15,6 +16,7 @@ export class User {
     public email: Email,
     public passwordHash: PasswordHash,
     public role: Role,
-    public residence: Residence
+    public residence: Residence,
+    public status: UserStatus
   ) {}
 }
