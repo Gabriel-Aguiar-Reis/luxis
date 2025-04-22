@@ -15,6 +15,7 @@ import { Email } from '@/modules/user/domain/value-objects/email.vo'
 import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
+import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
 
 export class CreateUserDto {
   @IsString()
@@ -40,7 +41,7 @@ export class CreateUserDto {
   password: Password
 
   @IsEnum(Role)
-  @IsNotEmpty()
+  @IsOptional()
   role: Role
 
   @IsString()
@@ -74,4 +75,8 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   country: Country
+
+  @IsEnum(UserStatus)
+  @IsOptional()
+  status: UserStatus
 }

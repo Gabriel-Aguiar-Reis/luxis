@@ -1,4 +1,5 @@
 import { User } from '@/modules/user/domain/entities/user.entity'
+import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
 import { UserRepository } from '@/modules/user/domain/repositories/user.repository'
 import { Address } from '@/modules/user/domain/value-objects/address.vo'
@@ -32,9 +33,9 @@ export class CreateUserUseCase {
       input.phone,
       input.email,
       passwordHash,
-      input.role,
+      input.role ?? Role.UNASSIGNED,
       residence,
-      UserStatus.ACTIVE
+      input.status ?? UserStatus.PENDING
     )
     return await this.userRepo.create(user)
   }
