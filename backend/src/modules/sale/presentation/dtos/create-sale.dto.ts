@@ -5,12 +5,12 @@ import {
   IsCurrency,
   IsDate,
   IsNotEmpty,
-  IsString
+  IsUUID
 } from 'class-validator'
 import { UUID } from 'crypto'
 
 export class CreateSaleDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   resellerId: UUID
 

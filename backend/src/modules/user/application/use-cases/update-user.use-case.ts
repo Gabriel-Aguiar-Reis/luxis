@@ -41,6 +41,6 @@ export class UpdateUserUseCase {
       residence ?? user.residence,
       user.status
     )
-    return user
+    return await this.userRepo.update(user)
   }
 }
