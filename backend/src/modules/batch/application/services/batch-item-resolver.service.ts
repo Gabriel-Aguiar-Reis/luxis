@@ -6,7 +6,7 @@ import { RawBatchItem } from '@/modules/batch/application/models/raw-batch-item.
 import { BatchItemWithResolvedModel } from '@/modules/batch/application/models/batch-item-with-resolved-model.model'
 
 @Injectable()
-export class BatchItemResolverService {
+export class BatchItemResolver {
   constructor(
     @Inject('ProductModelRepository')
     private readonly productModelRepo: ProductModelRepository,

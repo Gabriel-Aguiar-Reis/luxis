@@ -50,6 +50,8 @@ export class UpdateStatusShipmentUseCase {
       updatedProducts.map((product) => this.productRepository.update(product))
     )
 
+    // TODO -> criar o evento que dispará a adição no inventário
+
     return await this.shipmentRepository.updateStatus(id, status)
   }
 }

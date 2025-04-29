@@ -1,5 +1,6 @@
 export enum OwnershipTransferStatus {
   PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED',
+  APPROVED = 'APPROVED',
+  FINISHED = 'FINISHED',
   CANCELLED = 'CANCELLED'
 }
