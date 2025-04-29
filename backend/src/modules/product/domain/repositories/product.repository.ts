@@ -5,6 +5,7 @@ import { UUID } from 'crypto'
 export abstract class ProductRepository {
   abstract findAll(): Promise<Product[]>
   abstract findById(id: UUID): Promise<Product | null>
+  abstract findManyByIds(ids: UUID[]): Promise<Product[]>
   abstract findByBatchId(batchId: UUID): Promise<Product[]>
   abstract create(product: Product): Promise<Product>
   abstract update(product: Product): Promise<Product>
