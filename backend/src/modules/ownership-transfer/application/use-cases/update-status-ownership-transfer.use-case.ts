@@ -1,9 +1,11 @@
 import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
 import { OwnershipTransferStatus } from '@/modules/ownership-transfer/domain/enums/ownership-transfer-status.enum'
+import { OwnershipTransferDispatchedEvent } from '@/modules/ownership-transfer/domain/events/ownership-transfer-dispatcher.event'
 import { OwnershipTransferRepository } from '@/modules/ownership-transfer/domain/repositories/ownership-transfer.repository'
 import { OwnershipTransferStatusManager } from '@/modules/ownership-transfer/domain/services/ownership-transfer-status-manager.service'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { UserRepository } from '@/modules/user/domain/repositories/user.repository'
+import { EventDispatcher } from '@/shared/events/event-dispatcher'
 import {
   Injectable,
   Inject,
@@ -20,7 +22,8 @@ export class UpdateStatusOwnershipTransferUseCase {
     @Inject('ProductRepository')
     private readonly productRepository: ProductRepository,
     @Inject('UserRepository')
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly eventDispatcher: EventDispatcher
   ) {}
 
   async execute(
@@ -71,7 +74,13 @@ export class UpdateStatusOwnershipTransferUseCase {
       throw new NotFoundException('ToReseller not found')
     }
 
-    // TODO -> criar o evento que dispará a troca no inventário
+    await this.eventDispatcher.dispatch(
+      new OwnershipTransferDispatchedEvent(
+        fromReseller.id,
+        toReseller.id,
+        product.id
+      )
+    )
 
     return await this.ownershipTransferRepository.updateStatus(id, status)
   }

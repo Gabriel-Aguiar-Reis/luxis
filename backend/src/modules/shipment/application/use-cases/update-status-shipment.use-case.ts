@@ -2,8 +2,10 @@ import { ProductStatus } from '@/modules/product/domain/enums/product-status.enu
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
 import { ShipmentStatus } from '@/modules/shipment/domain/enums/shipment-status.enum'
+import { ShipmentDispatchedEvent } from '@/modules/shipment/domain/events/shipment-dispatcher.event'
 import { ShipmentRepository } from '@/modules/shipment/domain/repositories/shipment.repository'
 import { ShipmentStatusManager } from '@/modules/shipment/domain/services/shipment-status-manager.service'
+import { EventDispatcher } from '@/shared/events/event-dispatcher'
 import {
   Injectable,
   Inject,
@@ -18,7 +20,8 @@ export class UpdateStatusShipmentUseCase {
     @Inject('ShipmentRepository')
     private readonly shipmentRepository: ShipmentRepository,
     @Inject('ProductRepository')
-    private readonly productRepository: ProductRepository
+    private readonly productRepository: ProductRepository,
+    private readonly eventDispatcher: EventDispatcher
   ) {}
 
   async execute(id: UUID, status: ShipmentStatus): Promise<Shipment | null> {
@@ -50,7 +53,13 @@ export class UpdateStatusShipmentUseCase {
       updatedProducts.map((product) => this.productRepository.update(product))
     )
 
-    // TODO -> criar o evento que dispará a adição no inventário
+    await this.eventDispatcher.dispatch(
+      new ShipmentDispatchedEvent(
+        shipment.id,
+        shipment.resellerId,
+        shipment.productIds
+      )
+    )
 
     return await this.shipmentRepository.updateStatus(id, status)
   }
