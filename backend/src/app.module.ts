@@ -4,6 +4,7 @@ import { databaseConfig } from '@/shared/config/database.config'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CaslRuleBuilder } from '@/shared/infra/auth/casl/interfaces/casl-rules.builder'
 import { SaleCaslRule } from '@/shared/infra/auth/casl/rules/sale.rules'
+import { UserCaslRule } from '@/shared/infra/auth/casl/rules/user.rules'
 import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
 import { JwtStrategy } from '@/shared/infra/auth/jwt/jwt.strategy'
 import { Module } from '@nestjs/common'
@@ -36,14 +37,16 @@ import { TypeOrmModule } from '@nestjs/typeorm'
     JwtStrategy,
     CaslAbilityFactory,
     SaleCaslRule,
+    UserCaslRule,
     // ShipmentCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
       useFactory: (
-        saleRule: SaleCaslRule
+        saleRule: SaleCaslRule,
+        userRule: UserCaslRule
         // shipmentRule: ShipmentCaslRule
-      ): CaslRuleBuilder[] => [saleRule /*, shipmentRule */],
-      inject: [SaleCaslRule /*, ShipmentCaslRule */]
+      ): CaslRuleBuilder[] => [saleRule, userRule /*, shipmentRule */],
+      inject: [SaleCaslRule, UserCaslRule /*, ShipmentCaslRule */]
     }
   ],
   exports: [JwtModule, CaslAbilityFactory]

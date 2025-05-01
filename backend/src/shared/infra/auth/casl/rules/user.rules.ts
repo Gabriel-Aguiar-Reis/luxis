@@ -1,4 +1,4 @@
-import { Sale } from '@/modules/sale/domain/entities/sale.entity'
+import { User } from '@/modules/user/domain/entities/user.entity'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { AppAbility } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CaslRuleBuilder } from '@/shared/infra/auth/casl/interfaces/casl-rules.builder'
@@ -8,22 +8,25 @@ import { AbilityBuilder } from '@casl/ability'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class SaleCaslRule implements CaslRuleBuilder {
+export class UserCaslRule implements CaslRuleBuilder {
   buildFor(user: UserPayload, builder: AbilityBuilder<AppAbility>) {
     const { can } = builder
 
     switch (user.role) {
       case Role.ADMIN:
-        can(Actions.Manage, Sale)
+        can(Actions.Manage, User)
         break
       case Role.RESELLER:
-        can(Actions.Read, Sale, { resellerId: user.id })
-        can(Actions.Update, Sale, { resellerId: user.id })
-        can(Actions.Delete, Sale, { resellerId: user.id })
-        can(Actions.Create, Sale)
+        can(Actions.Read, User, { id: user.id })
+        can(Actions.Update, User, { id: user.id })
         break
       case Role.ASSISTANT:
-        can(Actions.Read, Sale)
+        can(Actions.Read, User)
+        can(Actions.Create, User)
+        break
+      default:
+        can(Actions.Create, User)
+        break
     }
   }
 }
