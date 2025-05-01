@@ -9,7 +9,7 @@ import {
 } from 'class-validator'
 import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
-import { Email } from '@/modules/user/domain/value-objects/email.vo'
+import { Email } from '@/shared/common/value-object/email.vo'
 import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'

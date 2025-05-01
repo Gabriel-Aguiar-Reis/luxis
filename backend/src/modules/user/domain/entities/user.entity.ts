@@ -1,6 +1,6 @@
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
-import { Email } from '@/modules/user/domain/value-objects/email.vo'
+import { Email } from '@/shared/common/value-object/email.vo'
 import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { PasswordHash } from '@/modules/user/domain/value-objects/password-hash.vo'
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'

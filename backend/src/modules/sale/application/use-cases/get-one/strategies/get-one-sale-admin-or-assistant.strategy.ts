@@ -1,10 +1,11 @@
-import { Sale } from '@/modules/sale/domain/entities/sale.entity'
-import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
 import { Injectable, Inject, NotFoundException } from '@nestjs/common'
+import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
+import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { UUID } from 'crypto'
+import { GetOneSaleStrategy } from '@/modules/sale/application/use-cases/get-one/strategies/get-one-sale.strategy'
 
 @Injectable()
-export class GetOneSaleUseCase {
+export class GetOneSaleAdminOrAssistantStrategy implements GetOneSaleStrategy {
   constructor(
     @Inject('SaleRepository')
     private readonly saleRepository: SaleRepository

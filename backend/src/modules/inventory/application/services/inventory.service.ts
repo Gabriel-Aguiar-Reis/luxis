@@ -1,10 +1,11 @@
 import { Inventory } from '@/modules/inventory/domain/entities/inventory.entity'
 import { InventoryRepository } from '@/modules/inventory/domain/repositories/inventory.repository'
+import { IInventoryService } from '@/modules/inventory/domain/services/inventory.interface'
 import { Injectable } from '@nestjs/common'
 import { UUID } from 'crypto'
 
 @Injectable()
-export class InventoryService {
+export class InventoryService implements IInventoryService {
   constructor(private readonly inventoryRepository: InventoryRepository) {}
 
   async addProductsToReseller(resellerId: UUID, productIds: UUID[]) {

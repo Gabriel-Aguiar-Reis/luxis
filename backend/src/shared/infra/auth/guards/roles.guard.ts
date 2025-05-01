@@ -1,6 +1,7 @@
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
 import { ROLES_KEY } from '@/shared/infra/auth/decorators/roles.decorator'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import {
   CanActivate,
   ExecutionContext,
@@ -20,7 +21,8 @@ export class RolesGuard implements CanActivate {
     ])
     if (!requiredRoles) return true
 
-    const { user } = context.switchToHttp().getRequest()
+    const request = context.switchToHttp().getRequest()
+    const user = request.user as UserPayload
 
     if (user.status === UserStatus.DISABLED) {
       throw new ForbiddenException('Disabled Account')

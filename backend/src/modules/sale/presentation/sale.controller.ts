@@ -1,12 +1,18 @@
-import { CreateSaleUseCase } from '@/modules/sale/application/use-cases/create-sale.use-case'
+import { CreateSaleUseCase } from '@/modules/sale/application/use-cases/create/create-sale.use-case'
 import { DeleteSaleUseCase } from '@/modules/sale/application/use-cases/delete-sale.use-case'
 import { GetAllSaleUseCase } from '@/modules/sale/application/use-cases/get-all-sale.use-case'
-import { GetOneSaleUseCase } from '@/modules/sale/application/use-cases/get-one-sale.use-case'
-import { UpdateSaleUseCase } from '@/modules/sale/application/use-cases/update-sale.use-case'
+import { GetOneSaleUseCase } from '@/modules/sale/application/use-cases/get-one/get-one-sale.use-case'
+import { UpdateSaleUseCase } from '@/modules/sale/application/use-cases/update/update-sale.use-case'
 import { CreateSaleDto } from '@/modules/sale/presentation/dtos/create-sale.dto'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
-import { Roles } from '@/shared/infra/auth/decorators/roles.decorator'
-import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
+import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
+import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
+import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
+import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
+import { CreateSalePolicy } from '@/shared/infra/auth/policies/sale/create-sale.policy'
+import { DeleteSalePolicy } from '@/shared/infra/auth/policies/sale/delete-sale.policy'
+import { ReadSalePolicy } from '@/shared/infra/auth/policies/sale/read-sale.policy'
+import { UpdateSalePolicy } from '@/shared/infra/auth/policies/sale/update-sale.policy'
 import {
   Controller,
   Post,
@@ -19,6 +25,7 @@ import {
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 
+@UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('sales')
 export class SaleController {
   constructor(
@@ -29,34 +36,37 @@ export class SaleController {
     private readonly deleteSaleUseCase: DeleteSaleUseCase
   ) {}
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @CheckPolicies(new ReadSalePolicy())
   @Get()
-  async getAll() {
-    return await this.getAllSaleUseCase.execute()
+  async getAll(@CurrentUser() user: UserPayload) {
+    return await this.getAllSaleUseCase.execute(user)
   }
 
-  // TODO -> ABAC c/ CASL para reseller ver só suas sales e admin/sup ver tudo
+  @CheckPolicies(new ReadSalePolicy())
   @Get(':id')
-  async getOne(@Param('id') id: UUID) {
-    return await this.getOneSaleUseCase.execute(id)
+  async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    return await this.getOneSaleUseCase.execute(id, user)
   }
 
-  // TODO -> ABAC c/ CASL para reseller vender só seus produtos e admin vender tudo
+  @CheckPolicies(new CreateSalePolicy())
   @Post()
-  async create(@Body() dto: CreateSaleDto) {
-    return await this.createSaleUseCase.execute(dto)
+  async create(@Body() dto: CreateSaleDto, @CurrentUser() user: UserPayload) {
+    return await this.createSaleUseCase.execute(dto, user)
   }
 
-  // TODO -> ABAC c/ CASL para reseller editar só suas sales e admin/sup editar tudo
+  @CheckPolicies(new UpdateSalePolicy())
   @Patch(':id')
-  async update(@Param('id') id: UUID, @Body() dto: CreateSaleDto) {
-    return await this.updateSaleUseCase.execute(id, dto)
+  async update(
+    @Param('id') id: UUID,
+    @Body() dto: CreateSaleDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    return this.updateSaleUseCase.execute(id, dto, user)
   }
 
-  // TODO -> ABAC c/ CASL para reseller deletar só suas sales e admin/sup deletar tudo
+  @CheckPolicies(new DeleteSalePolicy())
   @Delete(':id')
-  async delete(@Param('id') id: UUID) {
-    return await this.deleteSaleUseCase.execute(id)
+  async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    return await this.deleteSaleUseCase.execute(id, user)
   }
 }

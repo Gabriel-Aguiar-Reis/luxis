@@ -1,4 +1,4 @@
-export enum Action {
+export enum Actions {
   Manage = 'manage',
   Create = 'create',
   Read = 'read',
