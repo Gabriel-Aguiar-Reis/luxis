@@ -4,9 +4,9 @@ import { GetAllShipmentUseCase } from '@/modules/shipment/application/use-cases/
 import { GetOneShipmentUseCase } from '@/modules/shipment/application/use-cases/get-one-shipment.use-case'
 import { UpdateShipmentUseCase } from '@/modules/shipment/application/use-cases/update-shipment.use-case'
 import { ShipmentController } from '@/modules/shipment/presentation/shipment.controller'
+import { ShipmentTypeOrmRepository } from '@/shared/infra/persistence/typeorm/shipment/shipment.typeorm.repository'
 import { Module } from '@nestjs/common'
 
-// TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
 @Module({
   controllers: [ShipmentController],
   providers: [
@@ -14,7 +14,8 @@ import { Module } from '@nestjs/common'
     GetAllShipmentUseCase,
     GetOneShipmentUseCase,
     UpdateShipmentUseCase,
-    DeleteShipmentUseCase
+    DeleteShipmentUseCase,
+    { provide: 'ShipmentRepository', useClass: ShipmentTypeOrmRepository }
   ]
 })
 export class ShipmentModule {}

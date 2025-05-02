@@ -4,15 +4,22 @@ import { CreateBatchUseCase } from '@/modules/batch/application/use-cases/create
 import { DeleteBatchUseCase } from '@/modules/batch/application/use-cases/delete-batch.use-case'
 import { GetAllBatchUseCase } from '@/modules/batch/application/use-cases/get-all-batch.use-case'
 import { GetOneBatchUseCase } from '@/modules/batch/application/use-cases/get-one-batch.use-case'
+import { BatchTypeOrmRepository } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.repository'
+import { GetBatchQtyByMonthUseCase } from '@/modules/batch/application/use-cases/get-batch-qty-by-month.use-case'
+import { BatchItemResolver } from '@/modules/batch/application/services/batch-item-resolver.service'
+import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
 
-// TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
 @Module({
   controllers: [BatchController],
   providers: [
     CreateBatchUseCase,
     GetAllBatchUseCase,
+    GetBatchQtyByMonthUseCase,
     GetOneBatchUseCase,
-    DeleteBatchUseCase
+    DeleteBatchUseCase,
+    { provide: 'BatchRepository', useClass: BatchTypeOrmRepository },
+    { provide: 'BatchItemResolver', useClass: BatchItemResolver },
+    { provide: 'ProductRepository', useClass: ProductTypeOrmRepository }
   ]
 })
 export class BatchModule {}

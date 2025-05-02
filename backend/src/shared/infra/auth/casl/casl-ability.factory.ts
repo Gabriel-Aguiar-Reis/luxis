@@ -17,6 +17,7 @@ import { Batch } from '@/modules/batch/domain/entities/batch.entity'
 import { Product } from '@/modules/product/domain/entities/product.entity'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
+import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 
 type Subjects =
   | InferSubjects<typeof Batch>
@@ -27,6 +28,7 @@ type Subjects =
   | InferSubjects<typeof Sale>
   | InferSubjects<typeof Shipment>
   | InferSubjects<typeof User>
+  | InferSubjects<typeof Supplier>
   | 'all'
 
 export type AppAbility = PureAbility<[Actions, Subjects]>

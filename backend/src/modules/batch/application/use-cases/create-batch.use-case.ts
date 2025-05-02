@@ -4,10 +4,9 @@ import { Batch } from '@/modules/batch/domain/entities/batch.entity'
 import { BatchRepository } from '@/modules/batch/domain/repositories/batch.repository'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { BatchFactory } from '@/modules/batch/domain/services/batch.factory'
-import { BatchItemResolver } from '@/modules/batch/application/services/batch-item-resolver.service'
 import { GetBatchQtyByMonthUseCase } from '@/modules/batch/application/use-cases/get-batch-qty-by-month.use-case'
 import crypto from 'crypto'
-
+import { IBatchItemResolver } from '@/modules/batch/domain/services/batch-item-resolver.interface'
 @Injectable()
 export class CreateBatchUseCase {
   constructor(
@@ -19,7 +18,8 @@ export class CreateBatchUseCase {
 
     private readonly getBatchQtyByMonthUseCase: GetBatchQtyByMonthUseCase,
 
-    private readonly batchItemResolver: BatchItemResolver
+    @Inject('BatchItemResolver')
+    private readonly batchItemResolver: IBatchItemResolver
   ) {}
 
   async execute(input: CreateBatchDto): Promise<Batch> {

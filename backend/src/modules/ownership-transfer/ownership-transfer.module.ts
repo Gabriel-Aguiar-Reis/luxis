@@ -4,6 +4,7 @@ import { GetAllOwnershipTransferUseCase } from '@/modules/ownership-transfer/app
 import { GetOneOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/get-one-ownership-transfer.use-case'
 import { UpdateOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-ownership-transfer.use-case'
 import { OwnershipTransferController } from '@/modules/ownership-transfer/presentation/ownership-transfer.controller'
+import { OwnershipTransferTypeOrmRepository } from '@/shared/infra/persistence/typeorm/ownership-transfer/ownership-transfer.typeorm.repository'
 import { Module } from '@nestjs/common'
 
 // TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
@@ -14,7 +15,11 @@ import { Module } from '@nestjs/common'
     GetAllOwnershipTransferUseCase,
     GetOneOwnershipTransferUseCase,
     UpdateOwnershipTransferUseCase,
-    DeleteOwnershipTransferUseCase
+    DeleteOwnershipTransferUseCase,
+    {
+      provide: 'OwnershipTransferRepository',
+      useClass: OwnershipTransferTypeOrmRepository
+    }
   ]
 })
 export class OwnershipTransferModule {}

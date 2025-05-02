@@ -4,9 +4,11 @@ import { GetAllSaleUseCase } from '@/modules/sale/application/use-cases/get-all-
 import { GetOneSaleUseCase } from '@/modules/sale/application/use-cases/get-one/get-one-sale.use-case'
 import { UpdateSaleUseCase } from '@/modules/sale/application/use-cases/update/update-sale.use-case'
 import { SaleController } from '@/modules/sale/presentation/sale.controller'
+import { SaleTypeOrmRepository } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.repository'
 import { Module } from '@nestjs/common'
+import { SalePriceCalculatorService } from '@/modules/sale/application/services/sale-price-calculator.service'
+import { InventoryOwnershipVerifierService } from '@/modules/sale/application/services/inventory-ownership-verify.service'
 
-// TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
 @Module({
   controllers: [SaleController],
   providers: [
@@ -14,7 +16,13 @@ import { Module } from '@nestjs/common'
     GetOneSaleUseCase,
     GetAllSaleUseCase,
     UpdateSaleUseCase,
-    DeleteSaleUseCase
+    DeleteSaleUseCase,
+    { provide: 'SaleRepository', useClass: SaleTypeOrmRepository },
+    { provide: 'SalePriceCalculator', useClass: SalePriceCalculatorService },
+    {
+      provide: 'InventoryOwnershipVerifier',
+      useClass: InventoryOwnershipVerifierService
+    }
   ]
 })
 export class SaleModule {}

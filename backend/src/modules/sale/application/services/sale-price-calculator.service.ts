@@ -2,10 +2,10 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
-import { SalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
+import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
 
 @Injectable()
-export class SalePriceCalculatorService implements SalePriceCalculator {
+export class SalePriceCalculatorService implements ISalePriceCalculator {
   constructor(
     @Inject('ProductRepository')
     private readonly productRepository: ProductRepository

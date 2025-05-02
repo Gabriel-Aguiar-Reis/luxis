@@ -4,9 +4,9 @@ import { GetAllProductModelUseCase } from '@/modules/product-model/application/u
 import { GetOneProductModelUseCase } from '@/modules/product-model/application/use-cases/get-one-product-model.use-case'
 import { UpdateProductModelUseCase } from '@/modules/product-model/application/use-cases/update-product-model.use-case'
 import { ProductModelController } from '@/modules/product-model/presentation/product-model.controller'
+import { ProductModelTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.repository'
 import { Module } from '@nestjs/common'
 
-// TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
 @Module({
   controllers: [ProductModelController],
   providers: [
@@ -14,7 +14,11 @@ import { Module } from '@nestjs/common'
     GetAllProductModelUseCase,
     GetOneProductModelUseCase,
     UpdateProductModelUseCase,
-    DeleteProductModelUseCase
+    DeleteProductModelUseCase,
+    {
+      provide: 'ProductModelRepository',
+      useClass: ProductModelTypeOrmRepository
+    }
   ]
 })
 export class ProductModelModule {}

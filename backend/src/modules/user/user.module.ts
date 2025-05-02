@@ -7,8 +7,8 @@ import { DeleteUserUseCase } from '@/modules/user/application/use-cases/delete-u
 import { UpdateUserUseCase } from '@/modules/user/application/use-cases/update-user.use-case'
 import { DisableUserUseCase } from '@/modules/user/application/use-cases/disable-user.use-case'
 import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/update-user-role.use-case'
+import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/user.typeorm.repository'
 
-// TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
 @Module({
   controllers: [UserController],
   providers: [
@@ -18,7 +18,8 @@ import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/upda
     DeleteUserUseCase,
     UpdateUserUseCase,
     UpdateUserRoleUseCase,
-    DisableUserUseCase
+    DisableUserUseCase,
+    { provide: 'UserRepository', useClass: UserTypeOrmRepository }
   ]
 })
 export class UserModule {}

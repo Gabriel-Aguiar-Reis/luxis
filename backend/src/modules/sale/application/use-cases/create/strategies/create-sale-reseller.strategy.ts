@@ -4,8 +4,8 @@ import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interfa
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
 import { CreateSaleStrategy } from '@/modules/sale/application/use-cases/create/strategies/create-sale.strategy'
-import { SalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
-import { InventoryOwnershipVerifier } from '@/modules/sale/domain/services/inventory-ownership-verify.interface'
+import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
+import { IInventoryOwnershipVerifier } from '@/modules/sale/domain/services/inventory-ownership-verify.interface'
 
 @Injectable()
 export class CreateSaleResellerStrategy implements CreateSaleStrategy {
@@ -13,9 +13,9 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
     @Inject('SaleRepository')
     private readonly saleRepository: SaleRepository,
     @Inject('SalePriceCalculator')
-    private readonly salePriceCalculator: SalePriceCalculator,
+    private readonly salePriceCalculator: ISalePriceCalculator,
     @Inject('InventoryOwnershipVerifier')
-    private readonly inventoryOwnershipVerifier: InventoryOwnershipVerifier
+    private readonly inventoryOwnershipVerifier: IInventoryOwnershipVerifier
   ) {}
 
   async execute(dto: CreateSaleDto, user: UserPayload): Promise<Sale> {

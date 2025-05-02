@@ -4,9 +4,9 @@ import { GetAllCategoryUseCase } from '@/modules/category/application/use-cases/
 import { GetOneCategoryUseCase } from '@/modules/category/application/use-cases/get-one-category.use-case'
 import { UpdateCategoryUseCase } from '@/modules/category/application/use-cases/update-category.use-case'
 import { CategoryController } from '@/modules/category/presentation/category.controller'
+import { CategoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/category/category.typeorm.repository'
 import { Module } from '@nestjs/common'
 
-// TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
 @Module({
   controllers: [CategoryController],
   providers: [
@@ -14,7 +14,8 @@ import { Module } from '@nestjs/common'
     GetAllCategoryUseCase,
     GetOneCategoryUseCase,
     UpdateCategoryUseCase,
-    DeleteCategoryUseCase
+    DeleteCategoryUseCase,
+    { provide: 'CategoryRepository', useClass: CategoryTypeOrmRepository }
   ]
 })
 export class CategoryModule {}

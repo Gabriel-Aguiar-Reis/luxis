@@ -1,5 +1,5 @@
 import { UUID } from 'crypto'
 
-export interface InventoryOwnershipVerifier {
+export interface IInventoryOwnershipVerifier {
   verifyOwnership(resellerId: UUID, productIds: UUID[]): Promise<void>
 }

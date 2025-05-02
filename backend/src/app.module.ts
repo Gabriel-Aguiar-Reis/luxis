@@ -11,11 +11,9 @@ import { OwnershipTransferCaslRule } from '@/shared/infra/auth/casl/rules/owners
 import { ProductCaslRule } from '@/shared/infra/auth/casl/rules/product.rules'
 import { ProductModelCaslRule } from '@/shared/infra/auth/casl/rules/product-model.rules'
 import { ShipmentCaslRule } from '@/shared/infra/auth/casl/rules/shipment.rules'
-import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
 import { JwtStrategy } from '@/shared/infra/auth/jwt/jwt.strategy'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { APP_GUARD } from '@nestjs/core'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -27,6 +25,8 @@ import { ProductModelModule } from '@/modules/product-model/product-model.module
 import { SaleModule } from '@/modules/sale/sale.module'
 import { ShipmentModule } from '@/modules/shipment/shipment.module'
 import { UserModule } from '@/modules/user/user.module'
+import { SupplierModule } from '@/modules/supplier/supplier.module'
+import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
 
 @Module({
   imports: [
@@ -48,15 +48,12 @@ import { UserModule } from '@/modules/user/user.module'
     ProductModelModule,
     SaleModule,
     ShipmentModule,
-    UserModule
+    UserModule,
+    SupplierModule
   ],
   controllers: [],
   providers: [
     AppConfigService,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard
-    },
     JwtStrategy,
     CaslAbilityFactory,
     SaleCaslRule,
@@ -67,6 +64,7 @@ import { UserModule } from '@/modules/user/user.module'
     ProductCaslRule,
     ProductModelCaslRule,
     ShipmentCaslRule,
+    SupplierCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
       useFactory: (
@@ -77,7 +75,8 @@ import { UserModule } from '@/modules/user/user.module'
         ownershipTransferRule: OwnershipTransferCaslRule,
         productRule: ProductCaslRule,
         productModelRule: ProductModelCaslRule,
-        shipmentRule: ShipmentCaslRule
+        shipmentRule: ShipmentCaslRule,
+        supplierRule: SupplierCaslRule
       ): CaslRuleBuilder[] => [
         saleRule,
         userRule,
@@ -86,7 +85,8 @@ import { UserModule } from '@/modules/user/user.module'
         ownershipTransferRule,
         productRule,
         productModelRule,
-        shipmentRule
+        shipmentRule,
+        supplierRule
       ],
       inject: [
         SaleCaslRule,
@@ -96,7 +96,8 @@ import { UserModule } from '@/modules/user/user.module'
         OwnershipTransferCaslRule,
         ProductCaslRule,
         ProductModelCaslRule,
-        ShipmentCaslRule
+        ShipmentCaslRule,
+        SupplierCaslRule
       ]
     }
   ],
