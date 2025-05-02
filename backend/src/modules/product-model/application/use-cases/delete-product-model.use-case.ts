@@ -1,4 +1,4 @@
-import { ProductModelRepository } from '@/modules/product-model/domain/repository/product-model.repository'
+import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
 

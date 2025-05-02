@@ -4,6 +4,7 @@ import { UUID } from 'crypto'
 
 export abstract class ShipmentRepository {
   abstract findAll(): Promise<Shipment[]>
+  abstract findAllByResellerId(resellerId: UUID): Promise<Shipment[]>
   abstract findById(id: UUID): Promise<Shipment | null>
   abstract create(shipment: Shipment): Promise<Shipment>
   abstract update(shipment: Shipment): Promise<Shipment>

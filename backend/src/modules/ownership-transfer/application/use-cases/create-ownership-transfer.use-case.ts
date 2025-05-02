@@ -4,7 +4,8 @@ import { OwnershipTransferRepository } from '@/modules/ownership-transfer/domain
 import { CreateOwnershipTransferDto } from '@/modules/ownership-transfer/presentation/dtos/create-ownership-transfer.dto'
 import { Injectable, Inject } from '@nestjs/common'
 import * as crypto from 'crypto'
-
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
+import { Role } from '@/modules/user/domain/enums/user-role.enum'
 @Injectable()
 export class CreateOwnershipTransferUseCase {
   constructor(
@@ -12,15 +13,30 @@ export class CreateOwnershipTransferUseCase {
     private readonly ownershipTransferRepository: OwnershipTransferRepository
   ) {}
 
-  async execute(input: CreateOwnershipTransferDto): Promise<OwnershipTransfer> {
-    const ownershipTransfer = new OwnershipTransfer(
-      crypto.randomUUID(),
-      input.productId,
-      input.fromResellerId,
-      input.toResellerId,
-      new Date(),
-      OwnershipTransferStatus.PENDING
-    )
+  async execute(
+    input: CreateOwnershipTransferDto,
+    user: UserPayload
+  ): Promise<OwnershipTransfer> {
+    let ownershipTransfer: OwnershipTransfer
+    if (user.role === Role.RESELLER) {
+      ownershipTransfer = new OwnershipTransfer(
+        crypto.randomUUID(),
+        input.productId,
+        user.id,
+        input.toResellerId,
+        new Date(),
+        OwnershipTransferStatus.PENDING
+      )
+    } else {
+      ownershipTransfer = new OwnershipTransfer(
+        crypto.randomUUID(),
+        input.productId,
+        input.fromResellerId,
+        input.toResellerId,
+        new Date(),
+        OwnershipTransferStatus.PENDING
+      )
+    }
 
     return await this.ownershipTransferRepository.create(ownershipTransfer)
   }

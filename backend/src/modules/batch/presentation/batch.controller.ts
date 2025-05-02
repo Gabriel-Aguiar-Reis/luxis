@@ -3,9 +3,12 @@ import { DeleteBatchUseCase } from '@/modules/batch/application/use-cases/delete
 import { GetAllBatchUseCase } from '@/modules/batch/application/use-cases/get-all-batch.use-case'
 import { GetOneBatchUseCase } from '@/modules/batch/application/use-cases/get-one-batch.use-case'
 import { CreateBatchDto } from '@/modules/batch/presentation/dtos/create-batch.dto'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
-import { Roles } from '@/shared/infra/auth/decorators/roles.decorator'
-import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
+import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
+import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
+import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
+import { CreateBatchPolicy } from '@/shared/infra/auth/policies/batch/create-batch.policy'
+import { DeleteBatchPolicy } from '@/shared/infra/auth/policies/batch/delete-batch.policy'
+import { ReadBatchPolicy } from '@/shared/infra/auth/policies/batch/read-batch.policy'
 import {
   Controller,
   Post,
@@ -17,6 +20,7 @@ import {
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 
+@UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('batches')
 export class BatchController {
   constructor(
@@ -26,29 +30,25 @@ export class BatchController {
     private readonly getOneBatchUseCase: GetOneBatchUseCase
   ) {}
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @CheckPolicies(new ReadBatchPolicy())
   @Get()
   async getAll() {
     return this.getAllBatchUseCase.execute()
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @CheckPolicies(new ReadBatchPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID) {
     return this.getOneBatchUseCase.execute(id)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @CheckPolicies(new CreateBatchPolicy())
   @Post()
   async create(@Body() dto: CreateBatchDto) {
     return this.createBatchUseCase.execute(dto)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @CheckPolicies(new DeleteBatchPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID) {
     return this.deleteBatchUseCase.execute(id)

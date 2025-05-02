@@ -1,5 +1,5 @@
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
-import { ProductModelRepository } from '@/modules/product-model/domain/repository/product-model.repository'
+import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { Inject, Injectable } from '@nestjs/common'
 
 @Injectable()

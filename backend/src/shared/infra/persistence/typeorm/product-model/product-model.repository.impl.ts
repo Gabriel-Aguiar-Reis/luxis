@@ -1,8 +1,9 @@
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
-import { ProductModelRepository } from '@/modules/product-model/domain/repository/product-model.repository'
+import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { ProductModelOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.orm-entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { UUID } from 'crypto'
 import { Repository } from 'typeorm'
 
 @Injectable()
@@ -13,6 +14,9 @@ export class ProductModelRepositoryImpl implements ProductModelRepository {
   ) {}
 
   findAll(): Promise<ProductModel[]> {
+    throw new Error('Method not implemented.')
+  }
+  findAllByResellerId(resellerId: UUID): Promise<ProductModel[]> {
     throw new Error('Method not implemented.')
   }
   findById(id: string): Promise<ProductModel | null> {

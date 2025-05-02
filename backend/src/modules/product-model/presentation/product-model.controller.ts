@@ -5,9 +5,8 @@ import { GetOneProductModelUseCase } from '@/modules/product-model/application/u
 import { UpdateProductModelUseCase } from '@/modules/product-model/application/use-cases/update-product-model.use-case'
 import { CreateProductModelDto } from '@/modules/product-model/presentation/dtos/create-product-model.dto'
 import { UpdateProductModelDto } from '@/modules/product-model/presentation/dtos/update-product-model.dto'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
-import { Roles } from '@/shared/infra/auth/decorators/roles.decorator'
-import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
+import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
+import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
 import {
   Controller,
   Post,
@@ -18,8 +17,15 @@ import {
   Delete,
   Get
 } from '@nestjs/common'
-import { UUID } from 'crypto'
 
+import { UUID } from 'crypto'
+import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
+import { ReadProductModelPolicy } from '@/shared/infra/auth/policies/product-model/read-product-model.policy'
+import { CreateProductModelPolicy } from '@/shared/infra/auth/policies/product-model/create-product-model.policy'
+import { UpdateProductModelPolicy } from '@/shared/infra/auth/policies/product-model/update-product-model.policy'
+import { DeleteProductModelPolicy } from '@/shared/infra/auth/policies/product-model/delete-product-model.policy'
+
+@UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('product-models')
 export class ProductModelController {
   constructor(
@@ -30,36 +36,31 @@ export class ProductModelController {
     private readonly getOneProductModelUseCase: GetOneProductModelUseCase
   ) {}
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new ReadProductModelPolicy())
   @Get()
   async getAll() {
     return await this.getAllProductModelUseCase.execute()
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new ReadProductModelPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID) {
     return await this.getOneProductModelUseCase.execute(id)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new CreateProductModelPolicy())
   @Post()
   async create(@Body() dto: CreateProductModelDto) {
     return await this.createProductModelUseCase.execute(dto)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new UpdateProductModelPolicy())
   @Patch(':id')
   async update(@Param('id') id: UUID, @Body() dto: UpdateProductModelDto) {
     return await this.updateProductModelUseCase.execute(id, dto)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new DeleteProductModelPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID) {
     return await this.deleteProductModelUseCase.execute(id)

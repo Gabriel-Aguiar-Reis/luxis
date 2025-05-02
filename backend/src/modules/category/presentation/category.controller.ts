@@ -7,9 +7,13 @@ import { UpdateStatusCategoryUseCase } from '@/modules/category/application/use-
 import { CategoryStatus } from '@/modules/category/domain/enums/category.enum'
 import { CreateCategoryDto } from '@/modules/category/presentation/dtos/create-category.dto'
 import { UpdateCategoryDto } from '@/modules/category/presentation/dtos/update-category.dto'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
-import { Roles } from '@/shared/infra/auth/decorators/roles.decorator'
-import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
+import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
+import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
+import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
+import { CreateCategoryPolicy } from '@/shared/infra/auth/policies/category/create-category.policy'
+import { DeleteCategoryPolicy } from '@/shared/infra/auth/policies/category/delete-category.policy'
+import { ReadCategoryPolicy } from '@/shared/infra/auth/policies/category/read-category.policy'
+import { UpdateCategoryPolicy } from '@/shared/infra/auth/policies/category/update-category.policy'
 import {
   Controller,
   Post,
@@ -22,8 +26,9 @@ import {
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 
+@UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('categories')
-export class CategoriesController {
+export class CategoryController {
   constructor(
     private readonly createCategoryUseCase: CreateCategoryUseCase,
     private readonly getAllCategoryUseCase: GetAllCategoryUseCase,
@@ -33,36 +38,31 @@ export class CategoriesController {
     private readonly deleteCategoryUseCase: DeleteCategoryUseCase
   ) {}
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT, Role.RESELLER)
+  @CheckPolicies(new ReadCategoryPolicy())
   @Get()
   async getAll() {
     return await this.getAllCategoryUseCase.execute()
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT, Role.RESELLER)
+  @CheckPolicies(new ReadCategoryPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID) {
     return await this.getOneCategoryUseCase.execute(id)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new CreateCategoryPolicy())
   @Post()
   async create(@Body() dto: CreateCategoryDto) {
     return await this.createCategoryUseCase.execute(dto)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new UpdateCategoryPolicy())
   @Patch(':id')
   async update(@Param('id') id: UUID, @Body() dto: UpdateCategoryDto) {
     return await this.updateCategoryUseCase.execute(id, dto)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new UpdateCategoryPolicy())
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
@@ -71,8 +71,7 @@ export class CategoriesController {
     return await this.updateStatusCategoryUseCase.execute(id, status)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @CheckPolicies(new DeleteCategoryPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID) {
     return await this.deleteCategoryUseCase.execute(id)

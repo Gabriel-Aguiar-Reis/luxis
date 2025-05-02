@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ProductModelRepository } from '@/modules/product-model/domain/repository/product-model.repository'
+import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { RawBatchItem } from '@/modules/batch/application/models/raw-batch-item.model'

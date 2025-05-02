@@ -21,9 +21,19 @@ import {
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { UpdateStatusOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-status-ownership-transfer.use-case'
+import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
+import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
+import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
+import { ReadOwnershipTransferPolicy } from '@/shared/infra/auth/policies/ownership-transfer/read-ownership-transfer.policy'
+import { CreateOwnershipTransferPolicy } from '@/shared/infra/auth/policies/ownership-transfer/create-ownership-transfer.policy'
+import { DeleteOwnershipTransferPolicy } from '@/shared/infra/auth/policies/ownership-transfer/delete-ownership-transfer.policy'
+import { UpdateOwnershipTransferPolicy } from '@/shared/infra/auth/policies/ownership-transfer/update-ownership-transfer.policy'
+import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 
+@UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('ownership-transfers')
-export class OwnershipTransfersController {
+export class OwnershipTransferController {
   constructor(
     private readonly createOwnershipTransferUseCase: CreateOwnershipTransferUseCase,
     private readonly updateOwnershipTransferUseCase: UpdateOwnershipTransferUseCase,
@@ -33,35 +43,34 @@ export class OwnershipTransfersController {
     private readonly updateStatusOwnershipTransferUseCase: UpdateStatusOwnershipTransferUseCase
   ) {}
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new ReadOwnershipTransferPolicy())
   @Get()
-  async getAll() {
-    return await this.getAllOwnershipTransferUseCase.execute()
+  async getAll(@CurrentUser() user: UserPayload) {
+    return await this.getAllOwnershipTransferUseCase.execute(user)
   }
 
-  // TODO -> ABAC c/ CASL para reseller ver suas transfers e admin/sup ver tudo
+  @CheckPolicies(new ReadOwnershipTransferPolicy())
   @Get(':id')
-  async getOne(@Param('id') id: UUID) {
-    return await this.getOneOwnershipTransferUseCase.execute(id)
+  async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    return await this.getOneOwnershipTransferUseCase.execute(id, user)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT, Role.RESELLER)
+  @CheckPolicies(new CreateOwnershipTransferPolicy())
   @Post()
-  async create(@Body() dto: CreateOwnershipTransferDto) {
-    return await this.createOwnershipTransferUseCase.execute(dto)
+  async create(
+    @Body() dto: CreateOwnershipTransferDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    return await this.createOwnershipTransferUseCase.execute(dto, user)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT, Role.RESELLER)
+  @CheckPolicies(new UpdateOwnershipTransferPolicy())
   @Patch(':id')
   async update(@Param('id') id: UUID, @Body() dto: UpdateOwnershipTransferDto) {
     return await this.updateOwnershipTransferUseCase.execute(id, dto)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new UpdateOwnershipTransferPolicy())
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
@@ -70,8 +79,7 @@ export class OwnershipTransfersController {
     return await this.updateStatusOwnershipTransferUseCase.execute(id, status)
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSISTANT)
+  @CheckPolicies(new DeleteOwnershipTransferPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID) {
     return await this.deleteOwnershipTransferUseCase.execute(id)
