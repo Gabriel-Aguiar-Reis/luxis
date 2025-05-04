@@ -4,5 +4,5 @@ import { UUID } from 'crypto'
 export class UpdateSaleDto {
   @IsArray()
   @ArrayNotEmpty()
-  productIds: UUID[] = []
+  productIds: UUID[]
 }

@@ -2,7 +2,7 @@ import { BatchItem } from '@/modules/batch/domain/entities/batch-item.entity'
 import { RawBatchItem } from '@/modules/batch/application/models/raw-batch-item.model'
 import { BatchItemWithResolvedModel } from '@/modules/batch/application/models/batch-item-with-resolved-model.model'
 import { UUID } from 'crypto'
-import { Unit } from '@/modules/batch/domain/value-objects/unit.vo'
+import { Unit } from '@/shared/common/value-object/unit.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 
 interface TypeORMBatchItem {

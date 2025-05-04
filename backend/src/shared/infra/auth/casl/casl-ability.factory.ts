@@ -18,17 +18,21 @@ import { Product } from '@/modules/product/domain/entities/product.entity'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
+import { Return } from '@/modules/return/domain/entities/return.entity'
+import { Customer } from '@/modules/customer/domain/entities/customer.entity'
 
 type Subjects =
   | InferSubjects<typeof Batch>
   | InferSubjects<typeof Category>
+  | InferSubjects<typeof Customer>
   | InferSubjects<typeof OwnershipTransfer>
   | InferSubjects<typeof Product>
   | InferSubjects<typeof ProductModel>
+  | InferSubjects<typeof Return>
   | InferSubjects<typeof Sale>
   | InferSubjects<typeof Shipment>
-  | InferSubjects<typeof User>
   | InferSubjects<typeof Supplier>
+  | InferSubjects<typeof User>
   | 'all'
 
 export type AppAbility = PureAbility<[Actions, Subjects]>

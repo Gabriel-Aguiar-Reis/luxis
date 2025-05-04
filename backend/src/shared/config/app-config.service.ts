@@ -26,4 +26,12 @@ export class AppConfigService {
   isTest(): boolean {
     return this.getNodeEnv() === 'test'
   }
+
+  getJwtSecret(): string | undefined {
+    return this.config.get<string>('JWT_SECRET')
+  }
+
+  getJwtExpirationTime(): string | undefined {
+    return this.config.get<string>('JWT_EXPIRATION_TIME')
+  }
 }

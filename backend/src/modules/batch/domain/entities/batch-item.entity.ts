@@ -1,7 +1,7 @@
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { Currency } from '@/shared/common/value-object/currency.vo'
-import { Unit } from '@/modules/batch/domain/value-objects/unit.vo'
+import { Unit } from '@/shared/common/value-object/unit.vo'
 import { UUID } from 'crypto'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 

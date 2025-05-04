@@ -1,4 +1,3 @@
-import { AppConfigService } from '@/shared/config/app-config.service'
 import { ConfigModule } from '@/shared/config/config.module'
 import { databaseConfig } from '@/shared/config/database.config'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
@@ -27,6 +26,11 @@ import { ShipmentModule } from '@/modules/shipment/shipment.module'
 import { UserModule } from '@/modules/user/user.module'
 import { SupplierModule } from '@/modules/supplier/supplier.module'
 import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
+import { ReturnModule } from '@/modules/return/return.module'
+import { ReturnCaslRule } from '@/shared/infra/auth/casl/rules/return.rules'
+import { CustomerModule } from '@/modules/customer/customer.module'
+import { CustomerCaslRule } from '@/shared/infra/auth/casl/rules/customer.rules'
+import { AppConfigService } from '@/shared/config/app-config.service'
 
 @Module({
   imports: [
@@ -37,9 +41,12 @@ import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
     }),
     TypeOrmModule.forFeature([]),
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1d' }
+    JwtModule.registerAsync({
+      inject: [AppConfigService],
+      useFactory: (config: AppConfigService) => ({
+        secret: config.getJwtSecret(),
+        signOptions: { expiresIn: config.getJwtExpirationTime() }
+      })
     }),
     BatchModule,
     CategoryModule,
@@ -49,7 +56,9 @@ import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
     SaleModule,
     ShipmentModule,
     UserModule,
-    SupplierModule
+    SupplierModule,
+    ReturnModule,
+    CustomerModule
   ],
   controllers: [],
   providers: [
@@ -65,6 +74,8 @@ import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
     ProductModelCaslRule,
     ShipmentCaslRule,
     SupplierCaslRule,
+    ReturnCaslRule,
+    CustomerCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
       useFactory: (
@@ -76,7 +87,9 @@ import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
         productRule: ProductCaslRule,
         productModelRule: ProductModelCaslRule,
         shipmentRule: ShipmentCaslRule,
-        supplierRule: SupplierCaslRule
+        supplierRule: SupplierCaslRule,
+        returnRule: ReturnCaslRule,
+        customerRule: CustomerCaslRule
       ): CaslRuleBuilder[] => [
         saleRule,
         userRule,
@@ -86,7 +99,9 @@ import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
         productRule,
         productModelRule,
         shipmentRule,
-        supplierRule
+        supplierRule,
+        returnRule,
+        customerRule
       ],
       inject: [
         SaleCaslRule,
@@ -97,7 +112,9 @@ import { SupplierCaslRule } from '@/shared/infra/auth/casl/rules/supplier.rules'
         ProductCaslRule,
         ProductModelCaslRule,
         ShipmentCaslRule,
-        SupplierCaslRule
+        SupplierCaslRule,
+        ReturnCaslRule,
+        CustomerCaslRule
       ]
     }
   ],

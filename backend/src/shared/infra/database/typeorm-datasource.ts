@@ -20,6 +20,10 @@ import { CreateOwnershipTransfers1712938000006 } from '@/shared/infra/database/m
 import { CreateInventory1712938000007 } from '@/shared/infra/database/migrations/1712938000007-create-inventory'
 import { CreateShipments1712938000008 } from '@/shared/infra/database/migrations/1712938000008-create-shipments'
 import { CreateSuppliers1712938000009 } from '@/shared/infra/database/migrations/1712938000009-create-suppliers'
+import { CreateReturns1712938000010 } from '@/shared/infra/database/migrations/1712938000010-create-returns'
+import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
+import { CreateCustomers1712938000011 } from '@/shared/infra/database/migrations/1712938000011-create-customers'
+import { CreateCustomerPortfolios1712938000012 } from '@/shared/infra/database/migrations/1712938000012-create-custome-portfolios'
 
 const commonConfig = {
   entities: [
@@ -32,7 +36,8 @@ const commonConfig = {
     BatchTypeOrmEntity,
     CategoryTypeOrmEntity,
     ProductModelTypeOrmEntity,
-    SupplierTypeOrmEntity
+    SupplierTypeOrmEntity,
+    ReturnTypeOrmEntity
   ],
   migrations: [
     CreateUsers1712938000000,
@@ -44,7 +49,10 @@ const commonConfig = {
     CreateOwnershipTransfers1712938000006,
     CreateInventory1712938000007,
     CreateShipments1712938000008,
-    CreateSuppliers1712938000009
+    CreateSuppliers1712938000009,
+    CreateReturns1712938000010,
+    CreateCustomers1712938000011,
+    CreateCustomerPortfolios1712938000012
   ],
   synchronize: false,
   namingStrategy: new SnakeNamingStrategy()

@@ -2,8 +2,10 @@ import { CreateSaleUseCase } from '@/modules/sale/application/use-cases/create/c
 import { DeleteSaleUseCase } from '@/modules/sale/application/use-cases/delete-sale.use-case'
 import { GetAllSaleUseCase } from '@/modules/sale/application/use-cases/get-all-sale.use-case'
 import { GetOneSaleUseCase } from '@/modules/sale/application/use-cases/get-one/get-one-sale.use-case'
+import { MarkInstallmentPaidUseCase } from '@/modules/sale/application/use-cases/mark-installment-paid/mark-installment-paid.use-case'
 import { UpdateSaleUseCase } from '@/modules/sale/application/use-cases/update/update-sale.use-case'
 import { CreateSaleDto } from '@/modules/sale/presentation/dtos/create-sale.dto'
+import { MarkInstallmentPaidDto } from '@/modules/sale/presentation/dtos/mark-installment-paid.dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
@@ -33,7 +35,8 @@ export class SaleController {
     private readonly getAllSaleUseCase: GetAllSaleUseCase,
     private readonly getOneSaleUseCase: GetOneSaleUseCase,
     private readonly updateSaleUseCase: UpdateSaleUseCase,
-    private readonly deleteSaleUseCase: DeleteSaleUseCase
+    private readonly deleteSaleUseCase: DeleteSaleUseCase,
+    private readonly markInstallmentPaidUseCase: MarkInstallmentPaidUseCase
   ) {}
 
   @CheckPolicies(new ReadSalePolicy())
@@ -68,5 +71,14 @@ export class SaleController {
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     return await this.deleteSaleUseCase.execute(id, user)
+  }
+
+  @CheckPolicies(new UpdateSalePolicy())
+  @Patch(':id/installments/mark-paid')
+  async markInstallmentPaid(
+    @Param('id') id: UUID,
+    @Body() dto: MarkInstallmentPaidDto
+  ) {
+    return await this.markInstallmentPaidUseCase.execute(id, dto)
   }
 }

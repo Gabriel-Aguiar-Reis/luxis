@@ -1,7 +1,7 @@
 import { Batch } from '@/modules/batch/domain/entities/batch.entity'
 import { BatchItem } from '@/modules/batch/domain/entities/batch-item.entity'
 import { Currency } from '@/shared/common/value-object/currency.vo'
-import { Unit } from '@/modules/batch/domain/value-objects/unit.vo'
+import { Unit } from '@/shared/common/value-object/unit.vo'
 import { UUID } from 'crypto'
 import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.entity'
 import { BatchItemTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch-item.typeorm.entity'

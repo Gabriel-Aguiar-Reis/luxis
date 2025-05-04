@@ -1,0 +1,6 @@
+export enum ReturnStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  RETURNED = 'RETURNED',
+  CANCELLED = 'CANCELLED'
+}

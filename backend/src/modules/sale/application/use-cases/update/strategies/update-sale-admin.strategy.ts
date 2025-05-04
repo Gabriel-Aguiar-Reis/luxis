@@ -3,7 +3,7 @@ import { ProductRepository } from '@/modules/product/domain/repositories/product
 import { UpdateSaleStrategy } from '@/modules/sale/application/use-cases/update/strategies/update-sale.strategy'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
-import { SalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
+import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
 import { UpdateSaleDto } from '@/modules/sale/presentation/dtos/update-sale.dto'
 import { Inject, ForbiddenException } from '@nestjs/common'
 import { UUID } from 'crypto'
@@ -15,7 +15,7 @@ export class UpdateSaleAdminStrategy implements UpdateSaleStrategy {
     @Inject('SaleRepository')
     private readonly saleRepository: SaleRepository,
     @Inject('SalePriceCalculator')
-    private readonly salePriceCalculator: SalePriceCalculator
+    private readonly salePriceCalculator: ISalePriceCalculator
   ) {}
 
   async execute(id: UUID, dto: UpdateSaleDto): Promise<Sale> {
@@ -44,7 +44,9 @@ export class UpdateSaleAdminStrategy implements UpdateSaleStrategy {
       sale.resellerId,
       dto.productIds,
       sale.saleDate,
-      totalAmount
+      totalAmount,
+      sale.paymentMethod,
+      sale.numberInstallments
     )
 
     return this.saleRepository.update(sale)

@@ -1,4 +1,4 @@
-import { Unit } from '@/modules/batch/domain/value-objects/unit.vo'
+import { Unit } from '@/shared/common/value-object/unit.vo'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import {
