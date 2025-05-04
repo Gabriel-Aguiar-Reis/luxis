@@ -8,6 +8,7 @@ import { UserMapper } from '@/shared/infra/persistence/typeorm/user/mappers/user
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
 import { UUID } from 'crypto'
+import { Email } from '@/shared/common/value-object/email.vo'
 
 @Injectable()
 export class UserTypeOrmRepository implements UserRepository {
@@ -27,6 +28,14 @@ export class UserTypeOrmRepository implements UserRepository {
     return UserMapper.toDomain(entity)
   }
 
+  async findByEmail(email: Email): Promise<User | null> {
+    const entity = await this.repository.findOne({
+      where: { email: email.getValue() }
+    })
+    if (!entity) return null
+    return UserMapper.toDomain(entity)
+  }
+
   async create(user: User): Promise<User> {
     const entity = UserMapper.toTypeOrm(user)
     const savedEntity = await this.repository.save(entity)
@@ -39,8 +48,12 @@ export class UserTypeOrmRepository implements UserRepository {
     return UserMapper.toDomain(updatedEntity)
   }
 
-  async updateRole(id: UUID, role: Role): Promise<User> {
-    await this.repository.update(id, { role })
+  async updateRole(id: UUID, role: Role, status?: UserStatus): Promise<User> {
+    if (status) {
+      await this.repository.update(id, { role, status })
+    } else {
+      await this.repository.update(id, { role })
+    }
     const updatedEntity = await this.repository.findOne({ where: { id } })
     if (!updatedEntity) throw new Error('User not found')
     return UserMapper.toDomain(updatedEntity)

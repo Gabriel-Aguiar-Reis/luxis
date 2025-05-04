@@ -7,6 +7,7 @@ import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/upda
 import { UpdateUserUseCase } from '@/modules/user/application/use-cases/update-user.use-case'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { CreateUserDto } from '@/modules/user/presentation/dtos/create-user.dto'
+import { UpdateUserRoleDto } from '@/modules/user/presentation/dtos/update-user-role.dto'
 import { UpdateUserDto } from '@/modules/user/presentation/dtos/update-user.dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
@@ -63,12 +64,9 @@ export class UserController {
     return await this.getOneUserUseCase.execute(id, user)
   }
 
-  @Post()
-  async create(@Body() dto: CreateUserDto, @CurrentUser() user: UserPayload) {
-    this.logger.warn(
-      `Creating new user: ${dto.email} - Requested by user ${user.email}`,
-      'UserController'
-    )
+  @Post('signup')
+  async create(@Body() dto: CreateUserDto) {
+    this.logger.warn(`Creating new user: ${dto.email}`, 'UserController')
     return await this.createUserUseCase.execute(dto)
   }
 
@@ -90,14 +88,14 @@ export class UserController {
   @Patch(':id/role')
   async updateRole(
     @Param('id') id: UUID,
-    @Body() role: Role,
+    @Body() dto: UpdateUserRoleDto,
     @CurrentUser() user: UserPayload
   ) {
     this.logger.warn(
-      `Updating user ${id} role to ${role} - Requested by user ${user.email}`,
+      `Updating user ${id} role to ${dto.role} - Requested by user ${user.email}`,
       'UserController'
     )
-    return await this.updateUserRoleUseCase.execute(id, role, user)
+    return await this.updateUserRoleUseCase.execute(id, dto, user)
   }
 
   @CheckPolicies(new DeleteUserPolicy())

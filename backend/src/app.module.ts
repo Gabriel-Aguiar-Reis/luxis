@@ -33,6 +33,7 @@ import { ReturnCaslRule } from '@/shared/infra/auth/casl/rules/return.rules'
 import { CustomerModule } from '@/modules/customer/customer.module'
 import { CustomerCaslRule } from '@/shared/infra/auth/casl/rules/customer.rules'
 import { AppConfigService } from '@/shared/config/app-config.service'
+import { AuthModule } from '@/modules/auth/auth.module'
 
 @Module({
   imports: [
@@ -75,7 +76,8 @@ import { AppConfigService } from '@/shared/config/app-config.service'
     UserModule,
     SupplierModule,
     ReturnModule,
-    CustomerModule
+    CustomerModule,
+    AuthModule
   ],
   controllers: [],
   providers: [
