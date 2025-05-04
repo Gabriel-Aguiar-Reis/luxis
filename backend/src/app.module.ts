@@ -16,6 +16,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { LoggerModule } from 'nestjs-pino'
 import { BatchModule } from '@/modules/batch/batch.module'
 import { CategoryModule } from '@/modules/category/category.module'
 import { OwnershipTransferModule } from '@/modules/ownership-transfer/ownership-transfer.module'
@@ -34,6 +35,19 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            singleLine: true,
+            colorize: true,
+            levelFirst: true,
+            translateTime: 'SYS:standard'
+          }
+        }
+      }
+    }),
     ConfigModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

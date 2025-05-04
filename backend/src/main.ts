@@ -3,14 +3,16 @@ import { NestFactory } from '@nestjs/core'
 import { Logger } from '@nestjs/common'
 import { AppModule } from '@/app.module'
 import { AppConfigService } from '@/shared/config/app-config.service'
+import { Logger as PinoLogger } from 'nestjs-pino'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['log', 'warn', 'error', 'debug', 'verbose']
+    bufferLogs: true
   })
 
   // app.useGlobalFilters(new GlobalExceptionFilter())
 
+  app.useLogger(app.get(PinoLogger))
   const config = app.get(AppConfigService)
   const port = config.getPort() ?? 3000
   app.enableCors({ origin: '*' })
