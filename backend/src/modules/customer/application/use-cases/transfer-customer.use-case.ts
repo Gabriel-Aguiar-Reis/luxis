@@ -39,7 +39,8 @@ export class TransferCustomerUseCase {
     }
 
     const giverPortfolio = await this.customerPortfolioService.getPortfolio(
-      dto.fromResellerId
+      dto.fromResellerId,
+      user
     )
     if (!giverPortfolio) {
       throw new NotFoundException('Giver portfolio not found')
@@ -50,7 +51,8 @@ export class TransferCustomerUseCase {
     }
 
     const takerPortfolio = await this.customerPortfolioService.getPortfolio(
-      dto.toResellerId
+      dto.toResellerId,
+      user
     )
     if (!takerPortfolio) {
       throw new NotFoundException('Taker portfolio not found')
@@ -60,7 +62,8 @@ export class TransferCustomerUseCase {
       new CustomerTransferredEvent(
         customerId,
         dto.fromResellerId,
-        dto.toResellerId
+        dto.toResellerId,
+        user
       )
     )
   }

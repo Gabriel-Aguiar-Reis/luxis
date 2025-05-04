@@ -19,7 +19,9 @@ import {
   Get
 } from '@nestjs/common'
 import { UUID } from 'crypto'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
+import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('batches')
 export class BatchController {
@@ -27,30 +29,47 @@ export class BatchController {
     private readonly createBatchUseCase: CreateBatchUseCase,
     private readonly deleteBatchUseCase: DeleteBatchUseCase,
     private readonly getAllBatchUseCase: GetAllBatchUseCase,
-    private readonly getOneBatchUseCase: GetOneBatchUseCase
+    private readonly getOneBatchUseCase: GetOneBatchUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new ReadBatchPolicy())
   @Get()
-  async getAll() {
+  async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all batches - Requested by user ${user.email}`,
+      'BatchController'
+    )
     return this.getAllBatchUseCase.execute()
   }
 
   @CheckPolicies(new ReadBatchPolicy())
   @Get(':id')
-  async getOne(@Param('id') id: UUID) {
+  async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting batch ${id} - Requested by user ${user.email}`,
+      'BatchController'
+    )
     return this.getOneBatchUseCase.execute(id)
   }
 
   @CheckPolicies(new CreateBatchPolicy())
   @Post()
-  async create(@Body() dto: CreateBatchDto) {
+  async create(@Body() dto: CreateBatchDto, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Creating batch - Requested by user ${user.email}`,
+      'BatchController'
+    )
     return this.createBatchUseCase.execute(dto)
   }
 
   @CheckPolicies(new DeleteBatchPolicy())
   @Delete(':id')
-  async delete(@Param('id') id: UUID) {
+  async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting batch ${id} - Requested by user ${user.email}`,
+      'BatchController'
+    )
     return this.deleteBatchUseCase.execute(id)
   }
 }

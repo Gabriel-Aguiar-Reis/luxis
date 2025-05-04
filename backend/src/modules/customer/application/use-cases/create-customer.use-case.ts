@@ -17,13 +17,16 @@ export class CreateCustomerUseCase {
 
   async execute(dto: CreateCustomerDto, user: UserPayload): Promise<Customer> {
     const customer = new Customer(crypto.randomUUID(), dto.name, dto.phone)
-    let portfolio = await this.customerPortfolioService.getPortfolio(user.id)
+    let portfolio = await this.customerPortfolioService.getPortfolio(
+      user.id,
+      user
+    )
     if (!portfolio) {
       portfolio = new CustomerPortfolio(user.id)
     }
 
     await this.eventDispatcher.dispatch(
-      new CustomerCreatedEvent(customer.id, user.id)
+      new CustomerCreatedEvent(customer.id, user.id, user)
     )
 
     portfolio.addCustomer(customer.id)

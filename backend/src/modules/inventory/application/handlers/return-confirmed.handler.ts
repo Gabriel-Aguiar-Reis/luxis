@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ReturnConfirmedEvent } from '@/modules/return/domain/events/return-confirmed.event'
-import { InventoryService } from '@/modules/inventory/application/services/inventory.service'
 import { EventDispatcher } from '@/shared/events/event-dispatcher'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { IInventoryService } from '@/modules/inventory/domain/services/inventory.interface'
 @Injectable()
 export class ReturnConfirmedHandler {
   constructor(
     @Inject('InventoryService')
-    private readonly inventoryService: InventoryService,
-    private readonly eventDispatcher: EventDispatcher
+    private readonly inventoryService: IInventoryService,
+    private readonly eventDispatcher: EventDispatcher,
+    private readonly logger: CustomLogger
   ) {
     this.register()
   }
@@ -18,9 +19,14 @@ export class ReturnConfirmedHandler {
   }
 
   async handle(event: ReturnConfirmedEvent): Promise<void> {
+    this.logger.warn(
+      `Handling return confirmed event for return ${event.returnId}`,
+      'ReturnConfirmedHandler'
+    )
     await this.inventoryService.removeProductsFromReseller(
       event.resellerId,
-      event.items
+      event.items,
+      event.user
     )
   }
 }

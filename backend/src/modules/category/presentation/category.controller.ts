@@ -25,7 +25,9 @@ import {
   Delete
 } from '@nestjs/common'
 import { UUID } from 'crypto'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('categories')
 export class CategoryController {
@@ -35,45 +37,77 @@ export class CategoryController {
     private readonly getOneCategoryUseCase: GetOneCategoryUseCase,
     private readonly updateCategoryUseCase: UpdateCategoryUseCase,
     private readonly updateStatusCategoryUseCase: UpdateStatusCategoryUseCase,
-    private readonly deleteCategoryUseCase: DeleteCategoryUseCase
+    private readonly deleteCategoryUseCase: DeleteCategoryUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new ReadCategoryPolicy())
   @Get()
-  async getAll() {
+  async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all categories - Requested by user ${user.email}`,
+      'CategoryController'
+    )
     return await this.getAllCategoryUseCase.execute()
   }
 
   @CheckPolicies(new ReadCategoryPolicy())
   @Get(':id')
-  async getOne(@Param('id') id: UUID) {
+  async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting category ${id} - Requested by user ${user.email}`,
+      'CategoryController'
+    )
     return await this.getOneCategoryUseCase.execute(id)
   }
 
   @CheckPolicies(new CreateCategoryPolicy())
   @Post()
-  async create(@Body() dto: CreateCategoryDto) {
+  async create(
+    @Body() dto: CreateCategoryDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Creating category - Requested by user ${user.email}`,
+      'CategoryController'
+    )
     return await this.createCategoryUseCase.execute(dto)
   }
 
   @CheckPolicies(new UpdateCategoryPolicy())
   @Patch(':id')
-  async update(@Param('id') id: UUID, @Body() dto: UpdateCategoryDto) {
+  async update(
+    @Param('id') id: UUID,
+    @Body() dto: UpdateCategoryDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Updating category ${id} - Requested by user ${user.email}`,
+      'CategoryController'
+    )
     return await this.updateCategoryUseCase.execute(id, dto)
   }
-
   @CheckPolicies(new UpdateCategoryPolicy())
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
-    @Body('status') status: CategoryStatus
+    @Body('status') status: CategoryStatus,
+    @CurrentUser() user: UserPayload
   ) {
+    this.logger.warn(
+      `Updating status of category ${id} to ${status} - Requested by user ${user.email}`,
+      'CategoryController'
+    )
     return await this.updateStatusCategoryUseCase.execute(id, status)
   }
 
   @CheckPolicies(new DeleteCategoryPolicy())
   @Delete(':id')
-  async delete(@Param('id') id: UUID) {
+  async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting category ${id} - Requested by user ${user.email}`,
+      'CategoryController'
+    )
     return await this.deleteCategoryUseCase.execute(id)
   }
 }

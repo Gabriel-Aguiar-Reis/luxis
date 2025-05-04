@@ -26,7 +26,7 @@ import {
   Delete
 } from '@nestjs/common'
 import { UUID } from 'crypto'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('sales')
 export class SaleController {
@@ -36,24 +36,37 @@ export class SaleController {
     private readonly getOneSaleUseCase: GetOneSaleUseCase,
     private readonly updateSaleUseCase: UpdateSaleUseCase,
     private readonly deleteSaleUseCase: DeleteSaleUseCase,
-    private readonly markInstallmentPaidUseCase: MarkInstallmentPaidUseCase
+    private readonly markInstallmentPaidUseCase: MarkInstallmentPaidUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new ReadSalePolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all sales - Requested by user ${user.email}`,
+      'SaleController'
+    )
     return await this.getAllSaleUseCase.execute(user)
   }
 
   @CheckPolicies(new ReadSalePolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting sale ${id} - Requested by user ${user.email}`,
+      'SaleController'
+    )
     return await this.getOneSaleUseCase.execute(id, user)
   }
 
   @CheckPolicies(new CreateSalePolicy())
   @Post()
   async create(@Body() dto: CreateSaleDto, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Creating new sale - Requested by user ${user.email}`,
+      'SaleController'
+    )
     return await this.createSaleUseCase.execute(dto, user)
   }
 
@@ -64,12 +77,20 @@ export class SaleController {
     @Body() dto: CreateSaleDto,
     @CurrentUser() user: UserPayload
   ) {
+    this.logger.warn(
+      `Updating sale ${id} - Requested by user ${user.email}`,
+      'SaleController'
+    )
     return this.updateSaleUseCase.execute(id, dto, user)
   }
 
   @CheckPolicies(new DeleteSalePolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting sale ${id} - Requested by user ${user.email}`,
+      'SaleController'
+    )
     return await this.deleteSaleUseCase.execute(id, user)
   }
 
@@ -77,8 +98,13 @@ export class SaleController {
   @Patch(':id/installments/mark-paid')
   async markInstallmentPaid(
     @Param('id') id: UUID,
-    @Body() dto: MarkInstallmentPaidDto
+    @Body() dto: MarkInstallmentPaidDto,
+    @CurrentUser() user: UserPayload
   ) {
+    this.logger.warn(
+      `Marking installment ${dto.installmentNumber} as paid for sale ${id} - Requested by user ${user.email}`,
+      'SaleController'
+    )
     return await this.markInstallmentPaidUseCase.execute(id, dto)
   }
 }

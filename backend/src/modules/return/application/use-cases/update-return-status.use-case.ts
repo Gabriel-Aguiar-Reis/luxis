@@ -11,7 +11,7 @@ import { Return } from '@/modules/return/domain/entities/return.entity'
 import { ReturnStatusManager } from '@/modules/return/domain/services/return-status-manager.service'
 import { EventDispatcher } from '@/shared/events/event-dispatcher'
 import { ReturnConfirmedEvent } from '@/modules/return/domain/events/return-confirmed.event'
-
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 @Injectable()
 export class UpdateReturnStatusUseCase {
   constructor(
@@ -20,7 +20,7 @@ export class UpdateReturnStatusUseCase {
     private readonly eventDispatcher: EventDispatcher
   ) {}
 
-  async execute(id: UUID, status: ReturnStatus) {
+  async execute(id: UUID, status: ReturnStatus, user: UserPayload) {
     let returnEntity = await this.returnRepository.findById(id)
     if (!returnEntity) {
       throw new NotFoundException('Return not found')
@@ -48,7 +48,8 @@ export class UpdateReturnStatusUseCase {
       new ReturnConfirmedEvent(
         returnEntity.id,
         returnEntity.resellerId,
-        returnEntity.items
+        returnEntity.items,
+        user
       )
     )
   }

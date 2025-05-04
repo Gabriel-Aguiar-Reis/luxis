@@ -6,9 +6,7 @@ import { GetOneOwnershipTransferUseCase } from '@/modules/ownership-transfer/app
 import { UpdateOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-ownership-transfer.use-case'
 import { CreateOwnershipTransferDto } from '@/modules/ownership-transfer/presentation/dtos/create-ownership-transfer.dto'
 import { UpdateOwnershipTransferDto } from '@/modules/ownership-transfer/presentation/dtos/update-ownership-transfer.dto'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
-import { Roles } from '@/shared/infra/auth/decorators/roles.decorator'
-import { RolesGuard } from '@/shared/infra/auth/guards/roles.guard'
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import {
   Controller,
   Post,
@@ -40,18 +38,27 @@ export class OwnershipTransferController {
     private readonly getAllOwnershipTransferUseCase: GetAllOwnershipTransferUseCase,
     private readonly getOneOwnershipTransferUseCase: GetOneOwnershipTransferUseCase,
     private readonly deleteOwnershipTransferUseCase: DeleteOwnershipTransferUseCase,
-    private readonly updateStatusOwnershipTransferUseCase: UpdateStatusOwnershipTransferUseCase
+    private readonly updateStatusOwnershipTransferUseCase: UpdateStatusOwnershipTransferUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new ReadOwnershipTransferPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all ownership transfers - Requested by user ${user.email}`,
+      'OwnershipTransferController'
+    )
     return await this.getAllOwnershipTransferUseCase.execute(user)
   }
 
   @CheckPolicies(new ReadOwnershipTransferPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting ownership transfer ${id} - Requested by user ${user.email}`,
+      'OwnershipTransferController'
+    )
     return await this.getOneOwnershipTransferUseCase.execute(id, user)
   }
 
@@ -61,12 +68,24 @@ export class OwnershipTransferController {
     @Body() dto: CreateOwnershipTransferDto,
     @CurrentUser() user: UserPayload
   ) {
+    this.logger.warn(
+      `Creating ownership transfer - Requested by user ${user.email}`,
+      'OwnershipTransferController'
+    )
     return await this.createOwnershipTransferUseCase.execute(dto, user)
   }
 
   @CheckPolicies(new UpdateOwnershipTransferPolicy())
   @Patch(':id')
-  async update(@Param('id') id: UUID, @Body() dto: UpdateOwnershipTransferDto) {
+  async update(
+    @Param('id') id: UUID,
+    @Body() dto: UpdateOwnershipTransferDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Updating ownership transfer ${id} - Requested by user ${user.email}`,
+      'OwnershipTransferController'
+    )
     return await this.updateOwnershipTransferUseCase.execute(id, dto)
   }
 
@@ -74,14 +93,27 @@ export class OwnershipTransferController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
-    @Body('status') status: OwnershipTransferStatus
+    @Body('status') status: OwnershipTransferStatus,
+    @CurrentUser() user: UserPayload
   ) {
-    return await this.updateStatusOwnershipTransferUseCase.execute(id, status)
+    this.logger.warn(
+      `Updating status of ownership transfer ${id} to ${status} - Requested by user ${user.email}`,
+      'OwnershipTransferController'
+    )
+    return await this.updateStatusOwnershipTransferUseCase.execute(
+      id,
+      status,
+      user
+    )
   }
 
   @CheckPolicies(new DeleteOwnershipTransferPolicy())
   @Delete(':id')
-  async delete(@Param('id') id: UUID) {
+  async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting ownership transfer ${id} - Requested by user ${user.email}`,
+      'OwnershipTransferController'
+    )
     return await this.deleteOwnershipTransferUseCase.execute(id)
   }
 }

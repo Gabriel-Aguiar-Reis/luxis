@@ -13,7 +13,7 @@ import {
   BadRequestException
 } from '@nestjs/common'
 import { UUID } from 'crypto'
-
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 @Injectable()
 export class UpdateStatusShipmentUseCase {
   constructor(
@@ -24,7 +24,11 @@ export class UpdateStatusShipmentUseCase {
     private readonly eventDispatcher: EventDispatcher
   ) {}
 
-  async execute(id: UUID, status: ShipmentStatus): Promise<Shipment | null> {
+  async execute(
+    id: UUID,
+    status: ShipmentStatus,
+    user: UserPayload
+  ): Promise<Shipment | null> {
     let shipment = await this.shipmentRepository.findById(id)
     if (!shipment) {
       throw new NotFoundException('Shipment not found')
@@ -57,7 +61,8 @@ export class UpdateStatusShipmentUseCase {
       new ShipmentDispatchedEvent(
         shipment.id,
         shipment.resellerId,
-        shipment.productIds
+        shipment.productIds,
+        user
       )
     )
 

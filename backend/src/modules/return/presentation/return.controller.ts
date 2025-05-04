@@ -27,7 +27,7 @@ import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorat
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 import { UpdateReturnStatusUseCase } from '@/modules/return/application/use-cases/update-return-status.use-case'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('returns')
 export class ReturnController {
@@ -37,7 +37,8 @@ export class ReturnController {
     private readonly getOneReturnUseCase: GetOneReturnUseCase,
     private readonly updateReturnUseCase: UpdateReturnUseCase,
     private readonly deleteReturnUseCase: DeleteReturnUseCase,
-    private readonly updateReturnStatusUseCase: UpdateReturnStatusUseCase
+    private readonly updateReturnStatusUseCase: UpdateReturnStatusUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new CreateReturnPolicy())
@@ -46,36 +47,67 @@ export class ReturnController {
     @Body() input: CreateReturnDto,
     @CurrentUser() user: UserPayload
   ) {
+    this.logger.warn(
+      `Creating new return - Requested by user ${user.email}`,
+      'ReturnController'
+    )
     await this.createReturnUseCase.execute(input, user)
   }
 
   @CheckPolicies(new ReadReturnPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all returns - Requested by user ${user.email}`,
+      'ReturnController'
+    )
     return this.getAllReturnUseCase.execute(user)
   }
 
   @CheckPolicies(new ReadReturnPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting return ${id} - Requested by user ${user.email}`,
+      'ReturnController'
+    )
     return this.getOneReturnUseCase.execute(id, user)
   }
 
   @CheckPolicies(new UpdateReturnPolicy())
   @Put(':id')
-  async update(@Param('id') id: UUID, @Body() input: UpdateReturnDto) {
+  async update(
+    @Param('id') id: UUID,
+    @Body() input: UpdateReturnDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Updating return ${id} - Requested by user ${user.email}`,
+      'ReturnController'
+    )
     await this.updateReturnUseCase.execute(id, input)
   }
 
   @CheckPolicies(new UpdateReturnPolicy())
   @Put(':id/status')
-  async updateStatus(@Param('id') id: UUID, @Body() status: ReturnStatus) {
+  async updateStatus(
+    @Param('id') id: UUID,
+    @Body() status: ReturnStatus,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Updating return status ${status} - Requested by user ${user.email}`,
+      'ReturnController'
+    )
     await this.updateReturnStatusUseCase.execute(id, status)
   }
-
   @CheckPolicies(new DeleteReturnPolicy())
   @Delete(':id')
-  async delete(@Param('id') id: UUID) {
+  async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting return ${id} - Requested by user ${user.email}`,
+      'ReturnController'
+    )
     await this.deleteReturnUseCase.execute(id)
   }
 }

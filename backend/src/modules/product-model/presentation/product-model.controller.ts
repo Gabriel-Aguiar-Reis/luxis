@@ -24,7 +24,9 @@ import { ReadProductModelPolicy } from '@/shared/infra/auth/policies/product-mod
 import { CreateProductModelPolicy } from '@/shared/infra/auth/policies/product-model/create-product-model.policy'
 import { UpdateProductModelPolicy } from '@/shared/infra/auth/policies/product-model/update-product-model.policy'
 import { DeleteProductModelPolicy } from '@/shared/infra/auth/policies/product-model/delete-product-model.policy'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
+import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('product-models')
 export class ProductModelController {
@@ -33,36 +35,64 @@ export class ProductModelController {
     private readonly updateProductModelUseCase: UpdateProductModelUseCase,
     private readonly deleteProductModelUseCase: DeleteProductModelUseCase,
     private readonly getAllProductModelUseCase: GetAllProductModelUseCase,
-    private readonly getOneProductModelUseCase: GetOneProductModelUseCase
+    private readonly getOneProductModelUseCase: GetOneProductModelUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new ReadProductModelPolicy())
   @Get()
-  async getAll() {
+  async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all product models - Requested by user ${user.email}`,
+      'ProductModelController'
+    )
     return await this.getAllProductModelUseCase.execute()
   }
 
   @CheckPolicies(new ReadProductModelPolicy())
   @Get(':id')
-  async getOne(@Param('id') id: UUID) {
+  async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting product model ${id} - Requested by user ${user.email}`,
+      'ProductModelController'
+    )
     return await this.getOneProductModelUseCase.execute(id)
   }
 
   @CheckPolicies(new CreateProductModelPolicy())
   @Post()
-  async create(@Body() dto: CreateProductModelDto) {
+  async create(
+    @Body() dto: CreateProductModelDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Creating new product model - Requested by user ${user.email}`,
+      'ProductModelController'
+    )
     return await this.createProductModelUseCase.execute(dto)
   }
 
   @CheckPolicies(new UpdateProductModelPolicy())
   @Patch(':id')
-  async update(@Param('id') id: UUID, @Body() dto: UpdateProductModelDto) {
+  async update(
+    @Param('id') id: UUID,
+    @Body() dto: UpdateProductModelDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Updating product model ${id} - Requested by user ${user.email}`,
+      'ProductModelController'
+    )
     return await this.updateProductModelUseCase.execute(id, dto)
   }
 
   @CheckPolicies(new DeleteProductModelPolicy())
   @Delete(':id')
-  async delete(@Param('id') id: UUID) {
+  async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting product model ${id} - Requested by user ${user.email}`,
+      'ProductModelController'
+    )
     return await this.deleteProductModelUseCase.execute(id)
   }
 }

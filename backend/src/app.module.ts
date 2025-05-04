@@ -17,6 +17,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { LoggerModule } from 'nestjs-pino'
+import { LoggingModule } from '@/shared/infra/logging/logging.module'
 import { BatchModule } from '@/modules/batch/batch.module'
 import { CategoryModule } from '@/modules/category/category.module'
 import { OwnershipTransferModule } from '@/modules/ownership-transfer/ownership-transfer.module'
@@ -45,9 +46,11 @@ import { AppConfigService } from '@/shared/config/app-config.service'
             levelFirst: true,
             translateTime: 'SYS:standard'
           }
-        }
+        },
+        level: 'trace'
       }
     }),
+    LoggingModule,
     ConfigModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

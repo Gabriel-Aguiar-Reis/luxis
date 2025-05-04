@@ -6,6 +6,7 @@ import { OwnershipTransferStatusManager } from '@/modules/ownership-transfer/dom
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { UserRepository } from '@/modules/user/domain/repositories/user.repository'
 import { EventDispatcher } from '@/shared/events/event-dispatcher'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import {
   Injectable,
   Inject,
@@ -28,7 +29,8 @@ export class UpdateStatusOwnershipTransferUseCase {
 
   async execute(
     id: UUID,
-    status: OwnershipTransferStatus
+    status: OwnershipTransferStatus,
+    user: UserPayload
   ): Promise<OwnershipTransfer> {
     let ownershipTransfer = await this.ownershipTransferRepository.findById(id)
     if (!ownershipTransfer) {
@@ -78,7 +80,8 @@ export class UpdateStatusOwnershipTransferUseCase {
       new OwnershipTransferDispatchedEvent(
         fromReseller.id,
         toReseller.id,
-        product.id
+        product.id,
+        user
       )
     )
 

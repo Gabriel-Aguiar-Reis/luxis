@@ -28,7 +28,7 @@ import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interfa
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { TransferCustomerDto } from '@/modules/customer/presentation/dtos/transfer-customer.dto'
 import { TransferCustomerUseCase } from '@/modules/customer/application/use-cases/transfer-customer.use-case'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('customers')
 export class CustomerController {
@@ -38,7 +38,8 @@ export class CustomerController {
     private readonly getOneCustomerUseCase: GetOneCustomersUseCase,
     private readonly updateCustomerUseCase: UpdateCustomerUseCase,
     private readonly deleteCustomerUseCase: DeleteCustomerUseCase,
-    private readonly transferCustomerUseCase: TransferCustomerUseCase
+    private readonly transferCustomerUseCase: TransferCustomerUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new CreateCustomerPolicy())
@@ -47,12 +48,20 @@ export class CustomerController {
     @Body() dto: CreateCustomerDto,
     @CurrentUser() user: UserPayload
   ): Promise<Customer> {
+    this.logger.warn(
+      `Creating customer - Requested by user ${user.email}`,
+      'CustomerController'
+    )
     return await this.createCustomerUseCase.execute(dto, user)
   }
 
   @CheckPolicies(new ReadCustomerPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload): Promise<Customer[]> {
+    this.logger.log(
+      `Getting all customers - Requested by user ${user.email}`,
+      'CustomerController'
+    )
     return await this.getAllCustomersUseCase.execute(user)
   }
 
@@ -62,6 +71,10 @@ export class CustomerController {
     @Param('id') id: UUID,
     @CurrentUser() user: UserPayload
   ): Promise<Customer> {
+    this.logger.log(
+      `Getting customer ${id} - Requested by user ${user.email}`,
+      'CustomerController'
+    )
     return await this.getOneCustomerUseCase.execute(id, user)
   }
 
@@ -72,6 +85,10 @@ export class CustomerController {
     @Body() dto: UpdateCustomerDto,
     @CurrentUser() user: UserPayload
   ): Promise<Customer> {
+    this.logger.warn(
+      `Updating customer ${id} - Requested by user ${user.email}`,
+      'CustomerController'
+    )
     return await this.updateCustomerUseCase.execute(id, dto, user)
   }
 
@@ -79,9 +96,14 @@ export class CustomerController {
   @Delete(':id/from/:fromResellerId')
   async delete(
     @Param('id') id: UUID,
-    @Param('fromResellerId') fromResellerId: UUID
+    @Param('fromResellerId') fromResellerId: UUID,
+    @CurrentUser() user: UserPayload
   ): Promise<void> {
-    await this.deleteCustomerUseCase.execute(id, fromResellerId)
+    this.logger.warn(
+      `Deleting customer ${id} from reseller ${fromResellerId} - Requested by user ${user.email}`,
+      'CustomerController'
+    )
+    await this.deleteCustomerUseCase.execute(id, fromResellerId, user)
   }
 
   @CheckPolicies(new UpdateCustomerPolicy())
@@ -91,6 +113,10 @@ export class CustomerController {
     @Body() dto: TransferCustomerDto,
     @CurrentUser() user: UserPayload
   ): Promise<void> {
+    this.logger.warn(
+      `Transferring customer ${id} to reseller ${dto.toResellerId} - Requested by user ${user.email}`,
+      'CustomerController'
+    )
     await this.transferCustomerUseCase.execute(id, dto, user)
   }
 }

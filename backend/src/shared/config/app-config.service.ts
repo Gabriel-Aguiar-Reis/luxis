@@ -34,4 +34,8 @@ export class AppConfigService {
   getJwtExpirationTime(): string | undefined {
     return this.config.get<string>('JWT_EXPIRATION_TIME')
   }
+
+  getLogRules(): string | undefined {
+    return this.config.get<string>('LOG_RULES')
+  }
 }

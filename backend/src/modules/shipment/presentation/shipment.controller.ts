@@ -28,7 +28,7 @@ import {
   ParseEnumPipe
 } from '@nestjs/common'
 import { UUID } from 'crypto'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('shipments')
 export class ShipmentController {
@@ -38,30 +38,54 @@ export class ShipmentController {
     private readonly getAllShipmentUseCase: GetAllShipmentUseCase,
     private readonly getOneShipmentUseCase: GetOneShipmentUseCase,
     private readonly updateShipmentUseCase: UpdateShipmentUseCase,
-    private readonly updateStatusShipmentUseCase: UpdateStatusShipmentUseCase
+    private readonly updateStatusShipmentUseCase: UpdateStatusShipmentUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new ReadShipmentPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all shipments - Requested by user ${user.email}`,
+      'ShipmentController'
+    )
     return this.getAllShipmentUseCase.execute(user)
   }
 
   @CheckPolicies(new ReadShipmentPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting shipment ${id} - Requested by user ${user.email}`,
+      'ShipmentController'
+    )
     return this.getOneShipmentUseCase.execute(id, user)
   }
 
   @CheckPolicies(new CreateShipmentPolicy())
   @Post()
-  async create(@Body() dto: CreateShipmentDto) {
+  async create(
+    @Body() dto: CreateShipmentDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Creating new shipment to reseller ${dto.resellerId} - Requested by user ${user.email}`,
+      'ShipmentController'
+    )
     return this.createShipmentUseCase.execute(dto)
   }
 
   @CheckPolicies(new UpdateShipmentPolicy())
   @Patch(':id')
-  async update(@Param('id') id: UUID, @Body() dto: UpdateShipmentDto) {
+  async update(
+    @Param('id') id: UUID,
+    @Body() dto: UpdateShipmentDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Updating shipment ${id} to reseller ${dto.resellerId} - Requested by user ${user.email}`,
+      'ShipmentController'
+    )
     return this.updateShipmentUseCase.execute(id, dto)
   }
 
@@ -69,14 +93,23 @@ export class ShipmentController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
-    @Body('status', new ParseEnumPipe(ShipmentStatus)) status: ShipmentStatus
+    @Body('status', new ParseEnumPipe(ShipmentStatus)) status: ShipmentStatus,
+    @CurrentUser() user: UserPayload
   ) {
-    return this.updateStatusShipmentUseCase.execute(id, status)
+    this.logger.warn(
+      `Updating status of shipment ${id} to ${status} - Requested by user ${user.email}`,
+      'ShipmentController'
+    )
+    return this.updateStatusShipmentUseCase.execute(id, status, user)
   }
 
   @CheckPolicies(new DeleteShipmentPolicy())
   @Delete(':id')
-  async delete(@Param('id') id: UUID) {
+  async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting shipment ${id} - Requested by user ${user.email}`,
+      'ShipmentController'
+    )
     return this.deleteShipmentUseCase.execute(id)
   }
 }

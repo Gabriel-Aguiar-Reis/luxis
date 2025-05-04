@@ -4,17 +4,22 @@ import { CategoryRepository } from '@/modules/category/domain/repositories/categ
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { RawBatchItem } from '@/modules/batch/application/models/raw-batch-item.model'
 import { BatchItemWithResolvedModel } from '@/modules/batch/application/models/batch-item-with-resolved-model.model'
-
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 @Injectable()
 export class BatchItemResolver {
   constructor(
     @Inject('ProductModelRepository')
     private readonly productModelRepo: ProductModelRepository,
     @Inject('CategoryRepository')
-    private readonly categoryRepo: CategoryRepository
+    private readonly categoryRepo: CategoryRepository,
+    private readonly logger: CustomLogger
   ) {}
 
   async resolve(batchItem: RawBatchItem): Promise<BatchItemWithResolvedModel> {
+    this.logger.warn(
+      `Resolving batch item ${batchItem.id}`,
+      'BatchItemResolver'
+    )
     let model: ProductModel | null = null
 
     if (batchItem.modelId) {
@@ -45,6 +50,10 @@ export class BatchItemResolver {
 
     const categoryCode = category.name.getValue().slice(0, 2).toUpperCase()
 
+    this.logger.warn(
+      `Resolved batch item ${batchItem.id} with model ${model.id} and category ${category.id}`,
+      'BatchItemResolver'
+    )
     return {
       batchItem,
       model,

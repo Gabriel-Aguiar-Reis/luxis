@@ -4,6 +4,7 @@ import { UUID } from 'crypto'
 import { CustomerPortfolioService } from '@/modules/customer-portfolio/application/services/customer-portfolio.service'
 import { CustomerDeletedEvent } from '@/modules/customer/domain/events/customer-deleted.event'
 import { EventDispatcher } from '@/shared/events/event-dispatcher'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 
 @Injectable()
 export class DeleteCustomerUseCase {
@@ -15,14 +16,20 @@ export class DeleteCustomerUseCase {
     private readonly eventDispatcher: EventDispatcher
   ) {}
 
-  async execute(id: UUID, fromResellerId: UUID): Promise<void> {
+  async execute(
+    id: UUID,
+    fromResellerId: UUID,
+    user: UserPayload
+  ): Promise<void> {
     const customer = await this.customerRepository.findById(id)
     if (!customer) {
       throw new NotFoundException('Customer not found')
     }
 
-    const portfolio =
-      await this.customerPortfolioService.getPortfolio(fromResellerId)
+    const portfolio = await this.customerPortfolioService.getPortfolio(
+      fromResellerId,
+      user
+    )
     if (!portfolio) {
       throw new NotFoundException('Portfolio not found')
     }
@@ -30,7 +37,7 @@ export class DeleteCustomerUseCase {
     await this.customerRepository.delete(id)
 
     await this.eventDispatcher.dispatch(
-      new CustomerDeletedEvent(id, fromResellerId)
+      new CustomerDeletedEvent(id, fromResellerId, user)
     )
   }
 }

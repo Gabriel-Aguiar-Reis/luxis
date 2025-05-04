@@ -16,6 +16,7 @@ import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interfa
 import { DeleteUserPolicy } from '@/shared/infra/auth/policies/user/delete-user.policy'
 import { ReadUserPolicy } from '@/shared/infra/auth/policies/user/read-user.policy'
 import { UpdateUserPolicy } from '@/shared/infra/auth/policies/user/update-sale.policy'
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import {
   Controller,
   Post,
@@ -38,23 +39,36 @@ export class UserController {
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly updateUserRoleUseCase: UpdateUserRoleUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
-    private readonly disableUserUseCase: DisableUserUseCase
+    private readonly disableUserUseCase: DisableUserUseCase,
+    private readonly logger: CustomLogger
   ) {}
 
   @CheckPolicies(new ReadUserPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all users - Requested by user ${user.email}`,
+      'UserController'
+    )
     return await this.getAllUsersUseCase.execute(user)
   }
 
   @CheckPolicies(new ReadUserPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting user ${id} - Requested by user ${user.email}`,
+      'UserController'
+    )
     return await this.getOneUserUseCase.execute(id, user)
   }
 
   @Post()
-  async create(@Body() dto: CreateUserDto) {
+  async create(@Body() dto: CreateUserDto, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Creating new user: ${dto.email} - Requested by user ${user.email}`,
+      'UserController'
+    )
     return await this.createUserUseCase.execute(dto)
   }
 
@@ -65,6 +79,10 @@ export class UserController {
     @Body() dto: UpdateUserDto,
     @CurrentUser() user: UserPayload
   ) {
+    this.logger.warn(
+      `Updating user ${id} - Requested by user ${user.email}`,
+      'UserController'
+    )
     return await this.updateUserUseCase.execute(id, dto, user)
   }
 
@@ -75,18 +93,30 @@ export class UserController {
     @Body() role: Role,
     @CurrentUser() user: UserPayload
   ) {
+    this.logger.warn(
+      `Updating user ${id} role to ${role} - Requested by user ${user.email}`,
+      'UserController'
+    )
     return await this.updateUserRoleUseCase.execute(id, role, user)
   }
 
   @CheckPolicies(new DeleteUserPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Deleting user ${id} - Requested by user ${user.email}`,
+      'UserController'
+    )
     return await this.deleteUserUseCase.execute(id)
   }
 
   @CheckPolicies(new UpdateUserPolicy())
   @Patch(':id/disable')
   async disable(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
+    this.logger.warn(
+      `Disabling user ${id} - Requested by user ${user.email}`,
+      'UserController'
+    )
     return await this.disableUserUseCase.execute(id, user)
   }
 }
