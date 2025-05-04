@@ -29,6 +29,7 @@ import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorat
 import { TransferCustomerDto } from '@/modules/customer/presentation/dtos/transfer-customer.dto'
 import { TransferCustomerUseCase } from '@/modules/customer/application/use-cases/transfer-customer.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('customers')
 export class CustomerController {
@@ -42,6 +43,11 @@ export class CustomerController {
     private readonly logger: CustomLogger
   ) {}
 
+  @ApiOperation({ summary: 'Create a new customer' })
+  @ApiBody({ type: CreateCustomerDto })
+  @ApiResponse({ status: 201, description: 'Customer created successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateCustomerPolicy())
   @Post()
   async create(
@@ -55,6 +61,14 @@ export class CustomerController {
     return await this.createCustomerUseCase.execute(dto, user)
   }
 
+  @ApiOperation({ summary: 'Get all customers' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of customers returned successfully',
+    type: [Customer]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadCustomerPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload): Promise<Customer[]> {
@@ -65,6 +79,12 @@ export class CustomerController {
     return await this.getAllCustomersUseCase.execute(user)
   }
 
+  @ApiOperation({ summary: 'Get a specific customer' })
+  @ApiParam({ name: 'id', description: 'Customer ID' })
+  @ApiResponse({ status: 200, description: 'Customer found successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'Customer not found' })
   @CheckPolicies(new ReadCustomerPolicy())
   @Get(':id')
   async getOne(
@@ -78,6 +98,12 @@ export class CustomerController {
     return await this.getOneCustomerUseCase.execute(id, user)
   }
 
+  @ApiOperation({ summary: 'Update a customer' })
+  @ApiParam({ name: 'id', description: 'Customer ID' })
+  @ApiBody({ type: UpdateCustomerDto })
+  @ApiResponse({ status: 200, description: 'Customer updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCustomerPolicy())
   @Patch(':id')
   async update(
@@ -92,6 +118,12 @@ export class CustomerController {
     return await this.updateCustomerUseCase.execute(id, dto, user)
   }
 
+  @ApiOperation({ summary: 'Delete a customer' })
+  @ApiParam({ name: 'id', description: 'Customer ID' })
+  @ApiParam({ name: 'fromResellerId', description: 'Reseller ID' })
+  @ApiResponse({ status: 200, description: 'Customer deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteCustomerPolicy())
   @Delete(':id/from/:fromResellerId')
   async delete(
@@ -106,6 +138,15 @@ export class CustomerController {
     await this.deleteCustomerUseCase.execute(id, fromResellerId, user)
   }
 
+  @ApiOperation({ summary: 'Transfer a customer' })
+  @ApiParam({ name: 'id', description: 'Customer ID' })
+  @ApiBody({ type: TransferCustomerDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Customer transferred successfully'
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCustomerPolicy())
   @Post(':id/transfer')
   async transfer(

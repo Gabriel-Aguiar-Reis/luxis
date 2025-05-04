@@ -27,7 +27,7 @@ import { GetOneSuppliersUseCase } from '@/modules/supplier/application/use-cases
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
-
+import { ApiOperation, ApiBody, ApiResponse, ApiParam } from '@nestjs/swagger'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('suppliers')
 export class SupplierController {
@@ -40,6 +40,15 @@ export class SupplierController {
     private readonly logger: CustomLogger
   ) {}
 
+  @ApiOperation({ summary: 'Create a new supplier' })
+  @ApiBody({ type: CreateSupplierDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Supplier created successfully',
+    type: Supplier
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateSupplierPolicy())
   @Post()
   async create(
@@ -53,6 +62,14 @@ export class SupplierController {
     return await this.createSupplierUseCase.execute(dto)
   }
 
+  @ApiOperation({ summary: 'Get all suppliers' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of suppliers returned successfully',
+    type: [Supplier]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadSupplierPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload): Promise<Supplier[]> {
@@ -63,6 +80,12 @@ export class SupplierController {
     return await this.getAllSuppliersUseCase.execute()
   }
 
+  @ApiOperation({ summary: 'Get a specific supplier' })
+  @ApiParam({ name: 'id', description: 'Supplier ID' })
+  @ApiResponse({ status: 200, description: 'Supplier found successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'Supplier not found' })
   @CheckPolicies(new ReadSupplierPolicy())
   @Get(':id')
   async getOne(
@@ -76,6 +99,12 @@ export class SupplierController {
     return await this.getOneSupplierUseCase.execute(id)
   }
 
+  @ApiOperation({ summary: 'Update a supplier' })
+  @ApiParam({ name: 'id', description: 'Supplier ID' })
+  @ApiBody({ type: UpdateSupplierDto })
+  @ApiResponse({ status: 200, description: 'Supplier updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateSupplierPolicy())
   @Patch(':id')
   async update(
@@ -90,6 +119,11 @@ export class SupplierController {
     return await this.updateSupplierUseCase.execute(id, dto)
   }
 
+  @ApiOperation({ summary: 'Delete a supplier' })
+  @ApiParam({ name: 'id', description: 'Supplier ID' })
+  @ApiResponse({ status: 200, description: 'Supplier deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteSupplierPolicy())
   @Delete(':id')
   async delete(

@@ -26,10 +26,22 @@ import {
   Param,
   UseGuards,
   Patch,
-  Delete
+  Delete,
+  HttpCode,
+  HttpStatus
 } from '@nestjs/common'
 import { UUID } from 'crypto'
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam
+} from '@nestjs/swagger'
+import { User } from '@/modules/user/domain/entities/user.entity'
 
+@ApiTags('Usuários')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('users')
 export class UserController {
@@ -44,6 +56,14 @@ export class UserController {
     private readonly logger: CustomLogger
   ) {}
 
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of users returned successfully',
+    type: [User]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadUserPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
@@ -54,6 +74,12 @@ export class UserController {
     return await this.getAllUsersUseCase.execute(user)
   }
 
+  @ApiOperation({ summary: 'Get a specific user' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({ status: 200, description: 'User found successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new ReadUserPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -64,12 +90,22 @@ export class UserController {
     return await this.getOneUserUseCase.execute(id, user)
   }
 
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid data' })
+  @HttpCode(HttpStatus.CREATED)
   @Post('signup')
   async create(@Body() dto: CreateUserDto) {
     this.logger.warn(`Creating new user: ${dto.email}`, 'UserController')
     return await this.createUserUseCase.execute(dto)
   }
 
+  @ApiOperation({ summary: 'Update a user' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new UpdateUserPolicy())
   @Patch(':id')
   async update(
@@ -84,6 +120,15 @@ export class UserController {
     return await this.updateUserUseCase.execute(id, dto, user)
   }
 
+  @ApiOperation({ summary: 'Update a user role' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'User role updated successfully'
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new UpdateUserPolicy())
   @Patch(':id/role')
   async updateRole(
@@ -98,6 +143,13 @@ export class UserController {
     return await this.updateUserRoleUseCase.execute(id, dto, user)
   }
 
+  @ApiOperation({ summary: 'Delete a user' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({ status: 204, description: 'User deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @HttpCode(HttpStatus.NO_CONTENT)
   @CheckPolicies(new DeleteUserPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -108,6 +160,12 @@ export class UserController {
     return await this.deleteUserUseCase.execute(id)
   }
 
+  @ApiOperation({ summary: 'Disable a user' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({ status: 200, description: 'User disabled successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new UpdateUserPolicy())
   @Patch(':id/disable')
   async disable(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {

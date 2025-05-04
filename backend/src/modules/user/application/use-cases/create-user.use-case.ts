@@ -33,9 +33,9 @@ export class CreateUserUseCase {
       input.phone,
       input.email,
       passwordHash,
-      input.role ?? Role.UNASSIGNED,
+      Role.UNASSIGNED,
       residence,
-      input.status ?? UserStatus.PENDING
+      UserStatus.PENDING
     )
     return await this.userRepo.create(user)
   }

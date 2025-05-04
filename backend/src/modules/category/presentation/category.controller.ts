@@ -28,6 +28,9 @@ import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
+import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
+import { Category } from '@/modules/category/domain/entities/category.entity'
+
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('categories')
 export class CategoryController {
@@ -41,6 +44,14 @@ export class CategoryController {
     private readonly logger: CustomLogger
   ) {}
 
+  @ApiOperation({ summary: 'Get all categories' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of categories returned successfully',
+    type: [Category]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadCategoryPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
@@ -51,6 +62,12 @@ export class CategoryController {
     return await this.getAllCategoryUseCase.execute()
   }
 
+  @ApiOperation({ summary: 'Get a specific category' })
+  @ApiParam({ name: 'id', description: 'Category ID' })
+  @ApiResponse({ status: 200, description: 'Category found successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'Category not found' })
   @CheckPolicies(new ReadCategoryPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -61,6 +78,11 @@ export class CategoryController {
     return await this.getOneCategoryUseCase.execute(id)
   }
 
+  @ApiOperation({ summary: 'Create a new category' })
+  @ApiBody({ type: CreateCategoryDto })
+  @ApiResponse({ status: 201, description: 'Category created successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateCategoryPolicy())
   @Post()
   async create(
@@ -74,6 +96,12 @@ export class CategoryController {
     return await this.createCategoryUseCase.execute(dto)
   }
 
+  @ApiOperation({ summary: 'Update a category' })
+  @ApiParam({ name: 'id', description: 'Category ID' })
+  @ApiBody({ type: UpdateCategoryDto })
+  @ApiResponse({ status: 200, description: 'Category updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCategoryPolicy())
   @Patch(':id')
   async update(
@@ -87,6 +115,13 @@ export class CategoryController {
     )
     return await this.updateCategoryUseCase.execute(id, dto)
   }
+
+  @ApiOperation({ summary: 'Update the status of a category' })
+  @ApiParam({ name: 'id', description: 'Category ID' })
+  @ApiBody({ type: UpdateCategoryDto })
+  @ApiResponse({ status: 200, description: 'Category updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCategoryPolicy())
   @Patch(':id/status')
   async updateStatus(
@@ -101,6 +136,11 @@ export class CategoryController {
     return await this.updateStatusCategoryUseCase.execute(id, status)
   }
 
+  @ApiOperation({ summary: 'Delete a category' })
+  @ApiParam({ name: 'id', description: 'Category ID' })
+  @ApiResponse({ status: 200, description: 'Category deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteCategoryPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {

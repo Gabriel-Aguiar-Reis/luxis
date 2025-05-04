@@ -27,6 +27,8 @@ import { DeleteProductModelPolicy } from '@/shared/infra/auth/policies/product-m
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
+import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
+import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('product-models')
 export class ProductModelController {
@@ -39,6 +41,14 @@ export class ProductModelController {
     private readonly logger: CustomLogger
   ) {}
 
+  @ApiOperation({ summary: 'Get all product models' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of product models returned successfully',
+    type: [ProductModel]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductModelPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
@@ -49,6 +59,12 @@ export class ProductModelController {
     return await this.getAllProductModelUseCase.execute()
   }
 
+  @ApiOperation({ summary: 'Get a specific product model' })
+  @ApiParam({ name: 'id', description: 'Product model ID' })
+  @ApiResponse({ status: 200, description: 'Product model found successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'Product model not found' })
   @CheckPolicies(new ReadProductModelPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -59,6 +75,14 @@ export class ProductModelController {
     return await this.getOneProductModelUseCase.execute(id)
   }
 
+  @ApiOperation({ summary: 'Create a new product model' })
+  @ApiBody({ type: CreateProductModelDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Product model created successfully'
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateProductModelPolicy())
   @Post()
   async create(
@@ -72,6 +96,15 @@ export class ProductModelController {
     return await this.createProductModelUseCase.execute(dto)
   }
 
+  @ApiOperation({ summary: 'Update a product model' })
+  @ApiParam({ name: 'id', description: 'Product model ID' })
+  @ApiBody({ type: UpdateProductModelDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Product model updated successfully'
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateProductModelPolicy())
   @Patch(':id')
   async update(
@@ -86,6 +119,14 @@ export class ProductModelController {
     return await this.updateProductModelUseCase.execute(id, dto)
   }
 
+  @ApiOperation({ summary: 'Delete a product model' })
+  @ApiParam({ name: 'id', description: 'Product model ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product model deleted successfully'
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteProductModelPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {

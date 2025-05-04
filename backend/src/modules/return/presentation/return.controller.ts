@@ -28,6 +28,8 @@ import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interfa
 import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 import { UpdateReturnStatusUseCase } from '@/modules/return/application/use-cases/update-return-status.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { ApiOperation, ApiBody, ApiResponse, ApiParam } from '@nestjs/swagger'
+import { Return } from '@/modules/return/domain/entities/return.entity'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('returns')
 export class ReturnController {
@@ -41,6 +43,11 @@ export class ReturnController {
     private readonly logger: CustomLogger
   ) {}
 
+  @ApiOperation({ summary: 'Create a new return' })
+  @ApiBody({ type: CreateReturnDto })
+  @ApiResponse({ status: 201, description: 'Return created successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateReturnPolicy())
   @Post()
   async create(
@@ -54,6 +61,14 @@ export class ReturnController {
     await this.createReturnUseCase.execute(input, user)
   }
 
+  @ApiOperation({ summary: 'Get all returns' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of returns returned successfully',
+    type: [Return]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadReturnPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
@@ -64,6 +79,12 @@ export class ReturnController {
     return this.getAllReturnUseCase.execute(user)
   }
 
+  @ApiOperation({ summary: 'Get a specific return' })
+  @ApiParam({ name: 'id', description: 'Return ID' })
+  @ApiResponse({ status: 200, description: 'Return found successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'Return not found' })
   @CheckPolicies(new ReadReturnPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -74,6 +95,12 @@ export class ReturnController {
     return this.getOneReturnUseCase.execute(id, user)
   }
 
+  @ApiOperation({ summary: 'Update a return' })
+  @ApiParam({ name: 'id', description: 'Return ID' })
+  @ApiBody({ type: UpdateReturnDto })
+  @ApiResponse({ status: 200, description: 'Return updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateReturnPolicy())
   @Put(':id')
   async update(
@@ -88,6 +115,12 @@ export class ReturnController {
     await this.updateReturnUseCase.execute(id, input)
   }
 
+  @ApiOperation({ summary: 'Update the status of a return' })
+  @ApiParam({ name: 'id', description: 'Return ID' })
+  @ApiBody({ type: UpdateReturnDto })
+  @ApiResponse({ status: 200, description: 'Return updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateReturnPolicy())
   @Put(':id/status')
   async updateStatus(
@@ -99,8 +132,14 @@ export class ReturnController {
       `Updating return status ${status} - Requested by user ${user.email}`,
       'ReturnController'
     )
-    await this.updateReturnStatusUseCase.execute(id, status)
+    await this.updateReturnStatusUseCase.execute(id, status, user)
   }
+
+  @ApiOperation({ summary: 'Delete a return' })
+  @ApiParam({ name: 'id', description: 'Return ID' })
+  @ApiResponse({ status: 200, description: 'Return deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteReturnPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {

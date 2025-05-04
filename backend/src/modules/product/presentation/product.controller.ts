@@ -23,6 +23,8 @@ import {
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
+import { Product } from '@/modules/product/domain/entities/product.entity'
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('products')
 export class ProductController {
@@ -35,6 +37,14 @@ export class ProductController {
     private readonly logger: CustomLogger
   ) {}
 
+  @ApiOperation({ summary: 'Get all products' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of products returned successfully',
+    type: [Product]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductPolicy())
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
@@ -45,6 +55,12 @@ export class ProductController {
     return await this.getAllProductUseCase.execute(user)
   }
 
+  @ApiOperation({ summary: 'Get a specific product' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiResponse({ status: 200, description: 'Product found successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'Product not found' })
   @CheckPolicies(new ReadProductPolicy())
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -55,6 +71,12 @@ export class ProductController {
     return await this.getOneProductUseCase.execute(id, user)
   }
 
+  @ApiOperation({ summary: 'Update a product' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiBody({ type: UpdateProductDto })
+  @ApiResponse({ status: 200, description: 'Product updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateProductPolicy())
   @Patch(':id')
   async update(
@@ -69,6 +91,11 @@ export class ProductController {
     return await this.updateProductUseCase.execute(id, dto)
   }
 
+  @ApiOperation({ summary: 'Sell a product' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiResponse({ status: 200, description: 'Product sold successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateProductPolicy())
   @Patch(':id/sell')
   async sell(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -79,6 +106,11 @@ export class ProductController {
     return await this.sellProductUseCase.execute(id)
   }
 
+  @ApiOperation({ summary: 'Delete a product' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiResponse({ status: 200, description: 'Product deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteProductPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {

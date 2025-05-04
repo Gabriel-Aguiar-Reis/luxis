@@ -13,59 +13,133 @@ import { Email } from '@/shared/common/value-object/email.vo'
 import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class UpdateUserDto {
+  @ApiProperty({
+    description: 'The new name for the user',
+    minLength: 2,
+    maxLength: 50,
+    example: 'John',
+    type: Name
+  })
   @IsString()
   @Length(2, 50)
   @IsOptional()
-  name: Name
+  name?: Name
 
+  @ApiProperty({
+    description: 'The new last name for the user',
+    minLength: 2,
+    maxLength: 50,
+    example: 'Doe',
+    type: Name
+  })
   @IsString()
   @Length(2, 50)
   @IsOptional()
-  surName: Name
+  surName?: Name
 
+  @ApiProperty({
+    description: 'The new phone number for the user',
+    example: '+5511999999999',
+    type: PhoneNumber
+  })
   @IsString()
   @IsOptional()
-  phone: PhoneNumber
+  phone?: PhoneNumber
 
+  @ApiProperty({
+    description: 'The new email for the user',
+    example: 'john.doe@example.com',
+    type: Email
+  })
   @IsEmail()
   @IsOptional()
-  email: Email
+  email?: Email
 
+  @ApiProperty({
+    description: 'The new password for the user',
+    example: 'Password@123',
+    type: Password
+  })
   @IsString()
   @IsOptional()
-  password: Password
+  password?: Password
 
+  @ApiProperty({
+    description: 'The new street for the user',
+    example: 'Rua das Flores',
+    type: String
+  })
   @IsString()
   @IsOptional()
-  street: string
+  street?: string
 
+  @ApiProperty({
+    description: 'The new number for the user',
+    example: 123,
+    type: Number
+  })
   @IsNumber()
   @IsOptional()
-  number: number
+  number?: number
 
+  @ApiProperty({
+    description: 'The new complement for the user',
+    example: 'Apto 101',
+    type: String
+  })
   @IsString()
   @IsOptional()
-  complement: string
+  complement?: string
 
+  @ApiProperty({
+    description: 'The new neighborhood for the user',
+    example: 'Bairro das Flores',
+    type: String
+  })
   @IsString()
   @IsOptional()
-  neighborhood: string
+  neighborhood?: string
 
+  @ApiProperty({
+    description: 'The new city for the user',
+    example: 'São Paulo',
+    type: String
+  })
   @IsString()
   @IsOptional()
-  city: string
+  city?: string
 
+  @ApiProperty({
+    description: 'The new federative unit for the user',
+    enum: FederativeUnit,
+    example: FederativeUnit.SP,
+    type: FederativeUnit,
+    enumName: 'FederativeUnit'
+  })
   @IsEnum(FederativeUnit)
   @IsOptional()
-  federativeUnit: FederativeUnit
+  federativeUnit?: FederativeUnit
 
+  @ApiProperty({
+    description: 'The new postal code for the user',
+    example: '01234-567',
+    type: PostalCode
+  })
   @IsString()
   @IsOptional()
-  postalCode: PostalCode
+  postalCode?: PostalCode
 
+  @ApiProperty({
+    description: 'The new country for the user',
+    enum: Country,
+    example: Country.Brazil,
+    type: Country,
+    enumName: 'Country'
+  })
   @IsString()
   @IsOptional()
-  country: Country
+  country?: Country
 }
