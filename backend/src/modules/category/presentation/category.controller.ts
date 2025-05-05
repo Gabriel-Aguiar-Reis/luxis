@@ -28,9 +28,18 @@ import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiTags,
+  ApiBearerAuth
+} from '@nestjs/swagger'
 import { Category } from '@/modules/category/domain/entities/category.entity'
 
+@ApiTags('Categories')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('categories')
 export class CategoryController {

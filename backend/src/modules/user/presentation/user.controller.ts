@@ -40,7 +40,7 @@ import {
 } from '@nestjs/swagger'
 import { User } from '@/modules/user/domain/entities/user.entity'
 
-@ApiTags('Usuários')
+@ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('users')

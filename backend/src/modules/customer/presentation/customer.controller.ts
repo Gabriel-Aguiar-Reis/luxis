@@ -29,7 +29,17 @@ import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorat
 import { TransferCustomerDto } from '@/modules/customer/presentation/dtos/transfer-customer.dto'
 import { TransferCustomerUseCase } from '@/modules/customer/application/use-cases/transfer-customer.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
-import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiBearerAuth,
+  ApiTags
+} from '@nestjs/swagger'
+
+@ApiTags('Customers')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('customers')
 export class CustomerController {

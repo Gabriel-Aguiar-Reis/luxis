@@ -28,8 +28,18 @@ import { DeleteOwnershipTransferPolicy } from '@/shared/infra/auth/policies/owne
 import { UpdateOwnershipTransferPolicy } from '@/shared/infra/auth/policies/ownership-transfer/update-ownership-transfer.policy'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiTags,
+  ApiBearerAuth
+} from '@nestjs/swagger'
 import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
+
+@ApiTags('Ownership Transfers')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('ownership-transfers')
 export class OwnershipTransferController {

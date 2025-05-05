@@ -1,8 +1,14 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common'
 import { ReturnRepository } from '@/modules/return/domain/repositories/return.repository'
 import { UUID } from 'crypto'
 import { UpdateReturnDto } from '@/modules/return/presentation/dtos/update-return-dto'
 import { Return } from '@/modules/return/domain/entities/return.entity'
+import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 
 @Injectable()
 export class UpdateReturnUseCase {
@@ -15,6 +21,10 @@ export class UpdateReturnUseCase {
     let returnEntity = await this.returnRepository.findById(id)
     if (!returnEntity) {
       throw new NotFoundException('Return not found')
+    }
+
+    if (returnEntity.status !== ReturnStatus.PENDING) {
+      throw new BadRequestException('Return is not pending')
     }
 
     returnEntity = new Return(

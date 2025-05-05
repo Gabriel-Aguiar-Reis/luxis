@@ -6,7 +6,8 @@ export class TransferCustomerDto {
   @ApiProperty({
     description: 'The ID of the from reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: true
   })
   @IsUUID()
   @IsNotEmpty()
@@ -15,7 +16,8 @@ export class TransferCustomerDto {
   @ApiProperty({
     description: 'The ID of the to reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: true
   })
   @IsUUID()
   @IsNotEmpty()

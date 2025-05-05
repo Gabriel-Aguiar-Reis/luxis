@@ -8,7 +8,8 @@ export class UpdateCustomerDto {
   @ApiProperty({
     description: 'The name of the customer',
     example: 'John Doe',
-    type: Name
+    type: Name,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -17,7 +18,8 @@ export class UpdateCustomerDto {
   @ApiProperty({
     description: 'The phone number of the customer',
     example: '+5511999999999',
-    type: PhoneNumber
+    type: PhoneNumber,
+    required: false
   })
   @IsString()
   @IsOptional()

@@ -22,7 +22,8 @@ export class CreateUserDto {
     minLength: 2,
     maxLength: 50,
     type: Name,
-    example: 'John'
+    example: 'John',
+    required: true
   })
   @IsString()
   @Length(2, 50)
@@ -34,7 +35,8 @@ export class CreateUserDto {
     minLength: 2,
     maxLength: 50,
     type: Name,
-    example: 'Doe'
+    example: 'Doe',
+    required: true
   })
   @IsString()
   @Length(2, 50)
@@ -44,7 +46,8 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User phone number',
     example: '+5511999999999',
-    type: PhoneNumber
+    type: PhoneNumber,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -53,7 +56,8 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User email',
     example: 'john.doe@example.com',
-    type: Email
+    type: Email,
+    required: true
   })
   @IsEmail()
   @IsNotEmpty()
@@ -63,7 +67,8 @@ export class CreateUserDto {
     description: 'User password',
     minLength: 8,
     example: 'Password@123',
-    type: Password
+    type: Password,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -72,7 +77,8 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Street address',
     example: '123 Main St',
-    type: String
+    type: String,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -81,7 +87,8 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Address number',
     example: 123,
-    type: Number
+    type: Number,
+    required: true
   })
   @IsNumber()
   @IsNotEmpty()
@@ -91,16 +98,18 @@ export class CreateUserDto {
     description: 'Address complement',
     required: false,
     example: 'Apt 101',
-    type: String
+    type: String,
+    nullable: true
   })
   @IsString()
   @IsOptional()
-  complement: string
+  complement?: string
 
   @ApiProperty({
     description: 'Neighborhood',
     example: 'Center',
-    type: String
+    type: String,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -109,7 +118,8 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'City',
     example: 'São Paulo',
-    type: String
+    type: String,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -120,7 +130,8 @@ export class CreateUserDto {
     enum: FederativeUnit,
     example: FederativeUnit.SP,
     type: FederativeUnit,
-    enumName: 'FederativeUnit'
+    enumName: 'FederativeUnit',
+    required: true
   })
   @IsEnum(FederativeUnit)
   @IsNotEmpty()
@@ -129,7 +140,8 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Postal code',
     example: '01234-567',
-    type: PostalCode
+    type: PostalCode,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -140,7 +152,8 @@ export class CreateUserDto {
     enum: Country,
     example: Country.Brazil,
     type: Country,
-    enumName: 'Country'
+    enumName: 'Country',
+    required: true
   })
   @IsString()
   @IsNotEmpty()

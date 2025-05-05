@@ -27,8 +27,18 @@ import {
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  ApiBearerAuth
+} from '@nestjs/swagger'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
+
+@ApiTags('Sales')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('sales')
 export class SaleController {

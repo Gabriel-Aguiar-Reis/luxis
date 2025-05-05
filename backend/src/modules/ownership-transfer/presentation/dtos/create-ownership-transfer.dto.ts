@@ -7,7 +7,8 @@ export class CreateOwnershipTransferDto {
   @ApiProperty({
     description: 'The ID of the product',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: true
   })
   @IsUUID()
   @IsNotEmpty()
@@ -16,16 +17,18 @@ export class CreateOwnershipTransferDto {
   @ApiProperty({
     description: 'The ID of the from reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: false
   })
   @IsUUID()
   @IsOptional()
-  fromResellerId: UUID
+  fromResellerId?: UUID
 
   @ApiProperty({
     description: 'The ID of the to reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: true
   })
   @IsUUID()
   @IsNotEmpty()
@@ -34,7 +37,8 @@ export class CreateOwnershipTransferDto {
   @ApiProperty({
     description: 'The transfer date',
     example: '2021-01-01',
-    type: Date
+    type: Date,
+    required: true
   })
   @IsDate()
   @IsNotEmpty()
@@ -44,7 +48,8 @@ export class CreateOwnershipTransferDto {
     description: 'The status of the ownership transfer',
     example: OwnershipTransferStatus.PENDING,
     type: OwnershipTransferStatus,
-    enumName: 'OwnershipTransferStatus'
+    enumName: 'OwnershipTransferStatus',
+    required: true
   })
   @IsEnum(OwnershipTransferStatus)
   @IsNotEmpty()

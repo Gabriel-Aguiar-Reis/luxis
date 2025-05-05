@@ -13,7 +13,8 @@ export class CreateBatchDto {
   @ApiProperty({
     description: 'The arrival date of the batch',
     example: '2021-01-01',
-    type: Date
+    type: Date,
+    required: true
   })
   @IsDate()
   @IsNotEmpty()
@@ -22,7 +23,8 @@ export class CreateBatchDto {
   @ApiProperty({
     description: 'The ID of the supplier',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: true
   })
   @IsUUID()
   @IsNotEmpty()
@@ -40,7 +42,8 @@ export class CreateBatchDto {
         modelId: '123e4567-e89b-12d3-a456-426614174000'
       }
     ],
-    type: [BatchItem]
+    type: [BatchItem],
+    required: true
   })
   @IsArray()
   @ArrayNotEmpty()

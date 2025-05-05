@@ -27,7 +27,17 @@ import { GetOneSuppliersUseCase } from '@/modules/supplier/application/use-cases
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
-import { ApiOperation, ApiBody, ApiResponse, ApiParam } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiBody,
+  ApiResponse,
+  ApiParam,
+  ApiTags,
+  ApiBearerAuth
+} from '@nestjs/swagger'
+
+@ApiTags('Suppliers')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('suppliers')
 export class SupplierController {

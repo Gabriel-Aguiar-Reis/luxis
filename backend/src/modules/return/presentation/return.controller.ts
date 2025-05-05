@@ -28,8 +28,18 @@ import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interfa
 import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 import { UpdateReturnStatusUseCase } from '@/modules/return/application/use-cases/update-return-status.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
-import { ApiOperation, ApiBody, ApiResponse, ApiParam } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiBody,
+  ApiResponse,
+  ApiParam,
+  ApiTags,
+  ApiBearerAuth
+} from '@nestjs/swagger'
 import { Return } from '@/modules/return/domain/entities/return.entity'
+
+@ApiTags('Returns')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('returns')
 export class ReturnController {

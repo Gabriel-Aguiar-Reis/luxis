@@ -6,7 +6,8 @@ export class MarkInstallmentPaidDto {
   @ApiProperty({
     description: 'The number of the installment to be marked as paid',
     default: 1,
-    type: Unit
+    type: Unit,
+    required: true
   })
   @IsNumber()
   @IsPositive()

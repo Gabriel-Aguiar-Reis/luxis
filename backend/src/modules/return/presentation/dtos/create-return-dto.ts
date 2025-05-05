@@ -7,7 +7,8 @@ export class CreateReturnDto {
   @ApiProperty({
     description: 'The ID of the reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: false
   })
   @IsUUID()
   @IsOptional()
@@ -19,7 +20,8 @@ export class CreateReturnDto {
       '123e4567-e89b-12d3-a456-426614174000',
       '123e4567-e89b-12d3-a456-426614174001'
     ],
-    type: [String]
+    type: [String],
+    required: false
   })
   @IsArray()
   @ArrayNotEmpty()

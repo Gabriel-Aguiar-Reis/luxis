@@ -7,7 +7,8 @@ export class CreateCustomerDto {
   @ApiProperty({
     description: 'The name of the customer',
     example: 'John Doe',
-    type: Name
+    type: Name,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -16,7 +17,8 @@ export class CreateCustomerDto {
   @ApiProperty({
     description: 'The phone number of the customer',
     example: '+5511999999999',
-    type: PhoneNumber
+    type: PhoneNumber,
+    required: true
   })
   @IsString()
   @IsNotEmpty()

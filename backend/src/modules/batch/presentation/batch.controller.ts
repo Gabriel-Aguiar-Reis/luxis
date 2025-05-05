@@ -22,9 +22,18 @@ import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
-import { ApiBody, ApiOperation, ApiParam } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiTags
+} from '@nestjs/swagger'
 import { ApiResponse } from '@nestjs/swagger'
 import { Batch } from '@/modules/batch/domain/entities/batch.entity'
+
+@ApiTags('Batches')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('batches')
 export class BatchController {

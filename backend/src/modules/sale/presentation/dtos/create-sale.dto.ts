@@ -21,7 +21,8 @@ export class CreateSaleDto {
       '123e4567-e89b-12d3-a456-426614174000',
       '123e4567-e89b-12d3-a456-426614174001'
     ],
-    type: [String]
+    type: [String],
+    required: true
   })
   @IsArray()
   @ArrayNotEmpty()
@@ -30,7 +31,8 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The date of the sale',
     example: '2021-01-01',
-    type: Date
+    type: Date,
+    required: true
   })
   @IsDate()
   @IsNotEmpty()
@@ -41,7 +43,8 @@ export class CreateSaleDto {
     enum: PaymentMethod,
     example: PaymentMethod.CREDIT,
     type: PaymentMethod,
-    enumName: 'PaymentMethod'
+    enumName: 'PaymentMethod',
+    required: true
   })
   @IsEnum(PaymentMethod)
   @IsNotEmpty()
@@ -50,7 +53,8 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The number of installments of the sale',
     default: 1,
-    type: Unit
+    type: Unit,
+    required: true
   })
   @IsNumber()
   @IsPositive()
@@ -61,7 +65,8 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The interval of installments of the sale',
     default: 0,
-    type: Unit
+    type: Unit,
+    required: true
   })
   @IsNumber()
   @IsPositive()

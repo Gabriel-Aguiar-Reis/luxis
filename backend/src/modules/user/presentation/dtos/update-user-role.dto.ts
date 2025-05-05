@@ -9,7 +9,8 @@ export class UpdateUserRoleDto {
     enum: Role,
     example: Role.ADMIN,
     type: Role,
-    enumName: 'Role'
+    enumName: 'Role',
+    required: true
   })
   @IsEnum(Role)
   @IsNotEmpty()
@@ -20,7 +21,8 @@ export class UpdateUserRoleDto {
     enum: UserStatus,
     example: UserStatus.ACTIVE,
     type: UserStatus,
-    enumName: 'UserStatus'
+    enumName: 'UserStatus',
+    required: false
   })
   @IsEnum(UserStatus)
   @IsOptional()

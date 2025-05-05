@@ -17,7 +17,8 @@ export class CreateBatchItemDto {
   @ApiProperty({
     description: 'The name of the model',
     example: 'Model Name',
-    type: ModelName
+    type: ModelName,
+    required: true
   })
   @IsString()
   @IsNotEmpty()
@@ -26,7 +27,8 @@ export class CreateBatchItemDto {
   @ApiProperty({
     description: 'The ID of the category',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: true
   })
   @IsUUID()
   @IsNotEmpty()
@@ -35,7 +37,8 @@ export class CreateBatchItemDto {
   @ApiProperty({
     description: 'The quantity of the batch item',
     default: 1,
-    type: Unit
+    type: Unit,
+    required: true
   })
   @IsInt()
   @Min(1)
@@ -45,7 +48,8 @@ export class CreateBatchItemDto {
   @ApiProperty({
     description: 'The unit cost of the batch item',
     example: '100.00',
-    type: Currency
+    type: Currency,
+    required: false
   })
   @IsOptional()
   @IsCurrency()
@@ -54,7 +58,8 @@ export class CreateBatchItemDto {
   @ApiProperty({
     description: 'The sale price of the batch item',
     example: '100.00',
-    type: Currency
+    type: Currency,
+    required: false
   })
   @IsOptional()
   @IsCurrency()

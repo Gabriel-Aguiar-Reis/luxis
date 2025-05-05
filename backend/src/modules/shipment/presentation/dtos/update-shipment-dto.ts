@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsUUID } from 'class-validator'
+import { ArrayNotEmpty, IsArray, IsOptional, IsUUID } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 
@@ -6,11 +6,12 @@ export class UpdateShipmentDto {
   @ApiProperty({
     description: 'The ID of the reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: false
   })
   @IsUUID()
-  @IsNotEmpty()
-  resellerId: UUID
+  @IsOptional()
+  resellerId?: UUID
 
   @ApiProperty({
     description: 'The IDs of the products',
@@ -18,9 +19,10 @@ export class UpdateShipmentDto {
       '123e4567-e89b-12d3-a456-426614174000',
       '123e4567-e89b-12d3-a456-426614174001'
     ],
-    type: [String]
+    type: [String],
+    required: false
   })
   @IsArray()
-  @ArrayNotEmpty()
-  productIds: UUID[]
+  @IsOptional()
+  productIds?: UUID[]
 }
