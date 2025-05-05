@@ -1,6 +1,5 @@
 import { CreateProductModelUseCase } from '@/modules/product-model/application/use-cases/create-product-model.use-case'
 import { DeleteProductModelUseCase } from '@/modules/product-model/application/use-cases/delete-product-model.use-case'
-import { GetAllProductModelUseCase } from '@/modules/product-model/application/use-cases/get-all-product-model.use-case'
 import { GetOneProductModelUseCase } from '@/modules/product-model/application/use-cases/get-one-product-model.use-case'
 import { UpdateProductModelUseCase } from '@/modules/product-model/application/use-cases/update-product-model.use-case'
 import { CreateProductModelDto } from '@/modules/product-model/presentation/dtos/create-product-model.dto'
@@ -35,6 +34,7 @@ import {
   ApiBearerAuth
 } from '@nestjs/swagger'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
+import { GetAllProductModelUseCase } from '@/modules/product-model/application/use-cases/get-all/get-all-product-model.use-case'
 
 @ApiTags('Product Models')
 @ApiBearerAuth()
@@ -65,7 +65,7 @@ export class ProductModelController {
       `Getting all product models - Requested by user ${user.email}`,
       'ProductModelController'
     )
-    return await this.getAllProductModelUseCase.execute()
+    return await this.getAllProductModelUseCase.execute(user)
   }
 
   @ApiOperation({ summary: 'Get a specific product model' })
