@@ -38,4 +38,16 @@ export class AppConfigService {
   getLogRules(): string | undefined {
     return this.config.get<string>('LOG_RULES')
   }
+
+  getCloudinaryCloudName(): string | undefined {
+    return this.config.get<string>('CLOUDINARY_CLOUD_NAME')
+  }
+
+  getCloudinaryApiKey(): string | undefined {
+    return this.config.get<string>('CLOUDINARY_API_KEY')
+  }
+
+  getCloudinaryApiSecret(): string | undefined {
+    return this.config.get<string>('CLOUDINARY_API_SECRET')
+  }
 }

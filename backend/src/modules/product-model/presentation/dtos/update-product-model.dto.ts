@@ -9,7 +9,8 @@ export class UpdateProductModelDto {
   @ApiProperty({
     description: 'The name of the product model',
     example: 'Product Model Name',
-    type: ModelName
+    type: ModelName,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -18,7 +19,8 @@ export class UpdateProductModelDto {
   @ApiProperty({
     description: 'The ID of the category',
     example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String
+    type: String,
+    required: false
   })
   @IsUUID()
   @IsOptional()
@@ -27,7 +29,8 @@ export class UpdateProductModelDto {
   @ApiProperty({
     description: 'The suggested price of the product model',
     example: '100.00',
-    type: Currency
+    type: Currency,
+    required: false
   })
   @IsCurrency()
   @IsOptional()
@@ -36,9 +39,19 @@ export class UpdateProductModelDto {
   @ApiProperty({
     description: 'The description of the product model',
     example: 'Product Model Description',
-    type: Description
+    type: Description,
+    required: false
   })
   @IsString()
   @IsOptional()
   description?: Description
+
+  @ApiProperty({
+    description: 'The photo of the product model',
+    type: String,
+    format: 'binary',
+    required: false
+  })
+  @IsOptional()
+  photo?: Express.Multer.File
 }

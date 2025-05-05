@@ -3,6 +3,7 @@ import { Currency } from '@/shared/common/value-object/currency.vo'
 import { Description } from '@/shared/common/value-object/description.vo'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
+import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 
 export class ProductModelMapper {
   static toDomain(entity: ProductModelTypeOrmEntity): ProductModel {
@@ -11,7 +12,8 @@ export class ProductModelMapper {
       new ModelName(entity.name),
       entity.categoryId,
       new Currency(entity.suggestedPrice.toString()),
-      entity.description ? new Description(entity.description) : undefined
+      entity.description ? new Description(entity.description) : undefined,
+      entity.photoUrl ? new ImageURL(entity.photoUrl) : undefined
     )
   }
 
@@ -31,7 +33,8 @@ export class ProductModelMapper {
       name: productModel.name.getValue(),
       categoryId: productModel.categoryId,
       suggestedPrice: productModel.suggestedPrice.getValue(),
-      description: productModel.description?.getValue()
+      description: productModel.description?.getValue(),
+      photoUrl: productModel.photoUrl?.getValue()
     }
   }
 
@@ -41,7 +44,8 @@ export class ProductModelMapper {
       name: productModel.name.getValue(),
       categoryId: productModel.categoryId,
       suggestedPrice: productModel.suggestedPrice.getValue(),
-      description: productModel.description?.getValue()
+      description: productModel.description?.getValue(),
+      photoUrl: productModel.photoUrl?.getValue()
     }
   }
 }

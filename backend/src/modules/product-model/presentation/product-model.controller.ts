@@ -17,7 +17,6 @@ import {
   Delete,
   Get
 } from '@nestjs/common'
-
 import { UUID } from 'crypto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { ReadProductModelPolicy } from '@/shared/infra/auth/policies/product-model/read-product-model.policy'
@@ -27,8 +26,18 @@ import { DeleteProductModelPolicy } from '@/shared/infra/auth/policies/product-m
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
-import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiTags,
+  ApiBearerAuth
+} from '@nestjs/swagger'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
+
+@ApiTags('Product Models')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('product-models')
 export class ProductModelController {

@@ -20,4 +20,7 @@ export class ProductModelTypeOrmEntity {
 
   @Column({ nullable: true })
   description: string
+
+  @Column()
+  photoUrl: string
 }

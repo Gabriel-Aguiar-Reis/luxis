@@ -47,4 +47,13 @@ export class CreateProductModelDto {
   @IsString()
   @IsOptional()
   description?: Description
+
+  @ApiProperty({
+    description: 'Photo of the product model',
+    type: String,
+    format: 'binary',
+    required: false
+  })
+  @IsOptional()
+  photo?: Express.Multer.File
 }
