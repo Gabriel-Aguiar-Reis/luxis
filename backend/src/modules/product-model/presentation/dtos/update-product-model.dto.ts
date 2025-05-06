@@ -14,7 +14,7 @@ export class UpdateProductModelDto {
   })
   @IsString()
   @IsOptional()
-  name?: ModelName
+  name?: string
 
   @ApiProperty({
     description: 'The ID of the category',
@@ -34,7 +34,7 @@ export class UpdateProductModelDto {
   })
   @IsCurrency()
   @IsOptional()
-  suggestedPrice?: Currency
+  suggestedPrice?: string
 
   @ApiProperty({
     description: 'The description of the product model',
@@ -44,7 +44,7 @@ export class UpdateProductModelDto {
   })
   @IsString()
   @IsOptional()
-  description?: Description
+  description?: string
 
   @ApiProperty({
     description: 'The photo of the product model',

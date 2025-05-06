@@ -1,4 +1,9 @@
-import { Injectable, Inject } from '@nestjs/common'
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  BadRequestException
+} from '@nestjs/common'
 import { BatchRepository } from '@/modules/batch/domain/repositories/batch.repository'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { UUID } from 'crypto'
@@ -16,7 +21,7 @@ export class DeleteBatchUseCase {
 
   async execute(batchId: UUID): Promise<void> {
     const batch = await this.batchRepository.findById(batchId)
-    if (!batch) throw new Error('Batch not found')
+    if (!batch) throw new NotFoundException('Batch not found')
 
     const products = await this.productRepository.findByBatchId(batchId)
 
@@ -25,7 +30,7 @@ export class DeleteBatchUseCase {
     )
 
     if (nonDeletable.length > 0) {
-      throw new Error(
+      throw new BadRequestException(
         `Batch cannot be deleted. Some products are not in stock (${nonDeletable.length}).`
       )
     }

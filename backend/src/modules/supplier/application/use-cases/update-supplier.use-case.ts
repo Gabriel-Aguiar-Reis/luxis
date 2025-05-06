@@ -21,8 +21,8 @@ export class UpdateSupplierUseCase {
 
     const updatedSupplier = new Supplier(
       id,
-      dto.name ? new Name(dto.name.getValue()) : existingSupplier.name,
-      dto.phone ? new PhoneNumber(dto.phone.getValue()) : existingSupplier.phone
+      dto.name ? new Name(dto.name) : existingSupplier.name,
+      dto.phone ? new PhoneNumber(dto.phone) : existingSupplier.phone
     )
 
     return await this.supplierRepository.update(id, updatedSupplier)

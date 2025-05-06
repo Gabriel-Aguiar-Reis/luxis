@@ -4,6 +4,7 @@ import { PaymentMethod } from '@/modules/sale/domain/enums/payment-method.enum'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
+import { BadRequestException } from '@nestjs/common'
 
 export class Sale {
   private _installments: boolean[] = []
@@ -116,7 +117,7 @@ export class Sale {
       installmentNumber.getValue() < 1 ||
       installmentNumber.getValue() > this.numberInstallments.getValue()
     ) {
-      throw new Error('Installment number out of range')
+      throw new BadRequestException('Installment number out of range')
     }
     this._installments[installmentNumber.getValue() - 1] = true
     this._updateStatus()

@@ -1,6 +1,9 @@
+import { BadRequestException } from '@nestjs/common'
+
 export class Unit {
   constructor(private readonly value: number) {
-    if (!this.validate(value)) throw new Error('Invalid unit format')
+    if (!this.validate(value))
+      throw new BadRequestException('Invalid unit format')
   }
 
   private validate(unit: number): boolean {

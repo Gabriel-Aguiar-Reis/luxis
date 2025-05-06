@@ -1,4 +1,3 @@
-import { BatchItem } from '@/modules/batch/domain/entities/batch-item.entity'
 import {
   ArrayNotEmpty,
   IsArray,
@@ -8,6 +7,7 @@ import {
 } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
+import { CreateBatchItemDto } from '@/modules/batch/presentation/dtos/create-batch-item.dto'
 
 export class CreateBatchDto {
   @ApiProperty({
@@ -42,10 +42,10 @@ export class CreateBatchDto {
         modelId: '123e4567-e89b-12d3-a456-426614174000'
       }
     ],
-    type: [BatchItem],
+    type: [CreateBatchItemDto],
     required: true
   })
   @IsArray()
   @ArrayNotEmpty()
-  items: BatchItem[] = []
+  items: CreateBatchItemDto[]
 }

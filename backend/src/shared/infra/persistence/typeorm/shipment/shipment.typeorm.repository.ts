@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
@@ -46,7 +46,7 @@ export class ShipmentTypeOrmRepository implements ShipmentRepository {
   async updateStatus(id: UUID, status: ShipmentStatus): Promise<Shipment> {
     await this.repository.update(id, { status })
     const updatedEntity = await this.repository.findOne({ where: { id } })
-    if (!updatedEntity) throw new Error('Shipment not found')
+    if (!updatedEntity) throw new NotFoundException('Shipment not found')
     return ShipmentMapper.toDomain(updatedEntity)
   }
 

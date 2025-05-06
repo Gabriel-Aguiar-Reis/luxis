@@ -22,7 +22,7 @@ export class CreateBatchItemDto {
   })
   @IsString()
   @IsNotEmpty()
-  modelName: ModelName
+  modelName: string
 
   @ApiProperty({
     description: 'The ID of the category',
@@ -43,7 +43,7 @@ export class CreateBatchItemDto {
   @IsInt()
   @Min(1)
   @IsNotEmpty()
-  quantity: Unit
+  quantity: number
 
   @ApiProperty({
     description: 'The unit cost of the batch item',
@@ -51,9 +51,9 @@ export class CreateBatchItemDto {
     type: Currency,
     required: false
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsCurrency()
-  unitCost?: Currency
+  unitCost: string
 
   @ApiProperty({
     description: 'The sale price of the batch item',
@@ -63,5 +63,5 @@ export class CreateBatchItemDto {
   })
   @IsOptional()
   @IsCurrency()
-  salePrice?: Currency
+  salePrice?: string
 }

@@ -20,7 +20,7 @@ export class CreateProductModelDto {
   })
   @IsString()
   @IsNotEmpty()
-  name: ModelName
+  name: string
 
   @ApiProperty({
     description: 'The ID of the category',
@@ -40,7 +40,7 @@ export class CreateProductModelDto {
   })
   @IsCurrency()
   @IsNotEmpty()
-  suggestedPrice: Currency
+  suggestedPrice: string
 
   @ApiProperty({
     description: 'The description of the product model',
@@ -50,7 +50,7 @@ export class CreateProductModelDto {
   })
   @IsString()
   @IsOptional()
-  description?: Description
+  description?: string
 
   @ApiProperty({
     description: 'Photo of the product model',

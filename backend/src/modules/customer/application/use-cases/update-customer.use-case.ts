@@ -5,6 +5,8 @@ import { Customer } from '@/modules/customer/domain/entities/customer.entity'
 import { UUID } from 'crypto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CustomerPortfolioService } from '@/modules/customer-portfolio/application/services/customer-portfolio.service'
+import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
+import { Name } from '@/modules/user/domain/value-objects/name.vo'
 
 @Injectable()
 export class UpdateCustomerUseCase {
@@ -39,8 +41,8 @@ export class UpdateCustomerUseCase {
 
     const updatedCustomer = new Customer(
       id,
-      dto.name ?? existingCustomer.name,
-      dto.phone ?? existingCustomer.phone
+      dto.name ? new Name(dto.name) : existingCustomer.name,
+      dto.phone ? new PhoneNumber(dto.phone) : existingCustomer.phone
     )
 
     await this.customerRepository.update(updatedCustomer)

@@ -134,7 +134,7 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new country for the user',
     enum: Country,
-    example: Country.Brazil,
+    example: Country.BRAZIL,
     enumName: 'Country'
   })
   @IsString()

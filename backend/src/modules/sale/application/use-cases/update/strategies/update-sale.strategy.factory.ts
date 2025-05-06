@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { UpdateSaleAdminStrategy } from '@/modules/sale/application/use-cases/update/strategies/update-sale-admin.strategy'
 import { UpdateSaleStrategy } from '@/modules/sale/application/use-cases/update/strategies/update-sale.strategy'
@@ -18,7 +18,7 @@ export class UpdateSaleStrategyFactory {
       case Role.ADMIN:
         return this.adminStrategy
       default:
-        throw new Error(`No strategy defined for role ${role}`)
+        throw new BadRequestException(`No strategy defined for role ${role}`)
     }
   }
 }

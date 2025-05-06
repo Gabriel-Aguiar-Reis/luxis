@@ -12,7 +12,7 @@ export class CreateSupplierDto {
   })
   @IsString()
   @IsNotEmpty()
-  name: Name
+  name: string
 
   @ApiProperty({
     description: 'The phone number of the supplier',
@@ -22,5 +22,5 @@ export class CreateSupplierDto {
   })
   @IsString()
   @IsNotEmpty()
-  phone: PhoneNumber
+  phone: string
 }

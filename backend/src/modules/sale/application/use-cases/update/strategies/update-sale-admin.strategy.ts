@@ -5,7 +5,7 @@ import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
 import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
 import { UpdateSaleDto } from '@/modules/sale/presentation/dtos/update-sale.dto'
-import { Inject, ForbiddenException } from '@nestjs/common'
+import { Inject, ForbiddenException, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
 
 export class UpdateSaleAdminStrategy implements UpdateSaleStrategy {
@@ -21,7 +21,7 @@ export class UpdateSaleAdminStrategy implements UpdateSaleStrategy {
   async execute(id: UUID, dto: UpdateSaleDto): Promise<Sale> {
     let sale = await this.saleRepository.findById(id)
     if (!sale) {
-      throw new Error('Sale not found')
+      throw new NotFoundException('Sale not found')
     }
 
     const products = await this.productRepository.findManyByIds(dto.productIds)

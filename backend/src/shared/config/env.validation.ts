@@ -14,7 +14,12 @@ export const envSchema = z.object({
   DB_PORT: z.string().transform(Number).optional(),
   DB_USER: z.string().optional(),
   DB_PASSWORD: z.string().optional(),
-  DB_NAME: z.string().optional()
+  DB_NAME: z.string().optional(),
+  SUPERUSER_NAME: z.string().optional(),
+  SUPERUSER_SURNAME: z.string().optional(),
+  SUPERUSER_EMAIL: z.string().email().optional(),
+  SUPERUSER_PASSWORD: z.string().optional(),
+  SUPERUSER_PHONE: z.string().optional()
 })
 
 export type EnvVars = z.infer<typeof envSchema>

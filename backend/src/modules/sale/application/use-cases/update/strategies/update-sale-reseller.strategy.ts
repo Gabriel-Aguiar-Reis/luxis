@@ -5,7 +5,7 @@ import { IInventoryOwnershipVerifier } from '@/modules/sale/domain/services/inve
 import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
 import { UpdateSaleDto } from '@/modules/sale/presentation/dtos/update-sale.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { Inject, ForbiddenException } from '@nestjs/common'
+import { Inject, ForbiddenException, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
 
 export class UpdateSaleResellerStrategy implements UpdateSaleStrategy {
@@ -25,7 +25,7 @@ export class UpdateSaleResellerStrategy implements UpdateSaleStrategy {
   ): Promise<Sale> {
     let sale = await this.saleRepository.findById(id)
     if (!sale) {
-      throw new Error('Sale not found')
+      throw new NotFoundException('Sale not found')
     }
     if (sale.resellerId !== user.id) {
       throw new ForbiddenException('You are not authorized to update this sale')

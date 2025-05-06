@@ -12,7 +12,7 @@ export class CreateCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
-  name: Name
+  name: string
 
   @ApiProperty({
     description: 'The phone number of the customer',
@@ -22,5 +22,5 @@ export class CreateCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
-  phone: PhoneNumber
+  phone: string
 }

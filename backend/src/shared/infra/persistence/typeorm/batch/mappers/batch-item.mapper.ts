@@ -4,6 +4,7 @@ import { BatchItemWithResolvedModel } from '@/modules/batch/application/models/b
 import { UUID } from 'crypto'
 import { Unit } from '@/shared/common/value-object/unit.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'
+import { BadRequestException } from '@nestjs/common'
 
 interface TypeORMBatchItem {
   id: UUID
@@ -16,9 +17,13 @@ interface TypeORMBatchItem {
 export class BatchItemMapper {
   static toDomain(raw: RawBatchItem): BatchItem {
     if (!raw.modelId) {
-      throw new Error('modelId is required to create a BatchItem')
+      throw new BadRequestException('modelId is required to create a BatchItem')
     }
-
+    if (!raw.salePrice) {
+      throw new BadRequestException(
+        'salePrice is required to create a BatchItem'
+      )
+    }
     return BatchItem.withExistingModel(
       raw.id,
       raw.modelId,

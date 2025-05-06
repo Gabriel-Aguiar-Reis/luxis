@@ -12,7 +12,7 @@ export class UpdateProductDto {
   @IsString()
   @IsOptional()
   @IsCurrency({ allow_negatives: false, require_decimal: true })
-  unitCost?: Currency
+  unitCost?: string
 
   @ApiProperty({
     description: 'The sale price of the product',
@@ -23,7 +23,7 @@ export class UpdateProductDto {
   @IsString()
   @IsOptional()
   @IsCurrency({ allow_negatives: false, require_decimal: true })
-  salePrice?: Currency
+  salePrice?: string
 
   @ApiProperty({
     description: 'The status of the product',

@@ -13,7 +13,7 @@ export class UpdateCustomerDto {
   })
   @IsString()
   @IsOptional()
-  name?: Name
+  name?: string
 
   @ApiProperty({
     description: 'The phone number of the customer',
@@ -23,5 +23,5 @@ export class UpdateCustomerDto {
   })
   @IsString()
   @IsOptional()
-  phone?: PhoneNumber
+  phone?: string
 }

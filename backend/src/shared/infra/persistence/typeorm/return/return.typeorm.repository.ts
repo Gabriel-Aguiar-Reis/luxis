@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Return } from '@/modules/return/domain/entities/return.entity'
@@ -22,7 +22,7 @@ export class ReturnTypeOrmRepository implements ReturnRepository {
 
   async updateStatus(id: UUID, status: ReturnStatus): Promise<Return> {
     const raw = await this.repository.findOne({ where: { id } })
-    if (!raw) throw new Error('Return not found')
+    if (!raw) throw new NotFoundException('Return not found')
     raw.status = status
     await this.repository.save(raw)
     return ReturnTypeOrmMapper.toDomain(raw)

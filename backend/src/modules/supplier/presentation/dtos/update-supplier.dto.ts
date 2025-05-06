@@ -11,7 +11,7 @@ export class UpdateSupplierDto {
   })
   @IsString()
   @IsOptional()
-  name?: Name
+  name?: string
 
   @ApiProperty({
     description: 'The phone number of the supplier',
@@ -21,5 +21,5 @@ export class UpdateSupplierDto {
   })
   @IsString()
   @IsOptional()
-  phone?: PhoneNumber
+  phone?: string
 }

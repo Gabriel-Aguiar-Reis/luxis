@@ -59,7 +59,7 @@ export class CreateSaleDto {
   @IsPositive()
   @IsInt()
   @Min(1)
-  numberInstallments: Unit = new Unit(1)
+  numberInstallments: number = 1
 
   @ApiProperty({
     description: 'The interval of installments of the sale',
@@ -71,5 +71,5 @@ export class CreateSaleDto {
   @IsPositive()
   @IsInt()
   @Min(0)
-  installmentsInterval: Unit = new Unit(0)
+  installmentsInterval: number = 0
 }

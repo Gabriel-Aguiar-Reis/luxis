@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 type NodeEnv = 'development' | 'test' | 'production'
@@ -30,7 +30,9 @@ export class AppConfigService {
   getJwtSecret(): string {
     const secret = this.config.get<string>('JWT_SECRET')
     if (!secret) {
-      throw new Error('JWT_SECRET is not defined in environment variables')
+      throw new BadRequestException(
+        'JWT_SECRET is not defined in environment variables'
+      )
     }
     return secret
   }
@@ -73,5 +75,53 @@ export class AppConfigService {
 
   getDatabaseName(): string | undefined {
     return this.config.get<string>('DB_NAME')
+  }
+
+  getSuperuserEmail(): string | undefined {
+    return this.config.get<string>('SUPERUSER_EMAIL')
+  }
+
+  getSuperuserPassword(): string | undefined {
+    return this.config.get<string>('SUPERUSER_PASSWORD')
+  }
+
+  getSuperuserPhone(): string | undefined {
+    return this.config.get<string>('SUPERUSER_PHONE')
+  }
+
+  getSuperuserStreet(): string | undefined {
+    return this.config.get<string>('SUPERUSER_STREET')
+  }
+
+  getSuperuserNumber(): string | undefined {
+    return this.config.get<string>('SUPERUSER_NUMBER')
+  }
+
+  getSuperuserComplement(): string | undefined {
+    return this.config.get<string>('SUPERUSER_COMPLEMENT')
+  }
+
+  getSuperuserNeighborhood(): string | undefined {
+    return this.config.get<string>('SUPERUSER_NEIGHBORHOOD')
+  }
+
+  getSuperuserCity(): string | undefined {
+    return this.config.get<string>('SUPERUSER_CITY')
+  }
+
+  getSuperuserState(): string | undefined {
+    return this.config.get<string>('SUPERUSER_STATE')
+  }
+
+  getSuperuserZipCode(): string | undefined {
+    return this.config.get<string>('SUPERUSER_ZIPCODE')
+  }
+
+  getSuperuserName(): string | undefined {
+    return this.config.get<string>('SUPERUSER_NAME')
+  }
+
+  getSuperuserSurName(): string | undefined {
+    return this.config.get<string>('SUPERUSER_SURNAME')
   }
 }

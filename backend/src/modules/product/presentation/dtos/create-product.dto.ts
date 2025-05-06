@@ -13,7 +13,7 @@ export class CreateProductDto {
   })
   @IsString()
   @IsNotEmpty()
-  serialNumber: SerialNumber
+  serialNumber: string
 
   @ApiProperty({
     description: 'The ID of the product model',
@@ -44,7 +44,7 @@ export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
   @IsCurrency({ allow_negatives: false, require_decimal: true })
-  unitCost: Currency
+  unitCost: string
 
   @ApiProperty({
     description: 'The sale price of the product',
@@ -55,5 +55,5 @@ export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
   @IsCurrency({ allow_negatives: false, require_decimal: true })
-  salePrice: Currency
+  salePrice: string
 }

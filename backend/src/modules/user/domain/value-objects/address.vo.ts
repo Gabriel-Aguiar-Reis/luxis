@@ -1,6 +1,7 @@
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { FederativeUnit } from '@/modules/user/domain/enums/federative-unit.enum'
 import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
+import { BadRequestException } from '@nestjs/common'
 
 export class Address {
   constructor(
@@ -22,7 +23,7 @@ export class Address {
       !postalCode ||
       !country
     ) {
-      throw new Error('Invalid address')
+      throw new BadRequestException('Invalid address')
     }
   }
 
