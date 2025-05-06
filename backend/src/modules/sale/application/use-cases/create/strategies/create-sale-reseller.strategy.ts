@@ -6,7 +6,6 @@ import { SaleRepository } from '@/modules/sale/domain/repositories/sale.reposito
 import { CreateSaleStrategy } from '@/modules/sale/application/use-cases/create/strategies/create-sale.strategy'
 import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
 import { IInventoryOwnershipVerifier } from '@/modules/sale/domain/services/inventory-ownership-verify.interface'
-import { Unit } from '@/shared/common/value-object/unit.vo'
 import { SaleStatus } from '@/modules/sale/domain/enums/sale-status.enum'
 
 @Injectable()
@@ -23,7 +22,8 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
   async execute(dto: CreateSaleDto, user: UserPayload): Promise<Sale> {
     await this.inventoryOwnershipVerifier.verifyOwnership(
       user.id,
-      dto.productIds
+      dto.productIds,
+      user
     )
 
     const totalAmount = await this.salePriceCalculator.calculateTotal(
@@ -37,9 +37,9 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
       dto.saleDate,
       totalAmount,
       dto.paymentMethod,
-      new Unit(dto.numberInstallments),
+      dto.numberInstallments,
       SaleStatus.CONFIRMED,
-      new Unit(dto.installmentsInterval)
+      dto.installmentsInterval
     )
 
     return this.saleRepository.create(sale)

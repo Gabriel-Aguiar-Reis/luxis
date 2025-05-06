@@ -1,7 +1,8 @@
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { LoggerService } from '@nestjs/common'
+import { Injectable, LoggerService } from '@nestjs/common'
 import { AppConfigService } from '@/shared/config/app-config.service'
 
+@Injectable()
 export class CustomLogger implements LoggerService {
   private static contextRules: Record<string, number> = {}
   private static initialized = false

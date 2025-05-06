@@ -33,7 +33,8 @@ export class UpdateSaleResellerStrategy implements UpdateSaleStrategy {
 
     await this.inventoryOwnershipVerifier.verifyOwnership(
       user.id,
-      dto.productIds ?? sale.productIds
+      dto.productIds ?? sale.productIds,
+      user
     )
 
     const totalAmount = await this.salePriceCalculator.calculateTotal(

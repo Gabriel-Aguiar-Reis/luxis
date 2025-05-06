@@ -10,13 +10,15 @@ export class GetAllCustomersUseCase {
   constructor(
     @Inject('CustomerRepository')
     private readonly customerRepository: CustomerRepository,
+    @Inject('CustomerPortfolioService')
     private readonly customerPortfolioService: CustomerPortfolioService
   ) {}
 
   async execute(user: UserPayload): Promise<Customer[]> {
     if (user.role === Role.RESELLER) {
       const portfolio = await this.customerPortfolioService.getPortfolio(
-        user.id
+        user.id,
+        user
       )
       if (!portfolio) {
         throw new NotFoundException('Portfolio not found')

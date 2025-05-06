@@ -1,4 +1,3 @@
-import { Module } from '@nestjs/common'
 import { CustomerController } from '@/modules/customer/presentation/customer.controller'
 import { CreateCustomerUseCase } from '@/modules/customer/application/use-cases/create-customer.use-case'
 import { GetAllCustomersUseCase } from '@/modules/customer/application/use-cases/get-all-customer.use-case'
@@ -9,22 +8,41 @@ import { TransferCustomerUseCase } from '@/modules/customer/application/use-case
 import { CustomerTypeOrmRepository } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.repository'
 import { CustomerPortfolioTypeOrmRepository } from '@/shared/infra/persistence/typeorm/customer-portfolio/customer-portfolio.typeorm.repository'
 import { CustomerPortfolioService } from '@/modules/customer-portfolio/application/services/customer-portfolio.service'
-
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { CustomerTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.entity'
+import { EventDispatcher } from '@/shared/events/event-dispatcher'
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { AppConfigService } from '@/shared/config/app-config.service'
+import { CustomerPortfolioTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer-portfolio/customer-portfolio.typeorm.entity'
+import { forwardRef, Module } from '@nestjs/common'
+import { AppModule } from '@/app.module'
+import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      CustomerTypeOrmEntity,
+      CustomerPortfolioTypeOrmEntity
+    ]),
+    forwardRef(() => AppModule)
+  ],
   controllers: [CustomerController],
   providers: [
+    CustomLogger,
+    AppConfigService,
     CreateCustomerUseCase,
     GetAllCustomersUseCase,
     GetOneCustomersUseCase,
     UpdateCustomerUseCase,
     DeleteCustomerUseCase,
     TransferCustomerUseCase,
+    EventDispatcher,
     { provide: 'CustomerRepository', useClass: CustomerTypeOrmRepository },
     {
       provide: 'CustomerPortfolioRepository',
       useClass: CustomerPortfolioTypeOrmRepository
     },
-    { provide: 'CustomerPortfolioService', useClass: CustomerPortfolioService }
+    { provide: 'CustomerPortfolioService', useClass: CustomerPortfolioService },
+    { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }
   ]
 })
 export class CustomerModule {}

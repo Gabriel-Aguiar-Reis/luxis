@@ -8,7 +8,6 @@ export class UpdateUserRoleDto {
     description: 'The new role for the user',
     enum: Role,
     example: Role.ADMIN,
-    type: Role,
     enumName: 'Role',
     required: true
   })
@@ -20,7 +19,6 @@ export class UpdateUserRoleDto {
     description: 'The new status for the user',
     enum: UserStatus,
     example: UserStatus.ACTIVE,
-    type: UserStatus,
     enumName: 'UserStatus',
     required: false
   })

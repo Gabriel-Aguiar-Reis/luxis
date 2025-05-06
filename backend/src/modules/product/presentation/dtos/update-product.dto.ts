@@ -28,7 +28,6 @@ export class UpdateProductDto {
   @ApiProperty({
     description: 'The status of the product',
     example: ProductStatus.IN_STOCK,
-    type: ProductStatus,
     enumName: 'ProductStatus',
     required: false
   })

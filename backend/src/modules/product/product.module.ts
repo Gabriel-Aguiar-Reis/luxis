@@ -6,18 +6,36 @@ import { GetOneProductUseCase } from '@/modules/product/application/use-cases/ge
 import { UpdateProductUseCase } from '@/modules/product/application/use-cases/update-product.use-case'
 import { ProductController } from '@/modules/product/presentation/product.controller'
 import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
+import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.repository'
+import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { AppConfigService } from '@/shared/config/app-config.service'
+import { AppModule } from '@/app.module'
+import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
+import { SellProductUseCase } from '@/modules/product/application/use-cases/sell-product.use-case'
 
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([ProductTypeOrmEntity, InventoryTypeOrmEntity]),
+    forwardRef(() => AppModule)
+  ],
   controllers: [ProductController],
   providers: [
+    AppConfigService,
+    CustomLogger,
     CreateProductUseCase,
     GetOneProductUseCase,
     GetAllProductUseCase,
     UpdateProductUseCase,
     DeleteProductUseCase,
+    SellProductUseCase,
     { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
-    { provide: 'InventoryService', useClass: InventoryService }
+    { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },
+    { provide: 'InventoryService', useClass: InventoryService },
+    { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }
   ]
 })
 export class ProductModule {}

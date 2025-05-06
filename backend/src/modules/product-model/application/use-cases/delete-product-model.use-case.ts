@@ -8,6 +8,7 @@ export class DeleteProductModelUseCase {
   constructor(
     @Inject('ProductModelRepository')
     private readonly productModelRepository: ProductModelRepository,
+    @Inject('CloudinaryService')
     private readonly cloudinaryService: CloudinaryService
   ) {}
 

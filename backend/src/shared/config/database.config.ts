@@ -6,7 +6,7 @@ export const databaseConfig = (
 ): TypeOrmModuleOptions => {
   const env = appConfigService.getNodeEnv()
 
-  const entities = []
+  const entities = [__dirname + '/../**/*.entity{.ts,.js}']
 
   switch (env) {
     case 'production':
@@ -21,11 +21,11 @@ export const databaseConfig = (
     case 'development':
       return {
         type: 'postgres',
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT ?? '5432'),
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
+        host: appConfigService.getDatabaseHost(),
+        port: appConfigService.getDatabasePort(),
+        username: appConfigService.getDatabaseUser(),
+        password: appConfigService.getDatabasePassword(),
+        database: appConfigService.getDatabaseName(),
         entities,
         synchronize: true
       }
@@ -37,5 +37,8 @@ export const databaseConfig = (
         entities,
         synchronize: true
       }
+
+    default:
+      throw new Error(`Unknown NODE_ENV: ${env}`)
   }
 }

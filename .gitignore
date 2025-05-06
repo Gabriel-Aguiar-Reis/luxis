@@ -2,5 +2,5 @@ dist
 node_modules
 build
 .vscode
-.env
+.env*
 yarn.lock

@@ -11,6 +11,7 @@ export class UpdateCustomerUseCase {
   constructor(
     @Inject('CustomerRepository')
     private readonly customerRepository: CustomerRepository,
+    @Inject('CustomerPortfolioService')
     private readonly customerPortfolioService: CustomerPortfolioService
   ) {}
 
@@ -24,7 +25,10 @@ export class UpdateCustomerUseCase {
       throw new NotFoundException('Customer not found')
     }
 
-    const portfolio = await this.customerPortfolioService.getPortfolio(user.id)
+    const portfolio = await this.customerPortfolioService.getPortfolio(
+      user.id,
+      user
+    )
     if (!portfolio) {
       throw new NotFoundException('Portfolio not found')
     }

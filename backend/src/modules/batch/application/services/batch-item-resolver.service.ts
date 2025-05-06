@@ -5,6 +5,8 @@ import { ProductModel } from '@/modules/product-model/domain/entities/product-mo
 import { RawBatchItem } from '@/modules/batch/application/models/raw-batch-item.model'
 import { BatchItemWithResolvedModel } from '@/modules/batch/application/models/batch-item-with-resolved-model.model'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { InjectPinoLogger } from 'nestjs-pino'
+
 @Injectable()
 export class BatchItemResolver {
   constructor(
@@ -12,6 +14,7 @@ export class BatchItemResolver {
     private readonly productModelRepo: ProductModelRepository,
     @Inject('CategoryRepository')
     private readonly categoryRepo: CategoryRepository,
+    @InjectPinoLogger()
     private readonly logger: CustomLogger
   ) {}
 

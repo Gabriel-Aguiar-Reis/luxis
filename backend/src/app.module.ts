@@ -11,9 +11,7 @@ import { ProductCaslRule } from '@/shared/infra/auth/casl/rules/product.rules'
 import { ProductModelCaslRule } from '@/shared/infra/auth/casl/rules/product-model.rules'
 import { ShipmentCaslRule } from '@/shared/infra/auth/casl/rules/shipment.rules'
 import { JwtStrategy } from '@/shared/infra/auth/jwt/jwt.strategy'
-import { Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { JwtModule } from '@nestjs/jwt'
+import { Module, forwardRef } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { LoggerModule } from 'nestjs-pino'
@@ -32,11 +30,12 @@ import { ReturnModule } from '@/modules/return/return.module'
 import { ReturnCaslRule } from '@/shared/infra/auth/casl/rules/return.rules'
 import { CustomerModule } from '@/modules/customer/customer.module'
 import { CustomerCaslRule } from '@/shared/infra/auth/casl/rules/customer.rules'
-import { AppConfigService } from '@/shared/config/app-config.service'
 import { AuthModule } from '@/modules/auth/auth.module'
-
+import { AppConfigService } from '@/shared/config/app-config.service'
+import { InventoryModule } from '@/modules/inventory/inventory.module'
 @Module({
   imports: [
+    ConfigModule,
     LoggerModule.forRoot({
       pinoHttp: {
         transport: {
@@ -52,36 +51,28 @@ import { AuthModule } from '@/modules/auth/auth.module'
       }
     }),
     LoggingModule,
-    ConfigModule,
     TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
+      imports: [ConfigModule],
+      inject: [AppConfigService],
       useFactory: databaseConfig
     }),
-    TypeOrmModule.forFeature([]),
     PassportModule,
-    JwtModule.registerAsync({
-      inject: [AppConfigService],
-      useFactory: (config: AppConfigService) => ({
-        secret: config.getJwtSecret(),
-        signOptions: { expiresIn: config.getJwtExpirationTime() }
-      })
-    }),
-    BatchModule,
-    CategoryModule,
-    OwnershipTransferModule,
-    ProductModule,
-    ProductModelModule,
-    SaleModule,
-    ShipmentModule,
-    UserModule,
-    SupplierModule,
-    ReturnModule,
-    CustomerModule,
-    AuthModule
+    forwardRef(() => BatchModule),
+    forwardRef(() => CategoryModule),
+    forwardRef(() => OwnershipTransferModule),
+    forwardRef(() => ProductModule),
+    forwardRef(() => ProductModelModule),
+    forwardRef(() => SaleModule),
+    forwardRef(() => ShipmentModule),
+    forwardRef(() => UserModule),
+    forwardRef(() => SupplierModule),
+    forwardRef(() => ReturnModule),
+    forwardRef(() => CustomerModule),
+    forwardRef(() => AuthModule),
+    forwardRef(() => InventoryModule)
   ],
   controllers: [],
   providers: [
-    AppConfigService,
     JwtStrategy,
     CaslAbilityFactory,
     SaleCaslRule,
@@ -137,6 +128,6 @@ import { AuthModule } from '@/modules/auth/auth.module'
       ]
     }
   ],
-  exports: [JwtModule, CaslAbilityFactory]
+  exports: [CaslAbilityFactory, 'CASL_RULE_BUILDERS']
 })
 export class AppModule {}

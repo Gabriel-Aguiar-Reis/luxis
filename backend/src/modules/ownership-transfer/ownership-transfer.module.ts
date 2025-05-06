@@ -4,22 +4,51 @@ import { GetAllOwnershipTransferUseCase } from '@/modules/ownership-transfer/app
 import { GetOneOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/get-one-ownership-transfer.use-case'
 import { UpdateOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-ownership-transfer.use-case'
 import { OwnershipTransferController } from '@/modules/ownership-transfer/presentation/ownership-transfer.controller'
+import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
+import { OwnershipTransferTypeOrmEntity } from '@/shared/infra/persistence/typeorm/ownership-transfer/ownership-transfer.typeorm.entity'
 import { OwnershipTransferTypeOrmRepository } from '@/shared/infra/persistence/typeorm/ownership-transfer/ownership-transfer.typeorm.repository'
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { AppModule } from '@/app.module'
+import { UpdateStatusOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-status-ownership-transfer.use-case'
+import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
+import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/user.typeorm.repository'
+import { EventDispatcher } from '@/shared/events/event-dispatcher'
+import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
+import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
+import { AppConfigService } from '@/shared/config/app-config.service'
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 
-// TODO -> Preciso colocar as implementações concretas para todos os tokens deste module
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      OwnershipTransferTypeOrmEntity,
+      ProductTypeOrmEntity,
+      UserTypeOrmEntity
+    ]),
+    forwardRef(() => AppModule)
+  ],
   controllers: [OwnershipTransferController],
   providers: [
+    CustomLogger,
+    AppConfigService,
+    EventDispatcher,
     CreateOwnershipTransferUseCase,
     GetAllOwnershipTransferUseCase,
     GetOneOwnershipTransferUseCase,
     UpdateOwnershipTransferUseCase,
+    UpdateStatusOwnershipTransferUseCase,
     DeleteOwnershipTransferUseCase,
     {
       provide: 'OwnershipTransferRepository',
       useClass: OwnershipTransferTypeOrmRepository
-    }
+    },
+    {
+      provide: 'CaslAbilityFactory',
+      useClass: CaslAbilityFactory
+    },
+    { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
+    { provide: 'UserRepository', useClass: UserTypeOrmRepository }
   ]
 })
 export class OwnershipTransferModule {}

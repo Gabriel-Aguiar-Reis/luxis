@@ -129,7 +129,6 @@ export class CreateUserDto {
     description: 'Federative unit',
     enum: FederativeUnit,
     example: FederativeUnit.SP,
-    type: FederativeUnit,
     enumName: 'FederativeUnit',
     required: true
   })
@@ -151,7 +150,6 @@ export class CreateUserDto {
     description: 'Country',
     enum: Country,
     example: Country.Brazil,
-    type: Country,
     enumName: 'Country',
     required: true
   })

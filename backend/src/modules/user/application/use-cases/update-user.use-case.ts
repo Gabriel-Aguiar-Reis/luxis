@@ -38,14 +38,14 @@ export class UpdateUserUseCase {
     }
 
     const address = new Address(
-      input.street,
-      input.number,
-      input.neighborhood,
-      input.city,
-      input.federativeUnit,
-      input.postalCode,
-      input.country,
-      input.complement
+      input.street ?? userData.residence.address.street,
+      input.number ?? userData.residence.address.number,
+      input.neighborhood ?? userData.residence.address.neighborhood,
+      input.city ?? userData.residence.address.city,
+      input.federativeUnit ?? userData.residence.address.federativeUnit,
+      input.postalCode ?? userData.residence.address.postalCode,
+      input.country ?? userData.residence.address.country,
+      input.complement ?? userData.residence.address.complement
     )
 
     const residence = new Residence(address)
@@ -55,7 +55,9 @@ export class UpdateUserUseCase {
       input.surName ?? userData.surName,
       input.phone ?? userData.phone,
       input.email ?? userData.email,
-      PasswordHash.generate(input.password) ?? userData.passwordHash,
+      input.password
+        ? PasswordHash.generate(input.password)
+        : userData.passwordHash,
       userData.role,
       residence ?? userData.residence,
       userData.status

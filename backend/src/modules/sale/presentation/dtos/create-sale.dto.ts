@@ -42,7 +42,6 @@ export class CreateSaleDto {
     description: 'The payment method of the sale',
     enum: PaymentMethod,
     example: PaymentMethod.CREDIT,
-    type: PaymentMethod,
     enumName: 'PaymentMethod',
     required: true
   })

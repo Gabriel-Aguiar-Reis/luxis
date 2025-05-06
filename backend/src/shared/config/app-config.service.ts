@@ -27,8 +27,12 @@ export class AppConfigService {
     return this.getNodeEnv() === 'test'
   }
 
-  getJwtSecret(): string | undefined {
-    return this.config.get<string>('JWT_SECRET')
+  getJwtSecret(): string {
+    const secret = this.config.get<string>('JWT_SECRET')
+    if (!secret) {
+      throw new Error('JWT_SECRET is not defined in environment variables')
+    }
+    return secret
   }
 
   getJwtExpirationTime(): string | undefined {
@@ -49,5 +53,25 @@ export class AppConfigService {
 
   getCloudinaryApiSecret(): string | undefined {
     return this.config.get<string>('CLOUDINARY_API_SECRET')
+  }
+
+  getDatabaseHost(): string | undefined {
+    return this.config.get<string>('DB_HOST')
+  }
+
+  getDatabasePort(): number | undefined {
+    return this.config.get<number>('DB_PORT')
+  }
+
+  getDatabaseUser(): string | undefined {
+    return this.config.get<string>('DB_USER')
+  }
+
+  getDatabasePassword(): string | undefined {
+    return this.config.get<string>('DB_PASSWORD')
+  }
+
+  getDatabaseName(): string | undefined {
+    return this.config.get<string>('DB_NAME')
   }
 }

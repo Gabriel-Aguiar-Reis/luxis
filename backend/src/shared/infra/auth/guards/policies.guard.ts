@@ -4,13 +4,19 @@ import {
   PolicyHandler,
   PolicyHandlerCallback
 } from '@/shared/infra/auth/interfaces/policy-handler.interface'
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable
+} from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 
 @Injectable()
 export class PoliciesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
+    @Inject('CaslAbilityFactory')
     private caslAbilityFactory: CaslAbilityFactory
   ) {}
 

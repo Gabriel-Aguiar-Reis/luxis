@@ -2,7 +2,7 @@ import { CreateSaleUseCase } from '@/modules/sale/application/use-cases/create/c
 import { DeleteSaleUseCase } from '@/modules/sale/application/use-cases/delete-sale.use-case'
 import { GetAllSaleUseCase } from '@/modules/sale/application/use-cases/get-all-sale.use-case'
 import { GetOneSaleUseCase } from '@/modules/sale/application/use-cases/get-one/get-one-sale.use-case'
-import { MarkInstallmentPaidUseCase } from '@/modules/sale/application/use-cases/mark-installment-paid/mark-installment-paid.use-case'
+import { MarkInstallmentPaidUseCase } from '@/modules/sale/application/use-cases/mark-installment-paid.use-case'
 import { UpdateSaleUseCase } from '@/modules/sale/application/use-cases/update/update-sale.use-case'
 import { CreateSaleDto } from '@/modules/sale/presentation/dtos/create-sale.dto'
 import { MarkInstallmentPaidDto } from '@/modules/sale/presentation/dtos/mark-installment-paid.dto'

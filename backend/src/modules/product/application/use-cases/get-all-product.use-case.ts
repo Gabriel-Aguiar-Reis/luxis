@@ -21,7 +21,7 @@ export class GetAllProductUseCase {
     }
 
     if (user.role === Role.RESELLER) {
-      const inventory = await this.inventoryService.getInventory(user.id)
+      const inventory = await this.inventoryService.getInventory(user.id, user)
       if (!inventory) {
         return []
       }

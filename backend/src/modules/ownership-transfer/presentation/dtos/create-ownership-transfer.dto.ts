@@ -47,7 +47,7 @@ export class CreateOwnershipTransferDto {
   @ApiProperty({
     description: 'The status of the ownership transfer',
     example: OwnershipTransferStatus.PENDING,
-    type: OwnershipTransferStatus,
+    enum: OwnershipTransferStatus,
     enumName: 'OwnershipTransferStatus',
     required: true
   })

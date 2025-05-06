@@ -28,7 +28,7 @@ export class GetOneProductUseCase {
     }
 
     if (user.role === Role.RESELLER) {
-      const inventory = await this.inventoryService.getInventory(user.id)
+      const inventory = await this.inventoryService.getInventory(user.id, user)
       if (!inventory || !inventory.products.includes(product.id)) {
         throw new ForbiddenException('Product not available in your inventory')
       }

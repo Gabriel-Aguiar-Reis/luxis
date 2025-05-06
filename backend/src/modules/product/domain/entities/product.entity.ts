@@ -2,15 +2,74 @@ import { ProductStatus } from '@/modules/product/domain/enums/product-status.enu
 import { SerialNumber } from '@/modules/product/domain/value-objects/serial-number.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { UUID } from 'crypto'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class Product {
+  @ApiProperty({
+    description: 'The ID of the product',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String
+  })
+  public readonly id: UUID
+
+  @ApiProperty({
+    description: 'The serial number of the product',
+    example: 'SN20240101001',
+    type: String
+  })
+  public serialNumber: SerialNumber
+
+  @ApiProperty({
+    description: 'The ID of the product model',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String
+  })
+  public modelId: UUID
+
+  @ApiProperty({
+    description: 'The ID of the batch',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String
+  })
+  public batchId: UUID
+
+  @ApiProperty({
+    description: 'The unit cost of the product',
+    example: '100.00',
+    type: String
+  })
+  public unitCost: Currency
+
+  @ApiProperty({
+    description: 'The sale price of the product',
+    example: '150.00',
+    type: String
+  })
+  public salePrice: Currency
+
+  @ApiProperty({
+    description: 'The status of the product',
+    enum: ProductStatus,
+    example: ProductStatus.IN_STOCK,
+    type: String
+  })
+  public status: ProductStatus
+
   constructor(
-    public readonly id: UUID,
-    public serialNumber: SerialNumber,
-    public modelId: UUID,
-    public batchId: UUID,
-    public unitCost: Currency,
-    public salePrice: Currency,
-    public status: ProductStatus = ProductStatus.IN_STOCK
-  ) {}
+    id: UUID,
+    serialNumber: SerialNumber,
+    modelId: UUID,
+    batchId: UUID,
+    unitCost: Currency,
+    salePrice: Currency,
+    status: ProductStatus = ProductStatus.IN_STOCK
+  ) {
+    this.id = id
+    this.serialNumber = serialNumber
+    this.modelId = modelId
+    this.batchId = batchId
+    this.unitCost = unitCost
+    this.salePrice = salePrice
+    this.status = status
+  }
 }

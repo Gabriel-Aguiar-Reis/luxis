@@ -116,7 +116,6 @@ export class UpdateUserDto {
     description: 'The new federative unit for the user',
     enum: FederativeUnit,
     example: FederativeUnit.SP,
-    type: FederativeUnit,
     enumName: 'FederativeUnit'
   })
   @IsEnum(FederativeUnit)
@@ -136,7 +135,6 @@ export class UpdateUserDto {
     description: 'The new country for the user',
     enum: Country,
     example: Country.Brazil,
-    type: Country,
     enumName: 'Country'
   })
   @IsString()
