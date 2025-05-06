@@ -1,10 +1,13 @@
+import { BadRequestException } from '@nestjs/common'
+
 export class PostalCode {
   constructor(private readonly value: string) {
-    if (!this.validate(value)) throw new Error('Invalid postal code format')
+    if (!this.validate(value))
+      throw new BadRequestException('Invalid postal code format')
   }
 
   private validate(postalCode: string): boolean {
-    return /\d{5}-\d{3}/gm.test(postalCode)
+    return /\d{5}\d{3}/gm.test(postalCode)
   }
 
   getValue(): string {

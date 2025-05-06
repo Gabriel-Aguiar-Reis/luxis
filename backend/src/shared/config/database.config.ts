@@ -1,5 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { AppConfigService } from '@/shared/config/app-config.service'
+import { BadRequestException } from '@nestjs/common'
 
 export const databaseConfig = (
   appConfigService: AppConfigService
@@ -39,6 +40,6 @@ export const databaseConfig = (
       }
 
     default:
-      throw new Error(`Unknown NODE_ENV: ${env}`)
+      throw new BadRequestException(`Unknown NODE_ENV: ${env}`)
   }
 }

@@ -5,6 +5,8 @@ import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
 import { LoginDto } from '@/modules/auth/presentation/dtos/login.dto'
 import { PasswordHash } from '@/modules/user/domain/value-objects/password-hash.vo'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { Email } from '@/shared/common/value-object/email.vo'
+import { Password } from '@/modules/user/domain/value-objects/password.vo'
 
 @Injectable()
 export class AuthService {
@@ -16,24 +18,24 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto): Promise<{ accessToken: string }> {
-    const user = await this.userRepository.findByEmail(dto.email)
+    const email = new Email(dto.email)
+    const user = await this.userRepository.findByEmail(email)
 
     if (!user) {
       this.logger.error(
-        `Invalid credentials - Email: ${dto.email.getValue()}`,
+        `Invalid credentials - Email: ${email.getValue()}`,
         'AuthService'
       )
       throw new UnauthorizedException('Invalid credentials')
     }
-
-    const dtoPassword = new PasswordHash(dto.password.getValue())
-
+    const password = new Password(dto.password)
+    const dtoPassword = PasswordHash.generate(password)
     const isPasswordValid =
       dtoPassword.getValue() === user.passwordHash.getValue()
 
     if (!isPasswordValid) {
       this.logger.error(
-        `Invalid credentials - Email: ${dto.email.getValue()}`,
+        `Invalid credentials - Email: ${email.getValue()}`,
         'AuthService'
       )
       throw new UnauthorizedException('Invalid credentials')
@@ -41,7 +43,7 @@ export class AuthService {
 
     if (user.status !== UserStatus.ACTIVE) {
       this.logger.error(
-        `User is inactive - Email: ${dto.email.getValue()}`,
+        `User is inactive - Email: ${email.getValue()}`,
         'AuthService'
       )
       throw new UnauthorizedException('User is inactive')

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from '@/modules/user/domain/entities/user.entity'
@@ -55,7 +55,7 @@ export class UserTypeOrmRepository implements UserRepository {
       await this.repository.update(id, { role })
     }
     const updatedEntity = await this.repository.findOne({ where: { id } })
-    if (!updatedEntity) throw new Error('User not found')
+    if (!updatedEntity) throw new NotFoundException('User not found')
     return UserMapper.toDomain(updatedEntity)
   }
 
@@ -66,7 +66,7 @@ export class UserTypeOrmRepository implements UserRepository {
   async disable(id: UUID): Promise<User> {
     await this.repository.update(id, { status: UserStatus.DISABLED })
     const updatedEntity = await this.repository.findOne({ where: { id } })
-    if (!updatedEntity) throw new Error('User not found')
+    if (!updatedEntity) throw new NotFoundException('User not found')
     return UserMapper.toDomain(updatedEntity)
   }
 }

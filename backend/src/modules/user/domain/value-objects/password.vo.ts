@@ -1,6 +1,9 @@
+import { BadRequestException } from '@nestjs/common'
+
 export class Password {
   constructor(private readonly value: string) {
-    if (!this.validate(value)) throw new Error('Invalid password format')
+    if (!this.validate(value))
+      throw new BadRequestException('Invalid password format')
   }
 
   private validate(password: string): boolean {

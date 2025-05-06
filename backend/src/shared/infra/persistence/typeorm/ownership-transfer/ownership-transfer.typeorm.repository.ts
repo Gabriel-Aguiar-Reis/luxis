@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
@@ -67,7 +67,8 @@ export class OwnershipTransferTypeOrmRepository
   ): Promise<OwnershipTransfer> {
     await this.repository.update(id, { status })
     const updatedEntity = await this.repository.findOne({ where: { id } })
-    if (!updatedEntity) throw new Error('Ownership transfer not found')
+    if (!updatedEntity)
+      throw new NotFoundException('Ownership transfer not found')
     return OwnershipTransferMapper.toDomain(updatedEntity)
   }
 

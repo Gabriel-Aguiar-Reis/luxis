@@ -11,19 +11,26 @@ import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/pr
 import { SupplierTypeOrmEntity } from '@/shared/infra/persistence/typeorm/supplier/supplier.typeorm.entity'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { CreateUsers1712938000000 } from '@/shared/infra/database/migrations/1712938000000-create-users'
-import { CreateProducts1712938000001 } from '@/shared/infra/database/migrations/1712938000001-create-products'
-import { CreateCategories1712938000002 } from '@/shared/infra/database/migrations/1712938000002-create-categories'
-import { CreateProductModels1712938000003 } from '@/shared/infra/database/migrations/1712938000003-create-product-models'
+import { CreateProducts1712938000005 } from '@/shared/infra/database/migrations/1712938000005-create-products'
+import { CreateCategories1712938000001 } from '@/shared/infra/database/migrations/1712938000001-create-categories'
+import { CreateProductModels1712938000002 } from '@/shared/infra/database/migrations/1712938000002-create-product-models'
 import { CreateBatches1712938000004 } from '@/shared/infra/database/migrations/1712938000004-create-batches'
-import { CreateSales1712938000005 } from '@/shared/infra/database/migrations/1712938000005-create-sales'
+import { CreateSales1712938000009 } from '@/shared/infra/database/migrations/1712938000009-create-sales'
 import { CreateOwnershipTransfers1712938000006 } from '@/shared/infra/database/migrations/1712938000006-create-ownership-transfers'
 import { CreateInventory1712938000007 } from '@/shared/infra/database/migrations/1712938000007-create-inventory'
 import { CreateShipments1712938000008 } from '@/shared/infra/database/migrations/1712938000008-create-shipments'
-import { CreateSuppliers1712938000009 } from '@/shared/infra/database/migrations/1712938000009-create-suppliers'
+import { CreateSuppliers1712938000003 } from '@/shared/infra/database/migrations/1712938000003-create-suppliers'
 import { CreateReturns1712938000010 } from '@/shared/infra/database/migrations/1712938000010-create-returns'
 import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
 import { CreateCustomers1712938000011 } from '@/shared/infra/database/migrations/1712938000011-create-customers'
-import { CreateCustomerPortfolios1712938000012 } from '@/shared/infra/database/migrations/1712938000012-create-custome-portfolios'
+import { CreateCustomerPortfolios1712938000012 } from '@/shared/infra/database/migrations/1712938000012-create-customer-portfolios'
+import { AppConfigService } from '@/shared/config/app-config.service'
+import { ConfigService } from '@nestjs/config'
+import * as dotenv from 'dotenv'
+import { BatchItemTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch-item.typeorm.entity'
+import { BadRequestException } from '@nestjs/common'
+
+dotenv.config({ path: '.env.development' })
 
 const commonConfig = {
   entities: [
@@ -34,6 +41,7 @@ const commonConfig = {
     OwnershipTransferTypeOrmEntity,
     SaleTypeOrmEntity,
     BatchTypeOrmEntity,
+    BatchItemTypeOrmEntity,
     CategoryTypeOrmEntity,
     ProductModelTypeOrmEntity,
     SupplierTypeOrmEntity,
@@ -41,15 +49,15 @@ const commonConfig = {
   ],
   migrations: [
     CreateUsers1712938000000,
-    CreateProducts1712938000001,
-    CreateCategories1712938000002,
-    CreateProductModels1712938000003,
+    CreateCategories1712938000001,
+    CreateProductModels1712938000002,
+    CreateSuppliers1712938000003,
     CreateBatches1712938000004,
-    CreateSales1712938000005,
+    CreateProducts1712938000005,
     CreateOwnershipTransfers1712938000006,
     CreateInventory1712938000007,
     CreateShipments1712938000008,
-    CreateSuppliers1712938000009,
+    CreateSales1712938000009,
     CreateReturns1712938000010,
     CreateCustomers1712938000011,
     CreateCustomerPortfolios1712938000012
@@ -60,15 +68,17 @@ const commonConfig = {
 
 let AppDataSource: DataSource
 
-switch (process.env.NODE_ENV) {
+let appConfigService = new AppConfigService(new ConfigService())
+
+switch (appConfigService.getNodeEnv()) {
   case 'development':
     AppDataSource = new DataSource({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      username: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-      database: process.env.DB_NAME || 'luxis_dev',
+      host: appConfigService.getDatabaseHost(),
+      port: appConfigService.getDatabasePort(),
+      username: appConfigService.getDatabaseUser(),
+      password: appConfigService.getDatabasePassword(),
+      database: appConfigService.getDatabaseName(),
       ...commonConfig
     })
     break
@@ -94,7 +104,7 @@ switch (process.env.NODE_ENV) {
     break
 
   default:
-    throw new Error(`Unknown NODE_ENV: ${process.env.NODE_ENV}`)
+    throw new BadRequestException(`Unknown NODE_ENV: ${process.env.NODE_ENV}`)
 }
 
 export { AppDataSource }

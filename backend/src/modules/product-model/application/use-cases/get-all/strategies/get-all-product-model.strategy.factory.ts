@@ -1,5 +1,5 @@
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { GetAllProductModelStrategy } from './get-all-product-model.strategy'
 import { GetAllProductModelAdminStrategy } from './get-all-product-model-admin.strategy'
 import { GetAllProductModelResellerStrategy } from './get-all-product-model-reseller.strategy'
@@ -23,7 +23,7 @@ export class GetAllProductModelStrategyFactory {
       case Role.ASSISTANT:
         return this.assistantStrategy
       default:
-        throw new Error('Invalid role')
+        throw new BadRequestException('Invalid role')
     }
   }
 }

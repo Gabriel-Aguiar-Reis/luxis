@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common'
 import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
@@ -29,9 +34,15 @@ export class BatchItemResolver {
       model = await this.productModelRepo.findById(batchItem.modelId)
     }
 
-    if (!model && (!batchItem.modelName || !batchItem.categoryId)) {
-      throw new Error(
-        'Model name and categoryId are required to create a new model.'
+    if (
+      !model &&
+      (!batchItem.modelName ||
+        !batchItem.categoryId ||
+        !batchItem.salePrice ||
+        !batchItem.unitCost)
+    ) {
+      throw new BadRequestException(
+        'Model name, categoryId and salePrice are required to create a new model.'
       )
     }
 
@@ -41,14 +52,14 @@ export class BatchItemResolver {
           crypto.randomUUID(),
           batchItem.modelName!,
           batchItem.categoryId!,
-          batchItem.salePrice
+          batchItem.salePrice!
         )
       )
     }
 
     const category = await this.categoryRepo.findById(model.categoryId)
     if (!category) {
-      throw new Error(`Category not found for model ${model.id}.`)
+      throw new NotFoundException(`Category not found for model ${model.id}.`)
     }
 
     const categoryCode = category.name.getValue().slice(0, 2).toUpperCase()

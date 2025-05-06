@@ -33,6 +33,8 @@ import { CustomerCaslRule } from '@/shared/infra/auth/casl/rules/customer.rules'
 import { AuthModule } from '@/modules/auth/auth.module'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { InventoryModule } from '@/modules/inventory/inventory.module'
+import { SeedsModule } from '@/shared/infra/database/seeds/seeds.module'
+
 @Module({
   imports: [
     ConfigModule,
@@ -69,7 +71,8 @@ import { InventoryModule } from '@/modules/inventory/inventory.module'
     forwardRef(() => ReturnModule),
     forwardRef(() => CustomerModule),
     forwardRef(() => AuthModule),
-    forwardRef(() => InventoryModule)
+    forwardRef(() => InventoryModule),
+    forwardRef(() => SeedsModule)
   ],
   controllers: [],
   providers: [

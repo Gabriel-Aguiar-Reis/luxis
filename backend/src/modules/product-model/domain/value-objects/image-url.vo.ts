@@ -1,6 +1,9 @@
+import { BadRequestException } from '@nestjs/common'
+
 export class ImageURL {
   constructor(private readonly value: string) {
-    if (!this.validate(value)) throw new Error('Invalid image URL')
+    if (!this.validate(value))
+      throw new BadRequestException('Invalid image URL')
   }
 
   private validate(value: string): boolean {

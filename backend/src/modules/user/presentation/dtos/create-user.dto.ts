@@ -149,7 +149,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Country',
     enum: Country,
-    example: Country.Brazil,
+    example: Country.BRAZIL,
     enumName: 'Country',
     required: true
   })

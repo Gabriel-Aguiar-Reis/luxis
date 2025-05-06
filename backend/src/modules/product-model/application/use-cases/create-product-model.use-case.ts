@@ -4,6 +4,9 @@ import { CreateProductModelDto } from '@/modules/product-model/presentation/dtos
 import { CloudinaryService } from '@/shared/infra/cloudinary/cloudinary.service'
 import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 import { Inject, Injectable } from '@nestjs/common'
+import { Currency } from '@/shared/common/value-object/currency.vo'
+import { Description } from '@/shared/common/value-object/description.vo'
+import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 
 @Injectable()
 export class CreateProductModelUseCase {
@@ -25,10 +28,10 @@ export class CreateProductModelUseCase {
       : undefined
     const model = new ProductModel(
       crypto.randomUUID(),
-      input.name,
+      new ModelName(input.name),
       input.categoryId,
-      input.suggestedPrice,
-      input.description ?? undefined,
+      new Currency(input.suggestedPrice),
+      input.description ? new Description(input.description) : undefined,
       photoUrl
     )
     return await this.productModelRepository.create(model)

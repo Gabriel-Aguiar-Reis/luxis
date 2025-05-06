@@ -1,9 +1,10 @@
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
+import { BadRequestException } from '@nestjs/common'
 
 export class SerialNumber {
   constructor(private value: string) {
     if (!SerialNumber.isValid(value)) {
-      throw new Error(`Invalid serial number format: ${value}`)
+      throw new BadRequestException(`Invalid serial number format: ${value}`)
     }
   }
 

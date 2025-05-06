@@ -1,6 +1,9 @@
+import { BadRequestException } from '@nestjs/common'
+
 export class ModelName {
   constructor(private readonly value: string) {
-    if (!this.validate(value)) throw new Error('Invalid model name format')
+    if (!this.validate(value))
+      throw new BadRequestException('Invalid model name format')
   }
 
   private validate(name: string): boolean {

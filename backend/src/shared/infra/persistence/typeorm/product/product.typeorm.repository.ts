@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository, In } from 'typeorm'
 import { Product } from '@/modules/product/domain/entities/product.entity'
@@ -51,7 +51,7 @@ export class ProductTypeOrmRepository implements ProductRepository {
   async updateStatus(id: UUID, status: ProductStatus): Promise<Product> {
     await this.repository.update(id, { status })
     const updatedEntity = await this.repository.findOne({ where: { id } })
-    if (!updatedEntity) throw new Error('Product not found')
+    if (!updatedEntity) throw new NotFoundException('Product not found')
     return ProductMapper.toDomain(updatedEntity)
   }
 

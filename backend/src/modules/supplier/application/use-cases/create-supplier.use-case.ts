@@ -15,8 +15,8 @@ export class CreateSupplierUseCase {
   async execute(dto: CreateSupplierDto): Promise<Supplier> {
     const supplier = new Supplier(
       crypto.randomUUID(),
-      new Name(dto.name.getValue()),
-      new PhoneNumber(dto.phone.getValue())
+      new Name(dto.name),
+      new PhoneNumber(dto.phone)
     )
 
     return await this.supplierRepository.create(supplier)

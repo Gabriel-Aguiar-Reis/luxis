@@ -4,6 +4,7 @@ import { Product } from '@/modules/product/domain/entities/product.entity'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { UpdateProductDto } from '@/modules/product/presentation/dtos/update-product.dto'
 import { UUID } from 'crypto'
+import { Currency } from '@/shared/common/value-object/currency.vo'
 
 @Injectable()
 export class UpdateProductUseCase {
@@ -21,8 +22,8 @@ export class UpdateProductUseCase {
       product.serialNumber,
       product.modelId,
       product.batchId,
-      input.unitCost ? input.unitCost : product.unitCost,
-      input.salePrice ? input.salePrice : product.salePrice,
+      input.unitCost ? new Currency(input.unitCost) : product.unitCost,
+      input.salePrice ? new Currency(input.salePrice) : product.salePrice,
       input.status ? input.status : product.status
     )
 

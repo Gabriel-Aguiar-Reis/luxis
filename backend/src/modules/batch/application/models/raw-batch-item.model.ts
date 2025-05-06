@@ -8,7 +8,7 @@ export class RawBatchItem {
     public readonly id: UUID,
     public readonly quantity: Unit,
     public readonly unitCost: Currency,
-    public readonly salePrice: Currency,
+    public readonly salePrice?: Currency,
     public readonly modelId?: UUID,
     public readonly modelName?: ModelName,
     public readonly categoryId?: UUID

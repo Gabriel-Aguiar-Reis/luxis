@@ -1,13 +1,17 @@
+import { BadRequestException } from '@nestjs/common'
+
 export class Description {
   constructor(private value: string) {
     const cleaned = value.trim()
 
     if (cleaned.length === 0) {
-      throw new Error('Description cannot be empty')
+      throw new BadRequestException('Description cannot be empty')
     }
 
     if (cleaned.length > 500) {
-      throw new Error('Description must be 500 characters or less')
+      throw new BadRequestException(
+        'Description must be 500 characters or less'
+      )
     }
 
     this.value = cleaned

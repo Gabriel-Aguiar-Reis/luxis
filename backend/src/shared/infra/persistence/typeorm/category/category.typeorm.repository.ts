@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Category } from '@/modules/category/domain/entities/category.entity'
@@ -41,7 +41,7 @@ export class CategoryTypeOrmRepository implements CategoryRepository {
   async updateStatus(id: UUID, status: CategoryStatus): Promise<Category> {
     await this.repository.update(id, { status })
     const updatedEntity = await this.repository.findOne({ where: { id } })
-    if (!updatedEntity) throw new Error('Category not found')
+    if (!updatedEntity) throw new NotFoundException('Category not found')
     return CategoryMapper.toDomain(updatedEntity)
   }
 

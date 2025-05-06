@@ -6,9 +6,9 @@ export class CreateCustomerPortfolios1712938000012
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       CREATE TABLE "customer_portfolios" (
-        "id" UUID PRIMARY KEY,
-        "name" VARCHAR NOT NULL,
-        "phone" VARCHAR NOT NULL,
+        "reseller_id" UUID PRIMARY KEY,
+        "customer_ids" JSONB NOT NULL,
+        CONSTRAINT "fk_customer_portfolio_reseller" FOREIGN KEY ("reseller_id") REFERENCES "users"("id") ON DELETE RESTRICT
       );
     `)
   }

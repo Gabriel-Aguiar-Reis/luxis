@@ -1,9 +1,11 @@
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
-import { hash } from 'crypto'
+import { BadRequestException } from '@nestjs/common'
+import { createHash } from 'crypto'
 
 export class PasswordHash {
   constructor(private readonly value: string) {
-    if (!this.validate(value)) throw new Error('Invalid password hash format')
+    if (!this.validate(value))
+      throw new BadRequestException('Invalid password hash format')
   }
 
   private validate(hash: string): boolean {
@@ -11,7 +13,8 @@ export class PasswordHash {
   }
 
   static generate(password: Password): PasswordHash {
-    return new PasswordHash(hash(password.getValue(), 'sha256'))
+    const hash = createHash('sha256').update(password.getValue()).digest('hex')
+    return new PasswordHash(hash)
   }
 
   getValue(): string {

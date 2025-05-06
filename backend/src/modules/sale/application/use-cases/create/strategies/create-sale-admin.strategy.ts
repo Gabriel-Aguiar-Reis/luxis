@@ -8,6 +8,7 @@ import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { CreateSaleStrategy } from '@/modules/sale/application/use-cases/create/strategies/create-sale.strategy'
 import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
 import { SaleStatus } from '@/modules/sale/domain/enums/sale-status.enum'
+import { Unit } from '@/shared/common/value-object/unit.vo'
 
 @Injectable()
 export class CreateSaleAdminStrategy implements CreateSaleStrategy {
@@ -41,9 +42,9 @@ export class CreateSaleAdminStrategy implements CreateSaleStrategy {
       dto.saleDate,
       totalAmount,
       dto.paymentMethod,
-      dto.numberInstallments,
+      new Unit(dto.numberInstallments),
       SaleStatus.CONFIRMED,
-      dto.installmentsInterval
+      new Unit(dto.installmentsInterval)
     )
 
     return this.saleRepository.create(sale)

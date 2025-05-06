@@ -12,5 +12,5 @@ export class MarkInstallmentPaidDto {
   @IsNumber()
   @IsPositive()
   @Min(1)
-  installmentNumber: Unit
+  installmentNumber: number
 }
