@@ -140,7 +140,7 @@ yarn test:cov
 A documentação da API está disponível através do Swagger UI quando o servidor estiver rodando:
 
 ```html
-http://localhost:3000/api
+http://localhost:3000/api/docs
 ```
 
 ## 🏗️ Arquitetura
