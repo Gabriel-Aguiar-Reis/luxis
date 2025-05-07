@@ -42,7 +42,7 @@ Inventory management system built with NestJS, following Clean Architecture and 
 
 - Node.js (LTS version recommended)
 - PostgreSQL
-- Yarn ou NPM
+- Yarn or NPM
 - Cloudinary account (for image uploads)
 - MailerSend account (for sending emails)
 
