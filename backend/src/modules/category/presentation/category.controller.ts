@@ -22,7 +22,8 @@ import {
   Get,
   Param,
   Patch,
-  Delete
+  Delete,
+  UseInterceptors
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -37,11 +38,13 @@ import {
   ApiBearerAuth
 } from '@nestjs/swagger'
 import { Category } from '@/modules/category/domain/entities/category.entity'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Categories')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('categories')
+@UseInterceptors(CacheInterceptor)
 export class CategoryController {
   constructor(
     private readonly createCategoryUseCase: CreateCategoryUseCase,
@@ -63,6 +66,8 @@ export class CategoryController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadCategoryPolicy())
   @Get()
+  @CacheKey('all-categories')
+  @CacheTTL(300)
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all categories - Requested by user ${user.email}`,

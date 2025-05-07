@@ -3,7 +3,7 @@ import { SupplierRepository } from '@/modules/supplier/domain/repositories/suppl
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 
 @Injectable()
-export class GetAllSuppliersUseCase {
+export class GetAllSupplierUseCase {
   constructor(
     @Inject('SupplierRepository')
     private readonly supplierRepository: SupplierRepository

@@ -14,7 +14,8 @@ import {
   Patch,
   Param,
   Delete,
-  Get
+  Get,
+  UseInterceptors
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
@@ -35,11 +36,13 @@ import {
 } from '@nestjs/swagger'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { GetAllProductModelUseCase } from '@/modules/product-model/application/use-cases/get-all/get-all-product-model.use-case'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Product Models')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('product-models')
+@UseInterceptors(CacheInterceptor)
 export class ProductModelController {
   constructor(
     private readonly createProductModelUseCase: CreateProductModelUseCase,
@@ -60,6 +63,8 @@ export class ProductModelController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductModelPolicy())
   @Get()
+  @CacheKey('all-product-models')
+  @CacheTTL(300)
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all product models - Requested by user ${user.email}`,

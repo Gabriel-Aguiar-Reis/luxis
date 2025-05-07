@@ -6,7 +6,8 @@ import {
   Body,
   Param,
   Patch,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common'
 import { CreateCustomerDto } from '@/modules/customer/presentation/dtos/create-customer.dto'
 import { CreateCustomerUseCase } from '@/modules/customer/application/use-cases/create-customer.use-case'
@@ -19,9 +20,9 @@ import { CreateCustomerPolicy } from '@/shared/infra/auth/policies/customer/crea
 import { ReadCustomerPolicy } from '@/shared/infra/auth/policies/customer/read-customer.policy'
 import { UpdateCustomerPolicy } from '@/shared/infra/auth/policies/customer/update-customer.policy'
 import { DeleteCustomerPolicy } from '@/shared/infra/auth/policies/customer/delete-customer.policy'
-import { GetAllCustomersUseCase } from '@/modules/customer/application/use-cases/get-all-customer.use-case'
+import { GetAllCustomerUseCase } from '@/modules/customer/application/use-cases/get-all-customer.use-case'
 import { Customer } from '@/modules/customer/domain/entities/customer.entity'
-import { GetOneCustomersUseCase } from '@/modules/customer/application/use-cases/get-one-customer.use-case'
+import { GetOneCustomerUseCase } from '@/modules/customer/application/use-cases/get-one-customer.use-case'
 import { UpdateCustomerUseCase } from '@/modules/customer/application/use-cases/update-customer.use-case'
 import { UpdateCustomerDto } from '@/modules/customer/presentation/dtos/update-customer.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
@@ -37,16 +38,18 @@ import {
   ApiBearerAuth,
   ApiTags
 } from '@nestjs/swagger'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Customers')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('customers')
+@UseInterceptors(CacheInterceptor)
 export class CustomerController {
   constructor(
     private readonly createCustomerUseCase: CreateCustomerUseCase,
-    private readonly getAllCustomersUseCase: GetAllCustomersUseCase,
-    private readonly getOneCustomerUseCase: GetOneCustomersUseCase,
+    private readonly getAllCustomersUseCase: GetAllCustomerUseCase,
+    private readonly getOneCustomerUseCase: GetOneCustomerUseCase,
     private readonly updateCustomerUseCase: UpdateCustomerUseCase,
     private readonly deleteCustomerUseCase: DeleteCustomerUseCase,
     private readonly transferCustomerUseCase: TransferCustomerUseCase,
@@ -81,6 +84,8 @@ export class CustomerController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadCustomerPolicy())
   @Get()
+  @CacheKey('all-customers')
+  @CacheTTL(300)
   async getAll(@CurrentUser() user: UserPayload): Promise<Customer[]> {
     this.logger.log(
       `Getting all customers - Requested by user ${user.email}`,

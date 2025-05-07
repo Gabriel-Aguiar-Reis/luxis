@@ -6,7 +6,8 @@ import {
   Body,
   Param,
   Patch,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common'
 import { CreateSupplierDto } from '@/modules/supplier/presentation/dtos/create-supplier.dto'
 import { UpdateSupplierDto } from '@/modules/supplier/presentation/dtos/update-supplier.dto'
@@ -21,7 +22,7 @@ import { CreateSupplierPolicy } from '@/shared/infra/auth/policies/supplier/crea
 import { ReadSupplierPolicy } from '@/shared/infra/auth/policies/supplier/read-supplier.policy'
 import { UpdateSupplierPolicy } from '@/shared/infra/auth/policies/supplier/update-supplier.policy'
 import { DeleteSupplierPolicy } from '@/shared/infra/auth/policies/supplier/delete-supplier.policy'
-import { GetAllSuppliersUseCase } from '@/modules/supplier/application/use-cases/get-all-supplier.use-case'
+import { GetAllSupplierUseCase } from '@/modules/supplier/application/use-cases/get-all-supplier.use-case'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { GetOneSuppliersUseCase } from '@/modules/supplier/application/use-cases/get-one-supplier.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -35,15 +36,17 @@ import {
   ApiTags,
   ApiBearerAuth
 } from '@nestjs/swagger'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Suppliers')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('suppliers')
+@UseInterceptors(CacheInterceptor)
 export class SupplierController {
   constructor(
     private readonly createSupplierUseCase: CreateSupplierUseCase,
-    private readonly getAllSuppliersUseCase: GetAllSuppliersUseCase,
+    private readonly getAllSupplierUseCase: GetAllSupplierUseCase,
     private readonly getOneSupplierUseCase: GetOneSuppliersUseCase,
     private readonly updateSupplierUseCase: UpdateSupplierUseCase,
     private readonly deleteSupplierUseCase: DeleteSupplierUseCase,
@@ -82,12 +85,14 @@ export class SupplierController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadSupplierPolicy())
   @Get()
+  @CacheKey('all-suppliers')
+  @CacheTTL(300)
   async getAll(@CurrentUser() user: UserPayload): Promise<Supplier[]> {
     this.logger.log(
       `Getting all suppliers - Requested by user ${user.email}`,
       'SupplierController'
     )
-    return await this.getAllSuppliersUseCase.execute()
+    return await this.getAllSupplierUseCase.execute()
   }
 
   @ApiOperation({ summary: 'Get a specific supplier' })

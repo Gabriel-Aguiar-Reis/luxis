@@ -6,7 +6,7 @@ import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interfa
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 
 @Injectable()
-export class GetAllCustomersUseCase {
+export class GetAllCustomerUseCase {
   constructor(
     @Inject('CustomerRepository')
     private readonly customerRepository: CustomerRepository,

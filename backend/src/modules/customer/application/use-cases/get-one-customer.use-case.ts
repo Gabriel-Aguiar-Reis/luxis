@@ -7,7 +7,7 @@ import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { CustomerPortfolioService } from '@/modules/customer-portfolio/application/services/customer-portfolio.service'
 
 @Injectable()
-export class GetOneCustomersUseCase {
+export class GetOneCustomerUseCase {
   constructor(
     @Inject('CustomerRepository')
     private readonly customerRepository: CustomerRepository,

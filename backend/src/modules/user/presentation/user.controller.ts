@@ -28,7 +28,8 @@ import {
   Patch,
   Delete,
   HttpCode,
-  HttpStatus
+  HttpStatus,
+  UseInterceptors
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import {
@@ -36,14 +37,17 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
-  ApiParam
+  ApiParam,
+  ApiBody
 } from '@nestjs/swagger'
 import { User } from '@/modules/user/domain/entities/user.entity'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('users')
+@UseInterceptors(CacheInterceptor)
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
@@ -66,6 +70,8 @@ export class UserController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadUserPolicy())
   @Get()
+  @CacheKey('all-users')
+  @CacheTTL(300)
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all users - Requested by user ${user.email}`,
@@ -91,9 +97,14 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({ status: 201, description: 'User created successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid data' })
-  @HttpCode(HttpStatus.CREATED)
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: 201,
+    description: 'User created successfully',
+    type: User
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @Post('signup')
   async create(@Body() dto: CreateUserDto) {
     this.logger.warn(`Creating new user: ${dto.email}`, 'UserController')
@@ -102,6 +113,7 @@ export class UserController {
 
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiBody({ type: UpdateUserDto })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })

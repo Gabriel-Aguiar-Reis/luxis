@@ -34,10 +34,16 @@ import { AuthModule } from '@/modules/auth/auth.module'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { InventoryModule } from '@/modules/inventory/inventory.module'
 import { SeedsModule } from '@/shared/infra/database/seeds/seeds.module'
+import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
   imports: [
     ConfigModule,
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60000,
+      max: 100
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         transport: {

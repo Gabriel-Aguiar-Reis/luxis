@@ -16,7 +16,6 @@ import {
   ApiTags,
   ApiQuery
 } from '@nestjs/swagger'
-import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import { RequestPasswordResetDto } from '@/modules/auth/presentation/dtos/request-password-reset-dto'
 import { ResetPasswordDto } from '@/modules/auth/presentation/dtos/reset-password.dto'
 import { Email } from '@/shared/common/value-object/email.vo'
@@ -24,6 +23,7 @@ import { Response } from 'express'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -40,8 +40,7 @@ export class AuthController {
 
   constructor(
     private readonly authService: AuthService,
-    @InjectPinoLogger(AuthController.name)
-    private readonly logger: PinoLogger
+    private readonly logger: CustomLogger
   ) {}
 
   @ApiOperation({ summary: 'Login' })
@@ -50,7 +49,10 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @Post('login')
   async login(@Body() dto: LoginDto) {
-    this.logger.info('Login request received', dto)
+    this.logger.log(
+      `Login request received for user ${dto.email}`,
+      'AuthController'
+    )
     return await this.authService.login(dto)
   }
 

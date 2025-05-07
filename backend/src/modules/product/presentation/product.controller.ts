@@ -19,7 +19,8 @@ import {
   Param,
   Get,
   Delete,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -32,11 +33,13 @@ import {
   ApiBearerAuth
 } from '@nestjs/swagger'
 import { Product } from '@/modules/product/domain/entities/product.entity'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Products')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('products')
+@UseInterceptors(CacheInterceptor)
 export class ProductController {
   constructor(
     private readonly updateProductUseCase: UpdateProductUseCase,
@@ -57,6 +60,8 @@ export class ProductController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductPolicy())
   @Get()
+  @CacheKey('all-products')
+  @CacheTTL(300)
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all products - Requested by user ${user.email}`,

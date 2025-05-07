@@ -16,7 +16,8 @@ import {
   UseGuards,
   Param,
   Delete,
-  Get
+  Get,
+  UseInterceptors
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -31,11 +32,13 @@ import {
 } from '@nestjs/swagger'
 import { ApiResponse } from '@nestjs/swagger'
 import { Batch } from '@/modules/batch/domain/entities/batch.entity'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Batches')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('batches')
+@UseInterceptors(CacheInterceptor)
 export class BatchController {
   constructor(
     private readonly createBatchUseCase: CreateBatchUseCase,
@@ -55,6 +58,8 @@ export class BatchController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadBatchPolicy())
   @Get()
+  @CacheKey('all-batches')
+  @CacheTTL(300)
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all batches - Requested by user ${user.email}`,
