@@ -2,9 +2,14 @@ import { User } from '@/modules/user/domain/entities/user.entity'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { UserRepository } from '@/modules/user/domain/repositories/user.repository'
 import { Address } from '@/modules/user/domain/value-objects/address.vo'
+import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { PasswordHash } from '@/modules/user/domain/value-objects/password-hash.vo'
+import { Password } from '@/modules/user/domain/value-objects/password.vo'
+import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
+import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Residence } from '@/modules/user/domain/value-objects/residence.vo'
 import { UpdateUserDto } from '@/modules/user/presentation/dtos/update-user.dto'
+import { Email } from '@/shared/common/value-object/email.vo'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import {
   Injectable,
@@ -43,7 +48,9 @@ export class UpdateUserUseCase {
       input.neighborhood ?? userData.residence.address.neighborhood,
       input.city ?? userData.residence.address.city,
       input.federativeUnit ?? userData.residence.address.federativeUnit,
-      input.postalCode ?? userData.residence.address.postalCode,
+      input.postalCode
+        ? new PostalCode(input.postalCode)
+        : userData.residence.address.postalCode,
       input.country ?? userData.residence.address.country,
       input.complement ?? userData.residence.address.complement
     )
@@ -51,12 +58,12 @@ export class UpdateUserUseCase {
     const residence = new Residence(address)
     userData! = new User(
       id,
-      input.name ?? userData.name,
-      input.surName ?? userData.surName,
-      input.phone ?? userData.phone,
-      input.email ?? userData.email,
+      input.name ? new Name(input.name) : userData.name,
+      input.surName ? new Name(input.surName) : userData.surName,
+      input.phone ? new PhoneNumber(input.phone) : userData.phone,
+      input.email ? new Email(input.email) : userData.email,
       input.password
-        ? PasswordHash.generate(input.password)
+        ? PasswordHash.generate(new Password(input.password))
         : userData.passwordHash,
       userData.role,
       residence ?? userData.residence,

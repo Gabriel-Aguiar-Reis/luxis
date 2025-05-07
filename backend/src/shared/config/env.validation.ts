@@ -19,7 +19,12 @@ export const envSchema = z.object({
   SUPERUSER_SURNAME: z.string().optional(),
   SUPERUSER_EMAIL: z.string().email().optional(),
   SUPERUSER_PASSWORD: z.string().optional(),
-  SUPERUSER_PHONE: z.string().optional()
+  SUPERUSER_PHONE: z.string().optional(),
+  EMAIL_USER: z.string().optional(),
+  EMAIL_PASSWORD: z.string().optional(),
+  EMAIL_HOST: z.string().optional(),
+  EMAIL_PORT: z.string().transform(Number).optional(),
+  EMAIL_RESET_PASSWORD_URL: z.string().url().optional()
 })
 
 export type EnvVars = z.infer<typeof envSchema>

@@ -9,7 +9,6 @@ import crypto from 'crypto'
 import { IBatchItemResolver } from '@/modules/batch/domain/services/batch-item-resolver.interface'
 import { Unit } from '@/shared/common/value-object/unit.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'
-import { UUID } from 'typeorm/driver/mongodb/bson.typings'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 @Injectable()
 export class CreateBatchUseCase {
@@ -37,7 +36,7 @@ export class CreateBatchUseCase {
       id: crypto.randomUUID(),
       quantity: new Unit(item.quantity),
       unitCost: new Currency(item.unitCost),
-      salePrice: item.salePrice ? new Currency(item.salePrice) : undefined,
+      salePrice: new Currency(item.salePrice),
       modelName: item.modelName ? new ModelName(item.modelName) : undefined
     }))
     const resolvedItems = await Promise.all(

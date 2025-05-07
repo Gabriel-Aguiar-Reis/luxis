@@ -124,4 +124,24 @@ export class AppConfigService {
   getSuperuserSurName(): string | undefined {
     return this.config.get<string>('SUPERUSER_SURNAME')
   }
+
+  getEmailUser(): string | undefined {
+    return this.config.get<string>('EMAIL_USER')
+  }
+
+  getEmailPassword(): string | undefined {
+    return this.config.get<string>('EMAIL_PASSWORD')
+  }
+
+  getEmailHost(): string | undefined {
+    return this.config.get<string>('EMAIL_HOST')
+  }
+
+  getEmailPort(): number | undefined {
+    return this.config.get<number>('EMAIL_PORT')
+  }
+
+  getEmailResetPasswordUrl(): string | undefined {
+    return this.config.get<string>('EMAIL_RESET_PASSWORD_URL')
+  }
 }

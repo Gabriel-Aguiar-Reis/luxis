@@ -11,6 +11,8 @@ import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/u
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
+import { EmailService } from '@/modules/auth/application/services/email.service'
+
 @Module({
   imports: [
     UserModule,
@@ -31,7 +33,9 @@ import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.
     AppConfigService,
     AuthService,
     JwtStrategy,
-    { provide: 'UserRepository', useClass: UserTypeOrmRepository }
+    EmailService,
+    { provide: 'UserRepository', useClass: UserTypeOrmRepository },
+    { provide: 'EmailService', useClass: EmailService }
   ],
   exports: [AuthService, JwtModule]
 })

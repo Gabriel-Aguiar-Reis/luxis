@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Reset Password</title>
+    <link rel="stylesheet" href="/auth/reset-password-page/styles.css" />
+  </head>
+  <body>
+    <h1>Reset Password</h1>
+    <form id="resetForm">
+      <div class="form-group">
+        <label for="newPassword">New Password:</label>
+        <input
+          type="password"
+          id="newPassword"
+          name="newPassword"
+          required
+          minlength="10"
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s&quot;'`;=\\-]).{10,}$"
+        />
+        <div class="password-requirements">
+          <p>A senha deve conter:</p>
+          <ul>
+            <li id="length">Pelo menos 10 caracteres</li>
+            <li id="uppercase">Uma letra maiúscula</li>
+            <li id="lowercase">Uma letra minúscula</li>
+            <li id="number">Um número</li>
+            <li id="special">Um caractere especial</li>
+          </ul>
+        </div>
+      </div>
+      <button type="submit">Reset Password</button>
+    </form>
+    <div id="message"></div>
+
+    <script src="/auth/reset-password-page/script.js"></script>
+    <script>
+      handleResetPassword('{{token}}')
+    </script>
+  </body>
+</html>

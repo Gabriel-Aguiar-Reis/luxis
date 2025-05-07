@@ -26,7 +26,7 @@ export class UpdateUserDto {
   @IsString()
   @Length(2, 50)
   @IsOptional()
-  name?: Name
+  name?: string
 
   @ApiProperty({
     description: 'The new last name for the user',
@@ -38,7 +38,7 @@ export class UpdateUserDto {
   @IsString()
   @Length(2, 50)
   @IsOptional()
-  surName?: Name
+  surName?: string
 
   @ApiProperty({
     description: 'The new phone number for the user',
@@ -47,7 +47,7 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
-  phone?: PhoneNumber
+  phone?: string
 
   @ApiProperty({
     description: 'The new email for the user',
@@ -56,7 +56,7 @@ export class UpdateUserDto {
   })
   @IsEmail()
   @IsOptional()
-  email?: Email
+  email?: string
 
   @ApiProperty({
     description: 'The new password for the user',
@@ -65,7 +65,7 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
-  password?: Password
+  password?: string
 
   @ApiProperty({
     description: 'The new street for the user',
@@ -129,7 +129,7 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
-  postalCode?: PostalCode
+  postalCode?: string
 
   @ApiProperty({
     description: 'The new country for the user',

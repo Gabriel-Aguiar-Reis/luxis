@@ -5,7 +5,6 @@ import {
   IsCurrency,
   IsInt,
   IsNotEmpty,
-  IsOptional,
   IsString,
   IsUUID,
   Min
@@ -49,7 +48,7 @@ export class CreateBatchItemDto {
     description: 'The unit cost of the batch item',
     example: '100.00',
     type: Currency,
-    required: false
+    required: true
   })
   @IsNotEmpty()
   @IsCurrency()
@@ -59,9 +58,9 @@ export class CreateBatchItemDto {
     description: 'The sale price of the batch item',
     example: '100.00',
     type: Currency,
-    required: false
+    required: true
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsCurrency()
-  salePrice?: string
+  salePrice: string
 }

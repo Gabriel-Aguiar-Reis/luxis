@@ -28,7 +28,7 @@ export class CreateUserDto {
   @IsString()
   @Length(2, 50)
   @IsNotEmpty()
-  name: Name
+  name: string
 
   @ApiProperty({
     description: 'User last name',
@@ -41,7 +41,7 @@ export class CreateUserDto {
   @IsString()
   @Length(2, 50)
   @IsNotEmpty()
-  surName: Name
+  surName: string
 
   @ApiProperty({
     description: 'User phone number',
@@ -51,7 +51,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
-  phone: PhoneNumber
+  phone: string
 
   @ApiProperty({
     description: 'User email',
@@ -61,7 +61,7 @@ export class CreateUserDto {
   })
   @IsEmail()
   @IsNotEmpty()
-  email: Email
+  email: string
 
   @ApiProperty({
     description: 'User password',
@@ -72,7 +72,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
-  password: Password
+  password: string
 
   @ApiProperty({
     description: 'Street address',
@@ -144,7 +144,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
-  postalCode: PostalCode
+  postalCode: string
 
   @ApiProperty({
     description: 'Country',
