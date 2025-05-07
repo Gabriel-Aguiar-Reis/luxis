@@ -42,10 +42,11 @@ import {
 } from '@nestjs/swagger'
 import { User } from '@/modules/user/domain/entities/user.entity'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
-
+import { CustomThrottlerGuard } from '@/shared/infra/guards/throttler.guard'
+import { Throttle } from '@nestjs/throttler'
 @ApiTags('Users')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PoliciesGuard)
+@UseGuards(JwtAuthGuard, PoliciesGuard, CustomThrottlerGuard)
 @Controller('users')
 @UseInterceptors(CacheInterceptor)
 export class UserController {
@@ -72,6 +73,7 @@ export class UserController {
   @Get()
   @CacheKey('all-users')
   @CacheTTL(300)
+  @Throttle({ default: { limit: 3, ttl: 60 * 1000 } })
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all users - Requested by user ${user.email}`,
@@ -106,6 +108,7 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @Post('signup')
+  @Throttle({ default: { limit: 3, ttl: 60 * 1000 } })
   async create(@Body() dto: CreateUserDto) {
     this.logger.warn(`Creating new user: ${dto.email}`, 'UserController')
     return await this.createUserUseCase.execute(dto)

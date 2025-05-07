@@ -1,5 +1,6 @@
 import { ConfigModule } from '@/shared/config/config.module'
 import { databaseConfig } from '@/shared/config/database.config'
+import { throttlerConfig } from '@/shared/config/throttler.config'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CaslRuleBuilder } from '@/shared/infra/auth/casl/interfaces/casl-rules.builder'
 import { SaleCaslRule } from '@/shared/infra/auth/casl/rules/sale.rules'
@@ -35,10 +36,14 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { InventoryModule } from '@/modules/inventory/inventory.module'
 import { SeedsModule } from '@/shared/infra/database/seeds/seeds.module'
 import { CacheModule } from '@nestjs/cache-manager'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { APP_GUARD } from '@nestjs/core'
+import { CustomThrottlerGuard } from '@/shared/infra/guards/throttler.guard'
 
 @Module({
   imports: [
     ConfigModule,
+    ThrottlerModule.forRoot(throttlerConfig()),
     CacheModule.register({
       isGlobal: true,
       ttl: 60000,
@@ -135,6 +140,10 @@ import { CacheModule } from '@nestjs/cache-manager'
         ReturnCaslRule,
         CustomerCaslRule
       ]
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard
     }
   ],
   exports: [CaslAbilityFactory, 'CASL_RULE_BUILDERS']
