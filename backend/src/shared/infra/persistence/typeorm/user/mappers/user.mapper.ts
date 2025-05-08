@@ -12,18 +12,57 @@ import { Country } from '@/modules/user/domain/enums/country.enum'
 
 export class UserMapper {
   static toDomain(entity: UserTypeOrmEntity): User {
-    const residence = new Residence(
-      new Address(
-        entity.residence.street,
-        Number(entity.residence.number),
-        entity.residence.complement ?? '',
-        entity.residence.neighborhood,
-        entity.residence.state as FederativeUnit,
-        new PostalCode(entity.residence.zipCode),
-        entity.residence.country as Country,
-        entity.residence.city
+    let residence: Residence
+    if (entity.residence.split(',').length === 5) {
+      const residenceParts = entity.residence.split(',')
+      const [street, numberAndNeighborhood, cityAndState, postalCode, country] =
+        residenceParts
+      const [number, neighborhood] = numberAndNeighborhood.split(' - ')
+      const [city, state] = cityAndState.split(' - ')
+
+      residence = new Residence(
+        new Address(
+          street.trim(),
+          Number(number.trim()),
+          neighborhood.trim(),
+          city.trim(),
+          state.trim() as FederativeUnit,
+          new PostalCode(postalCode.trim()),
+          country.trim() as Country
+        )
       )
-    )
+    } else if (entity.residence.split(',').length === 6) {
+      const residenceParts = entity.residence.split(',')
+      const [
+        street,
+        number,
+        complementAndNeighborhood,
+        cityAndState,
+        postalCode,
+        country
+      ] = residenceParts
+
+      const [complement, neighborhood] = complementAndNeighborhood
+        .split(' - ')
+        .filter(Boolean)
+      const [city, state] = cityAndState.split(' - ')
+
+      residence = new Residence(
+        new Address(
+          street.trim(),
+          Number(number.trim()),
+          neighborhood.trim(),
+          city.trim(),
+          state.trim() as FederativeUnit,
+          new PostalCode(postalCode.trim()),
+          country.trim() as Country,
+          complement.trim()
+        )
+      )
+    } else {
+      throw new Error('Invalid residence format')
+    }
+
     return new User(
       entity.id,
       new Name(entity.name),
@@ -46,16 +85,7 @@ export class UserMapper {
     entity.email = user.email.getValue()
     entity.passwordHash = user.passwordHash.getValue()
     entity.role = user.role
-    entity.residence = {
-      street: user.residence.address.street,
-      number: user.residence.address.number.toString(),
-      complement: user.residence.address.complement,
-      neighborhood: user.residence.address.neighborhood,
-      city: user.residence.address.city,
-      state: user.residence.address.federativeUnit,
-      country: user.residence.address.country,
-      zipCode: user.residence.address.postalCode.getValue()
-    }
+    entity.residence = user.residence.getValue()
     entity.status = user.status
     return entity
   }

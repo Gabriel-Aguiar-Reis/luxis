@@ -24,27 +24,17 @@ export class UserTypeOrmEntity {
   passwordHash: string
 
   @Column({
-    type: 'enum',
-    enum: Role
+    type: 'text',
+    default: Role.UNASSIGNED
   })
   role: Role
 
-  @Column('jsonb')
-  residence: {
-    street: string
-    number: string
-    complement?: string
-    neighborhood: string
-    city: string
-    state: string
-    country: string
-    zipCode: string
-  }
+  @Column()
+  residence: string
 
   @Column({
-    type: 'enum',
-    enum: UserStatus,
-    default: UserStatus.ACTIVE
+    type: 'text',
+    default: UserStatus.PENDING
   })
   status: UserStatus
 }

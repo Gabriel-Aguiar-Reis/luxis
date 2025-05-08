@@ -29,8 +29,8 @@ export class Address {
 
   getValue(): string {
     if (this.complement) {
-      return `${this.street}, ${this.number}, ${this.complement} - ${this.neighborhood}, ${this.city} - ${this.federativeUnit}, ${this.postalCode}`
+      return `${this.street}, ${this.number}, ${this.complement} - ${this.neighborhood}, ${this.city} - ${this.federativeUnit}, ${this.postalCode.getValue()}, ${this.country}`
     }
-    return `${this.street}, ${this.number} - ${this.neighborhood}, ${this.city} - ${this.federativeUnit}, ${this.postalCode}`
+    return `${this.street}, ${this.number} - ${this.neighborhood}, ${this.city} - ${this.federativeUnit}, ${this.postalCode.getValue()}, ${this.country}`
   }
 }
