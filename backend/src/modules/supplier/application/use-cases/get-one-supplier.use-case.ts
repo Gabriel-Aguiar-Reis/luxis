@@ -4,7 +4,7 @@ import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { UUID } from 'crypto'
 
 @Injectable()
-export class GetOneSuppliersUseCase {
+export class GetOneSupplierUseCase {
   constructor(
     @Inject('SupplierRepository')
     private readonly supplierRepository: SupplierRepository

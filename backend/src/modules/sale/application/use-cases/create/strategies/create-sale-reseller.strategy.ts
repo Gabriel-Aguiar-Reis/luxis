@@ -34,6 +34,7 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
     const sale = new Sale(
       crypto.randomUUID(),
       user.id,
+      dto.customerId,
       dto.productIds,
       dto.saleDate,
       totalAmount,

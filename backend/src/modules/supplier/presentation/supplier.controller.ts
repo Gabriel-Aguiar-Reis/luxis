@@ -24,7 +24,7 @@ import { UpdateSupplierPolicy } from '@/shared/infra/auth/policies/supplier/upda
 import { DeleteSupplierPolicy } from '@/shared/infra/auth/policies/supplier/delete-supplier.policy'
 import { GetAllSupplierUseCase } from '@/modules/supplier/application/use-cases/get-all-supplier.use-case'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
-import { GetOneSuppliersUseCase } from '@/modules/supplier/application/use-cases/get-one-supplier.use-case'
+import { GetOneSupplierUseCase } from '@/modules/supplier/application/use-cases/get-one-supplier.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
@@ -47,7 +47,7 @@ export class SupplierController {
   constructor(
     private readonly createSupplierUseCase: CreateSupplierUseCase,
     private readonly getAllSupplierUseCase: GetAllSupplierUseCase,
-    private readonly getOneSupplierUseCase: GetOneSuppliersUseCase,
+    private readonly getOneSupplierUseCase: GetOneSupplierUseCase,
     private readonly updateSupplierUseCase: UpdateSupplierUseCase,
     private readonly deleteSupplierUseCase: DeleteSupplierUseCase,
     private readonly logger: CustomLogger

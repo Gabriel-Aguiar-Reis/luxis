@@ -53,8 +53,8 @@ export class User {
 
   @ApiProperty({
     description: 'The role of the user',
-    enum: ['ADMIN', 'RESELLER', 'ASSISTANT'],
-    example: 'RESELLER',
+    enum: Role,
+    example: Role.RESELLER,
     type: String
   })
   public role: Role

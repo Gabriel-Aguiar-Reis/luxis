@@ -17,6 +17,13 @@ export class Sale {
   public readonly id: UUID
 
   @ApiProperty({
+    description: 'The ID of the consumer',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String
+  })
+  public readonly customerId: UUID
+
+  @ApiProperty({
     description: 'The ID of the reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
     type: String
@@ -79,6 +86,7 @@ export class Sale {
 
   constructor(
     id: UUID,
+    customerId: UUID,
     resellerId: UUID,
     productIds: UUID[] = [],
     saleDate: Date,
@@ -89,6 +97,7 @@ export class Sale {
     installmentsInterval: Unit = new Unit(0)
   ) {
     this.id = id
+    this.customerId = customerId
     this.resellerId = resellerId
     this.productIds = productIds
     this.saleDate = saleDate
