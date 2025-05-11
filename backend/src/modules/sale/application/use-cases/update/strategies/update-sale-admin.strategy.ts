@@ -41,6 +41,7 @@ export class UpdateSaleAdminStrategy implements UpdateSaleStrategy {
 
     sale = new Sale(
       sale.id,
+      sale.customerId,
       sale.resellerId,
       dto.productIds,
       sale.saleDate,

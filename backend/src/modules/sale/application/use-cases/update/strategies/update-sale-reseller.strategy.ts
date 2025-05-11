@@ -43,6 +43,7 @@ export class UpdateSaleResellerStrategy implements UpdateSaleStrategy {
 
     sale = new Sale(
       sale.id,
+      sale.customerId,
       sale.resellerId,
       dto.productIds ?? sale.productIds,
       sale.saleDate,

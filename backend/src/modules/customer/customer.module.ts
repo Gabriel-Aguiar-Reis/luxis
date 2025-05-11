@@ -1,8 +1,8 @@
 import { CustomerController } from '@/modules/customer/presentation/customer.controller'
 import { CreateCustomerUseCase } from '@/modules/customer/application/use-cases/create-customer.use-case'
-import { GetAllCustomersUseCase } from '@/modules/customer/application/use-cases/get-all-customer.use-case'
+import { GetAllCustomerUseCase } from '@/modules/customer/application/use-cases/get-all-customer.use-case'
 import { DeleteCustomerUseCase } from '@/modules/customer/application/use-cases/delete-customer.use-case'
-import { GetOneCustomersUseCase } from '@/modules/customer/application/use-cases/get-one-customer.use-case'
+import { GetOneCustomerUseCase } from '@/modules/customer/application/use-cases/get-one-customer.use-case'
 import { UpdateCustomerUseCase } from '@/modules/customer/application/use-cases/update-customer.use-case'
 import { TransferCustomerUseCase } from '@/modules/customer/application/use-cases/transfer-customer.use-case'
 import { CustomerTypeOrmRepository } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.repository'
@@ -30,8 +30,8 @@ import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factor
     CustomLogger,
     AppConfigService,
     CreateCustomerUseCase,
-    GetAllCustomersUseCase,
-    GetOneCustomersUseCase,
+    GetAllCustomerUseCase,
+    GetOneCustomerUseCase,
     UpdateCustomerUseCase,
     DeleteCustomerUseCase,
     TransferCustomerUseCase,
