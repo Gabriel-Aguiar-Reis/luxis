@@ -1,6 +1,6 @@
 import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
 import { OwnershipTransferRepository } from '@/modules/ownership-transfer/domain/repositories/ownership-transfer.repository'
-import { UpdateOwnershipTransferDto } from '@/modules/ownership-transfer/presentation/dtos/update-ownership-transfer.dto'
+import { UpdateOwnershipTransferDto } from '@/modules/ownership-transfer/application/dtos/update-ownership-transfer.dto'
 import { Injectable, Inject, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
 

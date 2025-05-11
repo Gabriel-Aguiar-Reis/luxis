@@ -1,7 +1,7 @@
 import { CategoryStatus } from '@/modules/category/domain/enums/category.enum'
 import { Category } from '@/modules/category/domain/entities/category.entity'
 import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
-import { CreateCategoryDto } from '@/modules/category/presentation/dtos/create-category.dto'
+import { CreateCategoryDto } from '@/modules/category/application/dtos/create-category.dto'
 import { Injectable, Inject } from '@nestjs/common'
 import { CategoryName } from '@/modules/category/domain/value-objects/category-name.vo'
 import { Description } from '@/shared/common/value-object/description.vo'

@@ -4,8 +4,8 @@ import { DeleteOwnershipTransferUseCase } from '@/modules/ownership-transfer/app
 import { GetAllOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/get-all-ownership-transfer.use-case'
 import { GetOneOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/get-one-ownership-transfer.use-case'
 import { UpdateOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-ownership-transfer.use-case'
-import { CreateOwnershipTransferDto } from '@/modules/ownership-transfer/presentation/dtos/create-ownership-transfer.dto'
-import { UpdateOwnershipTransferDto } from '@/modules/ownership-transfer/presentation/dtos/update-ownership-transfer.dto'
+import { CreateOwnershipTransferDto } from '@/modules/ownership-transfer/application/dtos/create-ownership-transfer.dto'
+import { UpdateOwnershipTransferDto } from '@/modules/ownership-transfer/application/dtos/update-ownership-transfer.dto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import {
   Controller,

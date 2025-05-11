@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { Return } from '@/modules/return/domain/entities/return.entity'
 import { ReturnRepository } from '@/modules/return/domain/repositories/return.repository'
-import { CreateReturnDto } from '@/modules/return/presentation/dtos/create-return-dto'
+import { CreateReturnDto } from '@/modules/return/application/dtos/create-return-dto'
 import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'

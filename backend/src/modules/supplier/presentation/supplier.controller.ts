@@ -9,8 +9,8 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
-import { CreateSupplierDto } from '@/modules/supplier/presentation/dtos/create-supplier.dto'
-import { UpdateSupplierDto } from '@/modules/supplier/presentation/dtos/update-supplier.dto'
+import { CreateSupplierDto } from '@/modules/supplier/application/dtos/create-supplier.dto'
+import { UpdateSupplierDto } from '@/modules/supplier/application/dtos/update-supplier.dto'
 import { CreateSupplierUseCase } from '@/modules/supplier/application/use-cases/create-supplier.use-case'
 import { UpdateSupplierUseCase } from '@/modules/supplier/application/use-cases/update-supplier.use-case'
 import { DeleteSupplierUseCase } from '@/modules/supplier/application/use-cases/delete-supplier.use-case'

@@ -1,4 +1,4 @@
-import { CreateSupplierDto } from '@/modules/supplier/presentation/dtos/create-supplier.dto'
+import { CreateSupplierDto } from '@/modules/supplier/application/dtos/create-supplier.dto'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { SupplierRepository } from '@/modules/supplier/domain/repositories/supplier.repository'
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'

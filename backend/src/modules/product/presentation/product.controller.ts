@@ -3,7 +3,7 @@ import { GetAllProductUseCase } from '@/modules/product/application/use-cases/ge
 import { GetOneProductUseCase } from '@/modules/product/application/use-cases/get-one-product.use-case'
 import { SellProductUseCase } from '@/modules/product/application/use-cases/sell-product.use-case'
 import { UpdateProductUseCase } from '@/modules/product/application/use-cases/update-product.use-case'
-import { UpdateProductDto } from '@/modules/product/presentation/dtos/update-product.dto'
+import { UpdateProductDto } from '@/modules/product/application/dtos/update-product.dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'

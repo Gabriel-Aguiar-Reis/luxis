@@ -8,7 +8,7 @@ import {
   UseInterceptors
 } from '@nestjs/common'
 import { AuthService } from '@/modules/auth/application/services/auth.service'
-import { LoginDto } from '@/modules/auth/presentation/dtos/login.dto'
+import { LoginDto } from '@/modules/auth/application/dtos/login.dto'
 import {
   ApiOperation,
   ApiBody,
@@ -16,8 +16,8 @@ import {
   ApiTags,
   ApiQuery
 } from '@nestjs/swagger'
-import { RequestPasswordResetDto } from '@/modules/auth/presentation/dtos/request-password-reset-dto'
-import { ResetPasswordDto } from '@/modules/auth/presentation/dtos/reset-password.dto'
+import { RequestPasswordResetDto } from '@/modules/auth/application/dtos/request-password-reset-dto'
+import { ResetPasswordDto } from '@/modules/auth/application/dtos/reset-password.dto'
 import { Email } from '@/shared/common/value-object/email.vo'
 import { Response } from 'express'
 import { readFileSync } from 'fs'

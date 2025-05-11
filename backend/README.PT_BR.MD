@@ -154,6 +154,7 @@ O projeto segue os princípios da Clean Architecture e DDD, com a seguinte estru
 │   │   │   ├── auth/         # Autenticação e autorização
 │   │   │   ├── user/         # Gestão de usuários
 │   │   │   │   ├── application/ # Aplicação de negócio
+│   │   │   │   │   ├── dtos/ # Data Transfer Objects
 │   │   │   │   │   └── use-cases/ # Casos de uso
 │   │   │   │   ├── domain/   # Domínio da aplicação
 │   │   │   │   │   ├── entities/ # Entidades
@@ -161,7 +162,6 @@ O projeto segue os princípios da Clean Architecture e DDD, com a seguinte estru
 │   │   │   │   │   ├── values-objects/ # Valores de objeto
 │   │   │   │   │   └── repositories/ # Repositórios
 │   │   │   │   └── presentation/ # Camadas de apresentação
-│   │   │   │   │   ├── dtos/ # Data Transfer Objects
 │   │   │   │   │   └── user.controller.ts/ # Controlador de usuários
 │   │   │   │   └── user.module.ts # Módulo de usuários
 │   │   │   ├── product/      # Gestão de produtos

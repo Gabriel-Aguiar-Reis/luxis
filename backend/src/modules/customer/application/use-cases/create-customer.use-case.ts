@@ -1,4 +1,4 @@
-import { CreateCustomerDto } from '@/modules/customer/presentation/dtos/create-customer.dto'
+import { CreateCustomerDto } from '@/modules/customer/application/dtos/create-customer.dto'
 import { Customer } from '@/modules/customer/domain/entities/customer.entity'
 import { Inject, Injectable } from '@nestjs/common'
 import { CustomerPortfolio } from '@/modules/customer-portfolio/domain/entities/customer-portfolio.entity'

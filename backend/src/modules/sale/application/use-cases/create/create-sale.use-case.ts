@@ -1,6 +1,6 @@
 import { CreateSaleStrategyFactory } from '@/modules/sale/application/use-cases/create/strategies/create-sale.strategy.factory'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
-import { CreateSaleDto } from '@/modules/sale/presentation/dtos/create-sale.dto'
+import { CreateSaleDto } from '@/modules/sale/application/dtos/create-sale.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { Injectable } from '@nestjs/common'
 

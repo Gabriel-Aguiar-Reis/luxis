@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { SupplierRepository } from '@/modules/supplier/domain/repositories/supplier.repository'
-import { UpdateSupplierDto } from '@/modules/supplier/presentation/dtos/update-supplier.dto'
+import { UpdateSupplierDto } from '@/modules/supplier/application/dtos/update-supplier.dto'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'

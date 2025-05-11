@@ -9,7 +9,7 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
-import { CreateCustomerDto } from '@/modules/customer/presentation/dtos/create-customer.dto'
+import { CreateCustomerDto } from '@/modules/customer/application/dtos/create-customer.dto'
 import { CreateCustomerUseCase } from '@/modules/customer/application/use-cases/create-customer.use-case'
 import { DeleteCustomerUseCase } from '@/modules/customer/application/use-cases/delete-customer.use-case'
 import { UUID } from 'crypto'
@@ -24,10 +24,10 @@ import { GetAllCustomerUseCase } from '@/modules/customer/application/use-cases/
 import { Customer } from '@/modules/customer/domain/entities/customer.entity'
 import { GetOneCustomerUseCase } from '@/modules/customer/application/use-cases/get-one-customer.use-case'
 import { UpdateCustomerUseCase } from '@/modules/customer/application/use-cases/update-customer.use-case'
-import { UpdateCustomerDto } from '@/modules/customer/presentation/dtos/update-customer.dto'
+import { UpdateCustomerDto } from '@/modules/customer/application/dtos/update-customer.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
-import { TransferCustomerDto } from '@/modules/customer/presentation/dtos/transfer-customer.dto'
+import { TransferCustomerDto } from '@/modules/customer/application/dtos/transfer-customer.dto'
 import { TransferCustomerUseCase } from '@/modules/customer/application/use-cases/transfer-customer.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import {

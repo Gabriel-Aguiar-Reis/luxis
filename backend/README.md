@@ -154,6 +154,7 @@ This project follows Clean Architecture and DDD principles, with the following s
 │   │   │   ├── auth/         # Authentication and authorization
 │   │   │   ├── user/         # User management
 │   │   │   │   ├── application/ # Business logic
+│   │   │   │   │   ├── dtos/ # Data Transfer Objects
 │   │   │   │   │   └── use-cases/ # Use cases
 │   │   │   │   ├── domain/   # Domain layer
 │   │   │   │   │   ├── entities/ # Entities
@@ -161,7 +162,6 @@ This project follows Clean Architecture and DDD principles, with the following s
 │   │   │   │   │   ├── values-objects/ # Value objects
 │   │   │   │   │   └── repositories/ # Repositories
 │   │   │   │   └── presentation/ # Presentation layer
-│   │   │   │   │   ├── dtos/ # Data Transfer Objects
 │   │   │   │   │   └── user.controller.ts/ # User controller
 │   │   │   │   └── user.module.ts # User module
 │   │   │   ├── product/      # Product management

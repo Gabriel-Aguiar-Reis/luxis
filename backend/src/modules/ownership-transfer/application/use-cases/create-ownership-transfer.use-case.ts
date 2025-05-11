@@ -1,7 +1,7 @@
 import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
 import { OwnershipTransferStatus } from '@/modules/ownership-transfer/domain/enums/ownership-transfer-status.enum'
 import { OwnershipTransferRepository } from '@/modules/ownership-transfer/domain/repositories/ownership-transfer.repository'
-import { CreateOwnershipTransferDto } from '@/modules/ownership-transfer/presentation/dtos/create-ownership-transfer.dto'
+import { CreateOwnershipTransferDto } from '@/modules/ownership-transfer/application/dtos/create-ownership-transfer.dto'
 import { Injectable, Inject, BadRequestException } from '@nestjs/common'
 import * as crypto from 'crypto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'

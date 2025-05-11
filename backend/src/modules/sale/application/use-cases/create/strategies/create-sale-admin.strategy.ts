@@ -1,5 +1,5 @@
 import { Injectable, ForbiddenException, Inject } from '@nestjs/common'
-import { CreateSaleDto } from '@/modules/sale/presentation/dtos/create-sale.dto'
+import { CreateSaleDto } from '@/modules/sale/application/dtos/create-sale.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'

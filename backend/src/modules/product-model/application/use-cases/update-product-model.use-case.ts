@@ -2,7 +2,7 @@ import { ProductModel } from '@/modules/product-model/domain/entities/product-mo
 import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
-import { UpdateProductModelDto } from '@/modules/product-model/presentation/dtos/update-product-model.dto'
+import { UpdateProductModelDto } from '@/modules/product-model/application/dtos/update-product-model.dto'
 import { CloudinaryService } from '@/shared/infra/cloudinary/cloudinary.service'
 import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'

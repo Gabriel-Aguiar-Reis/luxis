@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common'
 import { ReturnRepository } from '@/modules/return/domain/repositories/return.repository'
 import { UUID } from 'crypto'
-import { UpdateReturnDto } from '@/modules/return/presentation/dtos/update-return-dto'
+import { UpdateReturnDto } from '@/modules/return/application/dtos/update-return-dto'
 import { Return } from '@/modules/return/domain/entities/return.entity'
 import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 
