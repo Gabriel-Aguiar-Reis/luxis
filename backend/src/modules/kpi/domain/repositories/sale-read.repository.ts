@@ -1,10 +1,10 @@
+import { SalesByResellerDto } from '@/modules/kpi/application/dtos/sales-by-reseller.dto'
 import { TotalSalesByResellerDto } from '@/modules/kpi/application/dtos/total-sales-by-reseller.dto'
 import { TotalSalesInPeriodDto } from '@/modules/kpi/application/dtos/total-sales-in-period.dto'
-import { SalesByReseller } from '@/modules/kpi/domain/entities/sales-by-reseller.entity'
 import { UUID } from 'crypto'
 
 export abstract class SaleReadRepository {
-  abstract salesByResellerId(resellerId: UUID): Promise<SalesByReseller>
+  abstract salesByResellerId(resellerId: UUID): Promise<SalesByResellerDto>
   abstract totalSalesInPeriod(
     start: Date,
     end: Date

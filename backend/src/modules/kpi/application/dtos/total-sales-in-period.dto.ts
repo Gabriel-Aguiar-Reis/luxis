@@ -14,7 +14,7 @@ export class TotalSalesInPeriodDto {
   public end: Date
 
   @ApiProperty({
-    description: 'The total sales amount in the period',
+    description: 'The total sales count in the period',
     example: 1000
   })
   public totalSales: number

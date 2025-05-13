@@ -10,13 +10,15 @@ import {
   ApiBearerAuth
 } from '@nestjs/swagger'
 import { GetResellerSalesUseCase } from '@/modules/kpi/application/use-cases/admin/get-sales-by-reseller-kpi'
-import { SalesByReseller } from '@/modules/kpi/domain/entities/sales-by-reseller.entity'
 import { AdminKpiControllerGuard } from '@/shared/infra/auth/guards/admin-kpi-controller.guard'
 import { GetTotalProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-in-stock-kpi'
 import { TotalSalesInPeriodDto } from '@/modules/kpi/application/dtos/total-sales-in-period.dto'
 import { TotalSalesByResellerDto } from '@/modules/kpi/application/dtos/total-sales-by-reseller.dto'
 import { GetTotalSalesByResellerUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-sales-by-reseller-kpi'
 import { GetTotalProductWithResellersUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-with-resellers-kpi'
+import { SalesByResellerDto } from '@/modules/kpi/application/dtos/sales-by-reseller.dto'
+import { GetProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-products-in-stock-kpi'
+import { ProductInStockDto } from '@/modules/kpi/application/dtos/product-in-stock.dto'
 
 @ApiTags('Admins KPIs')
 @ApiBearerAuth()
@@ -29,14 +31,15 @@ export class AdminKpiController {
     private readonly getTotalProductsInStockUseCase: GetTotalProductsInStockUseCase,
     private readonly GetTotalSalesInPeriodUseCase: GetTotalSalesInPeriodUseCase,
     private readonly getTotalSalesByResellerUseCase: GetTotalSalesByResellerUseCase,
-    private readonly getTotalProductWithResellersUseCase: GetTotalProductWithResellersUseCase
+    private readonly getTotalProductWithResellersUseCase: GetTotalProductWithResellersUseCase,
+    private readonly getProductsInStockUseCase: GetProductsInStockUseCase
   ) {}
 
   @ApiOperation({ summary: 'Get Resellers sales' })
   @ApiResponse({
     status: 200,
     description: 'List of resellers sales returned successfully',
-    type: [SalesByReseller]
+    type: [SalesByResellerDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -59,6 +62,20 @@ export class AdminKpiController {
   async getTotalProductsInStock() {
     this.logger.log('Get Total Products In Stock', 'AdminKpiController')
     return this.getTotalProductsInStockUseCase.execute()
+  }
+
+  @ApiOperation({ summary: 'Get Products In Stock' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of products in stock returned successfully',
+    type: [ProductInStockDto]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @Get('products/in-stock')
+  async getProductsInStock() {
+    this.logger.log('Get Products In Stock', 'AdminKpiController')
+    return this.getProductsInStockUseCase.execute()
   }
 
   @ApiOperation({ summary: 'Get Total Products With Resellers' })

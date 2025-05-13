@@ -1,6 +1,6 @@
+import { SalesByResellerDto } from '@/modules/kpi/application/dtos/sales-by-reseller.dto'
 import { TotalSalesByResellerDto } from '@/modules/kpi/application/dtos/total-sales-by-reseller.dto'
 import { TotalSalesInPeriodDto } from '@/modules/kpi/application/dtos/total-sales-in-period.dto'
-import { SalesByReseller } from '@/modules/kpi/domain/entities/sales-by-reseller.entity'
 import { SaleReadRepository } from '@/modules/kpi/domain/repositories/sale-read.repository'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { SaleMapper } from '@/shared/infra/persistence/typeorm/sale/mappers/sale.mapper'
@@ -44,7 +44,7 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
     }))
   }
 
-  async salesByResellerId(resellerId: UUID): Promise<SalesByReseller> {
+  async salesByResellerId(resellerId: UUID): Promise<SalesByResellerDto> {
     const resellerEntity = await this.userRepo.findOne({
       where: { id: resellerId }
     })
@@ -66,9 +66,10 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
 
     const total = sumResult?.sum || 0
     return {
-      reseller,
+      resellerId: reseller.id,
+      resellerName: `${reseller.name} ${reseller.surName}`,
       sales,
-      totalSales: new Currency(total.toFixed(2)),
+      totalSales: total.toString(),
       salesCount: sales.length
     }
   }
