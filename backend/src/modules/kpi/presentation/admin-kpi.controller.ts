@@ -1,3 +1,4 @@
+import { GetTotalSalesInPeriodUseCase } from './../application/use-cases/admin/get-total-sales-in-period-kpi'
 import { Controller, Get, Body, Param, UseGuards } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
@@ -11,6 +12,11 @@ import {
 import { GetResellerSalesUseCase } from '@/modules/kpi/application/use-cases/admin/get-sales-by-reseller-kpi'
 import { SalesByReseller } from '@/modules/kpi/domain/entities/sales-by-reseller.entity'
 import { AdminKpiControllerGuard } from '@/shared/infra/auth/guards/admin-kpi-controller.guard'
+import { GetTotalProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-in-stock-kpi'
+import { TotalSalesInPeriodDto } from '@/modules/kpi/application/dtos/total-sales-in-period.dto'
+import { TotalSalesByResellerDto } from '@/modules/kpi/application/dtos/total-sales-by-reseller.dto'
+import { GetTotalSalesByResellerUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-sales-by-reseller-kpi'
+import { GetTotalProductWithResellersUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-with-resellers-kpi'
 
 @ApiTags('Admins KPIs')
 @ApiBearerAuth()
@@ -19,8 +25,13 @@ import { AdminKpiControllerGuard } from '@/shared/infra/auth/guards/admin-kpi-co
 export class AdminKpiController {
   constructor(
     private readonly logger: CustomLogger,
-    private readonly getResellerSalesUseCase: GetResellerSalesUseCase
+    private readonly getResellerSalesUseCase: GetResellerSalesUseCase,
+    private readonly getTotalProductsInStockUseCase: GetTotalProductsInStockUseCase,
+    private readonly GetTotalSalesInPeriodUseCase: GetTotalSalesInPeriodUseCase,
+    private readonly getTotalSalesByResellerUseCase: GetTotalSalesByResellerUseCase,
+    private readonly getTotalProductWithResellersUseCase: GetTotalProductWithResellersUseCase
   ) {}
+
   @ApiOperation({ summary: 'Get Resellers sales' })
   @ApiResponse({
     status: 200,
@@ -34,5 +45,64 @@ export class AdminKpiController {
   async getResellerSales(@Param('id') id: UUID) {
     this.logger.log('Get Reseller Sales', 'AdminKpiController')
     return this.getResellerSalesUseCase.execute(id)
+  }
+
+  @ApiOperation({ summary: 'Get Total Products In Stock' })
+  @ApiResponse({
+    status: 200,
+    description: 'Total products in stock returned successfully',
+    type: Number
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @Get('products/in-stock/total')
+  async getTotalProductsInStock() {
+    this.logger.log('Get Total Products In Stock', 'AdminKpiController')
+    return this.getTotalProductsInStockUseCase.execute()
+  }
+
+  @ApiOperation({ summary: 'Get Total Products With Resellers' })
+  @ApiResponse({
+    status: 200,
+    description: 'Total products with resellers returned successfully',
+    type: Number
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @Get('products/with-resellers/total')
+  async getTotalProductsWithResellers() {
+    this.logger.log('Get Total Products With Resellers', 'AdminKpiController')
+    return this.getTotalProductWithResellersUseCase.execute()
+  }
+
+  @ApiOperation({ summary: 'Get Total Sales In Period' })
+  @ApiResponse({
+    status: 200,
+    description: 'Total sales in period returned successfully',
+    type: TotalSalesInPeriodDto
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @Get('sales/total')
+  async getTotalSalesInPeriod(
+    @Body('start') start: Date,
+    @Body('end') end: Date
+  ) {
+    this.logger.log('Get Total Sales In Period', 'AdminKpiController')
+    return this.GetTotalSalesInPeriodUseCase.execute(start, end)
+  }
+
+  @ApiOperation({ summary: 'Get Total Sales By Reseller' })
+  @ApiResponse({
+    status: 200,
+    description: 'Total sales by reseller returned successfully',
+    type: TotalSalesByResellerDto
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @Get('sales/total/resellers')
+  async getTotalSalesByReseller() {
+    this.logger.log('Get Total Sales By Reseller', 'AdminKpiController')
+    return this.getTotalSalesByResellerUseCase.execute()
   }
 }

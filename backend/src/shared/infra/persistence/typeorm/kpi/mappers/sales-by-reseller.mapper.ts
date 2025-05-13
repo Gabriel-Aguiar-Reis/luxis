@@ -5,7 +5,7 @@ export class SalesByResellerMapper {
   static toDto(entity: SalesByReseller): SalesByResellerDto {
     return {
       resellerId: entity.reseller.id,
-      resellerName: entity.reseller.name.getValue(),
+      resellerName: `${entity.reseller.name.getValue()} ${entity.reseller.surName.getValue()}`,
       sales: entity.sales,
       totalSales: entity.totalSales.toString(),
       salesCount: entity.sales.length

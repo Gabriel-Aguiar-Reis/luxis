@@ -1,6 +1,7 @@
+import { TotalSalesByResellerDto } from '@/modules/kpi/application/dtos/total-sales-by-reseller.dto'
+import { TotalSalesInPeriodDto } from '@/modules/kpi/application/dtos/total-sales-in-period.dto'
 import { SalesByReseller } from '@/modules/kpi/domain/entities/sales-by-reseller.entity'
 import { SaleReadRepository } from '@/modules/kpi/domain/repositories/sale-read.repository'
-import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { SaleMapper } from '@/shared/infra/persistence/typeorm/sale/mappers/sale.mapper'
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
@@ -10,13 +11,40 @@ import { NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { Repository } from 'typeorm'
 
+type TotalSalesRawResult = {
+  resellerId: string
+  resellerName: string
+  resellerSurName: string
+  salesCount: string
+}
+
 export class SaleReadTypeOrmRepository implements SaleReadRepository {
   constructor(
     private readonly saleRepo: Repository<SaleTypeOrmEntity>,
     private readonly userRepo: Repository<UserTypeOrmEntity>
   ) {}
 
-  async totalSalesByResellerId(resellerId: UUID): Promise<SalesByReseller> {
+  async totalSalesByReseller(): Promise<TotalSalesByResellerDto[]> {
+    const rawResult = await this.saleRepo
+      .createQueryBuilder('sale')
+      .innerJoin(UserTypeOrmEntity, 'user', 'user.id = sale.resellerId')
+      .select('user.id', 'resellerId')
+      .addSelect('user.name', 'resellerName')
+      .addSelect('user.surName', 'resellerSurName')
+      .addSelect('COUNT(sale.id)', 'salesCount')
+      .groupBy('user.id')
+      .addGroupBy('user.name')
+      .addGroupBy('user.surName')
+      .getRawMany<TotalSalesRawResult>()
+
+    return rawResult.map((row) => ({
+      resellerId: row.resellerId,
+      resellerName: `${row.resellerName} ${row.resellerSurName}`,
+      salesCount: parseInt(row.salesCount, 10)
+    }))
+  }
+
+  async salesByResellerId(resellerId: UUID): Promise<SalesByReseller> {
     const resellerEntity = await this.userRepo.findOne({
       where: { id: resellerId }
     })
@@ -43,6 +71,21 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
       totalSales: new Currency(total.toFixed(2)),
       salesCount: sales.length
     }
+  }
+
+  async totalSalesInPeriod(
+    start: Date,
+    end: Date
+  ): Promise<TotalSalesInPeriodDto> {
+    const totalSales = await this.saleRepo
+      .createQueryBuilder('sale')
+      .where('sale.sale_date BETWEEN :start AND :end', {
+        start,
+        end
+      })
+      .getCount()
+
+    return { start, end, totalSales }
   }
   // totalSalesInPeriod(start: Date, end: Date): Promise<Sale[]> {
   //   throw new Error('Method not implemented.')

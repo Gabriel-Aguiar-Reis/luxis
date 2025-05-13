@@ -12,7 +12,7 @@ export class GetResellerSalesUseCase {
   ) {}
 
   async execute(id: UUID): Promise<SalesByResellerDto> {
-    const entity = await this.saleReadRepository.totalSalesByResellerId(id)
+    const entity = await this.saleReadRepository.salesByResellerId(id)
     return SalesByResellerMapper.toDto(entity)
   }
 }
