@@ -8,7 +8,6 @@ import {
   ApiTags,
   ApiBearerAuth
 } from '@nestjs/swagger'
-import { SalesByReseller } from '@/modules/kpi/domain/entities/sales-by-reseller.entity'
 import { AdminKpiControllerGuard } from '@/shared/infra/auth/guards/admin-kpi-controller.guard'
 
 @ApiTags('Resellers KPIs')

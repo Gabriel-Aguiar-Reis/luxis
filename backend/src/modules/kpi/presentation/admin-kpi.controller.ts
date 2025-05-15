@@ -19,6 +19,7 @@ import { GetTotalProductWithResellersUseCase } from '@/modules/kpi/application/u
 import { SalesByResellerDto } from '@/modules/kpi/application/dtos/sales-by-reseller.dto'
 import { GetProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-products-in-stock-kpi'
 import { ProductInStockDto } from '@/modules/kpi/application/dtos/product-in-stock.dto'
+import { ProductWithResellerDto } from '@/modules/kpi/application/dtos/product-with-reseller.dto'
 
 @ApiTags('Admins KPIs')
 @ApiBearerAuth()
@@ -76,6 +77,20 @@ export class AdminKpiController {
   async getProductsInStock() {
     this.logger.log('Get Products In Stock', 'AdminKpiController')
     return this.getProductsInStockUseCase.execute()
+  }
+
+  @ApiOperation({ summary: 'Get Products With Resellers' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of products with resellers returned successfully',
+    type: [ProductWithResellerDto]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @Get('products/with-resellers')
+  async getProductsWithResellers() {
+    this.logger.log('Get Products With Resellers', 'AdminKpiController')
+    return this.getTotalProductWithResellersUseCase.execute()
   }
 
   @ApiOperation({ summary: 'Get Total Products With Resellers' })

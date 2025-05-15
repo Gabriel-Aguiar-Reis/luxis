@@ -64,8 +64,8 @@ export class Sale {
 
   @ApiProperty({
     description: 'The number of installments',
-    example: '12',
-    type: String
+    example: 12,
+    type: Number
   })
   public numberInstallments: Unit
 
@@ -79,8 +79,8 @@ export class Sale {
 
   @ApiProperty({
     description: 'The interval between installments in days',
-    example: '30',
-    type: String
+    example: 30,
+    type: Number
   })
   public installmentsInterval: Unit
 

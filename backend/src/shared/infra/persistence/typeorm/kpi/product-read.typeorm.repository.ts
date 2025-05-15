@@ -1,4 +1,5 @@
 import { ProductInStockDto } from '@/modules/kpi/application/dtos/product-in-stock.dto'
+import { ProductWithResellerDto } from '@/modules/kpi/application/dtos/product-with-reseller.dto'
 import { ProductReadRepository } from '@/modules/kpi/domain/repositories/product-read.repository'
 import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
@@ -16,8 +17,41 @@ type ProductInStockRawResult = {
   salePrice: string
   status: string
 }
+
+type ProductWithResellerRawResult = Omit<ProductInStockRawResult, 'status'>
+
 export class ProductReadTypeOrmRepository implements ProductReadRepository {
   constructor(private readonly productRepo: Repository<ProductTypeOrmEntity>) {}
+
+  async productsWithResellers(): Promise<ProductWithResellerDto[]> {
+    const rawProducts = await this.productRepo
+      .createQueryBuilder('product')
+      .innerJoin(
+        ProductModelTypeOrmEntity,
+        'productModel',
+        'productModel.id = product.productModelId'
+      )
+      .select('product.id', 'id')
+      .addSelect('product.serialNumber', 'serialNumber')
+      .addSelect('product.productModelId', 'modelId')
+      .select('productModel.name', 'modelName')
+      .addSelect('product.batchId', 'batchId')
+      .addSelect('product.unitCost', 'unitCost')
+      .addSelect('product.salePrice', 'salePrice')
+      .addSelect('product.status', 'status')
+      .where('product.status = :status', { status: ProductStatus.ASSIGNED })
+      .getRawMany<ProductWithResellerRawResult>()
+
+    return rawProducts.map((row) => ({
+      id: row.id,
+      serialNumber: row.serialNumber,
+      modelId: row.modelId,
+      modelName: row.modelName,
+      batchId: row.batchId,
+      unitCost: row.unitCost,
+      salePrice: row.salePrice
+    }))
+  }
 
   async productsInStock(): Promise<ProductInStockDto[]> {
     const rawProducts = await this.productRepo
