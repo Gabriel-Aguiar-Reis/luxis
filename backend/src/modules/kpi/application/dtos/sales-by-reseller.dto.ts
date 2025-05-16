@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger'
 export class SalesByResellerDto {
   @ApiProperty({
     description: 'The ID of the reseller',
-    example: '1234567890'
+    example: '1e23f456-e789-12d3-a456-426614174000'
   })
   public resellerId: string
 

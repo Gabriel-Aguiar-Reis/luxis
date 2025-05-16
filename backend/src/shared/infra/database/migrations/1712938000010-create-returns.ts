@@ -8,6 +8,7 @@ export class CreateReturns1712938000010 implements MigrationInterface {
         "reseller_id" UUID NOT NULL,
         "items" UUID[] NOT NULL,
         "status" VARCHAR NOT NULL,
+        "created_at" TIMESTAMP NOT NULL,
         CONSTRAINT "fk_return_reseller" FOREIGN KEY ("reseller_id") REFERENCES "users"("id") ON DELETE RESTRICT
       );
     `)

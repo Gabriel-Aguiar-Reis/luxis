@@ -5,8 +5,9 @@ import { SalesInPeriodDto } from '@/modules/kpi/application/dtos/sales-in-period
 import { TotalSalesByResellerDto } from '@/modules/kpi/application/dtos/total-sales-by-reseller.dto'
 import { TotalSalesInPeriodDto } from '@/modules/kpi/application/dtos/total-sales-in-period.dto'
 import { SaleReadRepository } from '@/modules/kpi/domain/repositories/sale-read.repository'
-import { Currency } from '@/shared/common/value-object/currency.vo'
 import { CustomerTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.entity'
+import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
+import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { SaleMapper } from '@/shared/infra/persistence/typeorm/sale/mappers/sale.mapper'
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
 import { UserMapper } from '@/shared/infra/persistence/typeorm/user/mappers/user.mapper'
@@ -14,13 +15,6 @@ import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.
 import { NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { Repository } from 'typeorm'
-
-type TotalSalesRawResult = {
-  resellerId: string
-  resellerName: string
-  resellerSurName: string
-  salesCount: string
-}
 
 type SaleReturnRawResult = {
   id: UUID
@@ -32,7 +26,6 @@ type SaleReturnRawResult = {
   productIds: UUID[]
   resellerId: UUID
   resellerName: string
-  resellerSurName: string
   resellerPhone: string
   customerId: UUID
   customerName: string
@@ -42,7 +35,8 @@ type SaleReturnRawResult = {
 export class SaleReadTypeOrmRepository implements SaleReadRepository {
   constructor(
     private readonly saleRepo: Repository<SaleTypeOrmEntity>,
-    private readonly userRepo: Repository<UserTypeOrmEntity>
+    private readonly userRepo: Repository<UserTypeOrmEntity>,
+    private readonly productRepo: Repository<ProductTypeOrmEntity>
   ) {}
 
   async SalesInPeriod(start: Date, end: Date): Promise<SalesInPeriodDto> {
@@ -65,8 +59,7 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
         'sale.product_ids as productIds',
 
         'reseller.id as resellerId',
-        'reseller.name as resellerName',
-        'reseller.sur_name as resellerSurName',
+        `CONCAT(reseller.name, ' ', reseller.sur_name) as resellerName`,
         'reseller.phone as resellerPhone',
 
         'customer.id as customerId',
@@ -80,20 +73,17 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
     for (const row of rawSales) {
       const productIds: UUID[] = row.productIds
 
-      const productData = await this.saleRepo.manager
-        .createQueryBuilder()
+      const productData = await this.productRepo
+        .createQueryBuilder('product')
+        .innerJoin(ProductModelTypeOrmEntity, 'pm', 'pm.id = product.model_id')
+        .where('p.id IN (:...productIds)', { productIds })
         .select([
-          'p.id as productId',
-          'p.model_id as productModelId',
-          'p.sale_price as salePrice',
+          'product.id as productId',
+          'product.model_id as productModelId',
+          'product.sale_price as salePrice',
           'pm.name as productModelName'
         ])
-        .from('products', 'p')
-        .innerJoin('product_models', 'pm', 'pm.id = p.model_id')
-        .where('p.id IN (:...productIds)', { productIds })
         .getRawMany<SaleReturnProductDto>()
-
-      const fullResellerName = `${row.resellerName} ${row.resellerSurName}`
 
       sales.push({
         id: row.id,
@@ -106,7 +96,7 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
         customerName: row.customerName,
         customerPhone: row.customerPhone,
         resellerId: row.resellerId,
-        resellerName: fullResellerName,
+        resellerName: row.resellerName,
         resellerPhone: row.resellerPhone,
         products: productData.map((p) => ({
           productId: p.productId,
@@ -130,19 +120,16 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = sale.resellerId')
       .select([
         'user.id as resellerId',
-        'user.name as resellerName',
-        'user.sur_name as resellerSurName',
+        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
         'COUNT(sale.id) as salesCount'
       ])
-      .groupBy('user.id')
-      .addGroupBy('user.name')
-      .addGroupBy('user.surName')
-      .getRawMany<TotalSalesRawResult>()
+      .groupBy('user.id, user.name, user.sur_name')
+      .getRawMany<TotalSalesByResellerDto>()
 
     return rawResult.map((row) => ({
       resellerId: row.resellerId,
-      resellerName: `${row.resellerName} ${row.resellerSurName}`,
-      salesCount: parseInt(row.salesCount, 10)
+      resellerName: row.resellerName,
+      salesCount: Number(row.salesCount) // Possibly a string, convert to number
     }))
   }
 
@@ -190,10 +177,4 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
 
     return { start, end, totalSales }
   }
-  // totalSalesInPeriod(start: Date, end: Date): Promise<Sale[]> {
-  //   throw new Error('Method not implemented.')
-  // }
-  // topSellers(limit: number): Promise<{ resellerId: UUID; total: number }[]> {
-  //   throw new Error('Method not implemented.')
-  // }
 }

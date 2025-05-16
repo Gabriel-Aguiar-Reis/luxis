@@ -9,7 +9,7 @@ export class ReturnTypeOrmEntity {
   @Column()
   resellerId: UUID
 
-  @Column('jsonb')
+  @Column('uuid', { array: true })
   items: UUID[]
 
   @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })

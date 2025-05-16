@@ -18,7 +18,7 @@ type ProductInStockRawResult = {
   status: string
 }
 
-type ProductWithResellerRawResult = Omit<ProductInStockRawResult, 'status'>
+type ProductWithResellerRawResult = ProductInStockRawResult
 
 export class ProductReadTypeOrmRepository implements ProductReadRepository {
   constructor(private readonly productRepo: Repository<ProductTypeOrmEntity>) {}
@@ -31,14 +31,16 @@ export class ProductReadTypeOrmRepository implements ProductReadRepository {
         'productModel',
         'productModel.id = product.productModelId'
       )
-      .select('product.id', 'id')
-      .addSelect('product.serialNumber', 'serialNumber')
-      .addSelect('product.productModelId', 'modelId')
-      .select('productModel.name', 'modelName')
-      .addSelect('product.batchId', 'batchId')
-      .addSelect('product.unitCost', 'unitCost')
-      .addSelect('product.salePrice', 'salePrice')
-      .addSelect('product.status', 'status')
+      .select([
+        'product.id as id',
+        'product.serialNumber as serialNumber',
+        'product.productModelId as modelId',
+        'productModel.name as modelName',
+        'product.batchId as batchId',
+        'product.unitCost as unitCost',
+        'product.salePrice as salePrice',
+        'product.status as status'
+      ])
       .where('product.status = :status', { status: ProductStatus.ASSIGNED })
       .getRawMany<ProductWithResellerRawResult>()
 
@@ -61,14 +63,16 @@ export class ProductReadTypeOrmRepository implements ProductReadRepository {
         'productModel',
         'productModel.id = product.productModelId'
       )
-      .select('product.id', 'id')
-      .addSelect('product.serialNumber', 'serialNumber')
-      .addSelect('product.productModelId', 'modelId')
-      .select('productModel.name', 'modelName')
-      .addSelect('product.batchId', 'batchId')
-      .addSelect('product.unitCost', 'unitCost')
-      .addSelect('product.salePrice', 'salePrice')
-      .addSelect('product.status', 'status')
+      .select([
+        'product.id as id',
+        'product.serialNumber as serialNumber',
+        'product.productModelId as modelId',
+        'productModel.name as modelName',
+        'product.batchId as batchId',
+        'product.unitCost as unitCost',
+        'product.salePrice as salePrice',
+        'product.status as status'
+      ])
       .where('product.status = :status', { status: ProductStatus.IN_STOCK })
       .getRawMany<ProductInStockRawResult>()
 

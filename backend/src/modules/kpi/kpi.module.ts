@@ -7,6 +7,7 @@ import { ResellerKpiController } from '@/modules/kpi/presentation/reseller-kpi.c
 import { ConfigModule } from '@/shared/config/config.module'
 import { SaleReadTypeOrmRepository } from '@/shared/infra/persistence/typeorm/kpi/sale-read.typeorm.repository'
 import { ProductReadTypeOrmRepository } from '@/shared/infra/persistence/typeorm/kpi/product-read.typeorm.repository'
+import { ReturnReadTypeOrmRepository } from '@/shared/infra/persistence/typeorm/kpi/return-read.typeorm.repository'
 
 @Module({
   imports: [ConfigModule],
@@ -16,7 +17,11 @@ import { ProductReadTypeOrmRepository } from '@/shared/infra/persistence/typeorm
     AppConfigService,
     GetResellerSalesUseCase,
     { provide: 'SaleReadRepository', useClass: SaleReadTypeOrmRepository },
-    { provide: 'ProductReadRepository', useClass: ProductReadTypeOrmRepository }
+    {
+      provide: 'ProductReadRepository',
+      useClass: ProductReadTypeOrmRepository
+    },
+    { provide: 'ReturnReadRepository', useClass: ReturnReadTypeOrmRepository }
   ]
 })
 export class KpiModule {}
