@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { AppConfigService } from '@/shared/config/app-config.service'
-import { GetResellerSalesUseCase } from '@/modules/kpi/application/use-cases/admin/get-sales-by-reseller-kpi'
+import { GetResellerSalesUseCase } from '@/modules/kpi/application/use-cases/admin/get-sales-by-reseller-kpi.use-case'
 import { AdminKpiController } from '@/modules/kpi/presentation/admin-kpi.controller'
 import { ResellerKpiController } from '@/modules/kpi/presentation/reseller-kpi.controller'
 import { ConfigModule } from '@/shared/config/config.module'

@@ -14,7 +14,7 @@ import { UserMapper } from '@/shared/infra/persistence/typeorm/user/mappers/user
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
 import { NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
-import { Repository } from 'typeorm'
+import { Repository, SelectQueryBuilder } from 'typeorm'
 
 type SaleReturnRawResult = {
   id: UUID
@@ -133,32 +133,50 @@ export class SaleReadTypeOrmRepository implements SaleReadRepository {
     }))
   }
 
-  async salesByResellerId(resellerId: UUID): Promise<SalesByResellerDto> {
+  async salesByResellerId(
+    resellerId: UUID,
+    start?: Date,
+    end?: Date
+  ): Promise<SalesByResellerDto> {
     const resellerEntity = await this.userRepo.findOne({
       where: { id: resellerId }
     })
     if (!resellerEntity) throw new NotFoundException('Reseller not found')
 
-    const salesEntities = await this.saleRepo
-      .createQueryBuilder('sale')
-      .where('sale.resellerId = :resellerId', { resellerId })
-      .getMany()
+    const baseWhere = (qb: SelectQueryBuilder<SaleTypeOrmEntity>) => {
+      qb.where('sale.resellerId = :resellerId', { resellerId })
 
-    const sumResult = await this.saleRepo
-      .createQueryBuilder('sale')
-      .select('SUM(sale.totalAmount::float)', 'sum')
-      .where('sale.resellerId = :resellerId', { resellerId })
-      .getRawOne<{ sum: number }>()
+      if (start) {
+        qb.andWhere('sale.createdAt >= :start', { start })
+      }
+
+      if (end) {
+        qb.andWhere('sale.createdAt <= :end', { end })
+      }
+
+      return qb
+    }
+
+    const salesEntities = await baseWhere(
+      this.saleRepo.createQueryBuilder('sale')
+    ).getMany()
+
+    const sumResult = await baseWhere(
+      this.saleRepo
+        .createQueryBuilder('sale')
+        .select('SUM(sale.totalAmount::float)', 'sum')
+    ).getRawOne<{ sum: string }>()
 
     const reseller = UserMapper.toDomain(resellerEntity)
     const sales = salesEntities.map((s) => SaleMapper.toDomain(s))
 
-    const total = sumResult?.sum || 0
+    const total = Number(sumResult?.sum ?? 0)
+
     return {
       resellerId: reseller.id,
       resellerName: `${reseller.name} ${reseller.surName}`,
       sales,
-      totalSales: total.toString(),
+      totalSales: total.toFixed(2),
       salesCount: sales.length
     }
   }

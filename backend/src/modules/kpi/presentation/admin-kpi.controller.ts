@@ -1,4 +1,4 @@
-import { GetTotalSalesInPeriodUseCase } from './../application/use-cases/admin/get-total-sales-in-period-kpi'
+import { GetTotalSalesInPeriodUseCase } from '../application/use-cases/admin/get-total-sales-in-period-kpi.use-case'
 import { Controller, Get, Body, Param, UseGuards } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
@@ -9,15 +9,15 @@ import {
   ApiTags,
   ApiBearerAuth
 } from '@nestjs/swagger'
-import { GetResellerSalesUseCase } from '@/modules/kpi/application/use-cases/admin/get-sales-by-reseller-kpi'
+import { GetResellerSalesUseCase } from '@/modules/kpi/application/use-cases/admin/get-sales-by-reseller-kpi.use-case'
 import { AdminKpiControllerGuard } from '@/shared/infra/auth/guards/admin-kpi-controller.guard'
-import { GetTotalProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-in-stock-kpi'
+import { GetTotalProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-in-stock-kpi.use-case'
 import { TotalSalesInPeriodDto } from '@/modules/kpi/application/dtos/total-sales-in-period.dto'
 import { TotalSalesByResellerDto } from '@/modules/kpi/application/dtos/total-sales-by-reseller.dto'
-import { GetTotalSalesByResellerUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-sales-by-reseller-kpi'
-import { GetTotalProductWithResellersUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-with-resellers-kpi'
+import { GetTotalSalesByResellerUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-sales-by-reseller-kpi.use-case'
+import { GetTotalProductWithResellersUseCase } from '@/modules/kpi/application/use-cases/admin/get-total-products-with-resellers-kpi.use-case'
 import { SalesByResellerDto } from '@/modules/kpi/application/dtos/sales-by-reseller.dto'
-import { GetProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-products-in-stock-kpi'
+import { GetProductsInStockUseCase } from '@/modules/kpi/application/use-cases/admin/get-products-in-stock-kpi.use-case'
 import { ProductInStockDto } from '@/modules/kpi/application/dtos/product-in-stock.dto'
 import { ProductWithResellerDto } from '@/modules/kpi/application/dtos/product-with-reseller.dto'
 
