@@ -1,0 +1,15 @@
+import { SaleReadRepository } from '@/modules/kpi/admin/domain/repositories/sale-read.repository'
+import { Injectable, Inject } from '@nestjs/common'
+import { SalesInPeriodDto } from '@/modules/kpi/admin/application/dtos/sale/sales-in-period.dto'
+
+@Injectable()
+export class GetSalesInPeriodUseCase {
+  constructor(
+    @Inject('SaleReadRepository')
+    private readonly saleReadRepository: SaleReadRepository
+  ) {}
+
+  async execute(start: Date, end: Date): Promise<SalesInPeriodDto> {
+    return await this.saleReadRepository.salesInPeriod(start, end)
+  }
+}

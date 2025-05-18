@@ -39,6 +39,8 @@ import { CacheModule } from '@nestjs/cache-manager'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { CustomThrottlerGuard } from '@/shared/infra/guards/throttler.guard'
+import { AdminKpiModule } from '@/modules/kpi/admin/admin-kpi.module'
+import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
 
 @Module({
   imports: [
@@ -83,7 +85,9 @@ import { CustomThrottlerGuard } from '@/shared/infra/guards/throttler.guard'
     forwardRef(() => CustomerModule),
     forwardRef(() => AuthModule),
     forwardRef(() => InventoryModule),
-    forwardRef(() => SeedsModule)
+    forwardRef(() => SeedsModule),
+    forwardRef(() => AdminKpiModule),
+    forwardRef(() => ResellerKpiModule)
   ],
   controllers: [],
   providers: [
