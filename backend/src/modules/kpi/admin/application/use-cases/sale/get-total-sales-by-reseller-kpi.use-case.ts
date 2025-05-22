@@ -1,6 +1,7 @@
 import { SaleReadRepository } from '@/modules/kpi/admin/domain/repositories/sale-read.repository'
 import { Injectable, Inject } from '@nestjs/common'
 import { TotalSalesByResellerDto } from '@/modules/kpi/admin/application/dtos/sale/total-sales-by-reseller.dto'
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
 
 @Injectable()
 export class GetTotalSalesByResellerUseCase {
@@ -9,7 +10,7 @@ export class GetTotalSalesByResellerUseCase {
     private readonly saleReadRepository: SaleReadRepository
   ) {}
 
-  async execute(): Promise<TotalSalesByResellerDto[]> {
-    return await this.saleReadRepository.totalSalesByReseller()
+  async execute(qParams: ParamsDto): Promise<TotalSalesByResellerDto[]> {
+    return await this.saleReadRepository.totalSalesByReseller(qParams)
   }
 }

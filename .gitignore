@@ -8,3 +8,4 @@ build
 yarn.lock
 next-env.d.ts
 .next
+.DS_Store

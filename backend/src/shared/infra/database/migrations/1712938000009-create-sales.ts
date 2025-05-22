@@ -6,7 +6,7 @@ export class CreateSales1712938000009 implements MigrationInterface {
       CREATE TABLE "sales" (
         "id" UUID PRIMARY KEY,
         "reseller_id" UUID NOT NULL,
-        "product_ids" JSONB NOT NULL,
+        "product_ids" UUID[] NOT NULL,
         "sale_date" DATE NOT NULL,
         "total_amount" DECIMAL(10,2) NOT NULL,
         "payment_method" VARCHAR(255) NOT NULL,

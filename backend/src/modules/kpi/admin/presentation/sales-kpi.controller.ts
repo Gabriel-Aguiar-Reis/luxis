@@ -1,5 +1,5 @@
-import { GetSalesInPeriodUseCase } from '../application/use-cases/sale/get-sales-in-period-kpi.use-case'
-import { GetTotalSalesInPeriodUseCase } from '../application/use-cases/sale/get-total-sales-in-period-kpi.use-case'
+import { GetSalesInPeriodUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-sales-in-period-kpi.use-case'
+import { GetTotalSalesInPeriodUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-total-sales-in-period-kpi.use-case'
 import { Controller, Get, Body, Param } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -12,6 +12,12 @@ import { SalesByResellerDto } from '@/modules/kpi/admin/application/dtos/sale/sa
 import { GetTotalSalesByResellerIdUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-total-sales-by-reseller-id-kpi.use-case'
 import { AdminKpiEndpoint } from '@/shared/infra/auth/decorators/admin-kpi-endpoint.decorator'
 import { GetSalesByResellerUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-sales-by-reseller-kpi.use-case'
+import { GetTotalBillingByResellerIdUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-total-billing-by-reseller-id-kpi.use-case'
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
+import { ParamsWithMandatoryPeriodDto } from '@/shared/common/dtos/params-with-mandatory-period.dto'
+import { TotalBillingReturnDto } from '@/modules/kpi/admin/application/dtos/sale/total-billing-return.dto'
+import { GetTotalBillingByBatchIdUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-total-billing-by-batch-id-kpi.use-case'
+import { GetTotalBillingInPeriodUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-total-billing-in-period-kpi.use-case'
 
 @ApiTags('Admins KPIs - Sales')
 @AdminKpiEndpoint()
@@ -24,7 +30,10 @@ export class SalesKpiController {
     private readonly getSalesInPeriodUseCase: GetSalesInPeriodUseCase,
     private readonly getTotalSalesInPeriodUseCase: GetTotalSalesInPeriodUseCase,
     private readonly getSalesByResellerUseCase: GetSalesByResellerUseCase,
-    private readonly getTotalSalesByResellerUseCase: GetTotalSalesByResellerUseCase
+    private readonly getTotalSalesByResellerUseCase: GetTotalSalesByResellerUseCase,
+    private readonly getTotalBillingByBatchIdUseCase: GetTotalBillingByBatchIdUseCase,
+    private readonly getTotalBillingByResellerIdUseCase: GetTotalBillingByResellerIdUseCase,
+    private readonly getTotalBillingInPeriodUseCase: GetTotalBillingInPeriodUseCase
   ) {}
 
   @ApiOperation({ summary: 'Get Sales By Reseller Id' })
@@ -39,11 +48,10 @@ export class SalesKpiController {
   @Get('resellers/:id')
   async getSalesByResellerId(
     @Param('id') id: UUID,
-    @Body('start') start: Date,
-    @Body('end') end: Date
+    @Body() qParams: ParamsDto
   ) {
     this.logger.log('Get Sales By Reseller Id', 'AdminKpiController')
-    return this.getSalesByResellerIdUseCase.execute(id, start, end)
+    return this.getSalesByResellerIdUseCase.execute(id, qParams)
   }
 
   @ApiOperation({ summary: 'Get Total Sales By Reseller Id' })
@@ -57,11 +65,10 @@ export class SalesKpiController {
   @Get('resellers/:id/total')
   async getTotalSalesByResellerId(
     @Param('id') id: UUID,
-    @Body('start') start: Date,
-    @Body('end') end: Date
+    @Body() qParams: ParamsDto
   ) {
     this.logger.log('Get Total Sales By Reseller Id', 'AdminKpiController')
-    return this.getTotalSalesByResellerIdUseCase.execute(id, start, end)
+    return this.getTotalSalesByResellerIdUseCase.execute(id, qParams)
   }
 
   @ApiOperation({ summary: 'Get Sales In Period' })
@@ -73,9 +80,9 @@ export class SalesKpiController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @Get()
-  async getSalesInPeriod(@Body('start') start: Date, @Body('end') end: Date) {
+  async getSalesInPeriod(@Body() qParams: ParamsWithMandatoryPeriodDto) {
     this.logger.log('Get Sales In Period', 'AdminKpiController')
-    return this.getSalesInPeriodUseCase.execute(start, end)
+    return this.getSalesInPeriodUseCase.execute(qParams)
   }
 
   @ApiOperation({ summary: 'Get Total Sales In Period' })
@@ -87,12 +94,9 @@ export class SalesKpiController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @Get('total')
-  async getTotalSalesInPeriod(
-    @Body('start') start: Date,
-    @Body('end') end: Date
-  ) {
+  async getTotalSalesInPeriod(@Body() qParams: ParamsWithMandatoryPeriodDto) {
     this.logger.log('Get Total Sales In Period', 'AdminKpiController')
-    return this.getTotalSalesInPeriodUseCase.execute(start, end)
+    return this.getTotalSalesInPeriodUseCase.execute(qParams)
   }
 
   @ApiOperation({ summary: 'Get Sales By Reseller' })
@@ -104,9 +108,9 @@ export class SalesKpiController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @Get('resellers')
-  async getSalesByReseller(@Body('start') start: Date, @Body('end') end: Date) {
+  async getSalesByReseller(@Body() qParams: ParamsDto) {
     this.logger.log('Get Sales By Reseller', 'AdminKpiController')
-    return this.getSalesByResellerUseCase.execute(start, end)
+    return this.getSalesByResellerUseCase.execute(qParams)
   }
 
   @ApiOperation({ summary: 'Get Total Sales By Reseller' })
@@ -118,8 +122,34 @@ export class SalesKpiController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @Get('resellers/total')
-  async getTotalSalesByReseller() {
+  async getTotalSalesByReseller(@Body() qParams: ParamsDto) {
     this.logger.log('Get Total Sales By Reseller', 'AdminKpiController')
-    return this.getTotalSalesByResellerUseCase.execute()
+    return this.getTotalSalesByResellerUseCase.execute(qParams)
+  }
+
+  @ApiOperation({ summary: 'Get Total Billing By Batch Id' })
+  @ApiResponse({
+    status: 200,
+    description: 'Total billing by batch ID returned successfully',
+    type: TotalBillingReturnDto
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @Get('billing/batch/:id')
+  async getTotalBillingByBatchId(@Param('id') id: UUID) {
+    this.logger.log('Get Total Billing By Batch Id', 'AdminKpiController')
+    return this.getTotalBillingByBatchIdUseCase.execute(id)
+  }
+
+  @Get('billing/resellers/:resellerId')
+  async getTotalBillingByResellerId(): Promise<TotalBillingReturnDto> {
+    throw new Error('Method not implemented.')
+  }
+
+  @Get('billing/period')
+  async getTotalBillingByPeriod(
+    @Body() qParams: ParamsWithMandatoryPeriodDto
+  ): Promise<TotalBillingReturnDto> {
+    throw new Error('Method not implemented.')
   }
 }

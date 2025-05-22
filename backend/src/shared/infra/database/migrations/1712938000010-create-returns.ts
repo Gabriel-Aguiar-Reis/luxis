@@ -6,9 +6,9 @@ export class CreateReturns1712938000010 implements MigrationInterface {
       CREATE TABLE "returns" (
         "id" UUID PRIMARY KEY,
         "reseller_id" UUID NOT NULL,
-        "items" UUID[] NOT NULL,
+        "product_ids" UUID[] NOT NULL,
         "status" VARCHAR NOT NULL,
-        "created_at" TIMESTAMP NOT NULL,
+        "created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
         CONSTRAINT "fk_return_reseller" FOREIGN KEY ("reseller_id") REFERENCES "users"("id") ON DELETE RESTRICT
       );
     `)

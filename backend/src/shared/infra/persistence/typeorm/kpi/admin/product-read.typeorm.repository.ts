@@ -1,3 +1,4 @@
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { ProductInStockDto } from '@/modules/kpi/admin/application/dtos/product/product-in-stock.dto'
 import { ProductWithResellerDto } from '@/modules/kpi/admin/application/dtos/product/product-with-reseller.dto'
 import { ProductReadRepository } from '@/modules/kpi/admin/domain/repositories/product-read.repository'
@@ -6,6 +7,8 @@ import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/pr
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { UUID } from 'crypto'
 import { Repository } from 'typeorm'
+import { baseWhere } from '@/shared/common/utils/query-builder.helper'
+import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.entity'
 
 type ProductInStockRawResult = {
   id: UUID
@@ -24,30 +27,32 @@ export class ProductReadTypeOrmRepository implements ProductReadRepository {
   constructor(private readonly productRepo: Repository<ProductTypeOrmEntity>) {}
 
   async productsWithResellers(
-    start?: Date,
-    end?: Date
+    qParams: ParamsDto
   ): Promise<ProductWithResellerDto[]> {
-    const rawProducts = await this.productRepo
+    const qb = this.productRepo
       .createQueryBuilder('product')
       .innerJoin(
         ProductModelTypeOrmEntity,
         'productModel',
-        'productModel.id = product.productModelId'
+        'productModel.id = product.model_id'
       )
       .select([
         'product.id as id',
-        'product.serialNumber as serialNumber',
-        'product.productModelId as modelId',
+        'product.serial_number as serialNumber',
+        'product.model_id as modelId',
         'productModel.name as modelName',
-        'product.batchId as batchId',
-        'product.unitCost as unitCost',
-        'product.salePrice as salePrice',
+        'product.batch_id as batchId',
+        'product.unit_cost as unitCost',
+        'product.sale_price as salePrice',
         'product.status as status'
       ])
       .where('product.status = :status', { status: ProductStatus.ASSIGNED })
-      .getRawMany<ProductWithResellerRawResult>()
+    const filteredProducts = baseWhere(qb, qParams, 'product.created_at')
 
-    return rawProducts.map((row) => ({
+    const result =
+      await filteredProducts.getRawMany<ProductWithResellerRawResult>()
+
+    return result.map((row) => ({
       id: row.id,
       serialNumber: row.serialNumber,
       modelId: row.modelId,
@@ -58,39 +63,40 @@ export class ProductReadTypeOrmRepository implements ProductReadRepository {
     }))
   }
 
-  async totalProductsWithResellers(start?: Date, end?: Date): Promise<number> {
-    const products = await this.productRepo
+  totalProductsWithResellers(qParams: ParamsDto): Promise<number> {
+    const qb = this.productRepo
       .createQueryBuilder('product')
       .where('product.status = :status', { status: ProductStatus.ASSIGNED })
-      .getCount()
-    return products
+    const filteredProducts = baseWhere(qb, qParams, 'product.created_at')
+
+    return filteredProducts.getCount()
   }
 
-  async productsInStock(
-    start?: Date,
-    end?: Date
-  ): Promise<ProductInStockDto[]> {
-    const rawProducts = await this.productRepo
+  async productsInStock(qParams: ParamsDto): Promise<ProductInStockDto[]> {
+    const qb = this.productRepo
       .createQueryBuilder('product')
       .innerJoin(
         ProductModelTypeOrmEntity,
         'productModel',
-        'productModel.id = product.productModelId'
+        'productModel.id = product.model_id'
       )
       .select([
         'product.id as id',
-        'product.serialNumber as serialNumber',
-        'product.productModelId as modelId',
+        'product.serial_number as serialNumber',
+        'product.model_id as modelId',
         'productModel.name as modelName',
-        'product.batchId as batchId',
-        'product.unitCost as unitCost',
-        'product.salePrice as salePrice',
+        'product.batch_id as batchId',
+        'product.unit_cost as unitCost',
+        'product.sale_price as salePrice',
         'product.status as status'
       ])
       .where('product.status = :status', { status: ProductStatus.IN_STOCK })
-      .getRawMany<ProductInStockRawResult>()
 
-    return rawProducts.map((row) => ({
+    const filteredProducts = baseWhere(qb, qParams, 'product.created_at')
+
+    const result = await filteredProducts.getRawMany<ProductInStockRawResult>()
+
+    return result.map((row) => ({
       id: row.id,
       serialNumber: row.serialNumber,
       modelId: row.modelId,
@@ -102,11 +108,66 @@ export class ProductReadTypeOrmRepository implements ProductReadRepository {
     }))
   }
 
-  async totalProductsInStock(start?: Date, end?: Date): Promise<number> {
-    const products = await this.productRepo
+  async totalProductsInStock(qParams: ParamsDto): Promise<number> {
+    const qb = this.productRepo
       .createQueryBuilder('product')
       .where('product.status = :status', { status: ProductStatus.IN_STOCK })
-      .getCount()
-    return products
+    const filteredProducts = baseWhere(qb, qParams, 'product.created_at')
+    return await filteredProducts.getCount()
+  }
+
+  async productsInStockForMoreThanXDays(
+    days: number,
+    qParams: ParamsDto
+  ): Promise<ProductInStockDto[]> {
+    const qb = this.productRepo
+      .createQueryBuilder('product')
+      .innerJoin(BatchTypeOrmEntity, 'batch', 'batch.id = product.batch_id')
+      .innerJoin(
+        ProductModelTypeOrmEntity,
+        'productModel',
+        'productModel.id = product.model_id'
+      )
+      .where('product.status = :status', { status: ProductStatus.IN_STOCK })
+      .andWhere(`batch.created_at < NOW() - INTERVAL '${days} days'`)
+      .select([
+        'product.id as id',
+        'product.serial_number as serialNumber',
+        'product.model_id as modelId',
+        'productModel.name as modelName',
+        'product.batch_id as batchId',
+        'product.unit_cost as unitCost',
+        'product.sale_price as salePrice',
+        'product.status as status'
+      ])
+
+    const filteredProducts = baseWhere(qb, qParams, 'batch.created_at')
+
+    const result = await filteredProducts.getRawMany<ProductInStockRawResult>()
+
+    return result.map((row) => ({
+      id: row.id,
+      serialNumber: row.serialNumber,
+      modelId: row.modelId,
+      modelName: row.modelName,
+      batchId: row.batchId,
+      unitCost: row.unitCost,
+      salePrice: row.salePrice,
+      status: row.status
+    }))
+  }
+
+  async totalProductsInStockForMoreThanXDays(
+    days: number,
+    qParams: ParamsDto
+  ): Promise<number> {
+    const qb = this.productRepo
+      .createQueryBuilder('product')
+      .innerJoin(BatchTypeOrmEntity, 'batch', 'batch.id = product.batch_id')
+      .where('product.status = :status', { status: ProductStatus.IN_STOCK })
+      .andWhere(`batch.created_at < NOW() - INTERVAL '${days} days'`)
+
+    const filteredProducts = baseWhere(qb, qParams, 'product.updatedAt')
+    return await filteredProducts.getCount()
   }
 }

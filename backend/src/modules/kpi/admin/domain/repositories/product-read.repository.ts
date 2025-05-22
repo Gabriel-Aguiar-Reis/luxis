@@ -1,15 +1,20 @@
 import { ProductInStockDto } from '@/modules/kpi/admin/application/dtos/product/product-in-stock.dto'
 import { ProductWithResellerDto } from '@/modules/kpi/admin/application/dtos/product/product-with-reseller.dto'
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
 
 export abstract class ProductReadRepository {
-  abstract productsInStock(
-    start?: Date,
-    end?: Date
-  ): Promise<ProductInStockDto[]>
-  abstract totalProductsInStock(start?: Date, end?: Date): Promise<number>
+  abstract productsInStock(qParams: ParamsDto): Promise<ProductInStockDto[]>
+  abstract totalProductsInStock(qParams: ParamsDto): Promise<number>
   abstract productsWithResellers(
-    start?: Date,
-    end?: Date
+    qParams: ParamsDto
   ): Promise<ProductWithResellerDto[]>
-  abstract totalProductsWithResellers(start?: Date, end?: Date): Promise<number>
+  abstract totalProductsWithResellers(qParams: ParamsDto): Promise<number>
+  abstract productsInStockForMoreThanXDays(
+    days: number,
+    qParams: ParamsDto
+  ): Promise<ProductInStockDto[]>
+  abstract totalProductsInStockForMoreThanXDays(
+    days: number,
+    qParams: ParamsDto
+  ): Promise<number>
 }

@@ -25,8 +25,8 @@ export class SaleReturnProductDto {
 
   @ApiProperty({
     description: 'The sale price of the product',
-    example: '150.00',
-    type: String
+    example: 150.0,
+    type: Number
   })
-  public salePrice: string
+  public salePrice: number
 }

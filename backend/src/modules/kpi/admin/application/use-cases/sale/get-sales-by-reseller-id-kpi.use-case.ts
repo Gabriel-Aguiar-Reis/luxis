@@ -1,5 +1,6 @@
 import { SalesByResellerDto } from '@/modules/kpi/admin/application/dtos/sale/sales-by-reseller.dto'
 import { SaleReadRepository } from '@/modules/kpi/admin/domain/repositories/sale-read.repository'
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { Injectable, Inject } from '@nestjs/common'
 import { UUID } from 'crypto'
 
@@ -10,11 +11,7 @@ export class GetSalesByResellerIdUseCase {
     private readonly saleReadRepository: SaleReadRepository
   ) {}
 
-  async execute(
-    id: UUID,
-    start?: Date,
-    end?: Date
-  ): Promise<SalesByResellerDto> {
-    return await this.saleReadRepository.salesByResellerId(id, start, end)
+  async execute(id: UUID, qParams: ParamsDto): Promise<SalesByResellerDto> {
+    return await this.saleReadRepository.salesByResellerId(id, qParams)
   }
 }

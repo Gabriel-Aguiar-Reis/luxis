@@ -1,4 +1,4 @@
-import { Sale } from '@/modules/sale/domain/entities/sale.entity'
+import { SaleByResellerReturnDto } from '@/modules/kpi/admin/application/dtos/sale/sale-by-reseller-return.dto'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class SalesByResellerDto {
@@ -16,9 +16,9 @@ export class SalesByResellerDto {
 
   @ApiProperty({
     description: 'The sales made by the reseller',
-    type: [Sale]
+    type: [SaleByResellerReturnDto]
   })
-  public sales: Sale[]
+  public sales: SaleByResellerReturnDto[]
 
   @ApiProperty({
     description: 'The total sales amount made by the reseller',

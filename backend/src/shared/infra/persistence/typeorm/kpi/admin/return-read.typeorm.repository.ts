@@ -8,38 +8,22 @@ import { ReturnsInPeriodDto } from '@/modules/kpi/admin/application/dtos/return/
 import { TotalReturnsByResellerDto } from '@/modules/kpi/admin/application/dtos/return/total-returns-by-reseller.dto'
 import { TotalReturnsInPeriodDto } from '@/modules/kpi/admin/application/dtos/return/total-returns-in-period.dto'
 import { ReturnReadRepository } from '@/modules/kpi/admin/domain/repositories/return-read.repository'
+import { ParamsWithMandatoryPeriodDto } from '@/shared/common/dtos/params-with-mandatory-period.dto'
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
+import { parsePgUuidArray } from '@/shared/common/utils/parse-pg-uuid-array.helper'
+import { baseWhere } from '@/shared/common/utils/query-builder.helper'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
 import { UUID } from 'crypto'
-import { Repository, SelectQueryBuilder } from 'typeorm'
+import { Repository } from 'typeorm'
 
 type ReturnByResellerRawResult = {
   id: UUID
   resellerId: UUID
   resellerName: string
   productIds: string
-}
-
-function baseWhere(
-  qb: SelectQueryBuilder<ReturnTypeOrmEntity>,
-  start?: Date,
-  end?: Date
-) {
-  if (start) {
-    qb.andWhere('return.created_at >= :start', { start })
-  }
-
-  if (end) {
-    qb.andWhere('return.created_at <= :end', { end })
-  }
-
-  return qb
-}
-
-function parsePgUuidArray(arrayStr: string): UUID[] {
-  return arrayStr.replace(/^{|}$/g, '').split(',').filter(Boolean) as UUID[]
 }
 
 export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
@@ -50,39 +34,116 @@ export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
 
   async ReturnsByResellerId(
     resellerId: UUID,
-    start?: Date,
-    end?: Date
+    qParams: ParamsDto
   ): Promise<ReturnByResellerDto> {
-    throw new Error('Method not implemented.')
+    const qb = this.returnRepo
+      .createQueryBuilder('return')
+      .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
+      .where('return.reseller_id = :resellerId', { resellerId })
+      .select([
+        'return.id as id',
+        'return.reseller_id as resellerId',
+        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        'return.product_ids as productIds'
+      ])
+
+    const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
+    const resReturns = await filteredReturns.getRawMany<ReturnByResellerRawResult>()
+
+    const parsedReturns = resReturns.map((r) => ({
+      ...r,
+      productIds: parsePgUuidArray(r.productIds)
+    }))
+
+    const allProductIds = [
+      ...new Set(parsedReturns.flatMap((r) => r.productIds))
+    ]
+
+    const products = await this.productRepo
+      .createQueryBuilder('product')
+      .innerJoin(
+        ProductModelTypeOrmEntity,
+        'productModel',
+        'productModel.id = product.model_id'
+      )
+      .where('product.id IN (:...productIds)', { productIds: allProductIds })
+      .select([
+        'product.id as productId',
+        'productModel.id as productModelId',
+        'productModel.name as productModelName'
+      ])
+      .getRawMany<ReturnProduct>()
+
+    const productMap = new Map<
+      UUID,
+      {
+        productId: UUID
+        productModelId: UUID
+        productModelName: string
+      }
+    >()
+    products.forEach((p) => productMap.set(p.productId, p))
+
+    const returns = parsedReturns.map((ret) => {
+      const returnProducts = ret.productIds.map((pid) => {
+        const product = productMap.get(pid)!
+        return {
+          productId: product.productId,
+          productModelId: product.productModelId,
+          productModelName: product.productModelName
+        }
+      })
+
+      return {
+        id: ret.id,
+        products: returnProducts
+      }
+    })
+
+    return {
+      resellerId,
+      resellerName: parsedReturns[0]?.resellerName || '',
+      returns,
+      totalReturns: returns.length
+    }
   }
 
   async TotalReturnsByResellerId(
     resellerId: UUID,
-    start?: Date,
-    end?: Date
+    qParams: ParamsDto
   ): Promise<TotalReturnsByResellerDto> {
-    throw new Error('Method not implemented.')
+    const qb = this.returnRepo
+      .createQueryBuilder('return')
+      .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
+      .where('return.reseller_id = :resellerId', { resellerId })
+      .select([
+        'user.id as resellerId',
+        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        'COUNT(return.id) as totalReturns'
+      ])
+      .groupBy('user.id, user.name, user.sur_name')
+
+    const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
+    const result = await filteredReturns.getRawOne<TotalReturnsByResellerDto>()
+
+    return result || { resellerId, resellerName: '', totalReturns: 0 }
   }
 
-  async ReturnsByReseller(
-    start?: Date,
-    end?: Date
-  ): Promise<ReturnByResellerDto[]> {
-    const rawReturns = await baseWhere(
-      this.returnRepo
-        .createQueryBuilder('return')
-        .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
-        .select([
-          'return.id as id',
-          'return.reseller_id as resellerId',
-          `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
-          'return.items as productIds'
-        ]),
-      start,
-      end
-    ).getRawMany<ReturnByResellerRawResult>()
+  async ReturnsByReseller(qParams: ParamsDto): Promise<ReturnByResellerDto[]> {
+    const qb = this.returnRepo
+      .createQueryBuilder('return')
+      .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
+      .select([
+        'return.id as id',
+        'return.reseller_id as resellerId',
+        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        'return.product_ids as productIds'
+      ])
+    const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
+    const resReturns =
+      await filteredReturns.getRawMany<ReturnByResellerRawResult>()
 
-    const parsedReturns = rawReturns.map((r) => ({
+    const parsedReturns = resReturns.map((r) => ({
       ...r,
       productIds: parsePgUuidArray(r.productIds)
     }))
@@ -162,28 +223,25 @@ export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
   }
 
   async TotalReturnsByReseller(
-    start?: Date,
-    end?: Date
+    qParams: ParamsDto
   ): Promise<TotalReturnsByResellerDto[]> {
-    const totals = await baseWhere(
-      this.returnRepo
-        .createQueryBuilder('return')
-        .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
-        .select([
-          'user.id as resellerId',
-          `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
-          'COUNT(return.id) as totalReturns'
-        ])
-        .groupBy('user.id, user.name, user.sur_name'),
-      start,
-      end
-    ).getRawMany<TotalReturnsByResellerDto>()
-
-    return totals
+    const qb = this.returnRepo
+      .createQueryBuilder('return')
+      .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
+      .select([
+        'user.id as resellerId',
+        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        'COUNT(return.id) as totalReturns'
+      ])
+      .groupBy('user.id, user.name, user.sur_name')
+    const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
+    return filteredReturns.getRawMany<TotalReturnsByResellerDto>()
   }
 
-  async ReturnsInPeriod(start: Date, end: Date): Promise<ReturnsInPeriodDto> {
-    const rawReturns = await this.returnRepo
+  async ReturnsInPeriod(
+    qParams: ParamsWithMandatoryPeriodDto
+  ): Promise<ReturnsInPeriodDto> {
+    const qb = this.returnRepo
       .createQueryBuilder('return')
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
       .select([
@@ -192,15 +250,16 @@ export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
         `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
         'return.items as productIds'
       ])
-      .where('return.created_at BETWEEN :start AND :end', { start, end })
-      .getRawMany<{
-        id: UUID
-        resellerId: UUID
-        resellerName: string
-        productIds: string
-      }>()
+    const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
 
-    const parsedReturns = rawReturns.map((r) => ({
+    const resReturns = await filteredReturns.getRawMany<{
+      id: UUID
+      resellerId: UUID
+      resellerName: string
+      productIds: string
+    }>()
+
+    const parsedReturns = resReturns.map((r) => ({
       ...r,
       productIds: parsePgUuidArray(r.productIds)
     }))
@@ -246,24 +305,23 @@ export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
     })
 
     return {
-      start,
-      end,
+      start: qParams.start,
+      end: qParams.end,
       returns
     }
   }
 
   async TotalReturnsInPeriod(
-    start: Date,
-    end: Date
+    qParams: ParamsWithMandatoryPeriodDto
   ): Promise<TotalReturnsInPeriodDto> {
-    const totalReturns = await this.returnRepo
-      .createQueryBuilder('return')
-      .where('return.created_at BETWEEN :start AND :end', { start, end })
-      .getCount()
+    const qb = this.returnRepo.createQueryBuilder('return')
+    const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
+    
+    const totalReturns = await filteredReturns.getCount()
 
     return {
-      start,
-      end,
+      start: qParams.start,
+      end: qParams.end,
       totalReturns
     }
   }

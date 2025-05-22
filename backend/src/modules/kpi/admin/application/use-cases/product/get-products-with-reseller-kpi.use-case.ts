@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common'
 import { ProductReadRepository } from '@/modules/kpi/admin/domain/repositories/product-read.repository'
 import { ProductWithResellerDto } from '@/modules/kpi/admin/application/dtos/product/product-with-reseller.dto'
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
 
 @Injectable()
 export class GetProductsWithResellerUseCase {
@@ -9,7 +10,7 @@ export class GetProductsWithResellerUseCase {
     private readonly productReadRepository: ProductReadRepository
   ) {}
 
-  async execute(): Promise<ProductWithResellerDto[]> {
-    return await this.productReadRepository.productsWithResellers()
+  async execute(qParams: ParamsDto): Promise<ProductWithResellerDto[]> {
+    return await this.productReadRepository.productsWithResellers(qParams)
   }
 }
