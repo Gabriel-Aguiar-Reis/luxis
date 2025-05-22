@@ -7,7 +7,7 @@ export class CreateCustomerPortfolios1712938000012
     await queryRunner.query(`
       CREATE TABLE "customer_portfolios" (
         "reseller_id" UUID PRIMARY KEY,
-        "customer_ids" JSONB NOT NULL,
+        "customer_ids" UUID[] NOT NULL,
         CONSTRAINT "fk_customer_portfolio_reseller" FOREIGN KEY ("reseller_id") REFERENCES "users"("id") ON DELETE RESTRICT
       );
     `)
