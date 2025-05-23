@@ -12,13 +12,18 @@ import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inven
 import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
 import { baseWhere } from '@/shared/common/utils/query-builder.helper'
 import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.entity'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class ProductReadTypeormRepository implements ProductReadRepository {
   constructor(
+    @InjectRepository(ProductTypeOrmEntity)
     private readonly productRepo: Repository<ProductTypeOrmEntity>,
+    @InjectRepository(ProductModelTypeOrmEntity)
     private readonly productModelRepo: Repository<ProductModelTypeOrmEntity>,
+    @InjectRepository(SaleTypeOrmEntity)
     private readonly saleRepo: Repository<SaleTypeOrmEntity>,
+    @InjectRepository(InventoryTypeOrmEntity)
     private readonly inventoryRepo: Repository<InventoryTypeOrmEntity>
   ) {}
 

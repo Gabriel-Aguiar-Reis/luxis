@@ -20,6 +20,7 @@ import { Repository } from 'typeorm'
 import { SaleByResellerReturnDto } from '@/modules/kpi/admin/application/dtos/sale/sale-by-reseller-return.dto'
 import { TotalBillingReturnDto } from '@/modules/kpi/admin/application/dtos/sale/total-billing-return.dto'
 import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.entity'
+import { InjectRepository } from '@nestjs/typeorm'
 
 type SaleByResellerIdReturnRawResult = {
   id: UUID
@@ -40,10 +41,13 @@ type SaleReturnRawResult = SaleByResellerIdReturnRawResult & {
   resellerPhone: string
 }
 
-export class SaleReadTypeOrmRepository implements SaleReadRepository {
+export class SaleReadTypeormRepository implements SaleReadRepository {
   constructor(
+    @InjectRepository(SaleTypeOrmEntity)
     private readonly saleRepo: Repository<SaleTypeOrmEntity>,
+    @InjectRepository(UserTypeOrmEntity)
     private readonly userRepo: Repository<UserTypeOrmEntity>,
+    @InjectRepository(ProductTypeOrmEntity)
     private readonly productRepo: Repository<ProductTypeOrmEntity>
   ) {}
 

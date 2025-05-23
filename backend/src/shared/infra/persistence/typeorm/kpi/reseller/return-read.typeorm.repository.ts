@@ -5,10 +5,14 @@ import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { ReturnReadRepository } from '@/modules/kpi/reseller/domain/repositories/return-read.repository'
 import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
 import { baseWhere } from '@/shared/common/utils/query-builder.helper'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class ReturnReadTypeormRepository implements ReturnReadRepository {
-  constructor(private readonly returnRepo: Repository<ReturnTypeOrmEntity>) {}
+  constructor(
+    @InjectRepository(ReturnTypeOrmEntity)
+    private readonly returnRepo: Repository<ReturnTypeOrmEntity>
+  ) {}
 
   async returnsMadeByResellerId(
     resellerId: UUID,

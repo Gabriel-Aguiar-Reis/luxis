@@ -1,5 +1,5 @@
 import { Controller, Get, Body } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { GetTopSellingProductsUseCase } from '@/modules/kpi/reseller/application/use-cases/product/get-top-selling-products.use-case'
 import { GetProductsWithLongestTimeInInventoryUseCase } from '@/modules/kpi/reseller/application/use-cases/product/get-products-with-longest-time-in-inventory.use-case'
@@ -13,7 +13,7 @@ import { ResellerKpiEndpoint } from '@/shared/infra/auth/decorators/reseller-kpi
 
 @ApiTags('Reseller KPIs - Products')
 @ResellerKpiEndpoint()
-@Controller('my-space/kpis/products')
+@Controller('kpi/my-space/products')
 export class ResellerProductKpiController {
   constructor(
     private readonly logger: CustomLogger,
@@ -21,13 +21,14 @@ export class ResellerProductKpiController {
     private readonly getProductsWithLongestTimeInInventoryUseCase: GetProductsWithLongestTimeInInventoryUseCase
   ) {}
 
-  @Get('top-selling')
   @ApiOperation({ summary: 'Get top selling products for a reseller' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({ status: 200, type: [SellingProductDto] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('top-selling-products')
   @CacheTTL(300)
+  @Get('top-selling')
   async getTopSellingProducts(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto
@@ -39,15 +40,16 @@ export class ResellerProductKpiController {
     return this.getTopSellingProductsUseCase.execute(user.id, qParams)
   }
 
-  @Get('longest-time-in-inventory')
   @ApiOperation({
     summary: 'Get products with longest time in inventory for a reseller'
   })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({ status: 200, type: [ProductInInventoryDto] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('products-with-longest-time-in-inventory')
   @CacheTTL(300)
+  @Get('longest-time-in-inventory')
   async getProductsWithLongestTimeInInventory(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto

@@ -1,5 +1,5 @@
 import { Controller, Get, Body } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { GetMonthlySalesUseCase } from '@/modules/kpi/reseller/application/use-cases/sale/get-monthly-sales.use-case'
 import { GetAverageTicketUseCase } from '@/modules/kpi/reseller/application/use-cases/sale/get-average-ticket.use-case'
@@ -12,7 +12,7 @@ import { ResellerKpiEndpoint } from '@/shared/infra/auth/decorators/reseller-kpi
 
 @ApiTags('Reseller KPIs - Sales')
 @ResellerKpiEndpoint()
-@Controller('my-space/kpis/sales')
+@Controller('kpi/my-space/sales')
 export class ResellerSaleKpiController {
   constructor(
     private readonly getMonthlySalesUseCase: GetMonthlySalesUseCase,
@@ -20,8 +20,8 @@ export class ResellerSaleKpiController {
     private readonly logger: CustomLogger
   ) {}
 
-  @Get('monthly')
   @ApiOperation({ summary: 'Get monthly sales for a reseller' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     description: 'Monthly sales returned successfully',
@@ -31,6 +31,7 @@ export class ResellerSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('monthly-sales')
   @CacheTTL(300)
+  @Get('monthly')
   async getMonthlySales(
     @Body() qParams: ParamsDto,
     @CurrentUser() user: UserPayload
@@ -42,8 +43,8 @@ export class ResellerSaleKpiController {
     return this.getMonthlySalesUseCase.execute(user.id, qParams)
   }
 
-  @Get('average-ticket')
   @ApiOperation({ summary: 'Get average ticket for a reseller' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     type: Number,
@@ -53,6 +54,7 @@ export class ResellerSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('average-ticket')
   @CacheTTL(300)
+  @Get('average-ticket')
   async getAverageTicket(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto

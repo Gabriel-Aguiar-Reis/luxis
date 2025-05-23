@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param } from '@nestjs/common'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { GetTotalProductsInStockUseCase } from '@/modules/kpi/admin/application/use-cases/product/get-total-products-in-stock-kpi.use-case'
 import { GetTotalProductWithResellersUseCase } from '@/modules/kpi/admin/application/use-cases/product/get-total-products-with-resellers-kpi.use-case'
 import { GetProductsInStockUseCase } from '@/modules/kpi/admin/application/use-cases/product/get-products-in-stock-kpi.use-case'
@@ -10,11 +10,12 @@ import { ProductInStockDto } from '@/modules/kpi/admin/application/dtos/product/
 import { ProductWithResellerDto } from '@/modules/kpi/admin/application/dtos/product/product-with-reseller.dto'
 import { AdminKpiEndpoint } from '@/shared/infra/auth/decorators/admin-kpi-endpoint.decorator'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
+import { CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 @ApiTags('Admins KPIs - Products')
 @AdminKpiEndpoint()
 @Controller('kpi/admin/products')
-export class ResellerKpiController {
+export class AdminProductKpiController {
   constructor(
     private readonly logger: CustomLogger,
     private readonly getProductsInStockUseCase: GetProductsInStockUseCase,
@@ -25,6 +26,7 @@ export class ResellerKpiController {
   ) {}
 
   @ApiOperation({ summary: 'Get Total Products In Stock' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     description: 'Total products in stock returned successfully',
@@ -32,6 +34,8 @@ export class ResellerKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
+  @CacheTTL(300)
+  @CacheKey('total-products-in-stock')
   @Get('in-stock/total')
   async getTotalProductsInStock(@Body() qParams: ParamsDto) {
     this.logger.log('Get Total Products In Stock', 'AdminKpiController')
@@ -39,6 +43,7 @@ export class ResellerKpiController {
   }
 
   @ApiOperation({ summary: 'Get Products In Stock' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     description: 'List of products in stock returned successfully',
@@ -46,6 +51,8 @@ export class ResellerKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
+  @CacheTTL(300)
+  @CacheKey('products-in-stock')
   @Get('in-stock')
   async getProductsInStock(@Body() qParams: ParamsDto) {
     this.logger.log('Get Products In Stock', 'AdminKpiController')
@@ -53,6 +60,7 @@ export class ResellerKpiController {
   }
 
   @ApiOperation({ summary: 'Get Products With Resellers' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     description: 'List of products with resellers returned successfully',
@@ -60,6 +68,8 @@ export class ResellerKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
+  @CacheTTL(300)
+  @CacheKey('products-with-resellers')
   @Get('with-resellers')
   async getProductsWithResellers(@Body() qParams: ParamsDto) {
     this.logger.log('Get Products With Resellers', 'AdminKpiController')
@@ -67,6 +77,7 @@ export class ResellerKpiController {
   }
 
   @ApiOperation({ summary: 'Get Total Products With Resellers' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     description: 'Total products with resellers returned successfully',
@@ -74,6 +85,8 @@ export class ResellerKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
+  @CacheTTL(300)
+  @CacheKey('total-products-with-resellers')
   @Get('with-resellers/total')
   async getTotalProductsWithResellers(@Body() qParams: ParamsDto) {
     this.logger.log('Get Total Products With Resellers', 'AdminKpiController')
@@ -81,6 +94,7 @@ export class ResellerKpiController {
   }
 
   @ApiOperation({ summary: 'Get Products In Stock For More Than X Days' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     description:
@@ -102,6 +116,7 @@ export class ResellerKpiController {
   }
 
   @ApiOperation({ summary: 'Get Total Products In Stock For More Than X Days' })
+  @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
     description:
@@ -110,6 +125,8 @@ export class ResellerKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
+  @CacheTTL(300)
+  @CacheKey('total-products-in-stock-for-more-than-x-days')
   @Get('in-stock/for-more-than/:days/total')
   async getTotalProductsInStockForMoreThanXDays(
     @Param('days') days: number,

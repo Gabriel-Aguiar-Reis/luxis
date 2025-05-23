@@ -9,6 +9,7 @@ import { UUID } from 'crypto'
 import { Repository } from 'typeorm'
 import { baseWhere } from '@/shared/common/utils/query-builder.helper'
 import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.entity'
+import { InjectRepository } from '@nestjs/typeorm'
 
 type ProductInStockRawResult = {
   id: UUID
@@ -23,8 +24,11 @@ type ProductInStockRawResult = {
 
 type ProductWithResellerRawResult = ProductInStockRawResult
 
-export class ProductReadTypeOrmRepository implements ProductReadRepository {
-  constructor(private readonly productRepo: Repository<ProductTypeOrmEntity>) {}
+export class ProductReadTypeormRepository implements ProductReadRepository {
+  constructor(
+    @InjectRepository(ProductTypeOrmEntity)
+    private readonly productRepo: Repository<ProductTypeOrmEntity>
+  ) {}
 
   async productsWithResellers(
     qParams: ParamsDto

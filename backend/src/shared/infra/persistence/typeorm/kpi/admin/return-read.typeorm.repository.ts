@@ -18,6 +18,7 @@ import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/r
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
 import { UUID } from 'crypto'
 import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
 
 type ReturnByResellerRawResult = {
   id: UUID
@@ -26,9 +27,11 @@ type ReturnByResellerRawResult = {
   productIds: string
 }
 
-export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
+export class ReturnReadTypeormRepository implements ReturnReadRepository {
   constructor(
+    @InjectRepository(ReturnTypeOrmEntity)
     private readonly returnRepo: Repository<ReturnTypeOrmEntity>,
+    @InjectRepository(ProductTypeOrmEntity)
     private readonly productRepo: Repository<ProductTypeOrmEntity>
   ) {}
 
@@ -48,7 +51,8 @@ export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
       ])
 
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
-    const resReturns = await filteredReturns.getRawMany<ReturnByResellerRawResult>()
+    const resReturns =
+      await filteredReturns.getRawMany<ReturnByResellerRawResult>()
 
     const parsedReturns = resReturns.map((r) => ({
       ...r,
@@ -316,7 +320,7 @@ export class ReturnReadTypeOrmRepository implements ReturnReadRepository {
   ): Promise<TotalReturnsInPeriodDto> {
     const qb = this.returnRepo.createQueryBuilder('return')
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
-    
+
     const totalReturns = await filteredReturns.getCount()
 
     return {

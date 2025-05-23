@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Inject,
   Injectable
 } from '@nestjs/common'
 import {
@@ -13,7 +14,10 @@ import { Actions } from '@/shared/infra/auth/enums/actions.enum'
 
 @Injectable()
 export class ResellerKpiControllerGuard implements CanActivate {
-  constructor(private readonly abilityFactory: CaslAbilityFactory) {}
+  constructor(
+    @Inject('CaslAbilityFactory')
+    private readonly abilityFactory: CaslAbilityFactory
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest()

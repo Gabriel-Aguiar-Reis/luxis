@@ -7,7 +7,7 @@ import {
 } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
-import { CreateBatchItemDto } from '@/modules/batch/presentation/dtos/create-batch-item.dto'
+import { CreateBatchItemDto } from '@/modules/batch/application/dtos/create-batch-item.dto'
 
 export class CreateBatchDto {
   @ApiProperty({

@@ -9,12 +9,16 @@ import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
 import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
 import { baseWhere } from '@/shared/common/utils/query-builder.helper'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class InventoryReadTypeormRepository implements InventoryReadRepository {
   constructor(
+    @InjectRepository(InventoryTypeOrmEntity)
     private readonly inventoryRepo: Repository<InventoryTypeOrmEntity>,
+    @InjectRepository(ProductTypeOrmEntity)
     private readonly productRepo: Repository<ProductTypeOrmEntity>,
+    @InjectRepository(ProductModelTypeOrmEntity)
     private readonly productModelRepo: Repository<ProductModelTypeOrmEntity>
   ) {}
 

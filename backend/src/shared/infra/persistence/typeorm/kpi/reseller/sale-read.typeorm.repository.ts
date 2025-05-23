@@ -6,10 +6,14 @@ import { MonthlySalesDto } from '@/modules/kpi/reseller/application/dtos/sale/mo
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
 import { Repository } from 'typeorm'
 import { baseWhere } from '@/shared/common/utils/query-builder.helper'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class SaleReadTypeormRepository implements SaleReadRepository {
-  constructor(private readonly saleRepo: Repository<SaleTypeOrmEntity>) {}
+  constructor(
+    @InjectRepository(SaleTypeOrmEntity)
+    private readonly saleRepo: Repository<SaleTypeOrmEntity>
+  ) {}
 
   async monthlySales(
     resellerId: UUID,

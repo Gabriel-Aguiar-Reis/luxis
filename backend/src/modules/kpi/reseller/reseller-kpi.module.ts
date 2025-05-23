@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { AppModule } from '@/app.module'
 
 import { ResellerSaleKpiController } from '@/modules/kpi/reseller/presentation/controllers/sale-kpi.controller'
 import { ResellerInventoryKpiController } from '@/modules/kpi/reseller/presentation/controllers/inventory-kpi.controller'
@@ -24,6 +25,10 @@ import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
 import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
 
+import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
+import { ResellerKpiControllerGuard } from '@/shared/infra/auth/guards/reseller-kpi-controller.guard'
+import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { AppConfigService } from '@/shared/config/app-config.service'
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -32,7 +37,8 @@ import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/r
       ProductTypeOrmEntity,
       ProductModelTypeOrmEntity,
       ReturnTypeOrmEntity
-    ])
+    ]),
+    forwardRef(() => AppModule)
   ],
   controllers: [
     ResellerSaleKpiController,
@@ -41,12 +47,16 @@ import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/r
     ResellerReturnKpiController
   ],
   providers: [
+    CustomLogger,
+    AppConfigService,
     GetMonthlySalesUseCase,
     GetAverageTicketUseCase,
     GetCurrentInventoryUseCase,
     GetTopSellingProductsUseCase,
     GetProductsWithLongestTimeInInventoryUseCase,
     GetReturnsMadeByResellerUseCase,
+    ResellerKpiControllerGuard,
+    { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory },
     { provide: 'SaleReadRepository', useClass: SaleReadTypeormRepository },
     {
       provide: 'InventoryReadRepository',
