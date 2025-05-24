@@ -2,8 +2,8 @@ import { CreateProductModelUseCase } from '@/modules/product-model/application/u
 import { DeleteProductModelUseCase } from '@/modules/product-model/application/use-cases/delete-product-model.use-case'
 import { GetOneProductModelUseCase } from '@/modules/product-model/application/use-cases/get-one-product-model.use-case'
 import { UpdateProductModelUseCase } from '@/modules/product-model/application/use-cases/update-product-model.use-case'
-import { CreateProductModelDto } from '@/modules/product-model/presentation/dtos/create-product-model.dto'
-import { UpdateProductModelDto } from '@/modules/product-model/presentation/dtos/update-product-model.dto'
+import { CreateProductModelDto } from '@/modules/product-model/application/dtos/create-product-model.dto'
+import { UpdateProductModelDto } from '@/modules/product-model/application/dtos/update-product-model.dto'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
 import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
 import {

@@ -11,6 +11,7 @@ export class CreateProducts1712938000005 implements MigrationInterface {
         "unit_cost" DECIMAL(10,2) NOT NULL,
         "sale_price" DECIMAL(10,2) NOT NULL,
         "status" VARCHAR NOT NULL,
+        "created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
         CONSTRAINT "fk_product_model" FOREIGN KEY ("model_id") REFERENCES "product_models"("id") ON DELETE RESTRICT,
         CONSTRAINT "fk_product_batch" FOREIGN KEY ("batch_id") REFERENCES "batches"("id") ON DELETE CASCADE
       );

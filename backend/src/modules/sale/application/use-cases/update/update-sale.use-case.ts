@@ -1,6 +1,6 @@
 import { UpdateSaleStrategyFactory } from '@/modules/sale/application/use-cases/update/strategies/update-sale.strategy.factory'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
-import { UpdateSaleDto } from '@/modules/sale/presentation/dtos/update-sale.dto'
+import { UpdateSaleDto } from '@/modules/sale/application/dtos/update-sale.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { Injectable } from '@nestjs/common'
 import { UUID } from 'crypto'

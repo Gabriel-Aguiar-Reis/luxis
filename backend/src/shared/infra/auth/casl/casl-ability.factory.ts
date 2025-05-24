@@ -33,6 +33,8 @@ type Subjects =
   | InferSubjects<typeof Shipment>
   | InferSubjects<typeof Supplier>
   | InferSubjects<typeof User>
+  | 'admin-kpi'
+  | 'reseller-kpi'
   | 'all'
 
 export type AppAbility = PureAbility<[Actions, Subjects]>

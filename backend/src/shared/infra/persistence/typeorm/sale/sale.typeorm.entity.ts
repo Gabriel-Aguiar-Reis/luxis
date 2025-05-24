@@ -9,6 +9,9 @@ export class SaleTypeOrmEntity {
   id: UUID
 
   @Column('uuid')
+  customerId: UUID
+
+  @Column('uuid')
   resellerId: UUID
 
   @Column('uuid', { array: true })

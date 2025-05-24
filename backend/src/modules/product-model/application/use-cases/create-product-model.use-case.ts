@@ -1,6 +1,6 @@
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
-import { CreateProductModelDto } from '@/modules/product-model/presentation/dtos/create-product-model.dto'
+import { CreateProductModelDto } from '@/modules/product-model/application/dtos/create-product-model.dto'
 import { CloudinaryService } from '@/shared/infra/cloudinary/cloudinary.service'
 import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 import { Inject, Injectable } from '@nestjs/common'

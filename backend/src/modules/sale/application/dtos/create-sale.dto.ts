@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsPositive,
+  IsUUID,
   Min
 } from 'class-validator'
 import { UUID } from 'crypto'
@@ -72,4 +73,14 @@ export class CreateSaleDto {
   @IsInt()
   @Min(0)
   installmentsInterval: number = 0
+
+  @ApiProperty({
+    description: 'The ID of the consumer',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String,
+    required: true
+  })
+  @IsNotEmpty()
+  @IsUUID()
+  customerId: UUID
 }

@@ -2,7 +2,7 @@ import { Category } from '@/modules/category/domain/entities/category.entity'
 import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
 import { Injectable, Inject, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
-import { UpdateCategoryDto } from '@/modules/category/presentation/dtos/update-category.dto'
+import { UpdateCategoryDto } from '@/modules/category/application/dtos/update-category.dto'
 import { Description } from '@/shared/common/value-object/description.vo'
 import { CategoryName } from '@/modules/category/domain/value-objects/category-name.vo'
 

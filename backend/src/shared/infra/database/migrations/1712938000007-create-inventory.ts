@@ -5,7 +5,7 @@ export class CreateInventory1712938000007 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "inventories" (
         "reseller_id" UUID PRIMARY KEY,
-        "product_ids" JSONB NOT NULL,
+        "product_ids" UUID[] NOT NULL,
         CONSTRAINT "fk_inventory_reseller" FOREIGN KEY ("reseller_id") REFERENCES "users"("id") ON DELETE RESTRICT
       );
     `)

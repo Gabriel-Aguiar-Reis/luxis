@@ -10,7 +10,7 @@ import { Password } from '@/modules/user/domain/value-objects/password.vo'
 import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Email } from '@/shared/common/value-object/email.vo'
 import { Residence } from '@/modules/user/domain/value-objects/residence.vo'
-import { CreateUserDto } from '@/modules/user/presentation/dtos/create-user.dto'
+import { CreateUserDto } from '@/modules/user/application/dtos/create-user.dto'
 import { Injectable, Inject } from '@nestjs/common'
 @Injectable()
 export class CreateUserUseCase {

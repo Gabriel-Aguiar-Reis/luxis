@@ -6,3 +6,6 @@ build
 .env.production
 .env.test
 yarn.lock
+next-env.d.ts
+.next
+.DS_Store

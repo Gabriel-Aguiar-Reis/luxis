@@ -8,7 +8,7 @@ import { Password } from '@/modules/user/domain/value-objects/password.vo'
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
 import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Residence } from '@/modules/user/domain/value-objects/residence.vo'
-import { UpdateUserDto } from '@/modules/user/presentation/dtos/update-user.dto'
+import { UpdateUserDto } from '@/modules/user/application/dtos/update-user.dto'
 import { Email } from '@/shared/common/value-object/email.vo'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import {

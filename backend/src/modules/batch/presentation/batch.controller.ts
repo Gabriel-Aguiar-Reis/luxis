@@ -2,7 +2,7 @@ import { CreateBatchUseCase } from '@/modules/batch/application/use-cases/create
 import { DeleteBatchUseCase } from '@/modules/batch/application/use-cases/delete-batch.use-case'
 import { GetAllBatchUseCase } from '@/modules/batch/application/use-cases/get-all-batch.use-case'
 import { GetOneBatchUseCase } from '@/modules/batch/application/use-cases/get-one-batch.use-case'
-import { CreateBatchDto } from '@/modules/batch/presentation/dtos/create-batch.dto'
+import { CreateBatchDto } from '@/modules/batch/application/dtos/create-batch.dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
 import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'

@@ -11,7 +11,7 @@ import { User } from '@/modules/user/domain/entities/user.entity'
 import { UUID } from 'crypto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
-import { UpdateUserRoleDto } from '@/modules/user/presentation/dtos/update-user-role.dto'
+import { UpdateUserRoleDto } from '@/modules/user/application/dtos/update-user-role.dto'
 @Injectable()
 export class UpdateUserRoleUseCase {
   constructor(

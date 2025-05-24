@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 
 import { Product } from '@/modules/product/domain/entities/product.entity'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
-import { UpdateProductDto } from '@/modules/product/presentation/dtos/update-product.dto'
+import { UpdateProductDto } from '@/modules/product/application/dtos/update-product.dto'
 import { UUID } from 'crypto'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 

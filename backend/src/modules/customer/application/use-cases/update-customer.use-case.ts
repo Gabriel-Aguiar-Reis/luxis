@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { CustomerRepository } from '@/modules/customer/domain/repositories/customer.repository'
-import { UpdateCustomerDto } from '@/modules/customer/presentation/dtos/update-customer.dto'
+import { UpdateCustomerDto } from '@/modules/customer/application/dtos/update-customer.dto'
 import { Customer } from '@/modules/customer/domain/entities/customer.entity'
 import { UUID } from 'crypto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'

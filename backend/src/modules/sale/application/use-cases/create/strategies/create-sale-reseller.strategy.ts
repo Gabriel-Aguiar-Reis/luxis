@@ -1,5 +1,5 @@
 import { Injectable, ForbiddenException, Inject } from '@nestjs/common'
-import { CreateSaleDto } from '@/modules/sale/presentation/dtos/create-sale.dto'
+import { CreateSaleDto } from '@/modules/sale/application/dtos/create-sale.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
@@ -34,6 +34,7 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
     const sale = new Sale(
       crypto.randomUUID(),
       user.id,
+      dto.customerId,
       dto.productIds,
       dto.saleDate,
       totalAmount,

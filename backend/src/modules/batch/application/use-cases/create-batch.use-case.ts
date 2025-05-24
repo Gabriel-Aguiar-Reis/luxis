@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common'
-import { CreateBatchDto } from '@/modules/batch/presentation/dtos/create-batch.dto'
+import { CreateBatchDto } from '@/modules/batch/application/dtos/create-batch.dto'
 import { Batch } from '@/modules/batch/domain/entities/batch.entity'
 import { BatchRepository } from '@/modules/batch/domain/repositories/batch.repository'
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'

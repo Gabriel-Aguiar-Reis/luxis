@@ -3,7 +3,7 @@ import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
 import { IInventoryOwnershipVerifier } from '@/modules/sale/domain/services/inventory-ownership-verify.interface'
 import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-calculator.interface'
-import { UpdateSaleDto } from '@/modules/sale/presentation/dtos/update-sale.dto'
+import { UpdateSaleDto } from '@/modules/sale/application/dtos/update-sale.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { Inject, ForbiddenException, NotFoundException } from '@nestjs/common'
 import { UUID } from 'crypto'
@@ -43,6 +43,7 @@ export class UpdateSaleResellerStrategy implements UpdateSaleStrategy {
 
     sale = new Sale(
       sale.id,
+      sale.customerId,
       sale.resellerId,
       dto.productIds ?? sale.productIds,
       sale.saleDate,

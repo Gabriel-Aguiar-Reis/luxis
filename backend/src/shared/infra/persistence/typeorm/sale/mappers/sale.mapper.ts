@@ -7,6 +7,7 @@ export class SaleMapper {
   static toDomain(entity: SaleTypeOrmEntity): Sale {
     const sale = new Sale(
       entity.id,
+      entity.customerId,
       entity.resellerId,
       entity.productIds,
       entity.saleDate,
@@ -29,6 +30,7 @@ export class SaleMapper {
   static toTypeOrm(sale: Sale): SaleTypeOrmEntity {
     const entity = new SaleTypeOrmEntity()
     entity.id = sale.id
+    entity.customerId = sale.customerId
     entity.resellerId = sale.resellerId
     entity.productIds = sale.productIds
     entity.saleDate = sale.saleDate
@@ -43,6 +45,7 @@ export class SaleMapper {
   static toPersistence(sale: Sale): any {
     return {
       id: sale.id,
+      customerId: sale.customerId,
       resellerId: sale.resellerId,
       productIds: sale.productIds,
       saleDate: sale.saleDate,
@@ -57,6 +60,7 @@ export class SaleMapper {
   static toResponse(sale: Sale): any {
     return {
       id: sale.id,
+      customerId: sale.customerId,
       resellerId: sale.resellerId,
       productIds: sale.productIds,
       saleDate: sale.saleDate,

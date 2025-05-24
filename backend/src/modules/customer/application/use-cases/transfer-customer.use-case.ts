@@ -9,7 +9,7 @@ import { CustomerRepository } from '@/modules/customer/domain/repositories/custo
 import { EventDispatcher } from '@/shared/events/event-dispatcher'
 import { CustomerTransferredEvent } from '@/modules/customer/domain/events/customer-transferred.event'
 import { ICustomerPortfolioService } from '@/modules/customer-portfolio/domain/services/customer-portfolio.interface'
-import { TransferCustomerDto } from '@/modules/customer/presentation/dtos/transfer-customer.dto'
+import { TransferCustomerDto } from '@/modules/customer/application/dtos/transfer-customer.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 
