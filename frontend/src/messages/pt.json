@@ -1,0 +1,11 @@
+{
+  "Login": {
+    "title": "Olá de novo!",
+    "button": "Acessar",
+    "description": "Entre em sua conta Luxis para continuar.",
+    "email": "Email",
+    "password": "Senha",
+    "forgotPassword": "Esqueceu sua senha?",
+    "orContinueWith": "Ou continue com"
+  }
+}
