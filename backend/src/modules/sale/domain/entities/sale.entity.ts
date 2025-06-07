@@ -139,4 +139,8 @@ export class Sale {
       this.status = SaleStatus.INSTALLMENTS_PENDING
     }
   }
+
+  public getInstallments(): boolean[] {
+    return this._installments
+  }
 }

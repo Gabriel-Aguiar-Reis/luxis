@@ -57,7 +57,7 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
   ): Promise<SalesByResellerDto> {
     const reseller = await this.userRepo.findOne({
       where: { id: resellerId },
-      select: ['id', 'name', 'surName']
+      select: ['id', 'name', 'surname']
     })
 
     if (!reseller) throw new NotFoundException()
@@ -157,7 +157,7 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
 
     return {
       resellerId: reseller.id,
-      resellerName: `${reseller.name} ${reseller.surName}`,
+      resellerName: `${reseller.name} ${reseller.surname}`,
       sales,
       totalSales: totalSales.toString(),
       salesCount
@@ -177,10 +177,10 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = sale.reseller_id')
       .select([
         'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        `CONCAT(user.name, ' ', user.surname) as resellerName`,
         'COUNT(sale.id) as salesCount'
       ])
-      .groupBy('user.id, user.name, user.sur_name')
+      .groupBy('user.id, user.name, user.surname')
       .orderBy('COUNT(sale.id)', 'DESC')
 
     const filtered = baseWhere(resellerQb, qParams, 'sale.sale_date')
@@ -310,10 +310,10 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = sale.resellerId')
       .select([
         'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        `CONCAT(user.name, ' ', user.surname) as resellerName`,
         'COUNT(sale.id) as salesCount'
       ])
-      .groupBy('user.id, user.name, user.sur_name')
+      .groupBy('user.id, user.name, user.surname')
 
     const filteredSales = baseWhere(qb, qParams, 'sale.sale_date')
 
@@ -351,7 +351,7 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
         'sale.product_ids as productIds',
 
         'reseller.id as resellerId',
-        `CONCAT(reseller.name, ' ', reseller.sur_name) as resellerName`,
+        `CONCAT(reseller.name, ' ', reseller.surname) as resellerName`,
         'reseller.phone as resellerPhone',
 
         'customer.id as customerId',

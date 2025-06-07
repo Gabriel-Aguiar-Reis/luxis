@@ -7,6 +7,7 @@ import { DeleteUserUseCase } from '@/modules/user/application/use-cases/delete-u
 import { UpdateUserUseCase } from '@/modules/user/application/use-cases/update-user.use-case'
 import { DisableUserUseCase } from '@/modules/user/application/use-cases/disable-user.use-case'
 import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/update-user-role.use-case'
+import { UpdateUserStatusUseCase } from '@/modules/user/application/use-cases/update-user-status.use-case'
 import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/user.typeorm.repository'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
@@ -31,6 +32,7 @@ import { AppConfigService } from '@/shared/config/app-config.service'
     UpdateUserUseCase,
     UpdateUserRoleUseCase,
     DisableUserUseCase,
+    UpdateUserStatusUseCase,
     { provide: 'UserRepository', useClass: UserTypeOrmRepository },
     { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }
   ]

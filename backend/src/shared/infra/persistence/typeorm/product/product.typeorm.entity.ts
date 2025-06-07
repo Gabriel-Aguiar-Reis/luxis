@@ -17,10 +17,10 @@ export class ProductTypeOrmEntity {
   batchId: UUID
 
   @Column('decimal', { precision: 10, scale: 2 })
-  unitCost: number
+  unitCost: string
 
   @Column('decimal', { precision: 10, scale: 2 })
-  salePrice: number
+  salePrice: string
 
   @Column({
     type: 'enum',

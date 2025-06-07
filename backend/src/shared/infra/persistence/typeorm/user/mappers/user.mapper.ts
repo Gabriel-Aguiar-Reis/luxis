@@ -66,7 +66,7 @@ export class UserMapper {
     return new User(
       entity.id,
       new Name(entity.name),
-      new Name(entity.surName),
+      new Name(entity.surname),
       new PhoneNumber(entity.phone),
       new Email(entity.email),
       new PasswordHash(entity.passwordHash),
@@ -80,7 +80,7 @@ export class UserMapper {
     const entity = new UserTypeOrmEntity()
     entity.id = user.id
     entity.name = user.name.getValue()
-    entity.surName = user.surName.getValue()
+    entity.surname = user.surname.getValue()
     entity.phone = user.phone.getValue()
     entity.email = user.email.getValue()
     entity.passwordHash = user.passwordHash.getValue()
@@ -94,7 +94,7 @@ export class UserMapper {
     return {
       id: user.id,
       name: user.name.getValue(),
-      surName: user.surName.getValue(),
+      surname: user.surname.getValue(),
       phone: user.phone.getValue(),
       email: user.email.getValue(),
       role: user.role,

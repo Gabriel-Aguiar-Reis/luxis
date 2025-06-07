@@ -19,11 +19,6 @@ export class ProductModelTypeOrmRepository implements ProductModelRepository {
     return entities.map(ProductModelMapper.toDomain)
   }
 
-  async findAllByResellerId(resellerId: UUID): Promise<ProductModel[]> {
-    const entities = await this.repository.find({ where: { resellerId } })
-    return entities.map(ProductModelMapper.toDomain)
-  }
-
   async findById(id: UUID): Promise<ProductModel | null> {
     const entity = await this.repository.findOne({ where: { id } })
     if (!entity) return null

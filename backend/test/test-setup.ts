@@ -37,7 +37,7 @@ export async function setupTestDatabase() {
     const user = userRepository.create({
       id: faker.string.uuid() as UUID,
       name: faker.person.firstName(),
-      surName: faker.person.lastName(),
+      surname: faker.person.lastName(),
       phone: fakerBr.phone.number(),
       email: faker.internet.email(),
       passwordHash,

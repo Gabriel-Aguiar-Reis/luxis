@@ -11,7 +11,7 @@ export class ProductModelMapper {
       entity.id,
       new ModelName(entity.name),
       entity.categoryId,
-      new Currency(entity.suggestedPrice.toString()),
+      new Currency(entity.suggestedPrice),
       entity.description ? new Description(entity.description) : undefined,
       entity.photoUrl ? new ImageURL(entity.photoUrl) : undefined
     )
@@ -22,8 +22,9 @@ export class ProductModelMapper {
     entity.id = model.id
     entity.name = model.name.getValue()
     entity.categoryId = model.categoryId
-    entity.suggestedPrice = Number(model.suggestedPrice.getValue())
+    entity.suggestedPrice = model.suggestedPrice.getValue()
     entity.description = model.description?.getValue() ?? ''
+    entity.photoUrl = model.photoUrl?.getValue() ?? ''
     return entity
   }
 

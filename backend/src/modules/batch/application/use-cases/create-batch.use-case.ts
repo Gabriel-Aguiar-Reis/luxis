@@ -5,11 +5,12 @@ import { BatchRepository } from '@/modules/batch/domain/repositories/batch.repos
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { BatchFactory } from '@/modules/batch/domain/services/batch.factory'
 import { GetBatchQtyByMonthUseCase } from '@/modules/batch/application/use-cases/get-batch-qty-by-month.use-case'
-import crypto from 'crypto'
+import * as crypto from 'crypto'
 import { IBatchItemResolver } from '@/modules/batch/domain/services/batch-item-resolver.interface'
 import { Unit } from '@/shared/common/value-object/unit.vo'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
+import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 @Injectable()
 export class CreateBatchUseCase {
   constructor(
@@ -35,9 +36,13 @@ export class CreateBatchUseCase {
       ...item,
       id: crypto.randomUUID(),
       quantity: new Unit(item.quantity),
-      unitCost: new Currency(item.unitCost),
-      salePrice: new Currency(item.salePrice),
-      modelName: item.modelName ? new ModelName(item.modelName) : undefined
+      unitCost: new Currency(item.unitCost?.getValue() ?? '0'),
+      salePrice: new Currency(item.salePrice?.getValue() ?? '0'),
+      modelName: item.modelName ? new ModelName(item.modelName) : undefined,
+      photoUrl: new ImageURL(
+        item.photoUrl?.getValue() ??
+          'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
+      )
     }))
     const resolvedItems = await Promise.all(
       rawItems.map((item) => this.batchItemResolver.resolve(item))

@@ -33,7 +33,7 @@ export class CreateUserUseCase {
     const user = new User(
       crypto.randomUUID(),
       new Name(input.name),
-      new Name(input.surName),
+      new Name(input.surname),
       new PhoneNumber(input.phone),
       new Email(input.email),
       passwordHash,

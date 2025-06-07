@@ -28,7 +28,7 @@ export class User {
     example: 'Doe',
     type: String
   })
-  public surName: Name
+  public surname: Name
 
   @ApiProperty({
     description: 'The phone number of the user',
@@ -76,7 +76,7 @@ export class User {
   constructor(
     id: UUID,
     name: Name,
-    surName: Name,
+    surname: Name,
     phone: PhoneNumber,
     email: Email,
     passwordHash: PasswordHash,
@@ -86,7 +86,7 @@ export class User {
   ) {
     this.id = id
     this.name = name
-    this.surName = surName
+    this.surname = surname
     this.phone = phone
     this.email = email
     this.passwordHash = passwordHash

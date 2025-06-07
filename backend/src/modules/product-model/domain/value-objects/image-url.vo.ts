@@ -15,9 +15,10 @@ export class ImageURL {
 
     const path = url.pathname.toLowerCase()
     const validExtensions = ['.jpg', '.jpeg', '.png', '.webp']
+    const isDummy = url.hostname.includes('dummyimage.com')
     const hasValidExtension = validExtensions.some((ext) => path.endsWith(ext))
 
-    if (!hasValidExtension) return false
+    if (!hasValidExtension && !isDummy) return false
 
     return true
   }

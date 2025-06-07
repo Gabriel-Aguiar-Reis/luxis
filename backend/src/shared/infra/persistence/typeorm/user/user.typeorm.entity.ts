@@ -12,7 +12,7 @@ export class UserTypeOrmEntity {
   name: string
 
   @Column()
-  surName: string
+  surname: string
 
   @Column()
   phone: string

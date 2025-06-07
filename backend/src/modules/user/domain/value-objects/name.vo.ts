@@ -7,7 +7,8 @@ export class Name {
   }
 
   private validate(name: string): boolean {
-    return /^([A-Z][a-z]+|de|da|do|dos|das|e)(\s([A-Z][a-z]+|de|da|do|dos|das|e))*$/.test(
+    // Permite nomes com letras acentuadas, hífen, cedilha e palavras minúsculas comuns
+    return /^([A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+|de|da|do|dos|das|e)([- ]([A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+|de|da|do|dos|das|e))*$/.test(
       name
     )
   }

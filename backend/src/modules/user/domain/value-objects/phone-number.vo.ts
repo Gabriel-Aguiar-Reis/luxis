@@ -7,9 +7,7 @@ export class PhoneNumber {
   }
 
   private validate(phoneNumber: string): boolean {
-    return /^(\+55\s?)?(\(?[0-9]{2}\)?)?\s?([0-9]{4,5})-?([0-9]{4})$/gm.test(
-      phoneNumber
-    )
+    return /^(\(?[0-9]{2}\)?)?\s?([0-9]{4,5})-?([0-9]{4})$/gm.test(phoneNumber)
   }
 
   getValue(): string {

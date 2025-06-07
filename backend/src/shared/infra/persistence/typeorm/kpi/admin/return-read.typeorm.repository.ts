@@ -46,7 +46,7 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .select([
         'return.id as id',
         'return.reseller_id as resellerId',
-        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        `CONCAT(user.name, ' ', user.surname) as resellerName`,
         'return.product_ids as productIds'
       ])
 
@@ -122,10 +122,10 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .where('return.reseller_id = :resellerId', { resellerId })
       .select([
         'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        `CONCAT(user.name, ' ', user.surname) as resellerName`,
         'COUNT(return.id) as totalReturns'
       ])
-      .groupBy('user.id, user.name, user.sur_name')
+      .groupBy('user.id, user.name, user.surname')
 
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
     const result = await filteredReturns.getRawOne<TotalReturnsByResellerDto>()
@@ -140,7 +140,7 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .select([
         'return.id as id',
         'return.reseller_id as resellerId',
-        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        `CONCAT(user.name, ' ', user.surname) as resellerName`,
         'return.product_ids as productIds'
       ])
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
@@ -234,10 +234,10 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
       .select([
         'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        `CONCAT(user.name, ' ', user.surname) as resellerName`,
         'COUNT(return.id) as totalReturns'
       ])
-      .groupBy('user.id, user.name, user.sur_name')
+      .groupBy('user.id, user.name, user.surname')
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
     return filteredReturns.getRawMany<TotalReturnsByResellerDto>()
   }
@@ -251,7 +251,7 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .select([
         'return.id as id',
         'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.sur_name) as resellerName`,
+        `CONCAT(user.name, ' ', user.surname) as resellerName`,
         'return.items as productIds'
       ])
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')

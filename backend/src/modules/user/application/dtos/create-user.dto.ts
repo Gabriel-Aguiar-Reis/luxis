@@ -41,11 +41,11 @@ export class CreateUserDto {
   @IsString()
   @Length(2, 50)
   @IsNotEmpty()
-  surName: string
+  surname: string
 
   @ApiProperty({
     description: 'User phone number',
-    example: '+5511999999999',
+    example: '+55(11)99999-9999',
     type: PhoneNumber,
     required: true
   })
@@ -138,7 +138,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'Postal code',
-    example: '01234-567',
+    example: '01234567',
     type: PostalCode,
     required: true
   })

@@ -13,8 +13,8 @@ export class BatchMapper {
         item.id as UUID,
         item.modelId as UUID,
         new Unit(item.quantity),
-        new Currency(item.unitCost.toString()),
-        new Currency(item.salePrice.toString())
+        new Currency(item.unitCost),
+        new Currency(item.salePrice)
       )
     )
     return new Batch(
@@ -35,8 +35,8 @@ export class BatchMapper {
       itemEntity.id = item.id
       itemEntity.modelId = item.modelId
       itemEntity.quantity = item.quantity.getValue()
-      itemEntity.unitCost = Number(item.unitCost.getValue())
-      itemEntity.salePrice = Number(item.salePrice.getValue())
+      itemEntity.unitCost = item.unitCost.getValue()
+      itemEntity.salePrice = item.salePrice.getValue()
       itemEntity.modelName = item.modelName?.getValue() ?? ''
       itemEntity.categoryId = item.categoryId ?? ('' as UUID)
       return itemEntity

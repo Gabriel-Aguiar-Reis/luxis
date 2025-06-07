@@ -5,7 +5,9 @@ import {
   Get,
   Query,
   Res,
-  UseInterceptors
+  UseInterceptors,
+  Headers,
+  UnauthorizedException
 } from '@nestjs/common'
 import { AuthService } from '@/modules/auth/application/services/auth.service'
 import { LoginDto } from '@/modules/auth/application/dtos/login.dto'
@@ -99,5 +101,28 @@ export class AuthController {
   @Get('reset-password-page/script.js')
   async getScript(@Res() res: Response) {
     res.sendFile(join(this.templatesPath, 'script.js'))
+  }
+
+  @ApiOperation({ summary: 'Verify JWT token' })
+  @ApiResponse({ status: 200, description: 'Token is valid' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid token' })
+  @Get('verify')
+  async verify(@Headers('authorization') authHeader: string) {
+    try {
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        throw new UnauthorizedException('Invalid token format')
+      }
+      
+      const token = authHeader.split(' ')[1]
+      const userData = await this.authService.verifyToken(token)
+      
+      return {
+        valid: true,
+        user: userData
+      }
+    } catch (error) {
+      this.logger.error(`Token verification failed: ${error.message}`, 'AuthController')
+      throw new UnauthorizedException('Invalid token')
+    }
   }
 }

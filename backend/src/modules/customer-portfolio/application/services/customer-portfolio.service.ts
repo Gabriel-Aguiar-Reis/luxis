@@ -11,7 +11,6 @@ export class CustomerPortfolioService implements ICustomerPortfolioService {
   constructor(
     @Inject('CustomerPortfolioRepository')
     private readonly customerPortfolioRepository: CustomerPortfolioRepository,
-    @InjectPinoLogger()
     private readonly logger: CustomLogger
   ) {}
 

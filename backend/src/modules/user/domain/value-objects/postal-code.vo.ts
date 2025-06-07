@@ -7,7 +7,7 @@ export class PostalCode {
   }
 
   private validate(postalCode: string): boolean {
-    return /\d{5}\d{3}/gm.test(postalCode)
+    return /^\d{5}\d{3}$/.test(postalCode)
   }
 
   getValue(): string {

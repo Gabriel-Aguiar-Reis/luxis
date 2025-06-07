@@ -21,7 +21,7 @@ export class SaleTypeOrmEntity {
   saleDate: Date
 
   @Column('decimal', { precision: 10, scale: 2 })
-  totalAmount: number
+  totalAmount: string
 
   @Column('enum', { enum: PaymentMethod })
   paymentMethod: PaymentMethod
@@ -35,6 +35,6 @@ export class SaleTypeOrmEntity {
   @Column('enum', { enum: SaleStatus })
   status: SaleStatus
 
-  @Column('boolean', { array: true })
-  installments: boolean[]
+  @Column('int', { default: 0 })
+  installmentsPaid: number
 }

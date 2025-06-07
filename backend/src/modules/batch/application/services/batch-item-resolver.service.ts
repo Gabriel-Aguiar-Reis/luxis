@@ -11,6 +11,8 @@ import { RawBatchItem } from '@/modules/batch/application/models/raw-batch-item.
 import { BatchItemWithResolvedModel } from '@/modules/batch/application/models/batch-item-with-resolved-model.model'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { InjectPinoLogger } from 'nestjs-pino'
+import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
+import { Description } from '@/shared/common/value-object/description.vo'
 
 @Injectable()
 export class BatchItemResolver {
@@ -52,11 +54,16 @@ export class BatchItemResolver {
           crypto.randomUUID(),
           batchItem.modelName!,
           batchItem.categoryId!,
-          batchItem.salePrice!
+          batchItem.salePrice!,
+          new Description(''),
+          new ImageURL(
+            batchItem.photoUrl
+              ? batchItem.photoUrl.getValue()
+              : 'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
+          )
         )
       )
     }
-
     const category = await this.categoryRepo.findById(model.categoryId)
     if (!category) {
       throw new NotFoundException(`Category not found for model ${model.id}.`)

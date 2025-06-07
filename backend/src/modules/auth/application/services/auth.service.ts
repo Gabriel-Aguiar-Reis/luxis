@@ -123,4 +123,32 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired token')
     }
   }
+
+  async verifyToken(token: string): Promise<any> {
+    try {
+      const payload = this.jwtService.verify(token)
+      const user = await this.userRepository.findById(payload.sub)
+      if (!user) {
+        throw new NotFoundException('User not found')
+      }
+
+      if (user.status !== UserStatus.ACTIVE) {
+        throw new UnauthorizedException('User is inactive')
+      }
+
+      return {
+        id: user.id,
+        email: user.email.getValue(),
+        role: user.role,
+        status: user.status,
+        name: user.name
+      }
+    } catch (error) {
+      this.logger.error(
+        `Token verification failed: ${error.message}`,
+        'AuthService'
+      )
+      throw new UnauthorizedException('Invalid or expired token')
+    }
+  }
 }

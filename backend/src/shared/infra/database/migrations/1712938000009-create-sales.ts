@@ -13,6 +13,7 @@ export class CreateSales1712938000009 implements MigrationInterface {
         "number_installments" INTEGER NOT NULL,
         "status" VARCHAR(255) NOT NULL,
         "installments_interval" INTEGER NOT NULL,
+        "installments_paid" INTEGER NOT NULL DEFAULT 0,
         CONSTRAINT "fk_sale_reseller" FOREIGN KEY ("reseller_id") REFERENCES "users"("id") ON DELETE RESTRICT
       );
     `)

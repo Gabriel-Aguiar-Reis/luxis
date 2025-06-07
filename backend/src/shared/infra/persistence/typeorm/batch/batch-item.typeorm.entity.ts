@@ -14,10 +14,10 @@ export class BatchItemTypeOrmEntity {
   quantity: number
 
   @Column('decimal', { precision: 10, scale: 2 })
-  unitCost: number
+  unitCost: string
 
   @Column('decimal', { precision: 10, scale: 2 })
-  salePrice: number
+  salePrice: string
 
   @Column({ nullable: true })
   modelName: string

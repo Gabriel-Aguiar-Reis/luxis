@@ -49,7 +49,7 @@ export class SuperuserSeed {
     await this.userRepository.create({
       id: crypto.randomUUID(),
       name: new Name(this.appConfigService.getSuperuserName()!),
-      surName: new Name(this.appConfigService.getSuperuserSurName()!),
+      surname: new Name(this.appConfigService.getSuperuserSurName()!),
       email: new Email(this.appConfigService.getSuperuserEmail()!),
       phone: new PhoneNumber(this.appConfigService.getSuperuserPhone()!),
       passwordHash,

@@ -7,7 +7,7 @@ export class ModelName {
   }
 
   private validate(name: string): boolean {
-    return /^([A-Z][a-z]+|de|e|com|sem)(\s([A-Z][a-z]+|de|e|com|sem))*$/.test(
+    return /^(?:[\p{L}\d]+(?:-[\p{L}\d]+)*|de|e|com|sem)(?: (?:[\p{L}\d]+(?:-[\p{L}\d]+)*|de|e|com|sem))*$/u.test(
       name
     )
   }

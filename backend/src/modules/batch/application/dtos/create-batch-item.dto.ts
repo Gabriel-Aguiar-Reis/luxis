@@ -5,12 +5,15 @@ import {
   IsCurrency,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
+  IsUrl,
   IsUUID,
   Min
 } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
+import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 
 export class CreateBatchItemDto {
   @ApiProperty({
@@ -20,8 +23,18 @@ export class CreateBatchItemDto {
     required: true
   })
   @IsString()
-  @IsNotEmpty()
-  modelName: string
+  @IsOptional()
+  modelName?: string
+
+  @ApiProperty({
+    description: 'The ID of the model',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String,
+    required: true
+  })
+  @IsUUID()
+  @IsOptional()
+  modelId?: UUID
 
   @ApiProperty({
     description: 'The ID of the category',
@@ -50,9 +63,9 @@ export class CreateBatchItemDto {
     type: Currency,
     required: true
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsCurrency()
-  unitCost: string
+  unitCost?: Currency
 
   @ApiProperty({
     description: 'The sale price of the batch item',
@@ -60,7 +73,17 @@ export class CreateBatchItemDto {
     type: Currency,
     required: true
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsCurrency()
-  salePrice: string
+  salePrice?: Currency
+
+  @ApiProperty({
+    description: 'The Photo URL of the batch item',
+    example: 'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis',
+    type: String,
+    required: false
+  })
+  @IsUrl()
+  @IsOptional()
+  photoUrl?: ImageURL
 }

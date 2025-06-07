@@ -7,7 +7,7 @@ export class CategoryName {
   }
 
   private validate(name: string): boolean {
-    return /^([A-Z][a-z])(\s([A-Z][a-z]))*$/.test(name)
+    return /^([\p{Lu}][\p{Ll}]+)(\s[\p{Lu}][\p{Ll}]+)*$/u.test(name)
   }
 
   getValue(): string {

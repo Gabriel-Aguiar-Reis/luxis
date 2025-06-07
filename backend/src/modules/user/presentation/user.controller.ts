@@ -44,6 +44,9 @@ import { User } from '@/modules/user/domain/entities/user.entity'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { CustomThrottlerGuard } from '@/shared/infra/guards/throttler.guard'
 import { Throttle } from '@nestjs/throttler'
+import { UpdateUserStatusDto } from '@/modules/user/application/dtos/update-user-status.dto'
+import { UpdateUserStatusUseCase } from '@/modules/user/application/use-cases/update-user-status.use-case'
+
 @ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard, CustomThrottlerGuard)
@@ -58,6 +61,7 @@ export class UserController {
     private readonly updateUserRoleUseCase: UpdateUserRoleUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly disableUserUseCase: DisableUserUseCase,
+    private readonly updateUserStatusUseCase: UpdateUserStatusUseCase,
     private readonly logger: CustomLogger
   ) {}
 
@@ -189,5 +193,26 @@ export class UserController {
       'UserController'
     )
     return await this.disableUserUseCase.execute(id, user)
+  }
+
+  @ApiOperation({ summary: 'Update a user status' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiBody({ type: UpdateUserStatusDto })
+  @ApiResponse({ status: 200, description: 'User status updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @CheckPolicies(new UpdateUserPolicy())
+  @Patch(':id/status')
+  async updateStatus(
+    @Param('id') id: UUID,
+    @Body() dto: UpdateUserStatusDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.warn(
+      `Updating user ${id} status to ${dto.status} - Requested by user ${user.email}`,
+      'UserController'
+    )
+    return await this.updateUserStatusUseCase.execute(id, dto, user)
   }
 }

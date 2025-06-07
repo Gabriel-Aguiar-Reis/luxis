@@ -12,11 +12,8 @@ export class ProductModelTypeOrmEntity {
   @Column('uuid')
   categoryId: UUID
 
-  @Column('uuid')
-  resellerId: UUID
-
   @Column('decimal', { precision: 10, scale: 2 })
-  suggestedPrice: number
+  suggestedPrice: string
 
   @Column({ nullable: true })
   description: string

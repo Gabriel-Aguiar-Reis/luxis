@@ -11,6 +11,7 @@ export abstract class UserRepository {
   abstract create(user: User): Promise<User>
   abstract update(user: User): Promise<User>
   abstract updateRole(id: UUID, role: Role, status?: UserStatus): Promise<User>
+  abstract updateStatus(id: UUID, status: UserStatus): Promise<User>
   abstract delete(id: UUID): Promise<void>
   abstract disable(id: UUID): Promise<User>
 }

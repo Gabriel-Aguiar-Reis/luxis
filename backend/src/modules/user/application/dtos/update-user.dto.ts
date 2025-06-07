@@ -38,7 +38,7 @@ export class UpdateUserDto {
   @IsString()
   @Length(2, 50)
   @IsOptional()
-  surName?: string
+  surname?: string
 
   @ApiProperty({
     description: 'The new phone number for the user',
