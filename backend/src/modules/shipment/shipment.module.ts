@@ -17,10 +17,17 @@ import { EventDispatcher } from '@/shared/events/event-dispatcher'
 import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { ShipmentDispatchedHandler } from '@/modules/inventory/application/handlers/shipment-dispatched.handler'
+import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.repository'
+import { InventoryService } from '@/modules/inventory/application/services/inventory.service'
+import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ShipmentTypeOrmEntity, ProductTypeOrmEntity]),
+    TypeOrmModule.forFeature([
+      ShipmentTypeOrmEntity,
+      ProductTypeOrmEntity,
+      InventoryTypeOrmEntity
+    ]),
     forwardRef(() => AppModule)
   ],
   controllers: [ShipmentController],
@@ -35,6 +42,9 @@ import { ShipmentDispatchedHandler } from '@/modules/inventory/application/handl
     UpdateShipmentUseCase,
     UpdateStatusShipmentUseCase,
     DeleteShipmentUseCase,
+
+    { provide: 'InventoryService', useClass: InventoryService },
+    { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },
     { provide: 'ShipmentRepository', useClass: ShipmentTypeOrmRepository },
     { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
     { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }
