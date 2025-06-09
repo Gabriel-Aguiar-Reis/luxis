@@ -7,19 +7,18 @@ export class ShipmentTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column('uuid')
+  @Column('uuid', { name: 'reseller_id' })
   resellerId: UUID
 
-  @Column('uuid', { array: true, default: [] })
+  @Column('uuid', { array: true, default: [], name: 'product_ids' })
   productIds: UUID[]
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp', {
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   createdAt: Date
 
-  @Column({
-    type: 'enum',
-    enum: ShipmentStatus,
-    default: ShipmentStatus.PENDING
-  })
+  @Column('enum', { name: 'status', enum: ShipmentStatus })
   status: ShipmentStatus
 }

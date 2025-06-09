@@ -18,6 +18,7 @@ import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { OwnershipTransferDispatchedHandler } from '@/modules/inventory/application/handlers/ownership-transfer-dispatched.handler'
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CustomLogger } from '@/shared/infra/logging/logger.service'
     CustomLogger,
     AppConfigService,
     EventDispatcher,
+    OwnershipTransferDispatchedHandler,
     CreateOwnershipTransferUseCase,
     GetAllOwnershipTransferUseCase,
     GetOneOwnershipTransferUseCase,

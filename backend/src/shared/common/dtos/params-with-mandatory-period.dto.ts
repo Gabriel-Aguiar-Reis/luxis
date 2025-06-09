@@ -5,8 +5,8 @@ import { Type } from 'class-transformer'
 export class ParamsWithMandatoryPeriodDto {
   @ApiProperty({
     type: 'string',
-    format: 'date',
-    example: '2025-01-01'
+    format: 'date-time',
+    example: '2025-01-01T00:00:00Z'
   })
   @IsNotEmpty()
   @IsDate()
@@ -15,8 +15,8 @@ export class ParamsWithMandatoryPeriodDto {
 
   @ApiProperty({
     type: 'string',
-    format: 'date',
-    example: '2025-01-01'
+    format: 'date-time',
+    example: '2025-01-01T00:00:00Z'
   })
   @IsNotEmpty()
   @IsDate()

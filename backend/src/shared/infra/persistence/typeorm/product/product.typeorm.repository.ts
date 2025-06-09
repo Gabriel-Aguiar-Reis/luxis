@@ -43,8 +43,11 @@ export class ProductTypeOrmRepository implements ProductRepository {
   }
 
   async update(product: Product): Promise<Product> {
-    const entity = ProductMapper.toTypeOrm(product)
-    const updatedEntity = await this.repository.save(entity)
+    const entity = await this.repository.findOne({ where: { id: product.id } })
+    if (!entity) throw new NotFoundException('Product not found')
+    const updatedEntity = await this.repository.save(
+      ProductMapper.toTypeOrm(product)
+    )
     return ProductMapper.toDomain(updatedEntity)
   }
 
@@ -53,6 +56,14 @@ export class ProductTypeOrmRepository implements ProductRepository {
     const updatedEntity = await this.repository.findOne({ where: { id } })
     if (!updatedEntity) throw new NotFoundException('Product not found')
     return ProductMapper.toDomain(updatedEntity)
+  }
+
+  async updateManyStatus(ids: UUID[], status: ProductStatus): Promise<void> {
+    await this.repository.update({ id: In(ids) }, { status })
+    const updatedEntities = await this.repository.findBy({ id: In(ids) })
+    if (updatedEntities.length !== ids.length) {
+      throw new NotFoundException('Some products not found')
+    }
   }
 
   async delete(id: UUID): Promise<void> {

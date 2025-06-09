@@ -12,7 +12,7 @@ export class CreateReturnUseCase {
     private readonly returnRepository: ReturnRepository
   ) {}
 
-  async execute(input: CreateReturnDto, user: UserPayload): Promise<void> {
+  async execute(input: CreateReturnDto, user: UserPayload): Promise<Return> {
     let returnEntity: Return
     if (user.role === Role.RESELLER) {
       returnEntity = new Return(
@@ -22,10 +22,10 @@ export class CreateReturnUseCase {
         ReturnStatus.PENDING,
         new Date()
       )
-      await this.returnRepository.create(returnEntity)
+      return await this.returnRepository.create(returnEntity)
     }
 
-    if (user.role !== Role.RESELLER && !input.resellerId) {
+    if (!input.resellerId) {
       throw new BadRequestException('Reseller ID is required')
     }
 
@@ -37,6 +37,6 @@ export class CreateReturnUseCase {
       new Date()
     )
 
-    await this.returnRepository.create(returnEntity)
+    return await this.returnRepository.create(returnEntity)
   }
 }

@@ -7,7 +7,7 @@ import { UpdateReturnStatusUseCase } from '@/modules/return/application/use-case
 import { ReturnController } from '@/modules/return/presentation/return.controller'
 import { ReturnTypeOrmRepository } from '@/shared/infra/persistence/typeorm/return/return.typeorm.repository'
 import { Module, forwardRef } from '@nestjs/common'
-import { ReturnConfirmedHandler } from '../inventory/application/handlers/return-confirmed.handler'
+import { ReturnConfirmedHandler } from '@/modules/inventory/application/handlers/return-confirmed.handler'
 import { EventDispatcher } from '@/shared/events/event-dispatcher'
 import { InventoryService } from '@/modules/inventory/application/services/inventory.service'
 import { TypeOrmModule } from '@nestjs/typeorm'

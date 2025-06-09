@@ -1,46 +1,46 @@
-import { BatchItemWithResolvedModel } from '@/modules/batch/application/models/batch-item-with-resolved-model.model'
-import { BatchItem } from '@/modules/batch/domain/entities/batch-item.entity'
+import { ResolvedProductEntry } from '@/modules/batch/application/models/resolved-product-entry.model'
 import { Batch } from '@/modules/batch/domain/entities/batch.entity'
 import { Product } from '@/modules/product/domain/entities/product.entity'
-import { ProductFactory } from '@/modules/product/domain/services/product.factory'
+import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
+import { SerialNumber } from '@/modules/product/domain/value-objects/serial-number.vo'
 import { UUID } from 'crypto'
 
 export class BatchFactory {
-  static async createFromResolvedItems(
+  static create(
     batchId: UUID,
     arrivalDate: Date,
     supplierId: UUID,
-    resolvedItems: BatchItemWithResolvedModel[],
+    entries: ResolvedProductEntry[],
     batchIndex: number
-  ): Promise<{ batch: Batch; products: Product[] }> {
-    const batchItems: BatchItem[] = []
+  ): { batch: Batch; products: Product[] } {
+    const batch = new Batch(batchId, arrivalDate, supplierId)
     const products: Product[] = []
 
-    for (const { batchItem, model, categoryCode } of resolvedItems) {
-      const item = BatchItem.withExistingModel(
-        batchItem.id,
-        model.id,
-        batchItem.quantity,
-        batchItem.unitCost,
-        batchItem.salePrice
-      )
+    for (const entry of entries) {
+      if (entry.quantity.getValue() <= 0) {
+        throw new Error(`Invalid quantity for entry: ${entry.modelId}`)
+      }
 
-      batchItems.push(item)
-
-      const createdProducts = ProductFactory.createManyFromBatchItem(
-        item,
-        model,
-        categoryCode,
-        model.name,
-        arrivalDate,
-        batchId,
-        batchIndex
-      )
-
-      products.push(...createdProducts)
+      for (let i = 0; i < entry.quantity.getValue(); i++) {
+        const serial = SerialNumber.generate(
+          arrivalDate,
+          batchIndex,
+          entry.categoryCode,
+          entry.modelName,
+          i + 1
+        )
+        const product = new Product(
+          crypto.randomUUID(),
+          serial,
+          entry.modelId,
+          batch.id,
+          entry.unitCost,
+          entry.salePrice,
+          ProductStatus.IN_STOCK
+        )
+        products.push(product)
+      }
     }
-
-    const batch = new Batch(batchId, arrivalDate, supplierId, batchItems)
 
     return { batch, products }
   }

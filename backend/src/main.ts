@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { GlobalExceptionFilter } from '@/shared/infra/filters/http-exceptions.filter'
-import { Logger } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { AppModule } from '@/app.module'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { Logger as PinoLogger } from 'nestjs-pino'
@@ -18,6 +18,14 @@ async function bootstrap() {
   app.useLogger(app.get(PinoLogger))
   const port = config.getPort() ?? 3000
   app.enableCors({ origin: '*' })
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true
+    })
+  )
 
   const document = SwaggerModule.createDocument(
     app,

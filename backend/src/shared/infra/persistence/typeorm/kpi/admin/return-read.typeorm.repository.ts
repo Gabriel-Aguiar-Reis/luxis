@@ -10,7 +10,6 @@ import { TotalReturnsInPeriodDto } from '@/modules/kpi/admin/application/dtos/re
 import { ReturnReadRepository } from '@/modules/kpi/admin/domain/repositories/return-read.repository'
 import { ParamsWithMandatoryPeriodDto } from '@/shared/common/dtos/params-with-mandatory-period.dto'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
-import { parsePgUuidArray } from '@/shared/common/utils/parse-pg-uuid-array.helper'
 import { baseWhere } from '@/shared/common/utils/query-builder.helper'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
@@ -24,7 +23,7 @@ type ReturnByResellerRawResult = {
   id: UUID
   resellerId: UUID
   resellerName: string
-  productIds: string
+  productIds: UUID[]
 }
 
 export class ReturnReadTypeormRepository implements ReturnReadRepository {
@@ -44,24 +43,17 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
       .where('return.reseller_id = :resellerId', { resellerId })
       .select([
-        'return.id as id',
-        'return.reseller_id as resellerId',
-        `CONCAT(user.name, ' ', user.surname) as resellerName`,
-        'return.product_ids as productIds'
+        'return.id as "id"',
+        'return.reseller_id as "resellerId"',
+        `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+        'return.product_ids as "productIds"'
       ])
 
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
     const resReturns =
       await filteredReturns.getRawMany<ReturnByResellerRawResult>()
 
-    const parsedReturns = resReturns.map((r) => ({
-      ...r,
-      productIds: parsePgUuidArray(r.productIds)
-    }))
-
-    const allProductIds = [
-      ...new Set(parsedReturns.flatMap((r) => r.productIds))
-    ]
+    const allProductIds = [...new Set(resReturns.flatMap((r) => r.productIds))]
 
     const products = await this.productRepo
       .createQueryBuilder('product')
@@ -72,9 +64,9 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       )
       .where('product.id IN (:...productIds)', { productIds: allProductIds })
       .select([
-        'product.id as productId',
-        'productModel.id as productModelId',
-        'productModel.name as productModelName'
+        'product.id as "productId"',
+        'productModel.id as "productModelId"',
+        'productModel.name as "productModelName"'
       ])
       .getRawMany<ReturnProduct>()
 
@@ -88,7 +80,7 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
     >()
     products.forEach((p) => productMap.set(p.productId, p))
 
-    const returns = parsedReturns.map((ret) => {
+    const returns = resReturns.map((ret) => {
       const returnProducts = ret.productIds.map((pid) => {
         const product = productMap.get(pid)!
         return {
@@ -106,7 +98,7 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
 
     return {
       resellerId,
-      resellerName: parsedReturns[0]?.resellerName || '',
+      resellerName: resReturns[0]?.resellerName || '',
       returns,
       totalReturns: returns.length
     }
@@ -121,9 +113,9 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
       .where('return.reseller_id = :resellerId', { resellerId })
       .select([
-        'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.surname) as resellerName`,
-        'COUNT(return.id) as totalReturns'
+        'user.id as "resellerId"',
+        `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+        'COUNT(return.id) as "totalReturns"'
       ])
       .groupBy('user.id, user.name, user.surname')
 
@@ -138,23 +130,16 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .createQueryBuilder('return')
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
       .select([
-        'return.id as id',
-        'return.reseller_id as resellerId',
-        `CONCAT(user.name, ' ', user.surname) as resellerName`,
-        'return.product_ids as productIds'
+        'return.id as "id"',
+        'return.reseller_id as "resellerId"',
+        `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+        'return.product_ids as "productIds"'
       ])
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
     const resReturns =
       await filteredReturns.getRawMany<ReturnByResellerRawResult>()
 
-    const parsedReturns = resReturns.map((r) => ({
-      ...r,
-      productIds: parsePgUuidArray(r.productIds)
-    }))
-
-    const allProductIds = [
-      ...new Set(parsedReturns.flatMap((r) => r.productIds))
-    ]
+    const allProductIds = [...new Set(resReturns.flatMap((r) => r.productIds))]
 
     const products = await this.productRepo
       .createQueryBuilder('product')
@@ -165,9 +150,9 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       )
       .where('product.id IN (:...productIds)', { productIds: allProductIds })
       .select([
-        'product.id as productId',
-        'productModel.id as productModelId',
-        'productModel.name as productModelName'
+        'product.id as "productId"',
+        'productModel.id as "productModelId"',
+        'productModel.name as "productModelName"'
       ])
       .getRawMany<ReturnProduct>()
 
@@ -189,7 +174,7 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       }
     >()
 
-    for (const ret of parsedReturns) {
+    for (const ret of resReturns) {
       const returnProducts = ret.productIds.map((pid) => {
         const product = productMap.get(pid)!
         return {
@@ -233,9 +218,9 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .createQueryBuilder('return')
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
       .select([
-        'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.surname) as resellerName`,
-        'COUNT(return.id) as totalReturns'
+        'user.id as "resellerId"',
+        `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+        'COUNT(return.id) as "totalReturns"'
       ])
       .groupBy('user.id, user.name, user.surname')
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
@@ -249,10 +234,10 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       .createQueryBuilder('return')
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
       .select([
-        'return.id as id',
-        'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.surname) as resellerName`,
-        'return.items as productIds'
+        'return.id as "id"',
+        'user.id as "resellerId"',
+        `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+        'return.items as "productIds"'
       ])
     const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
 
@@ -260,17 +245,10 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       id: UUID
       resellerId: UUID
       resellerName: string
-      productIds: string
+      productIds: UUID[]
     }>()
 
-    const parsedReturns = resReturns.map((r) => ({
-      ...r,
-      productIds: parsePgUuidArray(r.productIds)
-    }))
-
-    const allProductIds = [
-      ...new Set(parsedReturns.flatMap((r) => r.productIds))
-    ]
+    const allProductIds = [...new Set(resReturns.flatMap((r) => r.productIds))]
 
     const products = await this.productRepo
       .createQueryBuilder('product')
@@ -281,16 +259,16 @@ export class ReturnReadTypeormRepository implements ReturnReadRepository {
       )
       .where('product.id IN (:...productIds)', { productIds: allProductIds })
       .select([
-        'product.id as productId',
-        'productModel.id as productModelId',
-        'productModel.name as productModelName'
+        'product.id as "productId"',
+        'productModel.id as "productModelId"',
+        'productModel.name as "productModelName"'
       ])
       .getRawMany<ReturnProduct>()
 
     const productMap = new Map<UUID, ReturnProduct>()
     products.forEach((p) => productMap.set(p.productId, p))
 
-    const returns: ReturnWithResellerDto[] = parsedReturns.map((ret) => {
+    const returns: ReturnWithResellerDto[] = resReturns.map((ret) => {
       const returnProducts = ret.productIds.map((pid) => {
         const product = productMap.get(pid)!
         return {

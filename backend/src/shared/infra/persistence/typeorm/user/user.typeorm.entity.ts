@@ -8,33 +8,27 @@ export class UserTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column()
+  @Column({ name: 'name' })
   name: string
 
-  @Column()
+  @Column({ name: 'surname' })
   surname: string
 
-  @Column()
+  @Column({ name: 'phone' })
   phone: string
 
-  @Column()
+  @Column({ name: 'email', unique: true })
   email: string
 
-  @Column()
+  @Column({ name: 'password_hash' })
   passwordHash: string
 
-  @Column({
-    type: 'text',
-    default: Role.UNASSIGNED
-  })
+  @Column('enum', { name: 'role', enum: Role })
   role: Role
 
-  @Column()
+  @Column({ name: 'residence' })
   residence: string
 
-  @Column({
-    type: 'text',
-    default: UserStatus.PENDING
-  })
+  @Column('enum', { name: 'status', enum: UserStatus })
   status: UserStatus
 }

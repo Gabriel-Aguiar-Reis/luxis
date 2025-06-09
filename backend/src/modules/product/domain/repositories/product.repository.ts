@@ -10,5 +10,6 @@ export abstract class ProductRepository {
   abstract create(product: Product): Promise<Product>
   abstract update(product: Product): Promise<Product>
   abstract updateStatus(id: UUID, status: ProductStatus): Promise<Product>
+  abstract updateManyStatus(ids: UUID[], status: ProductStatus): Promise<void>
   abstract delete(id: UUID): Promise<void>
 }

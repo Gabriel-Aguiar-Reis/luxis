@@ -21,8 +21,7 @@ export class BatchTypeOrmRepository implements BatchRepository {
     const entities = await this.repository.find({
       where: {
         arrivalDate: Between(startDate, endDate)
-      },
-      relations: ['items']
+      }
     })
     return entities.map(BatchMapper.toDomain)
   }
@@ -35,15 +34,14 @@ export class BatchTypeOrmRepository implements BatchRepository {
 
   async findById(id: UUID): Promise<Batch | null> {
     const entity = await this.repository.findOne({
-      where: { id },
-      relations: ['items']
+      where: { id }
     })
     if (!entity) return null
     return BatchMapper.toDomain(entity)
   }
 
   async findAll(): Promise<Batch[]> {
-    const entities = await this.repository.find({ relations: ['items'] })
+    const entities = await this.repository.find()
     return entities.map(BatchMapper.toDomain)
   }
 

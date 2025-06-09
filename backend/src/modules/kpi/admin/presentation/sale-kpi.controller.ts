@@ -1,6 +1,6 @@
 import { GetSalesInPeriodUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-sales-in-period-kpi.use-case'
 import { GetTotalSalesInPeriodUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-total-sales-in-period-kpi.use-case'
-import { Controller, Get, Body, Param } from '@nestjs/common'
+import { Controller, Post, Body, Param } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
@@ -49,7 +49,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('sales-by-reseller-id')
-  @Get('resellers/:id')
+  @Post('resellers/:id')
   async getSalesByResellerId(
     @Param('id') id: UUID,
     @Body() qParams: ParamsDto
@@ -69,7 +69,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-sales-by-reseller-id')
-  @Get('resellers/:id/total')
+  @Post('resellers/:id/total')
   async getTotalSalesByResellerId(
     @Param('id') id: UUID,
     @Body() qParams: ParamsDto
@@ -89,7 +89,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('sales-in-period')
-  @Get()
+  @Post()
   async getSalesInPeriod(@Body() qParams: ParamsWithMandatoryPeriodDto) {
     this.logger.log('Get Sales In Period', 'AdminKpiController')
     return this.getSalesInPeriodUseCase.execute(qParams)
@@ -106,7 +106,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-sales-in-period')
-  @Get('total')
+  @Post('total')
   async getTotalSalesInPeriod(@Body() qParams: ParamsWithMandatoryPeriodDto) {
     this.logger.log('Get Total Sales In Period', 'AdminKpiController')
     return this.getTotalSalesInPeriodUseCase.execute(qParams)
@@ -123,7 +123,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('sales-by-reseller')
-  @Get('resellers')
+  @Post('resellers')
   async getSalesByReseller(@Body() qParams: ParamsDto) {
     this.logger.log('Get Sales By Reseller', 'AdminKpiController')
     return this.getSalesByResellerUseCase.execute(qParams)
@@ -140,7 +140,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-sales-by-reseller')
-  @Get('resellers/total')
+  @Post('resellers/total')
   async getTotalSalesByReseller(@Body() qParams: ParamsDto) {
     this.logger.log('Get Total Sales By Reseller', 'AdminKpiController')
     return this.getTotalSalesByResellerUseCase.execute(qParams)
@@ -156,7 +156,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-billing-by-batch-id')
-  @Get('billing/batch/:id')
+  @Post('billing/batch/:id')
   async getTotalBillingByBatchId(@Param('id') id: UUID) {
     this.logger.log('Get Total Billing By Batch Id', 'AdminKpiController')
     return this.getTotalBillingByBatchIdUseCase.execute(id)
@@ -173,7 +173,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-billing-by-reseller-id')
-  @Get('billing/resellers/:resellerId')
+  @Post('billing/resellers/:resellerId')
   async getTotalBillingByResellerId(
     @Param('resellerId') resellerId: UUID,
     @Body() qParams: ParamsWithMandatoryPeriodDto
@@ -193,7 +193,7 @@ export class AdminSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-billing-by-period')
-  @Get('billing/period')
+  @Post('billing/period')
   async getTotalBillingByPeriod(
     @Body() qParams: ParamsWithMandatoryPeriodDto
   ): Promise<TotalBillingReturnDto> {

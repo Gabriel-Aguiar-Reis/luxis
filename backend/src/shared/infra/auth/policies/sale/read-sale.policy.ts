@@ -1,9 +1,9 @@
 import { AppAbility } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { Actions } from '@/shared/infra/auth/enums/actions.enum'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
-import { IPolicyHandler } from '@/shared/infra/auth/interfaces/policy-handler.interface'
+import { IPolicy } from '@/shared/infra/auth/interfaces/policy-handler.interface'
 
-export class ReadSalePolicy implements IPolicyHandler {
+export class ReadSalePolicy implements IPolicy {
   handle(ability: AppAbility): boolean {
     return ability.can(Actions.Read, Sale)
   }

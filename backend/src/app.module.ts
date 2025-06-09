@@ -1,3 +1,4 @@
+import { AdminKpiCaslRule } from './shared/infra/auth/casl/rules/admin-kpi.rules'
 import { ConfigModule } from '@/shared/config/config.module'
 import { databaseConfig } from '@/shared/config/database.config'
 import { throttlerConfig } from '@/shared/config/throttler.config'
@@ -104,6 +105,7 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
     SupplierCaslRule,
     ReturnCaslRule,
     CustomerCaslRule,
+    AdminKpiCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
       useFactory: (
@@ -117,7 +119,8 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         shipmentRule: ShipmentCaslRule,
         supplierRule: SupplierCaslRule,
         returnRule: ReturnCaslRule,
-        customerRule: CustomerCaslRule
+        customerRule: CustomerCaslRule,
+        adminKpiCaslRule: AdminKpiCaslRule
       ): CaslRuleBuilder[] => [
         saleRule,
         userRule,
@@ -129,7 +132,8 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         shipmentRule,
         supplierRule,
         returnRule,
-        customerRule
+        customerRule,
+        adminKpiCaslRule
       ],
       inject: [
         SaleCaslRule,
@@ -142,7 +146,8 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         ShipmentCaslRule,
         SupplierCaslRule,
         ReturnCaslRule,
-        CustomerCaslRule
+        CustomerCaslRule,
+        AdminKpiCaslRule
       ]
     },
     {

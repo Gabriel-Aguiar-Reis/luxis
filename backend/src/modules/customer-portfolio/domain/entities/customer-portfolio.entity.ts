@@ -3,6 +3,13 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class CustomerPortfolio {
   @ApiProperty({
+    description: 'The ID of the portfolio',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String
+  })
+  public readonly id: UUID
+
+  @ApiProperty({
     description: 'The ID of the reseller',
     example: '123e4567-e89b-12d3-a456-426614174000',
     type: String
@@ -19,7 +26,8 @@ export class CustomerPortfolio {
   })
   private readonly customerIds: Set<UUID>
 
-  constructor(resellerId: UUID, customerIds: Set<UUID> = new Set()) {
+  constructor(id: UUID, resellerId: UUID, customerIds: Set<UUID> = new Set()) {
+    this.id = id
     this.resellerId = resellerId
     this.customerIds = customerIds
   }

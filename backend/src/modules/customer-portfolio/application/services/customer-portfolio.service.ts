@@ -25,15 +25,16 @@ export class CustomerPortfolioService implements ICustomerPortfolioService {
     )
     let portfolio =
       await this.customerPortfolioRepository.findByResellerId(resellerId)
-
     if (!portfolio) {
-      portfolio = new CustomerPortfolio(resellerId)
+      this.logger.warn(
+        `Portfolio not found for reseller ${resellerId}, não será criado automaticamente pelo handler.`,
+        'CustomerPortfolioService'
+      )
+      return
     }
-
     for (const id of customerIds) {
       portfolio.addCustomer(id)
     }
-
     await this.customerPortfolioRepository.save(portfolio)
   }
 

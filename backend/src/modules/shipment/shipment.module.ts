@@ -16,6 +16,7 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { EventDispatcher } from '@/shared/events/event-dispatcher'
 import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
+import { ShipmentDispatchedHandler } from '@/modules/inventory/application/handlers/shipment-dispatched.handler'
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product
     CustomLogger,
     AppConfigService,
     EventDispatcher,
+    ShipmentDispatchedHandler,
     CreateShipmentUseCase,
     GetAllShipmentUseCase,
     GetOneShipmentUseCase,

@@ -6,7 +6,7 @@ import { GetAllBatchUseCase } from '@/modules/batch/application/use-cases/get-al
 import { GetOneBatchUseCase } from '@/modules/batch/application/use-cases/get-one-batch.use-case'
 import { BatchTypeOrmRepository } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.repository'
 import { GetBatchQtyByMonthUseCase } from '@/modules/batch/application/use-cases/get-batch-qty-by-month.use-case'
-import { BatchItemResolver } from '@/modules/batch/application/services/batch-item-resolver.service'
+import { ProductEntryResolver } from '@/modules/batch/application/services/product-entry-resolver.service'
 import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.entity'
@@ -40,7 +40,7 @@ import { AppConfigService } from '@/shared/config/app-config.service'
     GetOneBatchUseCase,
     DeleteBatchUseCase,
     { provide: 'BatchRepository', useClass: BatchTypeOrmRepository },
-    { provide: 'BatchItemResolver', useClass: BatchItemResolver },
+    { provide: 'ProductEntryResolver', useClass: ProductEntryResolver },
     { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
     { provide: 'CategoryRepository', useClass: CategoryTypeOrmRepository },
     {

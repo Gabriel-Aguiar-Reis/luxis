@@ -25,7 +25,7 @@ export class Return {
     ],
     type: [String]
   })
-  public readonly items: UUID[]
+  public readonly productIds: UUID[]
 
   @ApiProperty({
     description: 'The status of the return',
@@ -45,13 +45,13 @@ export class Return {
   constructor(
     id: UUID,
     resellerId: UUID,
-    items: UUID[],
+    productIds: UUID[],
     status: ReturnStatus,
     createdAt: Date
   ) {
     this.id = id
     this.resellerId = resellerId
-    this.items = items
+    this.productIds = productIds
     this.status = status
     this.createdAt = createdAt
   }

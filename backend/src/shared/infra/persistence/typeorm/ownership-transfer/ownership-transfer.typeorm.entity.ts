@@ -7,22 +7,18 @@ export class OwnershipTransferTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column('uuid')
+  @Column('uuid', { name: 'product_id' })
   productId: UUID
 
-  @Column('uuid')
+  @Column('uuid', { name: 'from_reseller_id' })
   fromResellerId: UUID
 
-  @Column('uuid')
+  @Column('uuid', { name: 'to_reseller_id' })
   toResellerId: UUID
 
-  @Column('timestamp')
+  @Column('date', { name: 'transfer_date' })
   transferDate: Date
 
-  @Column({
-    type: 'enum',
-    enum: OwnershipTransferStatus,
-    default: OwnershipTransferStatus.PENDING
-  })
+  @Column('enum', { name: 'status', enum: OwnershipTransferStatus })
   status: OwnershipTransferStatus
 }

@@ -7,7 +7,6 @@ import { TotalSalesByResellerDto } from '@/modules/kpi/admin/application/dtos/sa
 import { TotalSalesInPeriodDto } from '@/modules/kpi/admin/application/dtos/sale/total-sales-in-period.dto'
 import { SaleReadRepository } from '@/modules/kpi/admin/domain/repositories/sale-read.repository'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
-import { parsePgUuidArray } from '@/shared/common/utils/parse-pg-uuid-array.helper'
 import { baseWhere } from '@/shared/common/utils/query-builder.helper'
 import { CustomerTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.entity'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
@@ -29,7 +28,7 @@ type SaleByResellerIdReturnRawResult = {
   paymentMethod: string
   numberInstallments: number
   status: string
-  productIds: string
+  productIds: UUID[]
   customerId: UUID
   customerName: string
   customerPhone: string
@@ -72,16 +71,16 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       )
       .where('sale.reseller_id = :resellerId', { resellerId })
       .select([
-        'sale.id as id',
-        'sale.sale_date as saleDate',
-        'sale.total_amount as totalAmount',
-        'sale.payment_method as paymentMethod',
-        'sale.number_installments as numberInstallments',
-        'sale.product_ids as productIds',
-        'sale.status as status',
-        'sale.customer_id as customerId',
-        'customer.name as customerName',
-        'customer.phone as customerPhone'
+        'sale.id as "id"',
+        'sale.sale_date as "saleDate"',
+        'sale.total_amount as "totalAmount"',
+        'sale.payment_method as "paymentMethod"',
+        'sale.number_installments as "numberInstallments"',
+        'sale.product_ids as "productIds"',
+        'sale.status as "status"',
+        'sale.customer_id as "customerId"',
+        'customer.name as "customerName"',
+        'customer.phone as "customerPhone"'
       ])
 
     const filteredSales = baseWhere(qb, qParams, 'sale.sale_date')
@@ -89,12 +88,7 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
     const resSales =
       await filteredSales.getRawMany<SaleByResellerIdReturnRawResult>()
 
-    const parsedSales = resSales.map((s) => ({
-      ...s,
-      productIds: parsePgUuidArray(s.productIds)
-    }))
-
-    const allProductIds = [...new Set(parsedSales.flatMap((s) => s.productIds))]
+    const allProductIds = [...new Set(resSales.flatMap((s) => s.productIds))]
 
     const products = await this.productRepo
       .createQueryBuilder('product')
@@ -105,10 +99,10 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       )
       .where('product.id IN (:...productIds)', { productIds: allProductIds })
       .select([
-        'product.id as productId',
-        'productModel.id as productModelId',
-        'productModel.name as productModelName',
-        'product.sale_price as salePrice'
+        'product.id as "productId"',
+        'productModel.id as "productModelId"',
+        'productModel.name as "productModelName"',
+        'product.sale_price as "salePrice"'
       ])
       .getRawMany<SaleReturnProductDto>()
 
@@ -123,7 +117,7 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
     >()
     products.forEach((p) => productMap.set(p.productId, p))
 
-    const sales = parsedSales.map((ret) => {
+    const sales = resSales.map((ret) => {
       const returnProducts = ret.productIds.map((pid) => {
         const product = productMap.get(pid)!
         return {
@@ -176,9 +170,9 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       .createQueryBuilder('sale')
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = sale.reseller_id')
       .select([
-        'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.surname) as resellerName`,
-        'COUNT(sale.id) as salesCount'
+        'user.id as "resellerId"',
+        `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+        'COUNT(sale.id) as "salesCount"'
       ])
       .groupBy('user.id, user.name, user.surname')
       .orderBy('COUNT(sale.id)', 'DESC')
@@ -203,17 +197,17 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       )
       .where('sale.reseller_id IN (:...resellerIds)', { resellerIds })
       .select([
-        'sale.id as id',
-        'sale.sale_date as saleDate',
-        'sale.total_amount as totalAmount',
-        'sale.payment_method as paymentMethod',
-        'sale.number_installments as numberInstallments',
-        'sale.product_ids as productIds',
-        'sale.status as status',
-        'sale.customer_id as customerId',
-        'customer.name as customerName',
-        'customer.phone as customerPhone',
-        'sale.reseller_id as resellerId'
+        'sale.id as "id"',
+        'sale.sale_date as "saleDate"',
+        'sale.total_amount as "totalAmount"',
+        'sale.payment_method as "paymentMethod"',
+        'sale.number_installments as "numberInstallments"',
+        'sale.product_ids as "productIds"',
+        'sale.status as "status"',
+        'sale.customer_id as "customerId"',
+        'customer.name as "customerName"',
+        'customer.phone as "customerPhone"',
+        'sale.reseller_id as "resellerId"'
       ])
 
     const filteredSalesQb = baseWhere(salesQb, qParams, 'sale.sale_date')
@@ -221,22 +215,17 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       SaleByResellerIdReturnRawResult & { resellerId: UUID }
     >()
 
-    const parsedSales = rawSales.map((s) => ({
-      ...s,
-      productIds: parsePgUuidArray(s.productIds)
-    }))
-
-    const allProductIds = [...new Set(parsedSales.flatMap((s) => s.productIds))]
+    const allProductIds = [...new Set(rawSales.flatMap((s) => s.productIds))]
 
     const allProducts = await this.productRepo
       .createQueryBuilder('product')
       .innerJoin(ProductModelTypeOrmEntity, 'pm', 'pm.id = product.model_id')
       .where('product.id IN (:...productIds)', { productIds: allProductIds })
       .select([
-        'product.id as productId',
-        'pm.id as productModelId',
-        'pm.name as productModelName',
-        'product.sale_price as salePrice'
+        'product.id as "productId"',
+        'pm.id as "productModelId"',
+        'pm.name as "productModelName"',
+        'product.sale_price as "salePrice"'
       ])
       .getRawMany<SaleReturnProductDto>()
 
@@ -251,7 +240,7 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       }
     >()
 
-    for (const row of parsedSales) {
+    for (const row of rawSales) {
       const products = row.productIds.map((pid) => {
         const p = productMap.get(pid)!
         return {
@@ -309,9 +298,9 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       .createQueryBuilder('sale')
       .innerJoin(UserTypeOrmEntity, 'user', 'user.id = sale.resellerId')
       .select([
-        'user.id as resellerId',
-        `CONCAT(user.name, ' ', user.surname) as resellerName`,
-        'COUNT(sale.id) as salesCount'
+        'user.id as "resellerId"',
+        `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+        'COUNT(sale.id) as "salesCount"'
       ])
       .groupBy('user.id, user.name, user.surname')
 
@@ -331,61 +320,57 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
   ): Promise<SalesInPeriodDto> {
     const qb = this.saleRepo
       .createQueryBuilder('sale')
-      .innerJoin(
-        UserTypeOrmEntity,
-        'reseller',
-        'reseller.id = sale.reseller_id'
-      )
+      .innerJoin(UserTypeOrmEntity, 'reseller', 'reseller.id = sale.resellerId')
       .innerJoin(
         CustomerTypeOrmEntity,
         'customer',
-        'customer.id = sale.customer_id'
+        'customer.id = sale.customerId'
       )
       .select([
-        'sale.id as id',
-        'sale.sale_date as saleDate',
-        'sale.total_amount as totalAmount',
-        'sale.payment_method as paymentMethod',
-        'sale.number_installments as numberInstallments',
-        'sale.status as status',
-        'sale.product_ids as productIds',
-
-        'reseller.id as resellerId',
-        `CONCAT(reseller.name, ' ', reseller.surname) as resellerName`,
-        'reseller.phone as resellerPhone',
-
-        'customer.id as customerId',
-        'customer.name as customerName',
-        'customer.phone as customerPhone'
+        'sale.id as "id"',
+        'sale.saleDate as "saleDate"',
+        'sale.totalAmount as "totalAmount"',
+        'sale.paymentMethod as "paymentMethod"',
+        'sale.numberInstallments as "numberInstallments"',
+        'sale.status as "status"',
+        'sale.productIds as "productIds"',
+        'reseller.id as "resellerId"',
+        `CONCAT(reseller.name, ' ', reseller.surname) as "resellerName"`,
+        'reseller.phone as "resellerPhone"',
+        'customer.id as "customerId"',
+        'customer.name as "customerName"',
+        'customer.phone as "customerPhone"'
       ])
 
     const filteredSales = baseWhere(qb, qParams, 'sale.sale_date')
-
     const rawSales = await filteredSales.getRawMany<SaleReturnRawResult>()
+    console.log('rawSales', rawSales)
+    const allProductIds = [...new Set(rawSales.flatMap((s) => s.productIds))]
 
-    const parsedSales = rawSales.map((s) => ({
-      ...s,
-      productIds: parsePgUuidArray(s.productIds)
-    }))
-
-    const allProductIds = [...new Set(parsedSales.flatMap((s) => s.productIds))]
+    if (allProductIds.length === 0) {
+      return {
+        start: qParams.start,
+        end: qParams.end,
+        sales: []
+      }
+    }
 
     const allProducts = await this.productRepo
       .createQueryBuilder('product')
-      .innerJoin(ProductModelTypeOrmEntity, 'pm', 'pm.id = product.model_id')
+      .innerJoin(ProductModelTypeOrmEntity, 'pm', 'pm.id = product.modelId')
       .where('product.id IN (:...productIds)', { productIds: allProductIds })
       .select([
-        'product.id as productId',
-        'pm.id as productModelId',
-        'pm.name as productModelName',
-        'product.sale_price as salePrice'
+        'product.id as "productId"',
+        'pm.id as "productModelId"',
+        'pm.name as "productModelName"',
+        'product.salePrice as "salePrice"'
       ])
       .getRawMany<SaleReturnProductDto>()
 
     const productMap = new Map<UUID, SaleReturnProductDto>()
     allProducts.forEach((p) => productMap.set(p.productId, p))
 
-    const sales: SaleReturnDto[] = parsedSales.map((row) => ({
+    const sales: SaleReturnDto[] = rawSales.map((row) => ({
       id: row.id,
       saleDate: row.saleDate,
       totalAmount: row.totalAmount,
@@ -409,6 +394,7 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
       })
     }))
 
+    console.log('sales', sales)
     return {
       start: qParams.start,
       end: qParams.end,

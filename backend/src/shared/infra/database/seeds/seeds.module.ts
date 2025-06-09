@@ -25,7 +25,6 @@ import { OwnershipTransferTypeOrmEntity } from '@/shared/infra/persistence/typeo
 import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
 import { ShipmentTypeOrmEntity } from '@/shared/infra/persistence/typeorm/shipment/shipment.typeorm.entity'
-import { BatchItemResolver } from '@/modules/batch/application/services/batch-item-resolver.service'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { AppModule } from '@/app.module'
 import { CreateCustomerUseCase } from '@/modules/customer/application/use-cases/create-customer.use-case'
@@ -59,6 +58,16 @@ import { InventoryService } from '@/modules/inventory/application/services/inven
 import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.repository'
 import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
 import { UpdateProductModelUseCase } from '@/modules/product-model/application/use-cases/update-product-model.use-case'
+import { CustomerTypeOrmRepository } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.repository'
+import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/update-user-role.use-case'
+import { UpdateStatusShipmentUseCase } from '@/modules/shipment/application/use-cases/update-status-shipment.use-case'
+import { UpdateReturnStatusUseCase } from '@/modules/return/application/use-cases/update-return-status.use-case'
+import { UpdateStatusOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-status-ownership-transfer.use-case'
+import { ProductEntryResolver } from '@/modules/batch/application/services/product-entry-resolver.service'
+import { ShipmentDispatchedHandler } from '@/modules/inventory/application/handlers/shipment-dispatched.handler'
+import { CustomerCreatedHandler } from '@/modules/customer-portfolio/application/handlers/customer-created.handler'
+import { OwnershipTransferDispatchedHandler } from '@/modules/inventory/application/handlers/ownership-transfer-dispatched.handler'
+import { ReturnConfirmedHandler } from '@/modules/inventory/application/handlers/return-confirmed.handler'
 
 @Module({
   imports: [
@@ -107,6 +116,10 @@ import { UpdateProductModelUseCase } from '@/modules/product-model/application/u
     CreateSaleAdminStrategy,
     CreateSaleResellerStrategy,
     UpdateProductModelUseCase,
+    UpdateUserRoleUseCase,
+    UpdateStatusShipmentUseCase,
+    UpdateReturnStatusUseCase,
+    UpdateStatusOwnershipTransferUseCase,
     { provide: 'InventoryService', useClass: InventoryService },
     { provide: 'SalePriceCalculator', useClass: SalePriceCalculatorService },
     {
@@ -126,18 +139,23 @@ import { UpdateProductModelUseCase } from '@/modules/product-model/application/u
       provide: 'ProductModelRepository',
       useClass: ProductModelTypeOrmRepository
     },
-    { provide: 'BatchItemResolver', useClass: BatchItemResolver },
+    { provide: 'ProductEntryResolver', useClass: ProductEntryResolver },
     { provide: 'AppConfigService', useClass: AppConfigService },
     {
       provide: 'CustomerPortfolioRepository',
       useClass: CustomerPortfolioTypeOrmRepository
     },
+    { provide: 'CustomerRepository', useClass: CustomerTypeOrmRepository },
     { provide: 'CloudinaryService', useClass: CloudinaryService },
     { provide: 'CustomerPortfolioService', useClass: CustomerPortfolioService },
     {
       provide: 'InventoryOwnershipVerifier',
       useClass: InventoryOwnershipVerifierService
-    }
+    },
+    ShipmentDispatchedHandler,
+    CustomerCreatedHandler,
+    OwnershipTransferDispatchedHandler,
+    ReturnConfirmedHandler
   ],
   exports: [
     SuperuserSeed,

@@ -41,14 +41,14 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
         'productModel.id = product.model_id'
       )
       .select([
-        'product.id as id',
-        'product.serial_number as serialNumber',
-        'product.model_id as modelId',
-        'productModel.name as modelName',
-        'product.batch_id as batchId',
-        'product.unit_cost as unitCost',
-        'product.sale_price as salePrice',
-        'product.status as status'
+        'product.id as "id"',
+        'product.serial_number as "serialNumber"',
+        'product.model_id as "modelId"',
+        'productModel.name as "modelName"',
+        'product.batch_id as "batchId"',
+        'product.unit_cost as "unitCost"',
+        'product.sale_price as "salePrice"',
+        'product.status as "status"'
       ])
       .where('product.status = :status', { status: ProductStatus.ASSIGNED })
     const filteredProducts = baseWhere(qb, qParams, 'product.created_at')
@@ -85,14 +85,14 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
         'productModel.id = product.model_id'
       )
       .select([
-        'product.id as id',
-        'product.serial_number as serialNumber',
-        'product.model_id as modelId',
-        'productModel.name as modelName',
-        'product.batch_id as batchId',
-        'product.unit_cost as unitCost',
-        'product.sale_price as salePrice',
-        'product.status as status'
+        'product.id as "id"',
+        'product.serial_number as "serialNumber"',
+        'product.model_id as "modelId"',
+        'productModel.name as "modelName"',
+        'product.batch_id as "batchId"',
+        'product.unit_cost as "unitCost"',
+        'product.sale_price as "salePrice"',
+        'product.status as "status"'
       ])
       .where('product.status = :status', { status: ProductStatus.IN_STOCK })
 
@@ -135,14 +135,14 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
       .where('product.status = :status', { status: ProductStatus.IN_STOCK })
       .andWhere(`batch.created_at < NOW() - INTERVAL '${days} days'`)
       .select([
-        'product.id as id',
-        'product.serial_number as serialNumber',
-        'product.model_id as modelId',
-        'productModel.name as modelName',
-        'product.batch_id as batchId',
-        'product.unit_cost as unitCost',
-        'product.sale_price as salePrice',
-        'product.status as status'
+        'product.id as "id"',
+        'product.serial_number as "serialNumber"',
+        'product.model_id as "modelId"',
+        'productModel.name as "modelName"',
+        'product.batch_id as "batchId"',
+        'product.unit_cost as "unitCost"',
+        'product.sale_price as "salePrice"',
+        'product.status as "status"'
       ])
 
     const filteredProducts = baseWhere(qb, qParams, 'batch.created_at')

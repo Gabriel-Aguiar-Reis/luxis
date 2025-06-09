@@ -34,7 +34,7 @@ export class BatchSeed {
       {
         arrivalDate: new Date('2024-05-01'),
         supplierId: supplierIds[0],
-        items: [
+        entries: [
           {
             modelName: 'Anel Solitário',
             categoryId: categoryIds[0],
@@ -60,7 +60,7 @@ export class BatchSeed {
       {
         arrivalDate: new Date('2024-05-10'),
         supplierId: supplierIds[1],
-        items: [
+        entries: [
           {
             modelName: 'Colar Coração',
             categoryId: categoryIds[2],

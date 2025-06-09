@@ -17,6 +17,9 @@ import { CustomerPortfolioTypeOrmEntity } from '@/shared/infra/persistence/typeo
 import { forwardRef, Module } from '@nestjs/common'
 import { AppModule } from '@/app.module'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
+import { CustomerCreatedHandler } from '@/modules/customer-portfolio/application/handlers/customer-created.handler'
+import { CustomerDeletedHandler } from '@/modules/customer-portfolio/application/handlers/customer-deleted.handler'
+import { CustomerTransferredHandler } from '@/modules/customer-portfolio/application/handlers/customer-transferred.handler'
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -36,6 +39,9 @@ import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factor
     DeleteCustomerUseCase,
     TransferCustomerUseCase,
     EventDispatcher,
+    CustomerCreatedHandler,
+    CustomerDeletedHandler,
+    CustomerTransferredHandler,
     { provide: 'CustomerRepository', useClass: CustomerTypeOrmRepository },
     {
       provide: 'CustomerPortfolioRepository',

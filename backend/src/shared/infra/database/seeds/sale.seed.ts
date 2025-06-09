@@ -15,12 +15,12 @@ export class SaleSeed {
     user: UserPayload
   ): Promise<UUID> {
     const dto: CreateSaleDto = {
-      customerId,
       productIds,
-      saleDate: new Date('2024-06-01'),
+      saleDate: new Date('2025-06-01'),
       paymentMethod: PaymentMethod.CASH,
       numberInstallments: 1,
-      installmentsInterval: 0
+      installmentsInterval: 0,
+      customerId
     }
     const sale = await this.createSaleUseCase.execute(dto, user)
     return sale.id

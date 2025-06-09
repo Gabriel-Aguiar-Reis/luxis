@@ -6,9 +6,9 @@ export class CustomerTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column()
+  @Column({ name: 'name' })
   name: string
 
-  @Column()
+  @Column({ name: 'phone' })
   phone: string
 }
