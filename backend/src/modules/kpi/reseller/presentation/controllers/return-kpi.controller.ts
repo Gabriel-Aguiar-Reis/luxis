@@ -1,4 +1,4 @@
-import { Controller, Get, Body } from '@nestjs/common'
+import { Controller, Body, Post } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { GetReturnsMadeByResellerUseCase } from '@/modules/kpi/reseller/application/use-cases/return/get-returns-made-by-reseller.use-case'
@@ -24,7 +24,7 @@ export class ResellerReturnKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('returns-count')
   @CacheTTL(300)
-  @Get('count')
+  @Post('count')
   async getReturnsMadeByReseller(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto

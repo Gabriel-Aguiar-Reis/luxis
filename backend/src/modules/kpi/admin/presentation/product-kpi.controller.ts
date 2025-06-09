@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param } from '@nestjs/common'
+import { Body, Controller, Param, Post } from '@nestjs/common'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { GetTotalProductsInStockUseCase } from '@/modules/kpi/admin/application/use-cases/product/get-total-products-in-stock-kpi.use-case'
@@ -36,7 +36,7 @@ export class AdminProductKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-products-in-stock')
-  @Get('in-stock/total')
+  @Post('in-stock/total')
   async getTotalProductsInStock(@Body() qParams: ParamsDto) {
     this.logger.log('Get Total Products In Stock', 'AdminKpiController')
     return this.getTotalProductsInStockUseCase.execute(qParams)
@@ -53,7 +53,7 @@ export class AdminProductKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('products-in-stock')
-  @Get('in-stock')
+  @Post('in-stock')
   async getProductsInStock(@Body() qParams: ParamsDto) {
     this.logger.log('Get Products In Stock', 'AdminKpiController')
     return this.getProductsInStockUseCase.execute(qParams)
@@ -70,7 +70,7 @@ export class AdminProductKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('products-with-resellers')
-  @Get('with-resellers')
+  @Post('with-resellers')
   async getProductsWithResellers(@Body() qParams: ParamsDto) {
     this.logger.log('Get Products With Resellers', 'AdminKpiController')
     return this.getTotalProductWithResellersUseCase.execute(qParams)
@@ -87,7 +87,7 @@ export class AdminProductKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-products-with-resellers')
-  @Get('with-resellers/total')
+  @Post('with-resellers/total')
   async getTotalProductsWithResellers(@Body() qParams: ParamsDto) {
     this.logger.log('Get Total Products With Resellers', 'AdminKpiController')
     return this.getTotalProductWithResellersUseCase.execute(qParams)
@@ -103,7 +103,7 @@ export class AdminProductKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @Get('in-stock/for-more-than/:days')
+  @Post('in-stock/for-more-than/:days')
   async getProductsInStockForMoreThanXDays(
     @Param('days') days: number,
     @Body() qParams: ParamsDto
@@ -127,7 +127,7 @@ export class AdminProductKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheTTL(300)
   @CacheKey('total-products-in-stock-for-more-than-x-days')
-  @Get('in-stock/for-more-than/:days/total')
+  @Post('in-stock/for-more-than/:days/total')
   async getTotalProductsInStockForMoreThanXDays(
     @Param('days') days: number,
     @Body() qParams: ParamsDto

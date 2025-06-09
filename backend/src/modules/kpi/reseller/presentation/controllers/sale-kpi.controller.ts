@@ -1,4 +1,4 @@
-import { Controller, Get, Body } from '@nestjs/common'
+import { Controller, Body, Post } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { GetMonthlySalesUseCase } from '@/modules/kpi/reseller/application/use-cases/sale/get-monthly-sales.use-case'
@@ -31,7 +31,7 @@ export class ResellerSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('monthly-sales')
   @CacheTTL(300)
-  @Get('monthly')
+  @Post('monthly')
   async getMonthlySales(
     @Body() qParams: ParamsDto,
     @CurrentUser() user: UserPayload
@@ -54,7 +54,7 @@ export class ResellerSaleKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('average-ticket')
   @CacheTTL(300)
-  @Get('average-ticket')
+  @Post('average-ticket')
   async getAverageTicket(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto
