@@ -1,12 +1,11 @@
 import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
-import { Currency } from '@/shared/common/value-object/currency.vo'
 import { IsCurrency, IsEnum, IsOptional, IsString } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 export class UpdateProductDto {
   @ApiProperty({
     description: 'The unit cost of the product',
     example: '100.00',
-    type: Currency,
+    type: String,
     required: false
   })
   @IsString()
@@ -17,7 +16,7 @@ export class UpdateProductDto {
   @ApiProperty({
     description: 'The sale price of the product',
     example: '100.00',
-    type: Currency,
+    type: String,
     required: false
   })
   @IsString()

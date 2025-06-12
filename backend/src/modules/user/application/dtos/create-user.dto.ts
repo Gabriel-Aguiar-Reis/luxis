@@ -1,4 +1,3 @@
-import { FederativeUnit } from '@/modules/user/domain/enums/federative-unit.enum'
 import {
   IsString,
   IsEmail,
@@ -8,12 +7,8 @@ import {
   IsOptional,
   IsNotEmpty
 } from 'class-validator'
-import { Name } from '@/modules/user/domain/value-objects/name.vo'
-import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
-import { Email } from '@/shared/common/value-object/email.vo'
-import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
+import { FederativeUnit } from '@/modules/user/domain/enums/federative-unit.enum'
 import { Country } from '@/modules/user/domain/enums/country.enum'
-import { Password } from '@/modules/user/domain/value-objects/password.vo'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateUserDto {
@@ -21,8 +16,8 @@ export class CreateUserDto {
     description: 'User name',
     minLength: 2,
     maxLength: 50,
-    type: Name,
-    example: 'John',
+    type: String,
+    example: 'John Doe',
     required: true
   })
   @IsString()
@@ -34,8 +29,8 @@ export class CreateUserDto {
     description: 'User last name',
     minLength: 2,
     maxLength: 50,
-    type: Name,
-    example: 'Doe',
+    type: String,
+    example: 'Jones',
     required: true
   })
   @IsString()
@@ -46,7 +41,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User phone number',
     example: '+55(11)99999-9999',
-    type: PhoneNumber,
+    type: String,
     required: true
   })
   @IsString()
@@ -56,7 +51,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User email',
     example: 'john.doe@example.com',
-    type: Email,
+    type: String,
     required: true
   })
   @IsEmail()
@@ -67,7 +62,7 @@ export class CreateUserDto {
     description: 'User password',
     minLength: 8,
     example: 'Password@123',
-    type: Password,
+    type: String,
     required: true
   })
   @IsString()
@@ -139,7 +134,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Postal code',
     example: '01234567',
-    type: PostalCode,
+    type: String,
     required: true
   })
   @IsString()

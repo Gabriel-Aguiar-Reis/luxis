@@ -23,7 +23,8 @@ import {
   Param,
   Patch,
   Delete,
-  UseInterceptors
+  UseInterceptors,
+  HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -65,9 +66,10 @@ export class CategoryController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadCategoryPolicy())
-  @Get()
-  @CacheKey('all-categories')
   @CacheTTL(300)
+  @CacheKey('all-categories')
+  @HttpCode(200)
+  @Get()
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all categories - Requested by user ${user.email}`,
@@ -78,11 +80,16 @@ export class CategoryController {
 
   @ApiOperation({ summary: 'Get a specific category' })
   @ApiParam({ name: 'id', description: 'Category ID' })
-  @ApiResponse({ status: 200, description: 'Category found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Category found successfully',
+    type: Category
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Category not found' })
   @CheckPolicies(new ReadCategoryPolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -94,10 +101,15 @@ export class CategoryController {
 
   @ApiOperation({ summary: 'Create a new category' })
   @ApiBody({ type: CreateCategoryDto })
-  @ApiResponse({ status: 201, description: 'Category created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Category created successfully',
+    type: Category
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateCategoryPolicy())
+  @HttpCode(201)
   @Post()
   async create(
     @Body() dto: CreateCategoryDto,
@@ -113,10 +125,15 @@ export class CategoryController {
   @ApiOperation({ summary: 'Update a category' })
   @ApiParam({ name: 'id', description: 'Category ID' })
   @ApiBody({ type: UpdateCategoryDto })
-  @ApiResponse({ status: 200, description: 'Category updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Category updated successfully',
+    type: Category
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCategoryPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -133,10 +150,15 @@ export class CategoryController {
   @ApiOperation({ summary: 'Update the status of a category' })
   @ApiParam({ name: 'id', description: 'Category ID' })
   @ApiBody({ type: UpdateCategoryDto })
-  @ApiResponse({ status: 200, description: 'Category updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Category updated successfully',
+    type: Category
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCategoryPolicy())
+  @HttpCode(200)
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
@@ -152,16 +174,21 @@ export class CategoryController {
 
   @ApiOperation({ summary: 'Delete a category' })
   @ApiParam({ name: 'id', description: 'Category ID' })
-  @ApiResponse({ status: 200, description: 'Category deleted successfully' })
+  @ApiResponse({
+    status: 204,
+    description: 'Category deleted successfully',
+    type: Category
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteCategoryPolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(
       `Deleting category ${id} - Requested by user ${user.email}`,
       'CategoryController'
     )
-    return await this.deleteCategoryUseCase.execute(id)
+    await this.deleteCategoryUseCase.execute(id)
   }
 }

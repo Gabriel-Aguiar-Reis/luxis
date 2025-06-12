@@ -21,7 +21,7 @@ export class UpdateUserDto {
     minLength: 2,
     maxLength: 50,
     example: 'John',
-    type: Name
+    type: String
   })
   @IsString()
   @Length(2, 50)
@@ -33,7 +33,7 @@ export class UpdateUserDto {
     minLength: 2,
     maxLength: 50,
     example: 'Doe',
-    type: Name
+    type: String
   })
   @IsString()
   @Length(2, 50)
@@ -43,7 +43,7 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new phone number for the user',
     example: '+5511999999999',
-    type: PhoneNumber
+    type: String
   })
   @IsString()
   @IsOptional()
@@ -52,7 +52,7 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new email for the user',
     example: 'john.doe@example.com',
-    type: Email
+    type: String
   })
   @IsEmail()
   @IsOptional()
@@ -61,7 +61,7 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new password for the user',
     example: 'Password@123',
-    type: Password
+    type: String
   })
   @IsString()
   @IsOptional()
@@ -125,7 +125,7 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new postal code for the user',
     example: '01234-567',
-    type: PostalCode
+    type: String
   })
   @IsString()
   @IsOptional()

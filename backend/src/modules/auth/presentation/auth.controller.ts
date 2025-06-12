@@ -7,7 +7,8 @@ import {
   Res,
   UseInterceptors,
   Headers,
-  UnauthorizedException
+  UnauthorizedException,
+  HttpCode
 } from '@nestjs/common'
 import { AuthService } from '@/modules/auth/application/services/auth.service'
 import { LoginDto } from '@/modules/auth/application/dtos/login.dto'
@@ -26,6 +27,7 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -49,6 +51,7 @@ export class AuthController {
   @ApiBody({ type: LoginDto })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @HttpCode(200)
   @Post('login')
   async login(@Body() dto: LoginDto) {
     this.logger.log(
@@ -60,8 +63,9 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Forgot password' })
   @ApiBody({ type: RequestPasswordResetDto })
-  @ApiResponse({ status: 200, description: 'Forgot password successful' })
+  @ApiResponse({ status: 204, description: 'Forgot password successful' })
   @ApiResponse({ status: 404, description: 'User not found' })
+  @HttpCode(204)
   @Post('forgot-password')
   async forgotPassword(@Body() dto: RequestPasswordResetDto): Promise<void> {
     return this.authService.forgotPassword(new Email(dto.email))
@@ -69,8 +73,9 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Reset password' })
   @ApiBody({ type: ResetPasswordDto })
-  @ApiResponse({ status: 200, description: 'Password reset successful' })
+  @ApiResponse({ status: 204, description: 'Password reset successful' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token' })
+  @HttpCode(204)
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     await this.authService.resetPassword(dto.token, dto.newPassword)
@@ -104,24 +109,23 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Verify JWT token' })
-  @ApiResponse({ status: 200, description: 'Token is valid' })
+  @ApiResponse({ status: 200, description: 'Token is valid', type: VerifyDto })
   @ApiResponse({ status: 401, description: 'Unauthorized - Invalid token' })
+  @HttpCode(200)
   @Get('verify')
   async verify(@Headers('authorization') authHeader: string) {
     try {
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         throw new UnauthorizedException('Invalid token format')
       }
-      
+
       const token = authHeader.split(' ')[1]
-      const userData = await this.authService.verifyToken(token)
-      
-      return {
-        valid: true,
-        user: userData
-      }
+      return await this.authService.verifyToken(token)
     } catch (error) {
-      this.logger.error(`Token verification failed: ${error.message}`, 'AuthController')
+      this.logger.error(
+        `Token verification failed: ${error.message}`,
+        'AuthController'
+      )
       throw new UnauthorizedException('Invalid token')
     }
   }

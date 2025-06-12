@@ -74,9 +74,10 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadUserPolicy())
-  @Get()
   @CacheKey('all-users')
   @CacheTTL(300)
+  @HttpCode(200)
+  @Get()
   @Throttle({ default: { limit: 3, ttl: 60 * 1000 } })
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -88,11 +89,16 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get a specific user' })
   @ApiParam({ name: 'id', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'User found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'User found successfully',
+    type: User
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new ReadUserPolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -111,6 +117,7 @@ export class UserController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
+  @HttpCode(201)
   @Post('signup')
   @Throttle({ default: { limit: 3, ttl: 60 * 1000 } })
   async create(@Body() dto: CreateUserDto) {
@@ -121,11 +128,16 @@ export class UserController {
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiBody({ type: UpdateUserDto })
-  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'User updated successfully',
+    type: User
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new UpdateUserPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -143,12 +155,14 @@ export class UserController {
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({
     status: 200,
-    description: 'User role updated successfully'
+    description: 'User role updated successfully',
+    type: User
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new UpdateUserPolicy())
+  @HttpCode(200)
   @Patch(':id/role')
   async updateRole(
     @Param('id') id: UUID,
@@ -168,7 +182,7 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(204)
   @CheckPolicies(new DeleteUserPolicy())
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
@@ -181,11 +195,16 @@ export class UserController {
 
   @ApiOperation({ summary: 'Disable a user' })
   @ApiParam({ name: 'id', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'User disabled successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'User disabled successfully',
+    type: User
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new UpdateUserPolicy())
+  @HttpCode(200)
   @Patch(':id/disable')
   async disable(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(
@@ -198,11 +217,16 @@ export class UserController {
   @ApiOperation({ summary: 'Update a user status' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiBody({ type: UpdateUserStatusDto })
-  @ApiResponse({ status: 200, description: 'User status updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'User status updated successfully',
+    type: User
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @CheckPolicies(new UpdateUserPolicy())
+  @HttpCode(200)
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,

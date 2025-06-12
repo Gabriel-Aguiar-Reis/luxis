@@ -39,21 +39,19 @@ export class BatchSeed {
             modelName: 'Anel Solitário',
             categoryId: categoryIds[0],
             quantity: 10,
-            unitCost: new Currency('60.00'),
-            salePrice: new Currency('120.00'),
-            photoUrl: new ImageURL(
+            unitCost: '60.00',
+            salePrice: '120.00',
+            photoUrl:
               'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
-            )
           },
           {
             modelName: 'Brinco Argola',
             categoryId: categoryIds[1],
             quantity: 15,
-            unitCost: new Currency('40.00'),
-            salePrice: new Currency('80.00'),
-            photoUrl: new ImageURL(
+            unitCost: '40.00',
+            salePrice: '80.00',
+            photoUrl:
               'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
-            )
           }
         ]
       },
@@ -65,21 +63,19 @@ export class BatchSeed {
             modelName: 'Colar Coração',
             categoryId: categoryIds[2],
             quantity: 8,
-            unitCost: new Currency('75.00'),
-            salePrice: new Currency('150.00'),
-            photoUrl: new ImageURL(
+            unitCost: '75.00',
+            salePrice: '150.00',
+            photoUrl:
               'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
-            )
           },
           {
             modelName: 'Pulseira Riviera',
             categoryId: categoryIds[3],
             quantity: 12,
-            unitCost: new Currency('100.00'),
-            salePrice: new Currency('200.00'),
-            photoUrl: new ImageURL(
+            unitCost: '100.00',
+            salePrice: '200.00',
+            photoUrl:
               'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
-            )
           }
         ]
       }

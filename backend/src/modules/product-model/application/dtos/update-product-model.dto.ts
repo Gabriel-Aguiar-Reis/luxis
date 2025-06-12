@@ -1,6 +1,3 @@
-import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
-import { Currency } from '@/shared/common/value-object/currency.vo'
-import { Description } from '@/shared/common/value-object/description.vo'
 import {
   IsCurrency,
   IsOptional,
@@ -10,13 +7,12 @@ import {
 } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
-import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 
 export class UpdateProductModelDto {
   @ApiProperty({
     description: 'The name of the product model',
     example: 'Product Model Name',
-    type: ModelName,
+    type: String,
     required: false
   })
   @IsString()
@@ -36,7 +32,7 @@ export class UpdateProductModelDto {
   @ApiProperty({
     description: 'The suggested price of the product model',
     example: '100.00',
-    type: Currency,
+    type: String,
     required: false
   })
   @IsCurrency()
@@ -46,7 +42,7 @@ export class UpdateProductModelDto {
   @ApiProperty({
     description: 'The description of the product model',
     example: 'Product Model Description',
-    type: Description,
+    type: String,
     required: false
   })
   @IsString()

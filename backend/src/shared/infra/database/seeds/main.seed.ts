@@ -21,14 +21,16 @@ async function bootstrap() {
       id: superUser.id,
       email: superUser.email,
       role: Role.ADMIN,
-      status: UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
+      name: 'Super User Admin'
     }
     const resellerIds = await app.get(ResellerSeed).run(user)
     const resellerPayload = {
       id: resellerIds[0],
       email: 'reseller@luxis.com',
       role: Role.RESELLER,
-      status: UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
+      name: 'Reseller User'
     }
 
     const supplierIds = await app.get(SupplierSeed).run()

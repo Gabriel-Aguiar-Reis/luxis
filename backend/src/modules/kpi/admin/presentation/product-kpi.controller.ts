@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common'
+import { Query, Controller, Param, Get } from '@nestjs/common'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { GetTotalProductsInStockUseCase } from '@/modules/kpi/admin/application/use-cases/product/get-total-products-in-stock-kpi.use-case'
@@ -34,10 +34,10 @@ export class AdminProductKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheTTL(300)
+  @CacheTTL(60)
   @CacheKey('total-products-in-stock')
-  @Post('in-stock/total')
-  async getTotalProductsInStock(@Body() qParams: ParamsDto) {
+  @Get('in-stock/total')
+  async getTotalProductsInStock(@Query() qParams: ParamsDto) {
     this.logger.log('Get Total Products In Stock', 'AdminKpiController')
     return this.getTotalProductsInStockUseCase.execute(qParams)
   }
@@ -51,10 +51,10 @@ export class AdminProductKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheTTL(300)
+  @CacheTTL(60)
   @CacheKey('products-in-stock')
-  @Post('in-stock')
-  async getProductsInStock(@Body() qParams: ParamsDto) {
+  @Get('in-stock')
+  async getProductsInStock(@Query() qParams: ParamsDto) {
     this.logger.log('Get Products In Stock', 'AdminKpiController')
     return this.getProductsInStockUseCase.execute(qParams)
   }
@@ -68,10 +68,10 @@ export class AdminProductKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheTTL(300)
+  @CacheTTL(60)
   @CacheKey('products-with-resellers')
-  @Post('with-resellers')
-  async getProductsWithResellers(@Body() qParams: ParamsDto) {
+  @Get('with-resellers')
+  async getProductsWithResellers(@Query() qParams: ParamsDto) {
     this.logger.log('Get Products With Resellers', 'AdminKpiController')
     return this.getTotalProductWithResellersUseCase.execute(qParams)
   }
@@ -85,10 +85,10 @@ export class AdminProductKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheTTL(300)
+  @CacheTTL(60)
   @CacheKey('total-products-with-resellers')
-  @Post('with-resellers/total')
-  async getTotalProductsWithResellers(@Body() qParams: ParamsDto) {
+  @Get('with-resellers/total')
+  async getTotalProductsWithResellers(@Query() qParams: ParamsDto) {
     this.logger.log('Get Total Products With Resellers', 'AdminKpiController')
     return this.getTotalProductWithResellersUseCase.execute(qParams)
   }
@@ -103,10 +103,10 @@ export class AdminProductKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @Post('in-stock/for-more-than/:days')
+  @Get('in-stock/for-more-than/:days')
   async getProductsInStockForMoreThanXDays(
     @Param('days') days: number,
-    @Body() qParams: ParamsDto
+    @Query() qParams: ParamsDto
   ) {
     this.logger.log(
       `Get Products In Stock For More Than ${days} Days`,
@@ -125,12 +125,12 @@ export class AdminProductKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheTTL(300)
+  @CacheTTL(60)
   @CacheKey('total-products-in-stock-for-more-than-x-days')
-  @Post('in-stock/for-more-than/:days/total')
+  @Get('in-stock/for-more-than/:days/total')
   async getTotalProductsInStockForMoreThanXDays(
     @Param('days') days: number,
-    @Body() qParams: ParamsDto
+    @Query() qParams: ParamsDto
   ) {
     this.logger.log(
       `Get Total Products In Stock For More Than ${days} Days`,

@@ -13,8 +13,8 @@ import { PasswordHash } from '@/modules/user/domain/value-objects/password-hash.
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { Email } from '@/shared/common/value-object/email.vo'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
-import { InjectPinoLogger } from 'nestjs-pino'
 import { EmailService } from '@/modules/auth/application/services/email.service'
+import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
 
 @Injectable()
 export class AuthService {
@@ -124,7 +124,7 @@ export class AuthService {
     }
   }
 
-  async verifyToken(token: string): Promise<any> {
+  async verifyToken(token: string): Promise<VerifyDto> {
     try {
       const payload = this.jwtService.verify(token)
       const user = await this.userRepository.findById(payload.sub)
@@ -137,11 +137,14 @@ export class AuthService {
       }
 
       return {
-        id: user.id,
-        email: user.email.getValue(),
-        role: user.role,
-        status: user.status,
-        name: user.name
+        valid: true,
+        user: {
+          id: user.id,
+          email: user.email.getValue(),
+          role: user.role,
+          status: user.status,
+          name: user.name.getValue()
+        }
       }
     } catch (error) {
       this.logger.error(

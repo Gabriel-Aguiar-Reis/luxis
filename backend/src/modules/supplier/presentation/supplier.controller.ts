@@ -7,7 +7,8 @@ import {
   Param,
   Patch,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
+  HttpCode
 } from '@nestjs/common'
 import { CreateSupplierDto } from '@/modules/supplier/application/dtos/create-supplier.dto'
 import { UpdateSupplierDto } from '@/modules/supplier/application/dtos/update-supplier.dto'
@@ -63,6 +64,7 @@ export class SupplierController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateSupplierPolicy())
+  @HttpCode(201)
   @Post()
   async create(
     @Body() dto: CreateSupplierDto,
@@ -84,9 +86,10 @@ export class SupplierController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadSupplierPolicy())
-  @Get()
   @CacheKey('all-suppliers')
   @CacheTTL(300)
+  @HttpCode(200)
+  @Get()
   async getAll(@CurrentUser() user: UserPayload): Promise<Supplier[]> {
     this.logger.log(
       `Getting all suppliers - Requested by user ${user.email}`,
@@ -97,16 +100,18 @@ export class SupplierController {
 
   @ApiOperation({ summary: 'Get a specific supplier' })
   @ApiParam({ name: 'id', description: 'Supplier ID' })
-  @ApiResponse({ status: 200, description: 'Supplier found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Supplier found successfully',
+    type: Supplier
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Supplier not found' })
   @CheckPolicies(new ReadSupplierPolicy())
+  @HttpCode(200)
   @Get(':id')
-  async getOne(
-    @Param('id') id: UUID,
-    @CurrentUser() user: UserPayload
-  ): Promise<Supplier> {
+  async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting supplier ${id} - Requested by user ${user.email}`,
       'SupplierController'
@@ -117,10 +122,15 @@ export class SupplierController {
   @ApiOperation({ summary: 'Update a supplier' })
   @ApiParam({ name: 'id', description: 'Supplier ID' })
   @ApiBody({ type: UpdateSupplierDto })
-  @ApiResponse({ status: 200, description: 'Supplier updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Supplier updated successfully',
+    type: Supplier
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateSupplierPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -136,10 +146,11 @@ export class SupplierController {
 
   @ApiOperation({ summary: 'Delete a supplier' })
   @ApiParam({ name: 'id', description: 'Supplier ID' })
-  @ApiResponse({ status: 200, description: 'Supplier deleted successfully' })
+  @ApiResponse({ status: 204, description: 'Supplier deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteSupplierPolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(
     @Param('id') id: UUID,

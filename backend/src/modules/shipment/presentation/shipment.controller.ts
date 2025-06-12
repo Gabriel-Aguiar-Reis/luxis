@@ -25,7 +25,8 @@ import {
   Delete,
   Get,
   Patch,
-  ParseEnumPipe
+  ParseEnumPipe,
+  HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -63,6 +64,7 @@ export class ShipmentController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadShipmentPolicy())
+  @HttpCode(200)
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -74,11 +76,16 @@ export class ShipmentController {
 
   @ApiOperation({ summary: 'Get a specific shipment' })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
-  @ApiResponse({ status: 200, description: 'Shipment found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Shipment found successfully',
+    type: Shipment
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Shipment not found' })
   @CheckPolicies(new ReadShipmentPolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -90,10 +97,15 @@ export class ShipmentController {
 
   @ApiOperation({ summary: 'Create a new shipment' })
   @ApiBody({ type: CreateShipmentDto })
-  @ApiResponse({ status: 201, description: 'Shipment created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Shipment created successfully',
+    type: Shipment
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateShipmentPolicy())
+  @HttpCode(201)
   @Post()
   async create(
     @Body() dto: CreateShipmentDto,
@@ -109,10 +121,15 @@ export class ShipmentController {
   @ApiOperation({ summary: 'Update a shipment' })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
   @ApiBody({ type: UpdateShipmentDto })
-  @ApiResponse({ status: 200, description: 'Shipment updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Shipment updated successfully',
+    type: Shipment
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateShipmentPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -129,10 +146,15 @@ export class ShipmentController {
   @ApiOperation({ summary: 'Update the status of a shipment' })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
   @ApiBody({ type: UpdateShipmentDto })
-  @ApiResponse({ status: 200, description: 'Shipment updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Shipment updated successfully',
+    type: Shipment
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateShipmentPolicy())
+  @HttpCode(200)
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
@@ -148,10 +170,11 @@ export class ShipmentController {
 
   @ApiOperation({ summary: 'Delete a shipment' })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
-  @ApiResponse({ status: 200, description: 'Shipment deleted successfully' })
+  @ApiResponse({ status: 204, description: 'Shipment deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteShipmentPolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(

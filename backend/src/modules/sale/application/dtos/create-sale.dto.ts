@@ -12,7 +12,6 @@ import {
 } from 'class-validator'
 import { UUID } from 'crypto'
 import { PaymentMethod } from '@/modules/sale/domain/enums/payment-method.enum'
-import { Unit } from '@/shared/common/value-object/unit.vo'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateSaleDto {
@@ -53,7 +52,7 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The number of installments of the sale',
     default: 1,
-    type: Unit,
+    type: String,
     required: true
   })
   @IsNumber()
@@ -65,7 +64,7 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The interval of installments of the sale',
     default: 0,
-    type: Unit,
+    type: String,
     required: true
   })
   @IsNumber()

@@ -1,0 +1,23 @@
+import { ParamsDto } from '@/shared/common/dtos/params.dto'
+import { Repository } from 'typeorm'
+import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
+import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
+import { baseWhere } from '@/shared/common/utils/query-builder.helper'
+import { TotalReturnsByResellerDto } from '@/modules/kpi/admin/application/dtos/return/total-returns-by-reseller.dto'
+
+export async function totalReturnsByReseller(
+  returnRepo: Repository<ReturnTypeOrmEntity>,
+  qParams: ParamsDto
+): Promise<TotalReturnsByResellerDto[]> {
+  const qb = returnRepo
+    .createQueryBuilder('return')
+    .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
+    .select([
+      'user.id as "resellerId"',
+      `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
+      'COUNT(return.id) as "totalReturns"'
+    ])
+    .groupBy('user.id, user.name, user.surname')
+  const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
+  return filteredReturns.getRawMany<TotalReturnsByResellerDto>()
+}

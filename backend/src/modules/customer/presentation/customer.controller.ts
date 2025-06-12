@@ -7,7 +7,8 @@ import {
   Param,
   Patch,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
+  HttpCode
 } from '@nestjs/common'
 import { CreateCustomerDto } from '@/modules/customer/application/dtos/create-customer.dto'
 import { CreateCustomerUseCase } from '@/modules/customer/application/use-cases/create-customer.use-case'
@@ -58,10 +59,15 @@ export class CustomerController {
 
   @ApiOperation({ summary: 'Create a new customer' })
   @ApiBody({ type: CreateCustomerDto })
-  @ApiResponse({ status: 201, description: 'Customer created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Customer created successfully',
+    type: Customer
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateCustomerPolicy())
+  @HttpCode(201)
   @Post()
   async create(
     @Body() dto: CreateCustomerDto,
@@ -83,9 +89,10 @@ export class CustomerController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadCustomerPolicy())
-  @Get()
   @CacheKey('all-customers')
   @CacheTTL(300)
+  @HttpCode(200)
+  @Get()
   async getAll(@CurrentUser() user: UserPayload): Promise<Customer[]> {
     this.logger.log(
       `Getting all customers - Requested by user ${user.email}`,
@@ -96,16 +103,18 @@ export class CustomerController {
 
   @ApiOperation({ summary: 'Get a specific customer' })
   @ApiParam({ name: 'id', description: 'Customer ID' })
-  @ApiResponse({ status: 200, description: 'Customer found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Customer found successfully',
+    type: Customer
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Customer not found' })
   @CheckPolicies(new ReadCustomerPolicy())
+  @HttpCode(200)
   @Get(':id')
-  async getOne(
-    @Param('id') id: UUID,
-    @CurrentUser() user: UserPayload
-  ): Promise<Customer> {
+  async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting customer ${id} - Requested by user ${user.email}`,
       'CustomerController'
@@ -116,10 +125,15 @@ export class CustomerController {
   @ApiOperation({ summary: 'Update a customer' })
   @ApiParam({ name: 'id', description: 'Customer ID' })
   @ApiBody({ type: UpdateCustomerDto })
-  @ApiResponse({ status: 200, description: 'Customer updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Customer updated successfully',
+    type: Customer
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCustomerPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -136,10 +150,11 @@ export class CustomerController {
   @ApiOperation({ summary: 'Delete a customer' })
   @ApiParam({ name: 'id', description: 'Customer ID' })
   @ApiParam({ name: 'fromResellerId', description: 'Reseller ID' })
-  @ApiResponse({ status: 200, description: 'Customer deleted successfully' })
+  @ApiResponse({ status: 204, description: 'Customer deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteCustomerPolicy())
+  @HttpCode(204)
   @Delete(':id/from/:fromResellerId')
   async delete(
     @Param('id') id: UUID,
@@ -157,12 +172,13 @@ export class CustomerController {
   @ApiParam({ name: 'id', description: 'Customer ID' })
   @ApiBody({ type: TransferCustomerDto })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Customer transferred successfully'
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateCustomerPolicy())
+  @HttpCode(204)
   @Post(':id/transfer')
   async transfer(
     @Param('id') id: UUID,

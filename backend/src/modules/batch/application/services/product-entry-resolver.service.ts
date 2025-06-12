@@ -1,3 +1,4 @@
+import { Currency } from '@/shared/common/value-object/currency.vo'
 import {
   BadRequestException,
   Inject,
@@ -48,10 +49,10 @@ export class ProductEntryResolver {
           crypto.randomUUID(),
           new ModelName(entry.modelName!),
           entry.categoryId!,
-          entry.salePrice!,
+          new Currency(entry.salePrice!),
           new Description(''),
           new ImageURL(
-            entry.photoUrl?.getValue() ??
+            entry.photoUrl ??
               'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
           )
         )
@@ -69,8 +70,8 @@ export class ProductEntryResolver {
       model.name,
       category.name.getValue().slice(0, 2).toUpperCase(),
       new Unit(entry.quantity),
-      entry.unitCost,
-      entry.salePrice
+      new Currency(entry.unitCost),
+      new Currency(entry.salePrice)
     )
   }
 }

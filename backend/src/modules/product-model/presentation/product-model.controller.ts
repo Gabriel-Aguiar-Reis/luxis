@@ -15,7 +15,8 @@ import {
   Param,
   Delete,
   Get,
-  UseInterceptors
+  UseInterceptors,
+  HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
@@ -62,9 +63,10 @@ export class ProductModelController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductModelPolicy())
-  @Get()
   @CacheKey('all-product-models')
   @CacheTTL(300)
+  @HttpCode(200)
+  @Get()
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all product models - Requested by user ${user.email}`,
@@ -75,11 +77,16 @@ export class ProductModelController {
 
   @ApiOperation({ summary: 'Get a specific product model' })
   @ApiParam({ name: 'id', description: 'Product model ID' })
-  @ApiResponse({ status: 200, description: 'Product model found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product model found successfully',
+    type: ProductModel
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Product model not found' })
   @CheckPolicies(new ReadProductModelPolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -93,11 +100,13 @@ export class ProductModelController {
   @ApiBody({ type: CreateProductModelDto })
   @ApiResponse({
     status: 201,
-    description: 'Product model created successfully'
+    description: 'Product model created successfully',
+    type: ProductModel
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateProductModelPolicy())
+  @HttpCode(201)
   @Post()
   async create(
     @Body() dto: CreateProductModelDto,
@@ -115,11 +124,13 @@ export class ProductModelController {
   @ApiBody({ type: UpdateProductModelDto })
   @ApiResponse({
     status: 200,
-    description: 'Product model updated successfully'
+    description: 'Product model updated successfully',
+    type: ProductModel
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateProductModelPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -136,12 +147,13 @@ export class ProductModelController {
   @ApiOperation({ summary: 'Delete a product model' })
   @ApiParam({ name: 'id', description: 'Product model ID' })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Product model deleted successfully'
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteProductModelPolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(
