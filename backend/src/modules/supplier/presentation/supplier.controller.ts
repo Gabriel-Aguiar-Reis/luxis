@@ -54,7 +54,10 @@ export class SupplierController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Create a new supplier' })
+  @ApiOperation({
+    summary: 'Create a new supplier',
+    operationId: 'createSupplier'
+  })
   @ApiBody({ type: CreateSupplierDto })
   @ApiResponse({
     status: 201,
@@ -77,7 +80,10 @@ export class SupplierController {
     return await this.createSupplierUseCase.execute(dto)
   }
 
-  @ApiOperation({ summary: 'Get all suppliers' })
+  @ApiOperation({
+    summary: 'Get all suppliers',
+    operationId: 'getAllSuppliers'
+  })
   @ApiResponse({
     status: 200,
     description: 'List of suppliers returned successfully',
@@ -98,7 +104,10 @@ export class SupplierController {
     return await this.getAllSupplierUseCase.execute()
   }
 
-  @ApiOperation({ summary: 'Get a specific supplier' })
+  @ApiOperation({
+    summary: 'Get a specific supplier',
+    operationId: 'getOneSupplier'
+  })
   @ApiParam({ name: 'id', description: 'Supplier ID' })
   @ApiResponse({
     status: 200,
@@ -119,7 +128,7 @@ export class SupplierController {
     return await this.getOneSupplierUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Update a supplier' })
+  @ApiOperation({ summary: 'Update a supplier', operationId: 'updateSupplier' })
   @ApiParam({ name: 'id', description: 'Supplier ID' })
   @ApiBody({ type: UpdateSupplierDto })
   @ApiResponse({
@@ -144,7 +153,10 @@ export class SupplierController {
     return await this.updateSupplierUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Delete a supplier' })
+  @ApiOperation({
+    summary: 'Delete a supplier',
+    operationId: 'deleteSupplier'
+  })
   @ApiParam({ name: 'id', description: 'Supplier ID' })
   @ApiResponse({ status: 204, description: 'Supplier deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

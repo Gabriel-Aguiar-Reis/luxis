@@ -20,6 +20,7 @@ import { GetTotalBillingByBatchIdUseCase } from '@/modules/kpi/admin/application
 import { GetTotalBillingInPeriodUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-total-billing-in-period-kpi.use-case'
 import { CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { ApiBody } from '@nestjs/swagger'
+import { SalesInPeriodDto } from '@/modules/kpi/admin/application/dtos/sale/sales-in-period.dto'
 
 @ApiTags('Admins KPIs - Sales')
 @AdminKpiEndpoint()
@@ -38,7 +39,10 @@ export class AdminSaleKpiController {
     private readonly getTotalBillingInPeriodUseCase: GetTotalBillingInPeriodUseCase
   ) {}
 
-  @ApiOperation({ summary: 'Get Sales By Reseller Id' })
+  @ApiOperation({
+    summary: 'Get Sales By Reseller Id',
+    operationId: 'getSalesByResellerId'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -59,7 +63,10 @@ export class AdminSaleKpiController {
     return this.getSalesByResellerIdUseCase.execute(id, qParams)
   }
 
-  @ApiOperation({ summary: 'Get Total Sales By Reseller Id' })
+  @ApiOperation({
+    summary: 'Get Total Sales By Reseller Id',
+    operationId: 'getTotalSalesByResellerId'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -80,12 +87,15 @@ export class AdminSaleKpiController {
     return this.getTotalSalesByResellerIdUseCase.execute(id, qParams)
   }
 
-  @ApiOperation({ summary: 'Get Sales In Period' })
+  @ApiOperation({
+    summary: 'Get Sales In Period',
+    operationId: 'getSalesInPeriod'
+  })
   @ApiBody({ type: ParamsWithMandatoryPeriodDto })
   @ApiResponse({
     status: 200,
     description: 'Sales in period returned successfully',
-    type: SalesByResellerDto
+    type: SalesInPeriodDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -98,7 +108,10 @@ export class AdminSaleKpiController {
     return this.getSalesInPeriodUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Total Sales In Period' })
+  @ApiOperation({
+    summary: 'Get Total Sales In Period',
+    operationId: 'getTotalSalesInPeriod'
+  })
   @ApiBody({ type: ParamsWithMandatoryPeriodDto })
   @ApiResponse({
     status: 200,
@@ -116,7 +129,10 @@ export class AdminSaleKpiController {
     return this.getTotalSalesInPeriodUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Sales By Reseller' })
+  @ApiOperation({
+    summary: 'Get Sales By Reseller',
+    operationId: 'getSalesByReseller'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -134,7 +150,10 @@ export class AdminSaleKpiController {
     return this.getSalesByResellerUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Total Sales By Reseller' })
+  @ApiOperation({
+    summary: 'Get Total Sales By Reseller',
+    operationId: 'getTotalSalesByReseller'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -152,7 +171,10 @@ export class AdminSaleKpiController {
     return this.getTotalSalesByResellerUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Total Billing By Batch Id' })
+  @ApiOperation({
+    summary: 'Get Total Billing By Batch Id',
+    operationId: 'getTotalBillingByBatchId'
+  })
   @ApiResponse({
     status: 200,
     description: 'Total billing by batch ID returned successfully',
@@ -169,7 +191,10 @@ export class AdminSaleKpiController {
     return this.getTotalBillingByBatchIdUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Get Total Billing By Reseller Id' })
+  @ApiOperation({
+    summary: 'Get Total Billing By Reseller Id',
+    operationId: 'getTotalBillingByResellerId'
+  })
   @ApiBody({ type: ParamsWithMandatoryPeriodDto })
   @ApiResponse({
     status: 200,
@@ -190,7 +215,10 @@ export class AdminSaleKpiController {
     return this.getTotalBillingByResellerIdUseCase.execute(resellerId, qParams)
   }
 
-  @ApiOperation({ summary: 'Get Total Billing By Period' })
+  @ApiOperation({
+    summary: 'Get Total Billing By Period',
+    operationId: 'getTotalBillingByPeriod'
+  })
   @ApiBody({ type: ParamsWithMandatoryPeriodDto })
   @ApiResponse({
     status: 200,

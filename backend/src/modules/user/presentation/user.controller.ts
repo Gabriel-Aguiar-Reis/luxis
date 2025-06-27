@@ -65,7 +65,7 @@ export class UserController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all users' })
+  @ApiOperation({ summary: 'Get all users', operationId: 'getAllUsers' })
   @ApiResponse({
     status: 200,
     description: 'List of users returned successfully',
@@ -87,7 +87,7 @@ export class UserController {
     return await this.getAllUsersUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific user' })
+  @ApiOperation({ summary: 'Get a specific user', operationId: 'getOneUser' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({
     status: 200,
@@ -108,7 +108,7 @@ export class UserController {
     return await this.getOneUserUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Create a new user' })
+  @ApiOperation({ summary: 'Create a new user', operationId: 'createUser' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({
     status: 201,
@@ -125,7 +125,7 @@ export class UserController {
     return await this.createUserUseCase.execute(dto)
   }
 
-  @ApiOperation({ summary: 'Update a user' })
+  @ApiOperation({ summary: 'Update a user', operationId: 'updateUser' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiBody({ type: UpdateUserDto })
   @ApiResponse({
@@ -151,7 +151,10 @@ export class UserController {
     return await this.updateUserUseCase.execute(id, dto, user)
   }
 
-  @ApiOperation({ summary: 'Update a user role' })
+  @ApiOperation({
+    summary: 'Update a user role',
+    operationId: 'updateUserRole'
+  })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({
     status: 200,
@@ -176,7 +179,7 @@ export class UserController {
     return await this.updateUserRoleUseCase.execute(id, dto, user)
   }
 
-  @ApiOperation({ summary: 'Delete a user' })
+  @ApiOperation({ summary: 'Delete a user', operationId: 'deleteUser' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 204, description: 'User deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -193,7 +196,7 @@ export class UserController {
     return await this.deleteUserUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Disable a user' })
+  @ApiOperation({ summary: 'Disable a user', operationId: 'disableUser' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({
     status: 200,
@@ -214,7 +217,10 @@ export class UserController {
     return await this.disableUserUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Update a user status' })
+  @ApiOperation({
+    summary: 'Update a user status',
+    operationId: 'updateUserStatus'
+  })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiBody({ type: UpdateUserStatusDto })
   @ApiResponse({

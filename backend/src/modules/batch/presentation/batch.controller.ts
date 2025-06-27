@@ -49,7 +49,7 @@ export class BatchController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all batches' })
+  @ApiOperation({ summary: 'Get all batches', operationId: 'getAllBatches' })
   @ApiResponse({
     status: 200,
     description: 'List of batches returned successfully',
@@ -70,7 +70,7 @@ export class BatchController {
     return this.getAllBatchUseCase.execute()
   }
 
-  @ApiOperation({ summary: 'Get a specific batch' })
+  @ApiOperation({ summary: 'Get a specific batch', operationId: 'getOneBatch' })
   @ApiParam({ name: 'id', description: 'Batch ID' })
   @ApiResponse({
     status: 200,
@@ -91,7 +91,7 @@ export class BatchController {
     return this.getOneBatchUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Create a new batch' })
+  @ApiOperation({ summary: 'Create a new batch', operationId: 'createBatch' })
   @ApiBody({ type: CreateBatchDto })
   @ApiResponse({
     status: 201,
@@ -111,7 +111,7 @@ export class BatchController {
     return this.createBatchUseCase.execute(dto)
   }
 
-  @ApiOperation({ summary: 'Delete a batch' })
+  @ApiOperation({ summary: 'Delete a batch', operationId: 'deleteBatch' })
   @ApiParam({ name: 'id', description: 'Batch ID' })
   @ApiResponse({ status: 204, description: 'Batch deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

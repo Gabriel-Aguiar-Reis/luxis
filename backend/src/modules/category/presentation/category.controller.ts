@@ -57,7 +57,10 @@ export class CategoryController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all categories' })
+  @ApiOperation({
+    summary: 'Get all categories',
+    operationId: 'getAllCategories'
+  })
   @ApiResponse({
     status: 200,
     description: 'List of categories returned successfully',
@@ -78,7 +81,10 @@ export class CategoryController {
     return await this.getAllCategoryUseCase.execute()
   }
 
-  @ApiOperation({ summary: 'Get a specific category' })
+  @ApiOperation({
+    summary: 'Get a specific category',
+    operationId: 'getOneCategory'
+  })
   @ApiParam({ name: 'id', description: 'Category ID' })
   @ApiResponse({
     status: 200,
@@ -99,7 +105,10 @@ export class CategoryController {
     return await this.getOneCategoryUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Create a new category' })
+  @ApiOperation({
+    summary: 'Create a new category',
+    operationId: 'createCategory'
+  })
   @ApiBody({ type: CreateCategoryDto })
   @ApiResponse({
     status: 201,
@@ -122,7 +131,7 @@ export class CategoryController {
     return await this.createCategoryUseCase.execute(dto)
   }
 
-  @ApiOperation({ summary: 'Update a category' })
+  @ApiOperation({ summary: 'Update a category', operationId: 'updateCategory' })
   @ApiParam({ name: 'id', description: 'Category ID' })
   @ApiBody({ type: UpdateCategoryDto })
   @ApiResponse({
@@ -147,7 +156,10 @@ export class CategoryController {
     return await this.updateCategoryUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Update the status of a category' })
+  @ApiOperation({
+    summary: 'Update the status of a category',
+    operationId: 'updateCategoryStatus'
+  })
   @ApiParam({ name: 'id', description: 'Category ID' })
   @ApiBody({ type: UpdateCategoryDto })
   @ApiResponse({
@@ -172,7 +184,10 @@ export class CategoryController {
     return await this.updateStatusCategoryUseCase.execute(id, status)
   }
 
-  @ApiOperation({ summary: 'Delete a category' })
+  @ApiOperation({
+    summary: 'Delete a category',
+    operationId: 'deleteCategory'
+  })
   @ApiParam({ name: 'id', description: 'Category ID' })
   @ApiResponse({
     status: 204,

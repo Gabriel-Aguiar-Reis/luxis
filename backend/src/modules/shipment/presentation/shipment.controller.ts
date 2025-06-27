@@ -39,6 +39,7 @@ import {
   ApiBearerAuth
 } from '@nestjs/swagger'
 import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
+import { UpdateStatusShipmentDto } from '@/modules/shipment/application/dtos/update-status-shipment'
 
 @ApiTags('Shipments')
 @ApiBearerAuth()
@@ -55,7 +56,10 @@ export class ShipmentController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all shipments' })
+  @ApiOperation({
+    summary: 'Get all shipments',
+    operationId: 'getAllShipments'
+  })
   @ApiResponse({
     status: 200,
     description: 'List of shipments returned successfully',
@@ -74,7 +78,10 @@ export class ShipmentController {
     return this.getAllShipmentUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific shipment' })
+  @ApiOperation({
+    summary: 'Get a specific shipment',
+    operationId: 'getOneShipment'
+  })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
   @ApiResponse({
     status: 200,
@@ -95,7 +102,10 @@ export class ShipmentController {
     return this.getOneShipmentUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Create a new shipment' })
+  @ApiOperation({
+    summary: 'Create a new shipment',
+    operationId: 'createShipment'
+  })
   @ApiBody({ type: CreateShipmentDto })
   @ApiResponse({
     status: 201,
@@ -118,7 +128,7 @@ export class ShipmentController {
     return this.createShipmentUseCase.execute(dto)
   }
 
-  @ApiOperation({ summary: 'Update a shipment' })
+  @ApiOperation({ summary: 'Update a shipment', operationId: 'updateShipment' })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
   @ApiBody({ type: UpdateShipmentDto })
   @ApiResponse({
@@ -143,9 +153,12 @@ export class ShipmentController {
     return this.updateShipmentUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Update the status of a shipment' })
+  @ApiOperation({
+    summary: 'Update the status of a shipment',
+    operationId: 'updateShipmentStatus'
+  })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
-  @ApiBody({ type: UpdateShipmentDto })
+  @ApiBody({ type: UpdateStatusShipmentDto })
   @ApiResponse({
     status: 200,
     description: 'Shipment updated successfully',
@@ -158,17 +171,17 @@ export class ShipmentController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
-    @Body('status', new ParseEnumPipe(ShipmentStatus)) status: ShipmentStatus,
+    @Body() dto: UpdateStatusShipmentDto,
     @CurrentUser() user: UserPayload
   ) {
     this.logger.warn(
-      `Updating status of shipment ${id} to ${status} - Requested by user ${user.email}`,
+      `Updating status of shipment ${id} to ${dto.status} - Requested by user ${user.email}`,
       'ShipmentController'
     )
-    return this.updateStatusShipmentUseCase.execute(id, status, user)
+    return this.updateStatusShipmentUseCase.execute(id, dto.status, user)
   }
 
-  @ApiOperation({ summary: 'Delete a shipment' })
+  @ApiOperation({ summary: 'Delete a shipment', operationId: 'deleteShipment' })
   @ApiParam({ name: 'id', description: 'Shipment ID' })
   @ApiResponse({ status: 204, description: 'Shipment deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

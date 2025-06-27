@@ -54,7 +54,7 @@ export class ReturnController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Create a new return' })
+  @ApiOperation({ summary: 'Create a new return', operationId: 'createReturn' })
   @ApiBody({ type: CreateReturnDto })
   @ApiResponse({
     status: 201,
@@ -77,7 +77,7 @@ export class ReturnController {
     return await this.createReturnUseCase.execute(input, user)
   }
 
-  @ApiOperation({ summary: 'Get all returns' })
+  @ApiOperation({ summary: 'Get all returns', operationId: 'getAllReturns' })
   @ApiResponse({
     status: 200,
     description: 'List of returns returned successfully',
@@ -96,7 +96,10 @@ export class ReturnController {
     return this.getAllReturnUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific return' })
+  @ApiOperation({
+    summary: 'Get a specific return',
+    operationId: 'getOneReturn'
+  })
   @ApiParam({ name: 'id', description: 'Return ID' })
   @ApiResponse({
     status: 200,
@@ -117,7 +120,7 @@ export class ReturnController {
     return this.getOneReturnUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Update a return' })
+  @ApiOperation({ summary: 'Update a return', operationId: 'updateReturn' })
   @ApiParam({ name: 'id', description: 'Return ID' })
   @ApiBody({ type: UpdateReturnDto })
   @ApiResponse({
@@ -142,7 +145,10 @@ export class ReturnController {
     return await this.updateReturnUseCase.execute(id, input)
   }
 
-  @ApiOperation({ summary: 'Update the status of a return' })
+  @ApiOperation({
+    summary: 'Update the status of a return',
+    operationId: 'updateReturnStatus'
+  })
   @ApiParam({ name: 'id', description: 'Return ID' })
   @ApiBody({ type: UpdateReturnDto })
   @ApiResponse({
@@ -167,7 +173,10 @@ export class ReturnController {
     return await this.updateReturnStatusUseCase.execute(id, status, user)
   }
 
-  @ApiOperation({ summary: 'Delete a return' })
+  @ApiOperation({
+    summary: 'Delete a return',
+    operationId: 'deleteReturn'
+  })
   @ApiParam({ name: 'id', description: 'Return ID' })
   @ApiResponse({
     status: 204,

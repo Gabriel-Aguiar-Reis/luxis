@@ -57,7 +57,10 @@ export class CustomerController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Create a new customer' })
+  @ApiOperation({
+    summary: 'Create a new customer',
+    operationId: 'createCustomer'
+  })
   @ApiBody({ type: CreateCustomerDto })
   @ApiResponse({
     status: 201,
@@ -80,7 +83,10 @@ export class CustomerController {
     return await this.createCustomerUseCase.execute(dto, user)
   }
 
-  @ApiOperation({ summary: 'Get all customers' })
+  @ApiOperation({
+    summary: 'Get all customers',
+    operationId: 'getAllCustomers'
+  })
   @ApiResponse({
     status: 200,
     description: 'List of customers returned successfully',
@@ -101,7 +107,10 @@ export class CustomerController {
     return await this.getAllCustomersUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific customer' })
+  @ApiOperation({
+    summary: 'Get a specific customer',
+    operationId: 'getOneCustomer'
+  })
   @ApiParam({ name: 'id', description: 'Customer ID' })
   @ApiResponse({
     status: 200,
@@ -122,7 +131,7 @@ export class CustomerController {
     return await this.getOneCustomerUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Update a customer' })
+  @ApiOperation({ summary: 'Update a customer', operationId: 'updateCustomer' })
   @ApiParam({ name: 'id', description: 'Customer ID' })
   @ApiBody({ type: UpdateCustomerDto })
   @ApiResponse({
@@ -147,7 +156,7 @@ export class CustomerController {
     return await this.updateCustomerUseCase.execute(id, dto, user)
   }
 
-  @ApiOperation({ summary: 'Delete a customer' })
+  @ApiOperation({ summary: 'Delete a customer', operationId: 'deleteCustomer' })
   @ApiParam({ name: 'id', description: 'Customer ID' })
   @ApiParam({ name: 'fromResellerId', description: 'Reseller ID' })
   @ApiResponse({ status: 204, description: 'Customer deleted successfully' })
@@ -168,7 +177,10 @@ export class CustomerController {
     await this.deleteCustomerUseCase.execute(id, fromResellerId, user)
   }
 
-  @ApiOperation({ summary: 'Transfer a customer' })
+  @ApiOperation({
+    summary: 'Transfer a customer',
+    operationId: 'transferCustomer'
+  })
   @ApiParam({ name: 'id', description: 'Customer ID' })
   @ApiBody({ type: TransferCustomerDto })
   @ApiResponse({

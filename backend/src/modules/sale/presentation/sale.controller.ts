@@ -56,7 +56,7 @@ export class SaleController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all sales' })
+  @ApiOperation({ summary: 'Get all sales', operationId: 'getAllSales' })
   @ApiResponse({
     status: 200,
     description: 'List of sales returned successfully',
@@ -77,7 +77,7 @@ export class SaleController {
     return await this.getAllSaleUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific sale' })
+  @ApiOperation({ summary: 'Get a specific sale', operationId: 'getOneSale' })
   @ApiParam({ name: 'id', description: 'Sale ID' })
   @ApiResponse({
     status: 200,
@@ -98,7 +98,7 @@ export class SaleController {
     return await this.getOneSaleUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Create a new sale' })
+  @ApiOperation({ summary: 'Create a new sale', operationId: 'createSale' })
   @ApiBody({ type: CreateSaleDto })
   @ApiResponse({
     status: 201,
@@ -118,7 +118,7 @@ export class SaleController {
     return await this.createSaleUseCase.execute(dto, user)
   }
 
-  @ApiOperation({ summary: 'Update a sale' })
+  @ApiOperation({ summary: 'Update a sale', operationId: 'updateSale' })
   @ApiParam({ name: 'id', description: 'Sale ID' })
   @ApiBody({ type: CreateSaleDto })
   @ApiResponse({
@@ -143,7 +143,7 @@ export class SaleController {
     return this.updateSaleUseCase.execute(id, dto, user)
   }
 
-  @ApiOperation({ summary: 'Delete a sale' })
+  @ApiOperation({ summary: 'Delete a sale', operationId: 'deleteSale' })
   @ApiParam({ name: 'id', description: 'Sale ID' })
   @ApiResponse({
     status: 204,
@@ -162,7 +162,10 @@ export class SaleController {
     return await this.deleteSaleUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Mark installment as paid' })
+  @ApiOperation({
+    summary: 'Mark installment as paid',
+    operationId: 'markInstallmentPaid'
+  })
   @ApiParam({ name: 'id', description: 'Sale ID' })
   @ApiBody({ type: MarkInstallmentPaidDto })
   @ApiResponse({

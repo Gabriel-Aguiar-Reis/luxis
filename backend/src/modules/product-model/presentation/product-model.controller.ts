@@ -54,7 +54,10 @@ export class ProductModelController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all product models' })
+  @ApiOperation({
+    summary: 'Get all product models',
+    operationId: 'getAllProductModels'
+  })
   @ApiResponse({
     status: 200,
     description: 'List of product models returned successfully',
@@ -75,7 +78,10 @@ export class ProductModelController {
     return await this.getAllProductModelUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific product model' })
+  @ApiOperation({
+    summary: 'Get a specific product model',
+    operationId: 'getOneProductModel'
+  })
   @ApiParam({ name: 'id', description: 'Product model ID' })
   @ApiResponse({
     status: 200,
@@ -96,7 +102,10 @@ export class ProductModelController {
     return await this.getOneProductModelUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Create a new product model' })
+  @ApiOperation({
+    summary: 'Create a new product model',
+    operationId: 'createProductModel'
+  })
   @ApiBody({ type: CreateProductModelDto })
   @ApiResponse({
     status: 201,
@@ -119,7 +128,10 @@ export class ProductModelController {
     return await this.createProductModelUseCase.execute(dto)
   }
 
-  @ApiOperation({ summary: 'Update a product model' })
+  @ApiOperation({
+    summary: 'Update a product model',
+    operationId: 'updateProductModel'
+  })
   @ApiParam({ name: 'id', description: 'Product model ID' })
   @ApiBody({ type: UpdateProductModelDto })
   @ApiResponse({
@@ -144,7 +156,10 @@ export class ProductModelController {
     return await this.updateProductModelUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Delete a product model' })
+  @ApiOperation({
+    summary: 'Delete a product model',
+    operationId: 'deleteProductModel'
+  })
   @ApiParam({ name: 'id', description: 'Product model ID' })
   @ApiResponse({
     status: 204,

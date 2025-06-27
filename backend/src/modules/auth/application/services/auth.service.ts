@@ -143,7 +143,7 @@ export class AuthService {
           email: user.email.getValue(),
           role: user.role,
           status: user.status,
-          name: user.name.getValue()
+          name: `${user.name.getValue()} ${user.surname.getValue()}`
         }
       }
     } catch (error) {

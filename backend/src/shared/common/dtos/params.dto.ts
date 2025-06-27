@@ -32,6 +32,7 @@ export class ParamsDto {
   })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   limit?: number
 
   @ApiPropertyOptional({
@@ -41,5 +42,6 @@ export class ParamsDto {
   })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   page?: number
 }

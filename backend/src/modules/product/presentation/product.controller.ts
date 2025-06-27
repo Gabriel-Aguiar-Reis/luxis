@@ -51,7 +51,7 @@ export class ProductController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all products' })
+  @ApiOperation({ summary: 'Get all products', operationId: 'getAllProducts' })
   @ApiResponse({
     status: 200,
     description: 'List of products returned successfully',
@@ -72,7 +72,10 @@ export class ProductController {
     return await this.getAllProductUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific product' })
+  @ApiOperation({
+    summary: 'Get a specific product',
+    operationId: 'getOneProduct'
+  })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({
     status: 200,
@@ -93,7 +96,7 @@ export class ProductController {
     return await this.getOneProductUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Update a product' })
+  @ApiOperation({ summary: 'Update a product', operationId: 'updateProduct' })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiBody({ type: UpdateProductDto })
   @ApiResponse({
@@ -118,7 +121,7 @@ export class ProductController {
     return await this.updateProductUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Sell a product' })
+  @ApiOperation({ summary: 'Sell a product', operationId: 'sellProduct' })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({ status: 204, description: 'Product sold successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -134,7 +137,7 @@ export class ProductController {
     return await this.sellProductUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Delete a product' })
+  @ApiOperation({ summary: 'Delete a product', operationId: 'deleteProduct' })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({ status: 204, description: 'Product deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

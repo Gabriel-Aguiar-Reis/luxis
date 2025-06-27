@@ -29,6 +29,7 @@ export class ParamsWithMandatoryPeriodDto {
   })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   limit?: number
 
   @ApiPropertyOptional({
@@ -37,5 +38,6 @@ export class ParamsWithMandatoryPeriodDto {
   })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   page?: number
 }

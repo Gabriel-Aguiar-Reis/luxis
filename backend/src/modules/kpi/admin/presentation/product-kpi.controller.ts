@@ -25,7 +25,10 @@ export class AdminProductKpiController {
     private readonly getTotalProductsInStockForMoreThanXDaysUseCase: GetTotalProductsInStockForMoreThanXDaysUseCase
   ) {}
 
-  @ApiOperation({ summary: 'Get Total Products In Stock' })
+  @ApiOperation({
+    summary: 'Get Total Products In Stock',
+    operationId: 'getTotalProductsInStock'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -42,7 +45,10 @@ export class AdminProductKpiController {
     return this.getTotalProductsInStockUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Products In Stock' })
+  @ApiOperation({
+    summary: 'Get Products In Stock',
+    operationId: 'getProductsInStock'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -59,7 +65,10 @@ export class AdminProductKpiController {
     return this.getProductsInStockUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Products With Resellers' })
+  @ApiOperation({
+    summary: 'Get Products With Resellers',
+    operationId: 'getProductsWithResellers'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -76,7 +85,10 @@ export class AdminProductKpiController {
     return this.getTotalProductWithResellersUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Total Products With Resellers' })
+  @ApiOperation({
+    summary: 'Get Total Products With Resellers',
+    operationId: 'getTotalProductsWithResellers'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -93,7 +105,10 @@ export class AdminProductKpiController {
     return this.getTotalProductWithResellersUseCase.execute(qParams)
   }
 
-  @ApiOperation({ summary: 'Get Products In Stock For More Than X Days' })
+  @ApiOperation({
+    summary: 'Get Products In Stock For More Than X Days',
+    operationId: 'getProductsInStockForMoreThanXDays'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,
@@ -115,7 +130,10 @@ export class AdminProductKpiController {
     return this.getProductsInStockForMoreThanXDaysUseCase.execute(days, qParams)
   }
 
-  @ApiOperation({ summary: 'Get Total Products In Stock For More Than X Days' })
+  @ApiOperation({
+    summary: 'Get Total Products In Stock For More Than X Days',
+    operationId: 'getTotalProductsInStockForMoreThanXDays'
+  })
   @ApiBody({ type: ParamsDto })
   @ApiResponse({
     status: 200,

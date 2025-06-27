@@ -1,4 +1,3 @@
-// Tipos e interfaces usados no SaleReadTypeormRepository
 import { UUID } from 'crypto'
 
 export type SaleByResellerIdReturnRawResult = {
@@ -7,6 +6,8 @@ export type SaleByResellerIdReturnRawResult = {
   totalAmount: string
   paymentMethod: string
   numberInstallments: number
+  installmentsInterval: number
+  installmentsPaid: number
   status: string
   productIds: UUID[]
   customerId: UUID

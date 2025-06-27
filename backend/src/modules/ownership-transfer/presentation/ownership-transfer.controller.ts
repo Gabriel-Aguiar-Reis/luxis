@@ -54,7 +54,10 @@ export class OwnershipTransferController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all ownership transfers' })
+  @ApiOperation({
+    summary: 'Get all ownership transfers',
+    operationId: 'getAllOwnershipTransfers'
+  })
   @ApiResponse({
     status: 200,
     description: 'List of ownership transfers returned successfully',
@@ -73,7 +76,10 @@ export class OwnershipTransferController {
     return await this.getAllOwnershipTransferUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific ownership transfer' })
+  @ApiOperation({
+    summary: 'Get a specific ownership transfer',
+    operationId: 'getOneOwnershipTransfer'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiResponse({
     status: 200,
@@ -94,7 +100,10 @@ export class OwnershipTransferController {
     return await this.getOneOwnershipTransferUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Create a new ownership transfer' })
+  @ApiOperation({
+    summary: 'Create a new ownership transfer',
+    operationId: 'createOwnershipTransfer'
+  })
   @ApiBody({ type: CreateOwnershipTransferDto })
   @ApiResponse({
     status: 201,
@@ -117,7 +126,10 @@ export class OwnershipTransferController {
     return await this.createOwnershipTransferUseCase.execute(dto, user)
   }
 
-  @ApiOperation({ summary: 'Update a ownership transfer' })
+  @ApiOperation({
+    summary: 'Update a ownership transfer',
+    operationId: 'updateOwnershipTransfer'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiBody({ type: UpdateOwnershipTransferDto })
   @ApiResponse({
@@ -142,7 +154,10 @@ export class OwnershipTransferController {
     return await this.updateOwnershipTransferUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Update the status of a ownership transfer' })
+  @ApiOperation({
+    summary: 'Update the status of a ownership transfer',
+    operationId: 'updateOwnershipTransferStatus'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiBody({ type: UpdateOwnershipTransferDto })
   @ApiResponse({
@@ -170,7 +185,10 @@ export class OwnershipTransferController {
     )
   }
 
-  @ApiOperation({ summary: 'Delete a ownership transfer' })
+  @ApiOperation({
+    summary: 'Delete a ownership transfer',
+    operationId: 'deleteOwnershipTransfer'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiResponse({
     status: 204,

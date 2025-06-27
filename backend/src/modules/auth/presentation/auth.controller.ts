@@ -28,6 +28,7 @@ import { join } from 'path'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
+import { AccessTokenDto } from '@/modules/auth/application/dtos/aceess-token.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -47,9 +48,13 @@ export class AuthController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Login' })
+  @ApiOperation({ summary: 'Login', operationId: 'login' })
   @ApiBody({ type: LoginDto })
-  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful',
+    type: AccessTokenDto
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @HttpCode(200)
   @Post('login')
@@ -61,7 +66,7 @@ export class AuthController {
     return await this.authService.login(dto)
   }
 
-  @ApiOperation({ summary: 'Forgot password' })
+  @ApiOperation({ summary: 'Forgot password', operationId: 'forgot-password' })
   @ApiBody({ type: RequestPasswordResetDto })
   @ApiResponse({ status: 204, description: 'Forgot password successful' })
   @ApiResponse({ status: 404, description: 'User not found' })
@@ -71,7 +76,7 @@ export class AuthController {
     return this.authService.forgotPassword(new Email(dto.email))
   }
 
-  @ApiOperation({ summary: 'Reset password' })
+  @ApiOperation({ summary: 'Reset password', operationId: 'reset-password' })
   @ApiBody({ type: ResetPasswordDto })
   @ApiResponse({ status: 204, description: 'Password reset successful' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token' })
@@ -81,7 +86,10 @@ export class AuthController {
     await this.authService.resetPassword(dto.token, dto.newPassword)
   }
 
-  @ApiOperation({ summary: 'Reset password page (Development only)' })
+  @ApiOperation({
+    summary: 'Reset password page (Development only)',
+    operationId: 'reset-password-page'
+  })
   @ApiQuery({
     name: 'token',
     required: true,
@@ -108,11 +116,11 @@ export class AuthController {
     res.sendFile(join(this.templatesPath, 'script.js'))
   }
 
-  @ApiOperation({ summary: 'Verify JWT token' })
+  @ApiOperation({ summary: 'Verify JWT token', operationId: 'verify-token' })
   @ApiResponse({ status: 200, description: 'Token is valid', type: VerifyDto })
   @ApiResponse({ status: 401, description: 'Unauthorized - Invalid token' })
   @HttpCode(200)
-  @Get('verify')
+  @Post('verify')
   async verify(@Headers('authorization') authHeader: string) {
     try {
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
