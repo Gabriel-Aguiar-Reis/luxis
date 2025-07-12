@@ -14,8 +14,8 @@ export async function totalProductsInStockForMoreThanXDays(
     .createQueryBuilder('product')
     .innerJoin(BatchTypeOrmEntity, 'batch', 'batch.id = product.batch_id')
     .where('product.status = :status', { status: ProductStatus.IN_STOCK })
-    .andWhere(`batch.created_at < NOW() - INTERVAL '${days} days'`)
+    .andWhere(`batch.arrival_date < NOW() - INTERVAL '${days} days'`)
 
-  const filteredProducts = baseWhere(qb, qParams, 'product.updatedAt')
+  const filteredProducts = baseWhere(qb, qParams, 'product.created_at')
   return filteredProducts.getCount()
 }

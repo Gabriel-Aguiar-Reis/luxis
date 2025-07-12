@@ -22,7 +22,7 @@ export async function returnsInPeriod(
       'return.id as "id"',
       'user.id as "resellerId"',
       `CONCAT(user.name, ' ', user.surname) as "resellerName"`,
-      'return.items as "productIds"'
+      'return.product_ids as "productIds"'
     ])
   const filteredReturns = baseWhere(qb, qParams, 'return.created_at')
 
@@ -46,7 +46,8 @@ export async function returnsInPeriod(
     .select([
       'product.id as "productId"',
       'productModel.id as "productModelId"',
-      'productModel.name as "productModelName"'
+      'productModel.name as "productModelName"',
+      'product.serial_number as "serialNumber"'
     ])
     .getRawMany<ReturnProduct>()
 
@@ -59,7 +60,8 @@ export async function returnsInPeriod(
       return {
         productId: product.productId,
         productModelId: product.productModelId,
-        productModelName: product.productModelName
+        productModelName: product.productModelName,
+        serialNumber: product.serialNumber
       }
     })
 

@@ -50,7 +50,8 @@ export async function returnsByResellerId(
     .select([
       'product.id as "productId"',
       'productModel.id as "productModelId"',
-      'productModel.name as "productModelName"'
+      'productModel.name as "productModelName"',
+      'product.serial_number as "serialNumber"'
     ])
     .getRawMany<ReturnProduct>()
 
@@ -60,6 +61,7 @@ export async function returnsByResellerId(
       productId: UUID
       productModelId: UUID
       productModelName: string
+      serialNumber: string
     }
   >()
   products.forEach((p) => productMap.set(p.productId, p))
@@ -70,7 +72,8 @@ export async function returnsByResellerId(
       return {
         productId: product.productId,
         productModelId: product.productModelId,
-        productModelName: product.productModelName
+        productModelName: product.productModelName,
+        serialNumber: product.serialNumber
       }
     })
     return {

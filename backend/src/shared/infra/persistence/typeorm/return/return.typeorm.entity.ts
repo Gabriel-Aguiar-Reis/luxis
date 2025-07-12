@@ -6,7 +6,7 @@ export class ReturnTypeOrmEntity {
   @PrimaryGeneratedColumn('uuid')
   id: UUID
 
-  @Column({ name: 'reseller_id' })
+  @Column('uuid',{ name: 'reseller_id' })
   resellerId: UUID
 
   @Column('uuid', { array: true, name: 'product_ids' })

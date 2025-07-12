@@ -47,7 +47,8 @@ export async function returnsByReseller(
     .select([
       'product.id as "productId"',
       'productModel.id as "productModelId"',
-      'productModel.name as "productModelName"'
+      'productModel.name as "productModelName"',
+      'product.serial_number as "serialNumber"'
     ])
     .getRawMany<ReturnProduct>()
 
@@ -68,7 +69,8 @@ export async function returnsByReseller(
       return {
         productId: product.productId,
         productModelId: product.productModelId,
-        productModelName: product.productModelName
+        productModelName: product.productModelName,
+        serialNumber: product.serialNumber
       }
     })
 

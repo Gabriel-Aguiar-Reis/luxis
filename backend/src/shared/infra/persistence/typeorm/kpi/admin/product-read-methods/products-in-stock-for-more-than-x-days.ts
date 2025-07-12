@@ -33,7 +33,7 @@ export async function productsInStockForMoreThanXDays(
       'productModel.id = product.model_id'
     )
     .where('product.status = :status', { status: ProductStatus.IN_STOCK })
-    .andWhere(`batch.created_at < NOW() - INTERVAL '${days} days'`)
+    .andWhere(`batch.arrival_date < NOW() - INTERVAL '${days} days'`)
     .select([
       'product.id as "id"',
       'product.serial_number as "serialNumber"',
@@ -45,7 +45,8 @@ export async function productsInStockForMoreThanXDays(
       'product.status as "status"'
     ])
 
-  const filteredProducts = baseWhere(qb, qParams, 'batch.created_at')
+  const filteredProducts = baseWhere(qb, qParams, 'batch.arrival_date')
+  filteredProducts.addOrderBy('product.serial_number', 'ASC')
   const result = await filteredProducts.getRawMany<ProductInStockRawResult>()
 
   return result.map((row) => ({
