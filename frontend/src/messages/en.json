@@ -6,6 +6,202 @@
     "email": "Email",
     "password": "Password",
     "forgotPassword": "Forgot your password?",
-    "orContinueWith": "Or continue with"
+    "orContinueWith": "Or continue with",
+    "authError": "You need to be authenticated as an admin to access this area",
+    "inactiveAccount": "Inactive account",
+    "successMessage": "Login successful",
+    "loading": "Logging in...",
+    "restrictedArea": "This area is restricted for admins, if you want to access the reseller area, click here",
+    "restrictedAreaHref": "Reseller Area",
+    "authErrorReseller": "You need to be authenticated as a reseller to access this area",
+    "dontHaveAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "emailInvalid": "Invalid email",
+    "passwordPlaceholder": "Password@123",
+    "passwordMinLength": "Password must be at least 6 characters long",
+    "showPassword": "Show Password"
+  },
+  "SignUp": {
+    "signUp": "Sign Up",
+    "successMessage": "Sign up successful! Please wait for an administrator's approval.",
+    "errorMessage": "Failed to sign up, please try again later.",
+    "title": "Sign Up",
+    "description": "Fill in the fields below to create your account.",
+    "button": "Sign Up",
+    "name": "Name",
+    "surname": "Surname",
+    "email": "Email",
+    "password": "Password",
+    "passwordPlaceholder": "Password@123",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Password@123",
+    "showPassword": "Show Password",
+    "phone": "Phone",
+    "phoneNumber": "(00) 00000-0000",
+    "street": "Street",
+    "number": "NNumber",
+    "complement": "Complement",
+    "complementPlaceholder": "Apt, Block, etc. (optional)",
+    "neighborhood": "Neighborhood",
+    "city": "City",
+    "federativeUnit": "State",
+    "postalCode": "ZIP Code",
+    "postalCodePlaceholder": "00000-000",
+    "select": "Select",
+    "country": "Country",
+    "back": "Back",
+    "next": "Next",
+    "loading": "Loading...",
+    "haveAccount": "Already have an account?",
+    "login": "Log in",
+    "step": "Step",
+    "of": "of"
+  },
+  "ForgotPassword": {
+    "title": "Forgot Password",
+    "button": "Send Reset Link",
+    "loading": "Sending...",
+    "description": "Enter your email and we'll send you a link to reset your password.",
+    "email": "Email",
+    "backToLogin": "Back to login",
+    "successMessage": "Password reset link sent to your email",
+    "errorMessage": "Failed to send reset link",
+    "termsText": "By clicking continue, you agree to our",
+    "termsLink": "Terms of Service",
+    "andText": "and",
+    "privacyLink": "Privacy Policy"
+  },
+  "ResetPassword": {
+    "title": "Reset Password",
+    "button": "Reset Password",
+    "loading": "Resetting...",
+    "description": "Enter your new password below.",
+    "password": "New Password",
+    "confirmPassword": "Confirm Password",
+    "backToLogin": "Back to login",
+    "successMessage": "Password reset successful",
+    "errorMessage": "Failed to reset password",
+    "termsText": "By clicking continue, you agree to our",
+    "termsLink": "Terms of Service",
+    "andText": "and",
+    "privacyLink": "Privacy Policy"
+  },
+  "Cashier": {
+    "title": "Cashier",
+    "description": "Register your sales quickly and efficiently",
+    "authError": "You need to be authenticated as a reseller to access this area",
+    "sessionExpired": "Session expired"
+  },
+  "Admin-Suppliers": {
+    "title": "Suppliers",
+    "description": "Manage your suppliers"
+  },
+  "Admin-Batches": {
+    "title": "Batches",
+    "description": "Manage your batches"
+  },
+  "Admin-Products": {
+    "title": "Products",
+    "description": "Manage your products"
+  },
+  "Admin-Shipments": {
+    "title": "Shipments",
+    "description": "Manage your shipments"
+  },
+  "Admin-Users": {
+    "title": "Users",
+    "description": "Manage your users"
+  },
+  "Admin-Sales": {
+    "title": "Sales",
+    "description": "Manage your sales"
+  },
+  "HomeLayout": {
+    "authError": "You need to be authenticated as an admin to access this area",
+    "sessionExpired": "Session expired"
+  },
+  "MySpaceLayout": {
+    "authError": "You need to be authenticated as a reseller to access this area"
+  },
+  "Cart": {
+    "title": "Cart"
+  },
+  "Customers": {
+    "title": "Customers"
+  },
+  "Settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "security": "Security",
+    "appearance": "Appearance",
+    "system": "System",
+    "profileUpdated": "Profile updated successfully",
+    "notificationsUpdated": "Notification preferences updated",
+    "passwordUpdated": "Password updated successfully",
+    "securityUpdated": "Security settings updated",
+    "appearanceUpdated": "Appearance preferences updated",
+    "systemSettings": "System Settings",
+    "systemSettingsDescription": "Manage advanced system settings",
+    "backupAndRestore": "Backup and Restore",
+    "backupDatabase": "Backup Database",
+    "restoreBackup": "Restore Backup",
+    "systemMaintenance": "System Maintenance",
+    "clearCache": "Clear Cache",
+    "optimizeDatabase": "Optimize Database",
+    "systemLogs": "System Logs",
+    "viewLogs": "View Logs",
+    "clearLogs": "Clear Logs"
+  },
+  "Returns": {
+    "title": "Returns"
+  },
+  "Inventory": {
+    "title": "My Inventory"
+  },
+  "Reports": {
+    "title": "Reports"
+  },
+  "Shipments": {
+    "title": "Shipments"
+  },
+  "Transfers": {
+    "title": "Transfers"
+  },
+  "Sales": {
+    "title": "My Sales"
+  },
+  "Routes": {
+    "my-space": "my-space",
+    "customers": "customers",
+    "shipments": "shipments",
+    "sales": "sales",
+    "returns": "returns",
+    "transfers": "transfers",
+    "inventory": "inventory",
+    "reports": "reports",
+    "settings": "settings",
+    "cart": "cart",
+    "cashier": "cashier",
+    "batches": "batches",
+    "orders": "orders",
+    "products": "products",
+    "suppliers": "suppliers",
+    "users": "users",
+    "home": "home",
+    "login": "login",
+    "admin-login": "admin-login",
+    "sign-up": "sign-up",
+    "forgot-password": "forgot-password",
+    "reset-password": "reset-password"
+  },
+  "Common": {
+    "AdminArea": "Admin Area",
+    "LogoutSuccess": "Logout successful",
+    "Settings": "Settings",
+    "Logout": "Logout",
+    "Dashboard": "Dashboard"
   }
 }

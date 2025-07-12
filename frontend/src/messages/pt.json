@@ -6,6 +6,202 @@
     "email": "Email",
     "password": "Senha",
     "forgotPassword": "Esqueceu sua senha?",
-    "orContinueWith": "Ou continue com"
+    "orContinueWith": "Ou continue com",
+    "authError": "Você precisa estar autenticado como administrador para acessar esta área",
+    "inactiveAccount": "Conta inativa",
+    "successMessage": "Login realizado com sucesso",
+    "loading": "Entrando...",
+    "restrictedArea": "Essa área é restrita para administradores, se deseja acessar a área de revendedores, clique aqui",
+    "restrictedAreaHref": "Área de revendedores",
+    "authErrorReseller": "Você precisa estar autenticado como revendedor para acessar esta área",
+    "dontHaveAccount": "Você não possui uma conta?",
+    "signUp": "Registre-se",
+    "emailRequired": "Email é obrigatório",
+    "passwordRequired": "Senha é obrigatória",
+    "emailInvalid": "Email inválido",
+    "passwordPlaceholder": "Password@123",
+    "passwordMinLength": "A senha deve ter pelo menos 6 caracteres",
+    "showPassword": "Mostrar Senha"
+  },
+  "SignUp": {
+    "signUp": "Registrar",
+    "successMessage": "Cadastro realizado com sucesso! Aguarde a aprovação de um administrador.",
+    "errorMessage": "Falha ao cadastrar, tente novamente mais tarde.",
+    "title": "Registrar",
+    "description": "Preencha os campos abaixo para criar sua conta.",
+    "button": "Registrar",
+    "name": "Nome",
+    "surname": "Sobrenome",
+    "email": "Email",
+    "password": "Senha",
+    "passwordPlaceholder": "Password@123",
+    "confirmPassword": "Confirmar Senha",
+    "confirmPasswordPlaceholder": "Password@123",
+    "showPassword": "Mostrar Senha",
+    "phone": "Telefone",
+    "phoneNumber": "(00) 00000-0000",
+    "street": "Rua",
+    "number": "Número",
+    "complement": "Complemento",
+    "complementPlaceholder": "Apto, Bloco, etc. (opcional)",
+    "neighborhood": "Bairro",
+    "city": "Cidade",
+    "federativeUnit": "UF",
+    "postalCode": "CEP",
+    "postalCodePlaceholder": "00000-000",
+    "select": "Selecione",
+    "country": "País",
+    "back": "Voltar",
+    "next": "Avançar",
+    "loading": "Carregando...",
+    "haveAccount": "Já tem uma conta?",
+    "login": "Faça login",
+    "step": "Passo",
+    "of": "de"
+  },
+  "ForgotPassword": {
+    "title": "Esqueci Minha Senha",
+    "button": "Enviar Link de Recuperação",
+    "loading": "Enviando...",
+    "description": "Digite seu email e enviaremos um link para redefinir sua senha.",
+    "email": "Email",
+    "backToLogin": "Voltar para o login",
+    "successMessage": "Link de recuperação enviado para seu email",
+    "errorMessage": "Falha ao enviar link de recuperação",
+    "termsText": "Ao clicar em continuar, você concorda com nossos",
+    "termsLink": "Termos de Serviço",
+    "andText": "e",
+    "privacyLink": "Política de Privacidade"
+  },
+  "ResetPassword": {
+    "title": "Redefinir Senha",
+    "button": "Redefinir Senha",
+    "loading": "Redefinindo...",
+    "description": "Digite sua nova senha abaixo.",
+    "password": "Nova Senha",
+    "confirmPassword": "Confirmar Senha",
+    "backToLogin": "Voltar para o login",
+    "successMessage": "Senha redefinida com sucesso",
+    "errorMessage": "Falha ao redefinir senha",
+    "termsText": "Ao clicar em continuar, você concorda com nossos",
+    "termsLink": "Termos de Serviço",
+    "andText": "e",
+    "privacyLink": "Política de Privacidade"
+  },
+  "Cashier": {
+    "title": "Caixa",
+    "description": "Registre suas vendas de forma rápida e eficiente",
+    "authError": "Você precisa estar autenticado como revendedor para acessar esta área",
+    "sessionExpired": "Sessão expirada"
+  },
+  "Admin-Suppliers": {
+    "title": "Fornecedores",
+    "description": "Gerencie seus fornecedores"
+  },
+  "Admin-Batches": {
+    "title": "Lotes de Fornecimentos",
+    "description": "Gerencie seus lotes de fornecimentos"
+  },
+  "Admin-Products": {
+    "title": "Produtos",
+    "description": "Gerencie seus produtos"
+  },
+  "Admin-Shipments": {
+    "title": "Romaneios",
+    "description": "Gerencie seus romaneios"
+  },
+  "Admin-Users": {
+    "title": "Usuários",
+    "description": "Gerencie seus usuários"
+  },
+  "Admin-Sales": {
+    "title": "Vendas",
+    "description": "Gerencie suas vendas"
+  },
+  "HomeLayout": {
+    "authError": "Você precisa estar autenticado como administrador para acessar esta área",
+    "sessionExpired": "Sessão expirada"
+  },
+  "MySpaceLayout": {
+    "authError": "Você precisa estar autenticado como revendedor para acessar esta área"
+  },
+  "Cart": {
+    "title": "Carrinho de Compras"
+  },
+  "Customers": {
+    "title": "Clientes"
+  },
+  "Settings": {
+    "title": "Configurações",
+    "profile": "Perfil",
+    "notifications": "Notificações",
+    "security": "Segurança",
+    "appearance": "Aparência",
+    "system": "Sistema",
+    "profileUpdated": "Perfil atualizado com sucesso",
+    "notificationsUpdated": "Preferências de notificações atualizadas",
+    "passwordUpdated": "Senha atualizada com sucesso",
+    "securityUpdated": "Configurações de segurança atualizadas",
+    "appearanceUpdated": "Preferências de aparência atualizadas",
+    "systemSettings": "Configurações do Sistema",
+    "systemSettingsDescription": "Gerencie configurações avançadas do sistema",
+    "backupAndRestore": "Backup e Restauração",
+    "backupDatabase": "Fazer Backup",
+    "restoreBackup": "Restaurar Backup",
+    "systemMaintenance": "Manutenção do Sistema",
+    "clearCache": "Limpar Cache",
+    "optimizeDatabase": "Otimizar Banco de Dados",
+    "systemLogs": "Logs do Sistema",
+    "viewLogs": "Visualizar Logs",
+    "clearLogs": "Limpar Logs"
+  },
+  "Returns": {
+    "title": "Devoluções"
+  },
+  "Inventory": {
+    "title": "Meu Estoque"
+  },
+  "Reports": {
+    "title": "Relatórios"
+  },
+  "Shipments": {
+    "title": "Romaneios"
+  },
+  "Transfers": {
+    "title": "Trocas"
+  },
+  "Sales": {
+    "title": "Minhas Vendas"
+  },
+  "Routes": {
+    "my-space": "meu-espaco",
+    "customers": "clientes",
+    "shipments": "romaneios",
+    "sales": "vendas",
+    "returns": "devolucoes",
+    "transfers": "trocas",
+    "inventory": "estoque",
+    "reports": "relatorios",
+    "settings": "configuracoes",
+    "cart": "carrinho",
+    "cashier": "caixa",
+    "batches": "lotes",
+    "orders": "pedidos",
+    "products": "produtos",
+    "suppliers": "fornecedores",
+    "users": "usuarios",
+    "home": "home",
+    "login": "login",
+    "admin-login": "admin-login",
+    "sign-up": "registrar",
+    "forgot-password": "esqueceu-senha",
+    "reset-password": "redefinir-senha"
+  },
+  "Common": {
+    "AdminArea": "Área Administrativa",
+    "LogoutSuccess": "Logout realizado com sucesso",
+    "Settings": "Configurações",
+    "Logout": "Sair",
+    "Dashboard": "Dashboard"
   }
 }
