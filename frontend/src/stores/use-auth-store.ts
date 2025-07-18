@@ -1,6 +1,6 @@
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
-import { Login, UpdateUser, Verify } from '@/lib/api-types'
+import { Login, ResetPassword, UpdateUser, Verify } from '@/lib/api-types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -12,6 +12,9 @@ type updateUserDto = UpdateUser['requestBody']['content']['application/json']
 
 type LoginDto = Login['requestBody']['content']['application/json']
 type LoginReturn = Login['responses']['200']['content']['application/json']
+type ResetPasswordDto =
+  ResetPassword['requestBody']['content']['application/json']
+
 type AuthState = {
   user: userPayload | null
   accessToken: string | null
@@ -23,6 +26,7 @@ type AuthState = {
   logout: () => void
   updateUser: (user: updateUserDto) => void
   verify: () => Promise<verifyDtoReturn>
+  resetPassword: (dto: ResetPasswordDto) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -117,6 +121,36 @@ export const useAuthStore = create<AuthState>()(
             accessToken: null
           })
           return Promise.reject(err)
+        }
+      },
+      resetPassword: async (dto: ResetPasswordDto) => {
+        const accessToken = get().accessToken
+        if (!accessToken) {
+          get().logout()
+          set({
+            isLoading: false,
+            error: 'Token de acesso ausente',
+            isAuthenticated: false
+          })
+          return Promise.reject(new Error('Token de acesso ausente'))
+        }
+        set({ isLoading: true, error: null })
+        try {
+          await apiFetch<void>(
+            apiPaths.auth.resetPassword,
+            {
+              body: JSON.stringify(dto)
+            },
+            true,
+            'POST'
+          )
+          set({ isLoading: false })
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Erro desconhecido',
+            isLoading: false
+          })
+          return Promise.reject(error)
         }
       }
     }),
