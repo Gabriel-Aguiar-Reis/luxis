@@ -28,7 +28,7 @@ import { join } from 'path'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
-import { AccessTokenDto } from '@/modules/auth/application/dtos/aceess-token.dto'
+import { AccessTokenDto } from '@/modules/auth/application/dtos/access-token.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
