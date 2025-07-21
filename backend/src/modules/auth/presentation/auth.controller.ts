@@ -29,6 +29,8 @@ import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
 import { AccessTokenDto } from '@/modules/auth/application/dtos/access-token.dto'
+import { UUID } from 'crypto'
+import { ChangePasswordDto } from '@/modules/auth/application/dtos/change-password.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -84,6 +86,23 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     await this.authService.resetPassword(dto.token, dto.newPassword)
+  }
+
+  @ApiOperation({
+    summary: 'Change password',
+    operationId: 'change-password'
+  })
+  @ApiBody({
+    type: ChangePasswordDto,
+    description: 'Change password request',
+  })
+  @ApiResponse({ status: 204, description: 'Password changed successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid current password' })
+  @HttpCode(204)
+  @Post('change-password')
+  async changePassword(@Body() dto: ChangePasswordDto) {
+    await this.authService.changePassword(dto)
   }
 
   @ApiOperation({

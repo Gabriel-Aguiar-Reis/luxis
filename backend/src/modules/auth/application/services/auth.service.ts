@@ -15,6 +15,8 @@ import { Email } from '@/shared/common/value-object/email.vo'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
 import { EmailService } from '@/modules/auth/application/services/email.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
+import { UUID } from 'crypto'
+import { ChangePasswordDto } from '@/modules/auth/application/dtos/change-password.dto'
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,22 @@ export class AuthService {
     private readonly logger: CustomLogger,
     @Inject('EmailService')
     private readonly emailService: EmailService
-  ) {}
+  ) { }
+
+  async changePassword(dto: ChangePasswordDto): Promise<void> {
+    const user = await this.userRepository.findById(dto.userId)
+    if (!user) {
+      this.logger.error(`User not found for change password: ${dto.userId}`, 'AuthService')
+      throw new NotFoundException('User not found')
+    }
+
+    const password = new Password(dto.newPassword)
+    const passwordHash = PasswordHash.generate(password)
+    user.passwordHash = passwordHash
+    await this.userRepository.update(user)
+
+    this.logger.log(`Password changed successfully for user: ${user.email.getValue()}`, 'AuthService')
+  }
 
   async login(dto: LoginDto): Promise<{ accessToken: string }> {
     const email = new Email(dto.email)
