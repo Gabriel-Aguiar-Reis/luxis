@@ -18,7 +18,7 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/use-auth-store'
 import { apiFetch } from '@/lib/api-client'
-import { User } from '@/lib/api-types'
+import { FederativeUnit, User } from '@/lib/api-types'
 import { apiPaths } from '@/lib/api-paths'
 import { UpdateUser } from '@/lib/api-types'
 import {
@@ -67,12 +67,12 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 type updateUserDto = UpdateUser['requestBody']['content']['application/json']
-type FederativeUnit = User['residence']['address']['federativeUnit']
 
 export function ProfileForm() {
   const [data, setData] = useState<User | null>(null)
   const { user } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const FederativeUnits = [
     'AC',
     'AL',
@@ -220,7 +220,11 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input placeholder="Seu nome" {...field} />
+                      <Input
+                        placeholder="Seu nome"
+                        {...field}
+                        disabled={!isEditing}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -234,7 +238,11 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Sobrenome</FormLabel>
                     <FormControl>
-                      <Input placeholder="Seu sobrenome" {...field} />
+                      <Input
+                        placeholder="Seu sobrenome"
+                        {...field}
+                        disabled={!isEditing}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -250,7 +258,11 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="seu.email@exemplo.com" {...field} />
+                      <Input
+                        placeholder="seu.email@exemplo.com"
+                        {...field}
+                        disabled={!isEditing}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -264,7 +276,11 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Telefone</FormLabel>
                     <FormControl>
-                      <Input placeholder="00000000000" {...field} />
+                      <Input
+                        placeholder="00000000000"
+                        {...field}
+                        disabled={!isEditing}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -286,7 +302,11 @@ export function ProfileForm() {
                       <FormItem>
                         <FormLabel>Rua</FormLabel>
                         <FormControl>
-                          <Input placeholder="Rua" {...field} />
+                          <Input
+                            placeholder="Rua"
+                            {...field}
+                            disabled={!isEditing}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -300,7 +320,11 @@ export function ProfileForm() {
                     <FormItem>
                       <FormLabel>Número</FormLabel>
                       <FormControl>
-                        <Input placeholder="Número" {...field} />
+                        <Input
+                          placeholder="Número"
+                          {...field}
+                          disabled={!isEditing}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -315,7 +339,11 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Complemento</FormLabel>
                     <FormControl>
-                      <Input placeholder="Complemento" {...field} />
+                      <Input
+                        placeholder="Complemento"
+                        {...field}
+                        disabled={!isEditing}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -330,7 +358,11 @@ export function ProfileForm() {
                     <FormItem>
                       <FormLabel>CEP</FormLabel>
                       <FormControl>
-                        <Input placeholder="00000000" {...field} />
+                        <Input
+                          placeholder="00000000"
+                          {...field}
+                          disabled={!isEditing}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -344,7 +376,11 @@ export function ProfileForm() {
                     <FormItem>
                       <FormLabel>Cidade</FormLabel>
                       <FormControl>
-                        <Input placeholder="Sua cidade" {...field} />
+                        <Input
+                          placeholder="Sua cidade"
+                          {...field}
+                          disabled={!isEditing}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -361,6 +397,7 @@ export function ProfileForm() {
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
+                          disabled={!isEditing}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Selecione um estado" />
@@ -382,8 +419,24 @@ export function ProfileForm() {
             </div>
           </CardContent>
         </Card>
-        <div className="flex justify-end">
-          <Button type="submit" disabled={isLoading}>
+        <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={() => setIsEditing(false)}
+            disabled={!isEditing}
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="button"
+            variant={isEditing ? 'ghost' : 'secondary'}
+            onClick={() => setIsEditing(true)}
+            disabled={isEditing}
+          >
+            Editar
+          </Button>
+          <Button type="submit" disabled={isLoading || !isEditing}>
             {isLoading ? 'Salvando...' : 'Salvar alterações'}
           </Button>
         </div>

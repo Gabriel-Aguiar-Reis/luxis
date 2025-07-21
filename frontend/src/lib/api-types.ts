@@ -80,7 +80,7 @@ export type UpdateShipmentStatus = paths['/shipments/{id}/status']['patch']
 // Users
 
 export type User = components['schemas']['User']
-export type FederalUnit = components['schemas']['FederativeUnit']
+export type FederativeUnit = components['schemas']['FederativeUnit']
 export type Country = components['schemas']['Country']
 export type UserRole = components['schemas']['Role']
 export type UserStatus = components['schemas']['UserStatus']
@@ -129,6 +129,7 @@ export type TransferCustomerOwnership =
 export type Login = paths['/auth/login']['post']
 export type ForgotPassword = paths['/auth/forgot-password']['post']
 export type ResetPassword = paths['/auth/reset-password']['post']
+export type ChangePassword = paths['/auth/change-password']['post']
 export type Verify = paths['/auth/verify']['post']
 
 // KPI - Admin

@@ -58,7 +58,7 @@ export function SecurityForm() {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { resetPassword, accessToken } = useAuthStore()
+  const { changePassword, user } = useAuthStore()
 
   const passwordForm = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordFormSchema),
@@ -71,13 +71,13 @@ export function SecurityForm() {
 
   const handlePasswordSubmit = (values: PasswordFormValues) => {
     setIsLoading(true)
-    if (!accessToken) {
-      toast.error('Token de autenticação não encontrado.')
+    if (!user) {
+      toast.error('Usuário não encontrado.')
       setIsLoading(false)
       return
     }
-    resetPassword({
-      token: accessToken,
+    changePassword({
+      userId: user.id,
       newPassword: values.newPassword
     })
       .then(() => {
