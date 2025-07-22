@@ -662,6 +662,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change password */
+        post: operations["change-password"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/reset-password-page": {
         parameters: {
             query?: never;
@@ -1409,6 +1426,20 @@ export interface components {
              */
             entries: components["schemas"]["ProductEntryDto"][];
         };
+        CategoryName: {
+            /**
+             * @description The name of the category
+             * @example Smartphones
+             */
+            value: string;
+        };
+        Description: {
+            /**
+             * @description The description of the product model
+             * @example Latest iPhone model with advanced features
+             */
+            value: string;
+        };
         Category: {
             /**
              * @description The ID of the category
@@ -1419,12 +1450,12 @@ export interface components {
              * @description The name of the category
              * @example Smartphones
              */
-            name: string;
+            name: components["schemas"]["CategoryName"];
             /**
              * @description The description of the category
              * @example Electronic devices for communication
              */
-            description?: string;
+            description?: components["schemas"]["Description"];
             /**
              * @description The status of the category
              * @example ACTIVE
@@ -1546,6 +1577,20 @@ export interface components {
              */
             transferDate?: string;
         };
+        SerialNumber: {
+            /**
+             * @description The serial number of the product
+             * @example 0424A-BR-BAB-001
+             */
+            value: string;
+        };
+        Currency: {
+            /**
+             * @description The currency value in string format
+             * @example 100.00
+             */
+            value: string;
+        };
         Product: {
             /**
              * @description The ID of the product
@@ -1554,9 +1599,9 @@ export interface components {
             id: string;
             /**
              * @description The serial number of the product
-             * @example SN20240101001
+             * @example 0424A-BR-BAB-001
              */
-            serialNumber: string;
+            serialNumber: components["schemas"]["SerialNumber"];
             /**
              * @description The ID of the product model
              * @example 123e4567-e89b-12d3-a456-426614174000
@@ -1571,12 +1616,12 @@ export interface components {
              * @description The unit cost of the product
              * @example 100.00
              */
-            unitCost: string;
+            unitCost: components["schemas"]["Currency"];
             /**
              * @description The sale price of the product
              * @example 150.00
              */
-            salePrice: string;
+            salePrice: components["schemas"]["Currency"];
             /**
              * @description The status of the product
              * @example IN_STOCK
@@ -1601,6 +1646,20 @@ export interface components {
              */
             status?: string;
         };
+        ModelName: {
+            /**
+             * @description The name of the product model
+             * @example iPhone 13 Pro Max
+             */
+            value: string;
+        };
+        ImageURL: {
+            /**
+             * @description The URL of the product model photo
+             * @example https://example.com/iphone13.jpg
+             */
+            value: string;
+        };
         ProductModel: {
             /**
              * @description The ID of the product model
@@ -1611,7 +1670,7 @@ export interface components {
              * @description The name of the product model
              * @example iPhone 13 Pro Max
              */
-            name: string;
+            name: components["schemas"]["ModelName"];
             /**
              * @description The ID of the category
              * @example 123e4567-e89b-12d3-a456-426614174000
@@ -1621,17 +1680,17 @@ export interface components {
              * @description The suggested price of the product model
              * @example 999.99
              */
-            suggestedPrice: string;
+            suggestedPrice: components["schemas"]["Currency"];
             /**
              * @description The description of the product model
              * @example Latest iPhone model with advanced features
              */
-            description?: string;
+            description?: components["schemas"]["Description"];
             /**
              * @description The URL of the product model photo
              * @example https://example.com/iphone13.jpg
              */
-            photoUrl?: string;
+            photoUrl?: components["schemas"]["ImageURL"];
         };
         CreateProductModelDto: {
             /**
@@ -1868,6 +1927,73 @@ export interface components {
              */
             status: "PENDING" | "APPROVED" | "DELIVERED" | "CANCELLED";
         };
+        Name: {
+            /** @description The name of the user */
+            value: string;
+        };
+        PhoneNumber: {
+            /** @description The phone number of the user */
+            value: string;
+        };
+        Email: {
+            /** @description The email address of the user */
+            value: string;
+        };
+        PostalCode: {
+            /**
+             * @description The postal code in the format XXXXX-XXX
+             * @example 01001000
+             */
+            value: string;
+        };
+        Address: {
+            /**
+             * @description The street of the address
+             * @example Rua do Sistema
+             */
+            street: string;
+            /**
+             * @description The number of the address
+             * @example 1
+             */
+            number: number;
+            /**
+             * @description The neighborhood of the address
+             * @example Centro
+             */
+            neighborhood: string;
+            /**
+             * @description The city of the address
+             * @example São Paulo
+             */
+            city: string;
+            /**
+             * @description The federative unit of the address
+             * @example SP
+             * @enum {string}
+             */
+            federativeUnit: "AC" | "AL" | "AP" | "AM" | "BA" | "CE" | "DF" | "ES" | "GO" | "MA" | "MT" | "MS" | "MG" | "PA" | "PB" | "PR" | "PE" | "PI" | "RJ" | "RN" | "RS" | "RO" | "RR" | "SC" | "SP" | "SE" | "TO";
+            /**
+             * @description The postal code of the address
+             * @example 01001000
+             */
+            postalCode: components["schemas"]["PostalCode"];
+            /**
+             * @description The country of the address
+             * @example Brasil
+             * @enum {string}
+             */
+            country: "Brasil";
+            /**
+             * @description The complement of the address
+             * @example Apto 101
+             */
+            complement: string;
+        };
+        Residence: {
+            /** @description The address of the residence */
+            address: components["schemas"]["Address"];
+        };
         User: {
             /**
              * @description The ID of the user
@@ -1878,22 +2004,22 @@ export interface components {
              * @description The first name of the user
              * @example John
              */
-            name: string;
+            name: components["schemas"]["Name"];
             /**
              * @description The last name of the user
              * @example Doe
              */
-            surname: string;
+            surname: components["schemas"]["Name"];
             /**
              * @description The phone number of the user
              * @example +5511999999999
              */
-            phone: string;
+            phone: components["schemas"]["PhoneNumber"];
             /**
              * @description The email of the user
              * @example john.doe@example.com
              */
-            email: string;
+            email: components["schemas"]["Email"];
             /**
              * @description The hashed password of the user
              * @example $2b$10$abcdefghijklmnopqrstuvwxyz
@@ -1905,8 +2031,24 @@ export interface components {
              * @enum {string}
              */
             role: "ADMIN" | "RESELLER" | "ASSISTANT" | "UNASSIGNED";
-            /** @description The residence information of the user */
-            residence: Record<string, never>;
+            /**
+             * @description The residence information of the user
+             * @example {
+             *       "address": {
+             *         "street": "Rua do Sistema",
+             *         "number": "1",
+             *         "neighborhood": "Centro",
+             *         "city": "São Paulo",
+             *         "federativeUnit": "SP",
+             *         "postalCode": {
+             *           "value": "01001000"
+             *         },
+             *         "country": "Brasil",
+             *         "complement": "Sistema"
+             *       }
+             *     }
+             */
+            residence: components["schemas"]["Residence"];
             /**
              * @description The status of the user
              * @example ACTIVE
@@ -2275,6 +2417,18 @@ export interface components {
              * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
              */
             token: string;
+            /**
+             * @description New password (must contain at least 10 characters, one uppercase, one lowercase, one number and one special character)
+             * @example NewPassword123!
+             */
+            newPassword: string;
+        };
+        ChangePasswordDto: {
+            /**
+             * @description User ID for whom the password is being changed
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            userId: string;
             /**
              * @description New password (must contain at least 10 characters, one uppercase, one lowercase, one number and one special character)
              * @example NewPassword123!
@@ -5447,6 +5601,43 @@ export interface operations {
             };
             /** @description Invalid or expired token */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Change password request */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Password changed successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized - Invalid current password */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

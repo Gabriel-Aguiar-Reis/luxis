@@ -1,9 +1,17 @@
 import { BadRequestException } from '@nestjs/common'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class CategoryName {
-  constructor(private readonly value: string) {
+  @ApiProperty({
+    description: 'The name of the category',
+    example: 'Smartphones',
+    type: String
+  })
+  private value: string
+  constructor(value: string) {
     if (!this.validate(value))
       throw new BadRequestException('Invalid category name format')
+    this.value = value
   }
 
   private validate(name: string): boolean {

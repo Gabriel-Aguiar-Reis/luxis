@@ -1,11 +1,19 @@
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 import { BadRequestException } from '@nestjs/common'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class SerialNumber {
-  constructor(private value: string) {
+  @ApiProperty({
+    description: 'The serial number of the product',
+    example: '0424A-BR-BAB-001',
+    type: String
+  })
+  private value: string
+  constructor(value: string) {
     if (!SerialNumber.isValid(value)) {
       throw new BadRequestException(`Invalid serial number format: ${value}`)
     }
+    this.value = value
   }
 
   static generate(
@@ -38,7 +46,15 @@ export class SerialNumber {
   }
 
   private static abbreviate(name: string): string {
-    const words = name.trim().split(/\s+/)
+    // Remove accents and replace ç with c
+    const normalize = (str: string) =>
+      str
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .replace(/ç/gi, 'c')
+
+    const cleanName = normalize(name)
+    const words = cleanName.trim().split(/\s+/)
 
     if (words.length === 1) {
       return words[0].slice(0, 3).toUpperCase()

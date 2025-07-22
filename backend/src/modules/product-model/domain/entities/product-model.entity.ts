@@ -16,7 +16,7 @@ export class ProductModel {
   @ApiProperty({
     description: 'The name of the product model',
     example: 'iPhone 13 Pro Max',
-    type: String
+    type: ModelName
   })
   public name: ModelName
 
@@ -30,14 +30,14 @@ export class ProductModel {
   @ApiProperty({
     description: 'The suggested price of the product model',
     example: '999.99',
-    type: String
+    type: Currency
   })
   public suggestedPrice: Currency
 
   @ApiProperty({
     description: 'The description of the product model',
     example: 'Latest iPhone model with advanced features',
-    type: String,
+    type: Description,
     required: false
   })
   public description?: Description
@@ -45,7 +45,7 @@ export class ProductModel {
   @ApiProperty({
     description: 'The URL of the product model photo',
     example: 'https://example.com/iphone13.jpg',
-    type: String,
+    type: ImageURL,
     required: false
   })
   public photoUrl?: ImageURL
