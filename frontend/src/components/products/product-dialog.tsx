@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import {
   Dialog,
@@ -21,14 +20,9 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Upload } from 'lucide-react'
-import { GetAllProductModels, Product, ProductModel } from '@/lib/api-types'
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
+import { Product, ProductModel } from '@/lib/api-types'
 
 type ProductStatus = Product['status']
-type GetAllProductModelsResponse =
-  GetAllProductModels['responses']['200']['content']['application/json']
 
 type ProductDialogProps = {
   product: Product | null
@@ -130,7 +124,6 @@ export function ProductDialog({
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
-              {/* Número de Série */}
               <div className="space-y-2">
                 <Label htmlFor="serialNumber">Nº de Série</Label>
                 <Input
@@ -143,7 +136,6 @@ export function ProductDialog({
                   disabled
                 />
               </div>
-              {/* Status */}
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
                 <Select
@@ -163,7 +155,6 @@ export function ProductDialog({
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {/* Modelo */}
               <div className="space-y-2">
                 <Label htmlFor="modelId">Modelo</Label>
                 <Select
@@ -185,7 +176,6 @@ export function ProductDialog({
                   </SelectContent>
                 </Select>
               </div>
-              {/* Lote (opcional) */}
               <div className="space-y-2">
                 <Label htmlFor="batchId">Lote</Label>
                 <Input
@@ -199,7 +189,6 @@ export function ProductDialog({
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {/* Custo Unitário */}
               <div className="space-y-2">
                 <Label htmlFor="unitCost">Custo Unitário (R$) *</Label>
                 <Input
@@ -214,7 +203,6 @@ export function ProductDialog({
                   required
                 />
               </div>
-              {/* Preço de Venda */}
               <div className="space-y-2">
                 <Label htmlFor="salePrice">Preço de Venda (R$) *</Label>
                 <Input

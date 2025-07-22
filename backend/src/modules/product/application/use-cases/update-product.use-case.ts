@@ -17,6 +17,9 @@ export class UpdateProductUseCase {
     if (!product) {
       throw new NotFoundException('Product not found')
     }
+    if (product.status === 'SOLD') {
+      throw new NotFoundException('Cannot update a sold product')
+    }
     product! = new Product(
       product.id,
       product.serialNumber,
