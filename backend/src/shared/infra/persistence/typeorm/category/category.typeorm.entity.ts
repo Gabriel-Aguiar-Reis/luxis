@@ -1,22 +1,18 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
-import { CategoryStatus } from '@/modules/category/domain/enums/category.enum'
 import { UUID } from 'crypto'
+import { CategoryStatus } from '@/modules/category/domain/enums/category.enum'
 
 @Entity('categories')
 export class CategoryTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column()
+  @Column({ name: 'name' })
   name: string
 
-  @Column({ nullable: true })
+  @Column({ name: 'description', nullable: true })
   description: string
 
-  @Column({
-    type: 'enum',
-    enum: CategoryStatus,
-    default: CategoryStatus.ACTIVE
-  })
+  @Column('enum', { name: 'status', enum: CategoryStatus })
   status: CategoryStatus
 }

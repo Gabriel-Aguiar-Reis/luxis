@@ -8,33 +8,33 @@ export class SaleTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column('uuid')
+  @Column('uuid', { name: 'customer_id', nullable: true })
   customerId: UUID
 
-  @Column('uuid')
+  @Column('uuid', { name: 'reseller_id' })
   resellerId: UUID
 
-  @Column('uuid', { array: true })
+  @Column('uuid', { array: true, name: 'product_ids' })
   productIds: UUID[]
 
-  @Column('timestamp')
+  @Column('date', { name: 'sale_date' })
   saleDate: Date
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  totalAmount: number
+  @Column('decimal', { precision: 10, scale: 2, name: 'total_amount' })
+  totalAmount: string
 
-  @Column('enum', { enum: PaymentMethod })
+  @Column('enum', { name: 'payment_method', enum: PaymentMethod })
   paymentMethod: PaymentMethod
 
-  @Column('int')
+  @Column('int', { name: 'number_installments' })
   numberInstallments: number
 
-  @Column('int')
+  @Column('int', { name: 'installments_interval' })
   installmentsInterval: number
 
-  @Column('enum', { enum: SaleStatus })
+  @Column('enum', { name: 'status', enum: SaleStatus })
   status: SaleStatus
 
-  @Column('boolean', { array: true })
-  installments: boolean[]
+  @Column('int', { name: 'installments_paid', default: 0 })
+  installmentsPaid: number
 }

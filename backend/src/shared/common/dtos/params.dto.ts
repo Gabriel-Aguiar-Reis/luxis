@@ -5,8 +5,8 @@ import { Type } from 'class-transformer'
 export class ParamsDto {
   @ApiProperty({
     type: 'string',
-    format: 'date',
-    example: '2025-01-01',
+    format: 'date-time',
+    example: '2025-01-01T00:00:00Z',
     required: false
   })
   @IsOptional()
@@ -16,8 +16,8 @@ export class ParamsDto {
 
   @ApiProperty({
     type: 'string',
-    format: 'date',
-    example: '2025-01-01',
+    format: 'date-time',
+    example: '2025-01-01T00:00:00Z',
     required: false
   })
   @IsOptional()
@@ -32,6 +32,7 @@ export class ParamsDto {
   })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   limit?: number
 
   @ApiPropertyOptional({
@@ -41,5 +42,6 @@ export class ParamsDto {
   })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   page?: number
 }

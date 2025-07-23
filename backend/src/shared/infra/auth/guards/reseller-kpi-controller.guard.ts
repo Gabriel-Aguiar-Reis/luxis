@@ -32,7 +32,7 @@ export class ResellerKpiControllerGuard implements CanActivate {
       role: user.role
     })
 
-    if (!ability.can(Actions.Read, 'reseller-kpi')) {
+    if (!ability.can(Actions.Create, 'reseller-kpi')) {
       throw new ForbiddenException(
         'You do not have permission to access this resource'
       )

@@ -24,21 +24,9 @@ export class Batch {
   })
   public supplierId: UUID
 
-  @ApiProperty({
-    description: 'The items in the batch',
-    type: [BatchItem]
-  })
-  public items: BatchItem[]
-
-  constructor(
-    id: UUID,
-    arrivalDate: Date,
-    supplierId: UUID,
-    items: BatchItem[] = []
-  ) {
+  constructor(id: UUID, arrivalDate: Date, supplierId: UUID) {
     this.id = id
     this.arrivalDate = arrivalDate
     this.supplierId = supplierId
-    this.items = items
   }
 }

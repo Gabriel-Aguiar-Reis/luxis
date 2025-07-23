@@ -1,18 +1,14 @@
-import { BatchItemTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch-item.typeorm.entity'
 import { UUID } from 'crypto'
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 
 @Entity('batches')
 export class BatchTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column('timestamp')
+  @Column('date', { name: 'arrival_date' })
   arrivalDate: Date
 
-  @Column('uuid')
+  @Column('uuid', { name: 'supplier_id' })
   supplierId: UUID
-
-  @OneToMany(() => BatchItemTypeOrmEntity, (item) => item.batch)
-  items: BatchItemTypeOrmEntity[]
 }

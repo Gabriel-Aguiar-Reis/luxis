@@ -24,7 +24,8 @@ import {
   Param,
   Patch,
   Delete,
-  UseInterceptors
+  UseInterceptors,
+  HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -55,7 +56,7 @@ export class SaleController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all sales' })
+  @ApiOperation({ summary: 'Get all sales', operationId: 'getAllSales' })
   @ApiResponse({
     status: 200,
     description: 'List of sales returned successfully',
@@ -64,9 +65,10 @@ export class SaleController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadSalePolicy())
-  @Get()
   @CacheKey('all-sales')
   @CacheTTL(300)
+  @HttpCode(200)
+  @Get()
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all sales - Requested by user ${user.email}`,
@@ -75,13 +77,18 @@ export class SaleController {
     return await this.getAllSaleUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific sale' })
+  @ApiOperation({ summary: 'Get a specific sale', operationId: 'getOneSale' })
   @ApiParam({ name: 'id', description: 'Sale ID' })
-  @ApiResponse({ status: 200, description: 'Sale found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale found successfully',
+    type: Sale
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Sale not found' })
   @CheckPolicies(new ReadSalePolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -91,12 +98,17 @@ export class SaleController {
     return await this.getOneSaleUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Create a new sale' })
+  @ApiOperation({ summary: 'Create a new sale', operationId: 'createSale' })
   @ApiBody({ type: CreateSaleDto })
-  @ApiResponse({ status: 201, description: 'Sale created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Sale created successfully',
+    type: Sale
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateSalePolicy())
+  @HttpCode(201)
   @Post()
   async create(@Body() dto: CreateSaleDto, @CurrentUser() user: UserPayload) {
     this.logger.warn(
@@ -106,13 +118,18 @@ export class SaleController {
     return await this.createSaleUseCase.execute(dto, user)
   }
 
-  @ApiOperation({ summary: 'Update a sale' })
+  @ApiOperation({ summary: 'Update a sale', operationId: 'updateSale' })
   @ApiParam({ name: 'id', description: 'Sale ID' })
   @ApiBody({ type: CreateSaleDto })
-  @ApiResponse({ status: 200, description: 'Sale updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale updated successfully',
+    type: Sale
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateSalePolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -126,12 +143,16 @@ export class SaleController {
     return this.updateSaleUseCase.execute(id, dto, user)
   }
 
-  @ApiOperation({ summary: 'Delete a sale' })
+  @ApiOperation({ summary: 'Delete a sale', operationId: 'deleteSale' })
   @ApiParam({ name: 'id', description: 'Sale ID' })
-  @ApiResponse({ status: 200, description: 'Sale deleted successfully' })
+  @ApiResponse({
+    status: 204,
+    description: 'Sale deleted successfully'
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteSalePolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(
@@ -141,13 +162,21 @@ export class SaleController {
     return await this.deleteSaleUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Mark installment as paid' })
+  @ApiOperation({
+    summary: 'Mark installment as paid',
+    operationId: 'markInstallmentPaid'
+  })
   @ApiParam({ name: 'id', description: 'Sale ID' })
   @ApiBody({ type: MarkInstallmentPaidDto })
-  @ApiResponse({ status: 200, description: 'Installment marked as paid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Installment marked as paid',
+    type: Sale
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateSalePolicy())
+  @HttpCode(200)
   @Patch(':id/installments/mark-paid')
   async markInstallmentPaid(
     @Param('id') id: UUID,

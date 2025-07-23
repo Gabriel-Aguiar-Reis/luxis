@@ -17,7 +17,8 @@ import {
   Param,
   Delete,
   Get,
-  UseInterceptors
+  UseInterceptors,
+  HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -48,7 +49,7 @@ export class BatchController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all batches' })
+  @ApiOperation({ summary: 'Get all batches', operationId: 'getAllBatches' })
   @ApiResponse({
     status: 200,
     description: 'List of batches returned successfully',
@@ -57,9 +58,10 @@ export class BatchController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadBatchPolicy())
-  @Get()
   @CacheKey('all-batches')
   @CacheTTL(300)
+  @HttpCode(200)
+  @Get()
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all batches - Requested by user ${user.email}`,
@@ -68,13 +70,18 @@ export class BatchController {
     return this.getAllBatchUseCase.execute()
   }
 
-  @ApiOperation({ summary: 'Get a specific batch' })
+  @ApiOperation({ summary: 'Get a specific batch', operationId: 'getOneBatch' })
   @ApiParam({ name: 'id', description: 'Batch ID' })
-  @ApiResponse({ status: 200, description: 'Batch found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Batch found successfully',
+    type: Batch
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Batch not found' })
   @CheckPolicies(new ReadBatchPolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -84,12 +91,17 @@ export class BatchController {
     return this.getOneBatchUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Create a new batch' })
+  @ApiOperation({ summary: 'Create a new batch', operationId: 'createBatch' })
   @ApiBody({ type: CreateBatchDto })
-  @ApiResponse({ status: 201, description: 'Batch created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Batch created successfully',
+    type: Batch
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateBatchPolicy())
+  @HttpCode(201)
   @Post()
   async create(@Body() dto: CreateBatchDto, @CurrentUser() user: UserPayload) {
     this.logger.warn(
@@ -99,18 +111,19 @@ export class BatchController {
     return this.createBatchUseCase.execute(dto)
   }
 
-  @ApiOperation({ summary: 'Delete a batch' })
+  @ApiOperation({ summary: 'Delete a batch', operationId: 'deleteBatch' })
   @ApiParam({ name: 'id', description: 'Batch ID' })
-  @ApiResponse({ status: 200, description: 'Batch deleted successfully' })
+  @ApiResponse({ status: 204, description: 'Batch deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteBatchPolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(
       `Deleting batch ${id} - Requested by user ${user.email}`,
       'BatchController'
     )
-    return this.deleteBatchUseCase.execute(id)
+    await this.deleteBatchUseCase.execute(id)
   }
 }

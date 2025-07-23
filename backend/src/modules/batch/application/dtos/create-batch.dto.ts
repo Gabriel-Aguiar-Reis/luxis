@@ -7,7 +7,7 @@ import {
 } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
-import { CreateBatchItemDto } from '@/modules/batch/application/dtos/create-batch-item.dto'
+import { ProductEntryDto } from '@/modules/batch/application/dtos/product-entry-dto'
 
 export class CreateBatchDto {
   @ApiProperty({
@@ -42,10 +42,10 @@ export class CreateBatchDto {
         modelId: '123e4567-e89b-12d3-a456-426614174000'
       }
     ],
-    type: [CreateBatchItemDto],
+    type: [ProductEntryDto],
     required: true
   })
   @IsArray()
   @ArrayNotEmpty()
-  items: CreateBatchItemDto[]
+  entries: ProductEntryDto[]
 }

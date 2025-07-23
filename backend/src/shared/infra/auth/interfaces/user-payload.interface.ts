@@ -7,4 +7,5 @@ export interface UserPayload {
   email: string
   role: Role
   status: UserStatus
+  name: string
 }

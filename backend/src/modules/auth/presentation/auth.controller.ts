@@ -5,7 +5,10 @@ import {
   Get,
   Query,
   Res,
-  UseInterceptors
+  UseInterceptors,
+  Headers,
+  UnauthorizedException,
+  HttpCode
 } from '@nestjs/common'
 import { AuthService } from '@/modules/auth/application/services/auth.service'
 import { LoginDto } from '@/modules/auth/application/dtos/login.dto'
@@ -24,6 +27,10 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
+import { AccessTokenDto } from '@/modules/auth/application/dtos/access-token.dto'
+import { UUID } from 'crypto'
+import { ChangePasswordDto } from '@/modules/auth/application/dtos/change-password.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -43,10 +50,15 @@ export class AuthController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Login' })
+  @ApiOperation({ summary: 'Login', operationId: 'login' })
   @ApiBody({ type: LoginDto })
-  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful',
+    type: AccessTokenDto
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @HttpCode(200)
   @Post('login')
   async login(@Body() dto: LoginDto) {
     this.logger.log(
@@ -56,25 +68,47 @@ export class AuthController {
     return await this.authService.login(dto)
   }
 
-  @ApiOperation({ summary: 'Forgot password' })
+  @ApiOperation({ summary: 'Forgot password', operationId: 'forgot-password' })
   @ApiBody({ type: RequestPasswordResetDto })
-  @ApiResponse({ status: 200, description: 'Forgot password successful' })
+  @ApiResponse({ status: 204, description: 'Forgot password successful' })
   @ApiResponse({ status: 404, description: 'User not found' })
+  @HttpCode(204)
   @Post('forgot-password')
   async forgotPassword(@Body() dto: RequestPasswordResetDto): Promise<void> {
     return this.authService.forgotPassword(new Email(dto.email))
   }
 
-  @ApiOperation({ summary: 'Reset password' })
+  @ApiOperation({ summary: 'Reset password', operationId: 'reset-password' })
   @ApiBody({ type: ResetPasswordDto })
-  @ApiResponse({ status: 200, description: 'Password reset successful' })
+  @ApiResponse({ status: 204, description: 'Password reset successful' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token' })
+  @HttpCode(204)
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     await this.authService.resetPassword(dto.token, dto.newPassword)
   }
 
-  @ApiOperation({ summary: 'Reset password page (Development only)' })
+  @ApiOperation({
+    summary: 'Change password',
+    operationId: 'change-password'
+  })
+  @ApiBody({
+    type: ChangePasswordDto,
+    description: 'Change password request',
+  })
+  @ApiResponse({ status: 204, description: 'Password changed successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid current password' })
+  @HttpCode(204)
+  @Post('change-password')
+  async changePassword(@Body() dto: ChangePasswordDto) {
+    await this.authService.changePassword(dto)
+  }
+
+  @ApiOperation({
+    summary: 'Reset password page (Development only)',
+    operationId: 'reset-password-page'
+  })
   @ApiQuery({
     name: 'token',
     required: true,
@@ -99,5 +133,27 @@ export class AuthController {
   @Get('reset-password-page/script.js')
   async getScript(@Res() res: Response) {
     res.sendFile(join(this.templatesPath, 'script.js'))
+  }
+
+  @ApiOperation({ summary: 'Verify JWT token', operationId: 'verify-token' })
+  @ApiResponse({ status: 200, description: 'Token is valid', type: VerifyDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid token' })
+  @HttpCode(200)
+  @Post('verify')
+  async verify(@Headers('authorization') authHeader: string) {
+    try {
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        throw new UnauthorizedException('Invalid token format')
+      }
+
+      const token = authHeader.split(' ')[1]
+      return await this.authService.verifyToken(token)
+    } catch (error) {
+      this.logger.error(
+        `Token verification failed: ${error.message}`,
+        'AuthController'
+      )
+      throw new UnauthorizedException('Invalid token')
+    }
   }
 }

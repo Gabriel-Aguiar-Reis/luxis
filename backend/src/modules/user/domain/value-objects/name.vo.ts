@@ -1,13 +1,18 @@
 import { BadRequestException } from '@nestjs/common'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class Name {
-  constructor(private readonly value: string) {
+  @ApiProperty({ description: 'The name of the user', type: String })
+  private value: string
+  constructor(value: string) {
     if (!this.validate(value))
       throw new BadRequestException('Invalid name format')
+    this.value = value
   }
 
   private validate(name: string): boolean {
-    return /^([A-Z][a-z]+|de|da|do|dos|das|e)(\s([A-Z][a-z]+|de|da|do|dos|das|e))*$/.test(
+    // Permite nomes com letras acentuadas, hífen, cedilha e palavras minúsculas comuns
+    return /^([A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+|de|da|do|dos|das|e)([- ]([A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+|de|da|do|dos|das|e))*$/.test(
       name
     )
   }

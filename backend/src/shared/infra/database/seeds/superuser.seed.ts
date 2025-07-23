@@ -13,6 +13,7 @@ import { FederativeUnit } from '@/modules/user/domain/enums/federative-unit.enum
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
+import { UUID } from 'crypto'
 
 @Injectable()
 export class SuperuserSeed {
@@ -22,7 +23,7 @@ export class SuperuserSeed {
     private readonly appConfigService: AppConfigService
   ) {}
 
-  async run(): Promise<void> {
+  async run(): Promise<{ id: UUID; email: string }> {
     if (
       !this.appConfigService.getSuperuserEmail() ||
       !this.appConfigService.getSuperuserName() ||
@@ -46,10 +47,10 @@ export class SuperuserSeed {
       'Sistema'
     )
 
-    await this.userRepository.create({
+    const user = await this.userRepository.create({
       id: crypto.randomUUID(),
       name: new Name(this.appConfigService.getSuperuserName()!),
-      surName: new Name(this.appConfigService.getSuperuserSurName()!),
+      surname: new Name(this.appConfigService.getSuperuserSurName()!),
       email: new Email(this.appConfigService.getSuperuserEmail()!),
       phone: new PhoneNumber(this.appConfigService.getSuperuserPhone()!),
       passwordHash,
@@ -57,5 +58,7 @@ export class SuperuserSeed {
       status: UserStatus.ACTIVE,
       residence: new Residence(defaultAddress)
     })
+
+    return { id: user.id, email: user.email.getValue() }
   }
 }

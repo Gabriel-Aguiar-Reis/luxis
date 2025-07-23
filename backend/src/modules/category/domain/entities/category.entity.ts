@@ -15,14 +15,14 @@ export class Category {
   @ApiProperty({
     description: 'The name of the category',
     example: 'Smartphones',
-    type: String
+    type: CategoryName
   })
   public name: CategoryName
 
   @ApiProperty({
     description: 'The description of the category',
     example: 'Electronic devices for communication',
-    type: String,
+    type: Description,
     required: false
   })
   public description?: Description

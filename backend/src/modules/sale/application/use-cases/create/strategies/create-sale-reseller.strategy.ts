@@ -8,6 +8,8 @@ import { ISalePriceCalculator } from '@/modules/sale/domain/services/sale-price-
 import { IInventoryOwnershipVerifier } from '@/modules/sale/domain/services/inventory-ownership-verify.interface'
 import { SaleStatus } from '@/modules/sale/domain/enums/sale-status.enum'
 import { Unit } from '@/shared/common/value-object/unit.vo'
+import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
+import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
 
 @Injectable()
 export class CreateSaleResellerStrategy implements CreateSaleStrategy {
@@ -17,7 +19,9 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
     @Inject('SalePriceCalculator')
     private readonly salePriceCalculator: ISalePriceCalculator,
     @Inject('InventoryOwnershipVerifier')
-    private readonly inventoryOwnershipVerifier: IInventoryOwnershipVerifier
+    private readonly inventoryOwnershipVerifier: IInventoryOwnershipVerifier,
+    @Inject('ProductRepository')
+    private readonly productRepository: ProductRepository
   ) {}
 
   async execute(dto: CreateSaleDto, user: UserPayload): Promise<Sale> {
@@ -33,8 +37,8 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
 
     const sale = new Sale(
       crypto.randomUUID(),
-      user.id,
       dto.customerId,
+      user.id,
       dto.productIds,
       dto.saleDate,
       totalAmount,
@@ -44,6 +48,9 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
       new Unit(dto.installmentsInterval)
     )
 
-    return this.saleRepository.create(sale)
+    const saleConfirmed = await this.saleRepository.create(sale)
+
+    this.productRepository.updateManyStatus(dto.productIds, ProductStatus.SOLD)
+    return saleConfirmed
   }
 }

@@ -7,12 +7,7 @@ import {
   IsNumber,
   IsOptional
 } from 'class-validator'
-import { Name } from '@/modules/user/domain/value-objects/name.vo'
-import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
-import { Email } from '@/shared/common/value-object/email.vo'
-import { PostalCode } from '@/modules/user/domain/value-objects/postal-code.vo'
 import { Country } from '@/modules/user/domain/enums/country.enum'
-import { Password } from '@/modules/user/domain/value-objects/password.vo'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class UpdateUserDto {
@@ -21,7 +16,8 @@ export class UpdateUserDto {
     minLength: 2,
     maxLength: 50,
     example: 'John',
-    type: Name
+    type: String,
+    required: false
   })
   @IsString()
   @Length(2, 50)
@@ -33,17 +29,19 @@ export class UpdateUserDto {
     minLength: 2,
     maxLength: 50,
     example: 'Doe',
-    type: Name
+    type: String,
+    required: false
   })
   @IsString()
   @Length(2, 50)
   @IsOptional()
-  surName?: string
+  surname?: string
 
   @ApiProperty({
     description: 'The new phone number for the user',
     example: '+5511999999999',
-    type: PhoneNumber
+    type: String,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -52,7 +50,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new email for the user',
     example: 'john.doe@example.com',
-    type: Email
+    type: String,
+    required: false
   })
   @IsEmail()
   @IsOptional()
@@ -61,7 +60,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new password for the user',
     example: 'Password@123',
-    type: Password
+    type: String,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -70,7 +70,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new street for the user',
     example: 'Rua das Flores',
-    type: String
+    type: String,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -79,7 +80,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new number for the user',
     example: 123,
-    type: Number
+    type: Number,
+    required: false
   })
   @IsNumber()
   @IsOptional()
@@ -88,7 +90,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new complement for the user',
     example: 'Apto 101',
-    type: String
+    type: String,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -97,7 +100,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new neighborhood for the user',
     example: 'Bairro das Flores',
-    type: String
+    type: String,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -106,7 +110,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new city for the user',
     example: 'São Paulo',
-    type: String
+    type: String,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -116,7 +121,8 @@ export class UpdateUserDto {
     description: 'The new federative unit for the user',
     enum: FederativeUnit,
     example: FederativeUnit.SP,
-    enumName: 'FederativeUnit'
+    enumName: 'FederativeUnit',
+    required: false
   })
   @IsEnum(FederativeUnit)
   @IsOptional()
@@ -125,7 +131,8 @@ export class UpdateUserDto {
   @ApiProperty({
     description: 'The new postal code for the user',
     example: '01234-567',
-    type: PostalCode
+    type: String,
+    required: false
   })
   @IsString()
   @IsOptional()
@@ -135,7 +142,8 @@ export class UpdateUserDto {
     description: 'The new country for the user',
     enum: Country,
     example: Country.BRAZIL,
-    enumName: 'Country'
+    enumName: 'Country',
+    required: false
   })
   @IsString()
   @IsOptional()

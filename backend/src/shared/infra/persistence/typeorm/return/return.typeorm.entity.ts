@@ -1,24 +1,23 @@
+import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 import { UUID } from 'crypto'
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 @Entity('returns')
 export class ReturnTypeOrmEntity {
   @PrimaryGeneratedColumn('uuid')
   id: UUID
 
-  @Column()
+  @Column('uuid',{ name: 'reseller_id' })
   resellerId: UUID
 
-  @Column('uuid', { array: true })
-  items: UUID[]
+  @Column('uuid', { array: true, name: 'product_ids' })
+  productIds: UUID[]
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp', {
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   createdAt: Date
 
-  @Column({
-    type: 'enum',
-    enum: ReturnStatus,
-    default: ReturnStatus.PENDING
-  })
+  @Column('enum', { name: 'status', enum: ReturnStatus })
   status: ReturnStatus
 }

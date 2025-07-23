@@ -18,13 +18,18 @@ import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
+import { OwnershipTransferDispatchedHandler } from '@/modules/inventory/application/handlers/ownership-transfer-dispatched.handler'
+import { InventoryService } from '@/modules/inventory/application/services/inventory.service'
+import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.repository'
+import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       OwnershipTransferTypeOrmEntity,
       ProductTypeOrmEntity,
-      UserTypeOrmEntity
+      UserTypeOrmEntity,
+      InventoryTypeOrmEntity
     ]),
     forwardRef(() => AppModule)
   ],
@@ -33,6 +38,9 @@ import { CustomLogger } from '@/shared/infra/logging/logger.service'
     CustomLogger,
     AppConfigService,
     EventDispatcher,
+    OwnershipTransferDispatchedHandler,
+    { provide: 'InventoryService', useClass: InventoryService },
+    { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },
     CreateOwnershipTransferUseCase,
     GetAllOwnershipTransferUseCase,
     GetOneOwnershipTransferUseCase,

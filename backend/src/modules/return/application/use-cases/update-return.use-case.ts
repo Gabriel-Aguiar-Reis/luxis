@@ -30,7 +30,7 @@ export class UpdateReturnUseCase {
     returnEntity = new Return(
       returnEntity.id,
       input.resellerId ?? returnEntity.resellerId,
-      input.items ?? returnEntity.items,
+      input.items ?? returnEntity.productIds,
       returnEntity.status,
       returnEntity.createdAt
     )

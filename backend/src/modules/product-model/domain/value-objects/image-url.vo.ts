@@ -1,9 +1,17 @@
 import { BadRequestException } from '@nestjs/common'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class ImageURL {
-  constructor(private readonly value: string) {
+  @ApiProperty({
+    description: 'The URL of the product model photo',
+    example: 'https://example.com/iphone13.jpg',
+    type: String
+  })
+  private value: string
+  constructor(value: string) {
     if (!this.validate(value))
       throw new BadRequestException('Invalid image URL')
+    this.value = value
   }
 
   private validate(value: string): boolean {
@@ -15,9 +23,10 @@ export class ImageURL {
 
     const path = url.pathname.toLowerCase()
     const validExtensions = ['.jpg', '.jpeg', '.png', '.webp']
+    const isDummy = url.hostname.includes('dummyimage.com')
     const hasValidExtension = validExtensions.some((ext) => path.endsWith(ext))
 
-    if (!hasValidExtension) return false
+    if (!hasValidExtension && !isDummy) return false
 
     return true
   }

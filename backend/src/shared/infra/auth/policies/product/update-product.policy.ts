@@ -1,11 +1,11 @@
 import { AppAbility } from '@/shared/infra/auth/casl/casl-ability.factory'
-import { IPolicyHandler } from '@/shared/infra/auth/interfaces/policy-handler.interface'
+import { IPolicy } from '@/shared/infra/auth/interfaces/policy-handler.interface'
 import { Product } from '@/modules/product/domain/entities/product.entity'
 import { Actions } from '@/shared/infra/auth/enums/actions.enum'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class UpdateProductPolicy implements IPolicyHandler {
+export class UpdateProductPolicy implements IPolicy {
   handle(ability: AppAbility): boolean {
     return ability.can(Actions.Update, Product)
   }

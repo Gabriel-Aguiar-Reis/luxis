@@ -20,7 +20,8 @@ import {
   Get,
   Delete,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
+  HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
@@ -50,7 +51,7 @@ export class ProductController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all products' })
+  @ApiOperation({ summary: 'Get all products', operationId: 'getAllProducts' })
   @ApiResponse({
     status: 200,
     description: 'List of products returned successfully',
@@ -59,9 +60,10 @@ export class ProductController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductPolicy())
-  @Get()
   @CacheKey('all-products')
   @CacheTTL(300)
+  @HttpCode(200)
+  @Get()
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all products - Requested by user ${user.email}`,
@@ -70,13 +72,21 @@ export class ProductController {
     return await this.getAllProductUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific product' })
+  @ApiOperation({
+    summary: 'Get a specific product',
+    operationId: 'getOneProduct'
+  })
   @ApiParam({ name: 'id', description: 'Product ID' })
-  @ApiResponse({ status: 200, description: 'Product found successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product found successfully',
+    type: Product
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Product not found' })
   @CheckPolicies(new ReadProductPolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -86,13 +96,18 @@ export class ProductController {
     return await this.getOneProductUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Update a product' })
+  @ApiOperation({ summary: 'Update a product', operationId: 'updateProduct' })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiBody({ type: UpdateProductDto })
-  @ApiResponse({ status: 200, description: 'Product updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product updated successfully',
+    type: Product
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateProductPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -106,12 +121,13 @@ export class ProductController {
     return await this.updateProductUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Sell a product' })
+  @ApiOperation({ summary: 'Sell a product', operationId: 'sellProduct' })
   @ApiParam({ name: 'id', description: 'Product ID' })
-  @ApiResponse({ status: 200, description: 'Product sold successfully' })
+  @ApiResponse({ status: 204, description: 'Product sold successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateProductPolicy())
+  @HttpCode(204)
   @Patch(':id/sell')
   async sell(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(
@@ -121,12 +137,13 @@ export class ProductController {
     return await this.sellProductUseCase.execute(id)
   }
 
-  @ApiOperation({ summary: 'Delete a product' })
+  @ApiOperation({ summary: 'Delete a product', operationId: 'deleteProduct' })
   @ApiParam({ name: 'id', description: 'Product ID' })
-  @ApiResponse({ status: 200, description: 'Product deleted successfully' })
+  @ApiResponse({ status: 204, description: 'Product deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteProductPolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(

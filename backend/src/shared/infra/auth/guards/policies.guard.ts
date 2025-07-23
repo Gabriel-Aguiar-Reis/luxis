@@ -1,8 +1,8 @@
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CHECK_POLICIES_KEY } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import {
-  PolicyHandler,
-  PolicyHandlerCallback
+  IPolicy,
+  PolicyCallback
 } from '@/shared/infra/auth/interfaces/policy-handler.interface'
 import {
   CanActivate,
@@ -22,10 +22,8 @@ export class PoliciesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const handlers =
-      this.reflector.get<PolicyHandler[]>(
-        CHECK_POLICIES_KEY,
-        context.getHandler()
-      ) || []
+      this.reflector.get<IPolicy[]>(CHECK_POLICIES_KEY, context.getHandler()) ||
+      []
 
     const request = context.switchToHttp().getRequest()
     const user = request.user
@@ -33,7 +31,7 @@ export class PoliciesGuard implements CanActivate {
 
     return handlers.every((handler) => {
       return typeof handler === 'function'
-        ? (handler as PolicyHandlerCallback)(ability)
+        ? (handler as PolicyCallback)(ability)
         : handler.handle(ability)
     })
   }

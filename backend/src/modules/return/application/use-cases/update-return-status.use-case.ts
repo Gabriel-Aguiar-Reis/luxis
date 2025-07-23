@@ -37,7 +37,7 @@ export class UpdateReturnStatusUseCase {
     returnEntity = new Return(
       returnEntity.id,
       returnEntity.resellerId,
-      returnEntity.items,
+      returnEntity.productIds,
       status,
       returnEntity.createdAt
     )
@@ -48,7 +48,7 @@ export class UpdateReturnStatusUseCase {
       new ReturnConfirmedEvent(
         returnEntity.id,
         returnEntity.resellerId,
-        returnEntity.items,
+        returnEntity.productIds,
         user
       )
     )

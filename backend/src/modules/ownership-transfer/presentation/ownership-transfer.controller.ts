@@ -15,7 +15,8 @@ import {
   Get,
   Param,
   Patch,
-  UseGuards
+  UseGuards,
+  HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
 import { UpdateStatusOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/update-status-ownership-transfer.use-case'
@@ -53,7 +54,10 @@ export class OwnershipTransferController {
     private readonly logger: CustomLogger
   ) {}
 
-  @ApiOperation({ summary: 'Get all ownership transfers' })
+  @ApiOperation({
+    summary: 'Get all ownership transfers',
+    operationId: 'getAllOwnershipTransfers'
+  })
   @ApiResponse({
     status: 200,
     description: 'List of ownership transfers returned successfully',
@@ -62,6 +66,7 @@ export class OwnershipTransferController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadOwnershipTransferPolicy())
+  @HttpCode(200)
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -71,16 +76,21 @@ export class OwnershipTransferController {
     return await this.getAllOwnershipTransferUseCase.execute(user)
   }
 
-  @ApiOperation({ summary: 'Get a specific ownership transfer' })
+  @ApiOperation({
+    summary: 'Get a specific ownership transfer',
+    operationId: 'getOneOwnershipTransfer'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiResponse({
     status: 200,
-    description: 'Ownership transfer found successfully'
+    description: 'Ownership transfer found successfully',
+    type: OwnershipTransfer
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({ status: 404, description: 'Ownership transfer not found' })
   @CheckPolicies(new ReadOwnershipTransferPolicy())
+  @HttpCode(200)
   @Get(':id')
   async getOne(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.log(
@@ -90,15 +100,20 @@ export class OwnershipTransferController {
     return await this.getOneOwnershipTransferUseCase.execute(id, user)
   }
 
-  @ApiOperation({ summary: 'Create a new ownership transfer' })
+  @ApiOperation({
+    summary: 'Create a new ownership transfer',
+    operationId: 'createOwnershipTransfer'
+  })
   @ApiBody({ type: CreateOwnershipTransferDto })
   @ApiResponse({
     status: 201,
-    description: 'Ownership transfer created successfully'
+    description: 'Ownership transfer created successfully',
+    type: OwnershipTransfer
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new CreateOwnershipTransferPolicy())
+  @HttpCode(201)
   @Post()
   async create(
     @Body() dto: CreateOwnershipTransferDto,
@@ -111,16 +126,21 @@ export class OwnershipTransferController {
     return await this.createOwnershipTransferUseCase.execute(dto, user)
   }
 
-  @ApiOperation({ summary: 'Update a ownership transfer' })
+  @ApiOperation({
+    summary: 'Update a ownership transfer',
+    operationId: 'updateOwnershipTransfer'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiBody({ type: UpdateOwnershipTransferDto })
   @ApiResponse({
     status: 200,
-    description: 'Ownership transfer updated successfully'
+    description: 'Ownership transfer updated successfully',
+    type: OwnershipTransfer
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateOwnershipTransferPolicy())
+  @HttpCode(200)
   @Patch(':id')
   async update(
     @Param('id') id: UUID,
@@ -134,7 +154,10 @@ export class OwnershipTransferController {
     return await this.updateOwnershipTransferUseCase.execute(id, dto)
   }
 
-  @ApiOperation({ summary: 'Update the status of a ownership transfer' })
+  @ApiOperation({
+    summary: 'Update the status of a ownership transfer',
+    operationId: 'updateOwnershipTransferStatus'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiBody({ type: UpdateOwnershipTransferDto })
   @ApiResponse({
@@ -144,6 +167,7 @@ export class OwnershipTransferController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new UpdateOwnershipTransferPolicy())
+  @HttpCode(200)
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
@@ -161,15 +185,19 @@ export class OwnershipTransferController {
     )
   }
 
-  @ApiOperation({ summary: 'Delete a ownership transfer' })
+  @ApiOperation({
+    summary: 'Delete a ownership transfer',
+    operationId: 'deleteOwnershipTransfer'
+  })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Ownership transfer deleted successfully'
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new DeleteOwnershipTransferPolicy())
+  @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id') id: UUID, @CurrentUser() user: UserPayload) {
     this.logger.warn(

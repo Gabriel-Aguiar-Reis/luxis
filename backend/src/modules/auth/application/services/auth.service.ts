@@ -13,8 +13,10 @@ import { PasswordHash } from '@/modules/user/domain/value-objects/password-hash.
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { Email } from '@/shared/common/value-object/email.vo'
 import { Password } from '@/modules/user/domain/value-objects/password.vo'
-import { InjectPinoLogger } from 'nestjs-pino'
 import { EmailService } from '@/modules/auth/application/services/email.service'
+import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
+import { UUID } from 'crypto'
+import { ChangePasswordDto } from '@/modules/auth/application/dtos/change-password.dto'
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,22 @@ export class AuthService {
     private readonly logger: CustomLogger,
     @Inject('EmailService')
     private readonly emailService: EmailService
-  ) {}
+  ) { }
+
+  async changePassword(dto: ChangePasswordDto): Promise<void> {
+    const user = await this.userRepository.findById(dto.userId)
+    if (!user) {
+      this.logger.error(`User not found for change password: ${dto.userId}`, 'AuthService')
+      throw new NotFoundException('User not found')
+    }
+
+    const password = new Password(dto.newPassword)
+    const passwordHash = PasswordHash.generate(password)
+    user.passwordHash = passwordHash
+    await this.userRepository.update(user)
+
+    this.logger.log(`Password changed successfully for user: ${user.email.getValue()}`, 'AuthService')
+  }
 
   async login(dto: LoginDto): Promise<{ accessToken: string }> {
     const email = new Email(dto.email)
@@ -121,6 +138,37 @@ export class AuthService {
         'AuthService'
       )
       throw new BadRequestException('Invalid or expired token')
+    }
+  }
+
+  async verifyToken(token: string): Promise<VerifyDto> {
+    try {
+      const payload = this.jwtService.verify(token)
+      const user = await this.userRepository.findById(payload.sub)
+      if (!user) {
+        throw new NotFoundException('User not found')
+      }
+
+      if (user.status !== UserStatus.ACTIVE) {
+        throw new UnauthorizedException('User is inactive')
+      }
+
+      return {
+        valid: true,
+        user: {
+          id: user.id,
+          email: user.email.getValue(),
+          role: user.role,
+          status: user.status,
+          name: `${user.name.getValue()} ${user.surname.getValue()}`
+        }
+      }
+    } catch (error) {
+      this.logger.error(
+        `Token verification failed: ${error.message}`,
+        'AuthService'
+      )
+      throw new UnauthorizedException('Invalid or expired token')
     }
   }
 }

@@ -7,7 +7,7 @@ export class Unit {
   }
 
   private validate(unit: number): boolean {
-    return unit === Math.trunc(unit) && unit > 0
+    return unit === Math.trunc(unit) && unit > -1
   }
 
   getValue(): number {

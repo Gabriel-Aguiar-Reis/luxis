@@ -23,14 +23,15 @@ export class UpdateProductModelUseCase {
     if (!model) {
       throw new NotFoundException('Model not found')
     }
-    const photoUrl = input.photo
-      ? new ImageURL(
-          await this.cloudinaryService.uploadImage(
-            input.photo,
-            'product-models'
-          )
-        )
-      : model.photoUrl
+
+    let photoUrl: ImageURL | undefined = undefined
+    if (input.photoUrl) {
+      photoUrl = new ImageURL(input.photoUrl)
+    } else if (input.photo) {
+      photoUrl = new ImageURL(
+        await this.cloudinaryService.uploadImage(input.photo, 'product-models')
+      )
+    }
 
     model = new ProductModel(
       id,
@@ -42,7 +43,7 @@ export class UpdateProductModelUseCase {
       input.description
         ? new Description(input.description)
         : model.description,
-      photoUrl
+      photoUrl ?? model.photoUrl
     )
     return await this.productModelRepository.update(model)
   }

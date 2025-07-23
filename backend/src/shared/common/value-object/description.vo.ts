@@ -1,12 +1,16 @@
 import { BadRequestException } from '@nestjs/common'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class Description {
-  constructor(private value: string) {
+  @ApiProperty({
+    description: 'The description of the product model',
+    example: 'Latest iPhone model with advanced features',
+    type: String,
+    maxLength: 500
+  })
+  private value: string
+  constructor(value: string) {
     const cleaned = value.trim()
-
-    if (cleaned.length === 0) {
-      throw new BadRequestException('Description cannot be empty')
-    }
 
     if (cleaned.length > 500) {
       throw new BadRequestException(

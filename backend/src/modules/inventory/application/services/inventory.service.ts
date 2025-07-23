@@ -27,6 +27,7 @@ export class InventoryService implements IInventoryService {
 
     if (!inventory) {
       inventory = new Inventory(resellerId)
+      await this.inventoryRepository.save(inventory)
     }
 
     for (const id of productIds) {

@@ -3,9 +3,9 @@ import { UUID } from 'crypto'
 
 @Entity('inventories')
 export class InventoryTypeOrmEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn('uuid', { name: 'reseller_id' })
   resellerId: UUID
 
-  @Column('uuid', { array: true, default: [] })
+  @Column('uuid', { array: true, default: [], name: 'product_ids' })
   productIds: UUID[]
 }

@@ -69,4 +69,11 @@ export class UserTypeOrmRepository implements UserRepository {
     if (!updatedEntity) throw new NotFoundException('User not found')
     return UserMapper.toDomain(updatedEntity)
   }
+
+  async updateStatus(id: UUID, status: UserStatus): Promise<User> {
+    await this.repository.update(id, { status })
+    const updatedEntity = await this.repository.findOne({ where: { id } })
+    if (!updatedEntity) throw new NotFoundException('User not found')
+    return UserMapper.toDomain(updatedEntity)
+  }
 }

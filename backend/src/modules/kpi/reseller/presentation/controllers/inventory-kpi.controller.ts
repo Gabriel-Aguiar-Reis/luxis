@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { GetCurrentInventoryUseCase } from '@/modules/kpi/reseller/application/use-cases/inventory/get-current-inventory.use-case'
@@ -25,7 +25,7 @@ export class ResellerInventoryKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('current-inventory')
   @CacheTTL(300)
-  @Get('current')
+  @Post('current')
   async getCurrentInventory(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto

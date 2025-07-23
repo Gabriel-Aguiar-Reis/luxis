@@ -6,21 +6,18 @@ export class ProductModelTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column()
+  @Column({ name: 'name' })
   name: string
 
-  @Column('uuid')
+  @Column('uuid', { name: 'category_id' })
   categoryId: UUID
 
-  @Column('uuid')
-  resellerId: UUID
+  @Column('decimal', { precision: 10, scale: 2, name: 'suggested_price' })
+  suggestedPrice: string
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  suggestedPrice: number
-
-  @Column({ nullable: true })
+  @Column({ name: 'description', nullable: true })
   description: string
 
-  @Column()
+  @Column({ name: 'photo_url' })
   photoUrl: string
 }

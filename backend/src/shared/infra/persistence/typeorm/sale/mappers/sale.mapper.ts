@@ -11,18 +11,15 @@ export class SaleMapper {
       entity.resellerId,
       entity.productIds,
       entity.saleDate,
-      new Currency(entity.totalAmount.toString()),
+      new Currency(entity.totalAmount),
       entity.paymentMethod,
       new Unit(entity.numberInstallments),
       entity.status
     )
 
-    // Restaurar o estado das parcelas
-    entity.installments.forEach((paid, index) => {
-      if (paid) {
-        sale.markInstallmentAsPaid(new Unit(index + 1))
-      }
-    })
+    for (let i = 0; i < (entity.installmentsPaid || 0); i++) {
+      sale.markInstallmentAsPaid(new Unit(i + 1))
+    }
 
     return sale
   }
@@ -34,11 +31,12 @@ export class SaleMapper {
     entity.resellerId = sale.resellerId
     entity.productIds = sale.productIds
     entity.saleDate = sale.saleDate
-    entity.totalAmount = Number(sale.totalAmount.getValue())
+    entity.totalAmount = sale.totalAmount.getValue()
     entity.paymentMethod = sale.paymentMethod
     entity.numberInstallments = sale.numberInstallments.getValue()
     entity.status = sale.status
     entity.installmentsInterval = sale.installmentsInterval.getValue()
+    entity.installmentsPaid = sale.getInstallments().filter(Boolean).length
     return entity
   }
 
@@ -53,7 +51,8 @@ export class SaleMapper {
       paymentMethod: sale.paymentMethod,
       numberInstallments: sale.numberInstallments.getValue(),
       status: sale.status,
-      installmentsInterval: sale.installmentsInterval.getValue()
+      installmentsInterval: sale.installmentsInterval.getValue(),
+      installmentsPaid: sale.getInstallments().filter(Boolean).length
     }
   }
 

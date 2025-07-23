@@ -1,4 +1,4 @@
-import { Controller, Get, Body } from '@nestjs/common'
+import { Controller, Body, Post } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { GetTopSellingProductsUseCase } from '@/modules/kpi/reseller/application/use-cases/product/get-top-selling-products.use-case'
@@ -28,7 +28,7 @@ export class ResellerProductKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('top-selling-products')
   @CacheTTL(300)
-  @Get('top-selling')
+  @Post('top-selling')
   async getTopSellingProducts(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto
@@ -49,7 +49,7 @@ export class ResellerProductKpiController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CacheKey('products-with-longest-time-in-inventory')
   @CacheTTL(300)
-  @Get('longest-time-in-inventory')
+  @Post('longest-time-in-inventory')
   async getProductsWithLongestTimeInInventory(
     @CurrentUser() user: UserPayload,
     @Body() qParams: ParamsDto

@@ -28,7 +28,7 @@ export class AdminKpiControllerGuard implements CanActivate {
       role: user.role
     })
 
-    if (!ability.can(Actions.Read, 'admin-kpi')) {
+    if (!ability.can(Actions.Create, 'admin-kpi')) {
       throw new ForbiddenException(
         'You do not have permission to access this resource'
       )

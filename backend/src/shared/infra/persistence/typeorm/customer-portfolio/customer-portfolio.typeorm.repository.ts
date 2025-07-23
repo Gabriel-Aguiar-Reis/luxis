@@ -13,8 +13,12 @@ export class CustomerPortfolioTypeOrmRepository {
   ) {}
 
   async save(portfolio: CustomerPortfolio): Promise<void> {
-    const entity = new CustomerPortfolioTypeOrmEntity()
-    entity.resellerId = portfolio.resellerId
+    let entity = await this.repository.findOne({ where: { id: portfolio.id } })
+    if (!entity) {
+      entity = new CustomerPortfolioTypeOrmEntity()
+      entity.id = portfolio.id
+      entity.resellerId = portfolio.resellerId
+    }
     entity.customerIds = portfolio.customers
 
     await this.repository.save(entity)
@@ -27,7 +31,11 @@ export class CustomerPortfolioTypeOrmRepository {
 
     if (!entity) return null
 
-    return new CustomerPortfolio(entity.resellerId, new Set(entity.customerIds))
+    return new CustomerPortfolio(
+      entity.id,
+      entity.resellerId,
+      new Set(entity.customerIds)
+    )
   }
 
   async deleteByResellerId(resellerId: UUID): Promise<void> {

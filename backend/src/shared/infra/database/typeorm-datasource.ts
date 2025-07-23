@@ -9,26 +9,12 @@ import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/bat
 import { CategoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/category/category.typeorm.entity'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
 import { SupplierTypeOrmEntity } from '@/shared/infra/persistence/typeorm/supplier/supplier.typeorm.entity'
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
-import { CreateUsers1712938000000 } from '@/shared/infra/database/migrations/1712938000000-create-users'
-import { CreateProducts1712938000005 } from '@/shared/infra/database/migrations/1712938000005-create-products'
-import { CreateCategories1712938000001 } from '@/shared/infra/database/migrations/1712938000001-create-categories'
-import { CreateProductModels1712938000002 } from '@/shared/infra/database/migrations/1712938000002-create-product-models'
-import { CreateBatches1712938000004 } from '@/shared/infra/database/migrations/1712938000004-create-batches'
-import { CreateSales1712938000009 } from '@/shared/infra/database/migrations/1712938000009-create-sales'
-import { CreateOwnershipTransfers1712938000006 } from '@/shared/infra/database/migrations/1712938000006-create-ownership-transfers'
-import { CreateInventory1712938000007 } from '@/shared/infra/database/migrations/1712938000007-create-inventory'
-import { CreateShipments1712938000008 } from '@/shared/infra/database/migrations/1712938000008-create-shipments'
-import { CreateSuppliers1712938000003 } from '@/shared/infra/database/migrations/1712938000003-create-suppliers'
-import { CreateReturns1712938000010 } from '@/shared/infra/database/migrations/1712938000010-create-returns'
 import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
-import { CreateCustomers1712938000011 } from '@/shared/infra/database/migrations/1712938000011-create-customers'
-import { CreateCustomerPortfolios1712938000012 } from '@/shared/infra/database/migrations/1712938000012-create-customer-portfolios'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { ConfigService } from '@nestjs/config'
 import * as dotenv from 'dotenv'
-import { BatchItemTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch-item.typeorm.entity'
 import { BadRequestException } from '@nestjs/common'
+import { Init1749406833692 } from '@/shared/infra/database/migrations/1749406833692-Init'
 
 dotenv.config({ path: '.env.development' })
 
@@ -41,29 +27,13 @@ const commonConfig = {
     OwnershipTransferTypeOrmEntity,
     SaleTypeOrmEntity,
     BatchTypeOrmEntity,
-    BatchItemTypeOrmEntity,
     CategoryTypeOrmEntity,
     ProductModelTypeOrmEntity,
     SupplierTypeOrmEntity,
     ReturnTypeOrmEntity
   ],
-  migrations: [
-    CreateUsers1712938000000,
-    CreateCategories1712938000001,
-    CreateProductModels1712938000002,
-    CreateSuppliers1712938000003,
-    CreateBatches1712938000004,
-    CreateProducts1712938000005,
-    CreateOwnershipTransfers1712938000006,
-    CreateInventory1712938000007,
-    CreateShipments1712938000008,
-    CreateSales1712938000009,
-    CreateReturns1712938000010,
-    CreateCustomers1712938000011,
-    CreateCustomerPortfolios1712938000012
-  ],
-  synchronize: false,
-  namingStrategy: new SnakeNamingStrategy()
+  migrations: [Init1749406833692],
+  synchronize: false
 }
 
 let AppDataSource: DataSource

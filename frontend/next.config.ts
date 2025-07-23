@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
+import { NextConfig } from 'next'
+import createNextIntlPlugin from 'next-intl/plugin'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  skipMiddlewareUrlNormalize: false,
+  skipTrailingSlashRedirect: true,
+  reactStrictMode: false
+}
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts')
+
+export default withNextIntl(nextConfig)

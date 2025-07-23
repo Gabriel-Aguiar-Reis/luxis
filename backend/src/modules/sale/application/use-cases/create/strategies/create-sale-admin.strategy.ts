@@ -37,8 +37,8 @@ export class CreateSaleAdminStrategy implements CreateSaleStrategy {
 
     const sale = new Sale(
       crypto.randomUUID(),
-      user.id,
       dto.customerId,
+      user.id,
       dto.productIds,
       dto.saleDate,
       totalAmount,
@@ -48,6 +48,10 @@ export class CreateSaleAdminStrategy implements CreateSaleStrategy {
       new Unit(dto.installmentsInterval)
     )
 
-    return this.saleRepository.create(sale)
+    const saleConfirmed = await this.saleRepository.create(sale)
+
+    this.productRepository.updateManyStatus(dto.productIds, ProductStatus.SOLD)
+
+    return saleConfirmed
   }
 }

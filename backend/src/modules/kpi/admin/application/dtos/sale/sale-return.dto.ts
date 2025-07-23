@@ -96,6 +96,20 @@ export class SaleReturnDto {
   public numberInstallments: number
 
   @ApiProperty({
+    description: 'The interval between installments of the sale',
+    example: 30,
+    type: Number
+  })
+  public installmentsInterval: number
+
+  @ApiProperty({
+    description: 'The number of installments paid for the sale',
+    example: 1,
+    type: Number
+  })
+  public installmentsPaid: number
+
+  @ApiProperty({
     description: 'The status of the sale',
     enum: SaleStatus,
     example: SaleStatus.CONFIRMED,

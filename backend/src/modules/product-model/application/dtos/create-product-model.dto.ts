@@ -15,7 +15,7 @@ export class CreateProductModelDto {
   @ApiProperty({
     description: 'The name of the product model',
     example: 'Product Model Name',
-    type: ModelName,
+    type: String,
     required: true
   })
   @IsString()
@@ -35,7 +35,7 @@ export class CreateProductModelDto {
   @ApiProperty({
     description: 'The suggested price of the product model',
     example: '100.00',
-    type: Currency,
+    type: String,
     required: true
   })
   @IsCurrency()
@@ -45,7 +45,7 @@ export class CreateProductModelDto {
   @ApiProperty({
     description: 'The description of the product model',
     example: 'Product Model Description',
-    type: Description,
+    type: String,
     required: false
   })
   @IsString()

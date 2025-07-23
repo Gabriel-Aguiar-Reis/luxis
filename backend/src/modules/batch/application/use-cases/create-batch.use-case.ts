@@ -5,11 +5,8 @@ import { BatchRepository } from '@/modules/batch/domain/repositories/batch.repos
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { BatchFactory } from '@/modules/batch/domain/services/batch.factory'
 import { GetBatchQtyByMonthUseCase } from '@/modules/batch/application/use-cases/get-batch-qty-by-month.use-case'
-import crypto from 'crypto'
-import { IBatchItemResolver } from '@/modules/batch/domain/services/batch-item-resolver.interface'
-import { Unit } from '@/shared/common/value-object/unit.vo'
-import { Currency } from '@/shared/common/value-object/currency.vo'
-import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
+import * as crypto from 'crypto'
+import { IProductEntryResolver } from '@/modules/batch/domain/services/product-entry-resolver.interface'
 @Injectable()
 export class CreateBatchUseCase {
   constructor(
@@ -21,40 +18,30 @@ export class CreateBatchUseCase {
 
     private readonly getBatchQtyByMonthUseCase: GetBatchQtyByMonthUseCase,
 
-    @Inject('BatchItemResolver')
-    private readonly batchItemResolver: IBatchItemResolver
+    @Inject('ProductEntryResolver')
+    private readonly productEntryResolver: IProductEntryResolver
   ) {}
 
   async execute(input: CreateBatchDto): Promise<Batch> {
+    const batchId = crypto.randomUUID()
     const batchIndex = await this.getBatchQtyByMonthUseCase.execute(
       input.arrivalDate
     )
-    const batchId = crypto.randomUUID()
 
-    const rawItems = input.items.map((item) => ({
-      ...item,
-      id: crypto.randomUUID(),
-      quantity: new Unit(item.quantity),
-      unitCost: new Currency(item.unitCost),
-      salePrice: new Currency(item.salePrice),
-      modelName: item.modelName ? new ModelName(item.modelName) : undefined
-    }))
-    const resolvedItems = await Promise.all(
-      rawItems.map((item) => this.batchItemResolver.resolve(item))
+    const resolvedEntries = await Promise.all(
+      input.entries.map((entry) => this.productEntryResolver.resolve(entry))
     )
 
-    const { batch, products } = await BatchFactory.createFromResolvedItems(
+    const { batch, products } = await BatchFactory.create(
       batchId,
       input.arrivalDate,
       input.supplierId,
-      resolvedItems,
+      resolvedEntries,
       batchIndex
     )
 
     await this.batchRepository.create(batch)
-    await Promise.all(
-      products.map((product) => this.productRepository.create(product))
-    )
+    await Promise.all(products.map((p) => this.productRepository.create(p)))
 
     return batch
   }

@@ -7,25 +7,27 @@ export class ProductTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column()
+  @Column({ name: 'serial_number' })
   serialNumber: string
 
-  @Column('uuid')
+  @Column('uuid', { name: 'model_id' })
   modelId: UUID
 
-  @Column('uuid')
+  @Column('uuid', { name: 'batch_id' })
   batchId: UUID
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  unitCost: number
+  @Column('decimal', { precision: 10, scale: 2, name: 'unit_cost' })
+  unitCost: string
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  salePrice: number
+  @Column('decimal', { precision: 10, scale: 2, name: 'sale_price' })
+  salePrice: string
 
-  @Column({
-    type: 'enum',
-    enum: ProductStatus,
-    default: ProductStatus.IN_STOCK
-  })
+  @Column('enum', { name: 'status', enum: ProductStatus })
   status: ProductStatus
+
+  @Column('timestamp', {
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
+  createdAt: Date
 }

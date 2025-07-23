@@ -10,8 +10,8 @@ export class ProductMapper {
       new SerialNumber(entity.serialNumber),
       entity.modelId,
       entity.batchId,
-      new Currency(entity.unitCost.toString()),
-      new Currency(entity.salePrice.toString()),
+      new Currency(entity.unitCost),
+      new Currency(entity.salePrice),
       entity.status
     )
   }
@@ -22,8 +22,8 @@ export class ProductMapper {
     entity.serialNumber = product.serialNumber.getValue()
     entity.modelId = product.modelId
     entity.batchId = product.batchId
-    entity.unitCost = Number(product.unitCost.getValue())
-    entity.salePrice = Number(product.salePrice.getValue())
+    entity.unitCost = product.unitCost.getValue()
+    entity.salePrice = product.salePrice.getValue()
     entity.status = product.status
     return entity
   }

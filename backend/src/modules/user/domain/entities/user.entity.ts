@@ -19,28 +19,28 @@ export class User {
   @ApiProperty({
     description: 'The first name of the user',
     example: 'John',
-    type: String
+    type: Name
   })
   public name: Name
 
   @ApiProperty({
     description: 'The last name of the user',
     example: 'Doe',
-    type: String
+    type: Name
   })
-  public surName: Name
+  public surname: Name
 
   @ApiProperty({
     description: 'The phone number of the user',
     example: '+5511999999999',
-    type: String
+    type: PhoneNumber
   })
   public phone: PhoneNumber
 
   @ApiProperty({
     description: 'The email of the user',
     example: 'john.doe@example.com',
-    type: String
+    type: Email
   })
   public email: Email
 
@@ -55,28 +55,40 @@ export class User {
     description: 'The role of the user',
     enum: Role,
     example: Role.RESELLER,
-    type: String
   })
   public role: Role
 
   @ApiProperty({
     description: 'The residence information of the user',
-    type: Object
+    example: {
+      address: {
+        street: 'Rua do Sistema',
+        number: '1',
+        neighborhood: 'Centro',
+        city: 'São Paulo',
+        federativeUnit: 'SP',
+        postalCode: {
+          value: '01001000'
+        },
+        country: 'Brasil',
+        complement: 'Sistema'
+    }
+    },
+    type: Residence
   })
   public residence: Residence
 
   @ApiProperty({
     description: 'The status of the user',
     enum: UserStatus,
-    example: UserStatus.ACTIVE,
-    type: String
+    example: UserStatus.ACTIVE
   })
   public status: UserStatus
 
   constructor(
     id: UUID,
     name: Name,
-    surName: Name,
+    surname: Name,
     phone: PhoneNumber,
     email: Email,
     passwordHash: PasswordHash,
@@ -86,7 +98,7 @@ export class User {
   ) {
     this.id = id
     this.name = name
-    this.surName = surName
+    this.surname = surname
     this.phone = phone
     this.email = email
     this.passwordHash = passwordHash

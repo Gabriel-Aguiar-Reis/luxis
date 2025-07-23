@@ -14,8 +14,8 @@ export class Product {
 
   @ApiProperty({
     description: 'The serial number of the product',
-    example: 'SN20240101001',
-    type: String
+    example: '0424A-BR-BAB-001',
+    type: SerialNumber
   })
   public serialNumber: SerialNumber
 
@@ -36,14 +36,14 @@ export class Product {
   @ApiProperty({
     description: 'The unit cost of the product',
     example: '100.00',
-    type: String
+    type: Currency
   })
   public unitCost: Currency
 
   @ApiProperty({
     description: 'The sale price of the product',
     example: '150.00',
-    type: String
+    type: Currency
   })
   public salePrice: Currency
 
@@ -51,7 +51,6 @@ export class Product {
     description: 'The status of the product',
     enum: ProductStatus,
     example: ProductStatus.IN_STOCK,
-    type: String
   })
   public status: ProductStatus
 

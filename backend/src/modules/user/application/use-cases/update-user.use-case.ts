@@ -59,7 +59,7 @@ export class UpdateUserUseCase {
     userData! = new User(
       id,
       input.name ? new Name(input.name) : userData.name,
-      input.surName ? new Name(input.surName) : userData.surName,
+      input.surname ? new Name(input.surname) : userData.surname,
       input.phone ? new PhoneNumber(input.phone) : userData.phone,
       input.email ? new Email(input.email) : userData.email,
       input.password

@@ -38,7 +38,7 @@ describe('User Entity', () => {
   it('should create a user with correct properties', () => {
     expect(user.id).toBe('f07b1624-2939-4951-a809-957e2637576c')
     expect(user.name.getValue()).toBe(new Name('John').getValue())
-    expect(user.surName.getValue()).toBe(new Name('Doe').getValue())
+    expect(user.surname.getValue()).toBe(new Name('Doe').getValue())
     expect(user.phone.getValue()).toBe(
       new PhoneNumber('12912345678').getValue()
     )
