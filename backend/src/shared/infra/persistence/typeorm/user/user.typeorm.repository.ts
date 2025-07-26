@@ -18,7 +18,7 @@ export class UserTypeOrmRepository implements UserRepository {
   ) {}
 
   async findAll(): Promise<User[]> {
-    const entities = await this.repository.find()
+    const entities = await this.repository.find({ order: { name: 'ASC', surname: 'ASC' } })
     return entities.map(UserMapper.toDomain)
   }
 

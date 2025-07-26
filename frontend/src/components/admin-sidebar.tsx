@@ -21,12 +21,15 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
+  SidebarSeparator
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation'
 import { useAuthStore } from '@/stores/use-auth-store'
+import { useGetUsers } from '@/hooks/use-users'
+import { Badge } from '@/components/ui/badge'
 
 export function AdminSidebar({
   ...props
@@ -44,6 +47,8 @@ export function AdminSidebar({
 
   const { logout } = useAuthStore()
 
+  const { data: users } = useGetUsers()
+
   const handleLogout = () => {
     logout()
     toast.success(t('LogoutSuccess'))
@@ -56,49 +61,57 @@ export function AdminSidebar({
       routeKey: 'home',
       url: '/home',
       icon: BarChart3,
-      isActive: pathname === '/home' || pathname.endsWith('/home')
+      isActive: pathname === '/home' || pathname.endsWith('/home'),
+      hasBadge: false
     },
     {
       title: tProducts('title'),
       routeKey: 'products',
       url: '/home/products',
       icon: Box,
-      isActive: pathname.includes('/home/products')
+      isActive: pathname.includes('/home/products'),
+      hasBadge: false
     },
     {
       title: tUsers('title'),
       routeKey: 'users',
       url: '/home/users',
       icon: Users,
-      isActive: pathname.includes('/home/users')
+      isActive: pathname.includes('/home/users'),
+      hasBadge:
+        users && users?.filter((user) => user.status === 'PENDING').length > 0
     },
     {
       title: tSales('title'),
       routeKey: 'sales',
       url: '/home/sales',
       icon: ShoppingBag,
-      isActive: pathname.includes('/home/sales')
+      isActive: pathname.includes('/home/sales'),
+      hasBadge: false
     },
     {
       title: tBatches('title'),
       routeKey: 'batches',
       url: '/home/batches',
       icon: PackageOpen,
-      isActive: pathname.includes('/home/batches')
+      isActive: pathname.includes('/home/batches'),
+      hasBadge: false
     },
     {
       title: tSuppliers('title'),
       routeKey: 'suppliers',
       url: '/home/suppliers',
       icon: Store,
-      isActive: pathname.includes('/home/suppliers')
+      isActive: pathname.includes('/home/suppliers'),
+      hasBadge: false
     },
     {
       title: tShipments('title'),
       routeKey: 'shipments',
       url: '/home/shipments',
       icon: Truck,
-      isActive: pathname.includes('/home/shipments')
+      isActive: pathname.includes('/home/shipments'),
+      hasBadge: false
     }
   ]
 
@@ -110,7 +123,7 @@ export function AdminSidebar({
             <SidebarMenuButton size="lg" asChild>
               <Link href="/home">
                 <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Sparkle className="size-4 fill-accent" />
+                  <Sparkle className="fill-accent size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">Luxis</span>
@@ -121,20 +134,29 @@ export function AdminSidebar({
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+      <SidebarSeparator />
       <SidebarContent>
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.url}>
               <SidebarMenuButton asChild isActive={item.isActive}>
-                <Link href={item.url}>
-                  <item.icon className="size-4" />
-                  <span>{item.title}</span>
+                <Link href={item.url} className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <item.icon className="size-4" />
+                    <span>{item.title}</span>
+                  </div>
+                  {item.hasBadge && (
+                    <Badge className="ml-2 bg-[var(--badge-6)] text-[var(--badge-text-6)]">
+                      !
+                    </Badge>
+                  )}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarContent>
+      <SidebarSeparator />
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>

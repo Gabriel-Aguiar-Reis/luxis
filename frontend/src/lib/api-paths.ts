@@ -86,7 +86,8 @@ export const apiPaths = {
   returns: {
     base: '/returns',
     byId: (id: string) => `/returns/${id}`,
-    status: (id: string) => `/returns/${id}/status`
+    status: (id: string) => `/returns/${id}/status`,
+    reseller: (resellerId: string) => `/returns/reseller/${resellerId}`
   },
 
   // Customers

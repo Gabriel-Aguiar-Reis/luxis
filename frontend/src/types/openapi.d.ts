@@ -541,6 +541,23 @@ export interface paths {
         patch: operations["updateReturnStatus"];
         trace?: never;
     };
+    "/returns/reseller/{resellerId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get returns by reseller ID */
+        get: operations["getReturnsByResellerId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/customers": {
         parameters: {
             query?: never;
@@ -5279,6 +5296,50 @@ export interface operations {
             };
             /** @description Access denied */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getReturnsByResellerId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Reseller ID */
+                resellerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns for the reseller returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Return"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Reseller not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

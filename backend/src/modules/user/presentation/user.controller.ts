@@ -5,7 +5,6 @@ import { GetAllUserUseCase } from '@/modules/user/application/use-cases/get-all-
 import { GetOneUserUseCase } from '@/modules/user/application/use-cases/get-one-user.use-case'
 import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/update-user-role.use-case'
 import { UpdateUserUseCase } from '@/modules/user/application/use-cases/update-user.use-case'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { CreateUserDto } from '@/modules/user/application/dtos/create-user.dto'
 import { UpdateUserRoleDto } from '@/modules/user/application/dtos/update-user-role.dto'
 import { UpdateUserDto } from '@/modules/user/application/dtos/update-user.dto'
@@ -28,7 +27,6 @@ import {
   Patch,
   Delete,
   HttpCode,
-  HttpStatus,
   UseInterceptors
 } from '@nestjs/common'
 import { UUID } from 'crypto'
@@ -42,14 +40,12 @@ import {
 } from '@nestjs/swagger'
 import { User } from '@/modules/user/domain/entities/user.entity'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
-import { CustomThrottlerGuard } from '@/shared/infra/guards/throttler.guard'
-import { Throttle } from '@nestjs/throttler'
 import { UpdateUserStatusDto } from '@/modules/user/application/dtos/update-user-status.dto'
 import { UpdateUserStatusUseCase } from '@/modules/user/application/use-cases/update-user-status.use-case'
 
 @ApiTags('Users')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PoliciesGuard, CustomThrottlerGuard)
+@UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('users')
 @UseInterceptors(CacheInterceptor)
 export class UserController {
@@ -78,7 +74,6 @@ export class UserController {
   @CacheTTL(300)
   @HttpCode(200)
   @Get()
-  @Throttle({ default: { limit: 3, ttl: 60 * 1000 } })
   async getAll(@CurrentUser() user: UserPayload) {
     this.logger.log(
       `Getting all users - Requested by user ${user.email}`,
@@ -119,7 +114,6 @@ export class UserController {
   @ApiResponse({ status: 403, description: 'Access denied' })
   @HttpCode(201)
   @Post('signup')
-  @Throttle({ default: { limit: 3, ttl: 60 * 1000 } })
   async create(@Body() dto: CreateUserDto) {
     this.logger.warn(`Creating new user: ${dto.email}`, 'UserController')
     return await this.createUserUseCase.execute(dto)

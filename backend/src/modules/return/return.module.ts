@@ -18,6 +18,7 @@ import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/i
 import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
 import { AppModule } from '@/app.module'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
+import { GetReturnsByResellerIdUseCase } from '@/modules/return/application/use-cases/get-returns-by-reseller-id.use-case'
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factor
     UpdateReturnUseCase,
     DeleteReturnUseCase,
     UpdateReturnStatusUseCase,
+    GetReturnsByResellerIdUseCase,
     ReturnConfirmedHandler,
     EventDispatcher,
     { provide: 'ReturnRepository', useClass: ReturnTypeOrmRepository },

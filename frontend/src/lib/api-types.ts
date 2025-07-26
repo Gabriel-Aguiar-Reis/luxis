@@ -105,8 +105,11 @@ export type UpdateSupplier = paths['/suppliers/{id}']['patch']
 // Returns
 
 export type Return = components['schemas']['Return']
+export type ReturnStatus = components['schemas']['Return']['status']
 export type GetAllReturns = paths['/returns']['get']
 export type GetOneReturn = paths['/returns/{id}']['get']
+export type GetReturnsByResellerId =
+  paths['/returns/reseller/{resellerId}']['get']
 export type PostReturn = paths['/returns']['post']
 export type DeleteReturn = paths['/returns/{id}']['delete']
 export type UpdateReturn = paths['/returns/{id}']['patch']
@@ -180,7 +183,7 @@ export type GetTotalOwnershipTransfersGivenByResellerId =
   paths['/kpi/admin/ownership-transfers/given/by-reseller/{id}/total']['get']
 
 // KPI - Admin (Returns)
-export type GetReturnsByResellerId =
+export type GetReturnsByResellerIdKpi =
   paths['/kpi/admin/returns/by-reseller/{id}']['get']
 export type GetTotalReturnsByResellerId =
   paths['/kpi/admin/returns/by-reseller/{id}/total']['get']
