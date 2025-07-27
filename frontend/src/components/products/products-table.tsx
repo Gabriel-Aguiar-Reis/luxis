@@ -42,7 +42,6 @@ type ProductsTableProps = {
   products: Product[]
   productsPerPage?: number
   handleEditProduct: (product: Product) => void
-  handleDeleteProduct: (productId: string) => void
 }
 
 import { useState } from 'react'
@@ -53,8 +52,7 @@ export function ProductsTable({
   isLoading,
   products,
   productsPerPage = 10,
-  handleEditProduct,
-  handleDeleteProduct
+  handleEditProduct
 }: ProductsTableProps) {
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [filters, setFilters] = useState<ProductFiltersType>({})
@@ -238,7 +236,7 @@ export function ProductsTable({
                                       <FileEdit className="h-4 w-4" />
                                       <span className="sr-only">Editar</span>
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                       variant="ghost"
                                       size="icon"
                                       onClick={() =>
@@ -247,7 +245,7 @@ export function ProductsTable({
                                     >
                                       <Trash2 className="h-4 w-4" />
                                       <span className="sr-only">Excluir</span>
-                                    </Button>
+                                    </Button> */}
                                   </div>
                                 </TableCell>
                               </TableRow>

@@ -29,7 +29,7 @@ import {
   GetOwnershipTransfersGivenByResellerId,
   GetTotalOwnershipTransfersGivenByResellerId,
   // Returns
-  GetReturnsByResellerId,
+  GetReturnsByResellerIdKpi,
   GetTotalReturnsByResellerId,
   GetReturnsByReseller,
   GetTotalReturnsByReseller,
@@ -366,12 +366,12 @@ export function useTotalOwnershipTransfersGivenByResellerId(id: string) {
 // --- Returns ---
 export function useReturnsByResellerId(id: string) {
   return useQuery<
-    GetReturnsByResellerId['responses']['200']['content']['application/json']
+    GetReturnsByResellerIdKpi['responses']['200']['content']['application/json']
   >({
     queryKey: ['kpi-returns-by-reseller', id],
     queryFn: () =>
       apiFetch<
-        GetReturnsByResellerId['responses']['200']['content']['application/json']
+        GetReturnsByResellerIdKpi['responses']['200']['content']['application/json']
       >(apiPaths.kpiAdmin.returnsByResellerId(id), {}, true),
     enabled: !!id
   })

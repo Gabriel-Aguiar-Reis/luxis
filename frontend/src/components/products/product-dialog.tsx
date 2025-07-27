@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,17 +19,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { toast } from 'sonner'
 import { Product, ProductModel } from '@/lib/api-types'
-
-type ProductStatus = Product['status']
+import { UpdateProductDto } from '@/hooks/use-products'
 
 type ProductDialogProps = {
   product: Product | null
   models: ProductModel[]
   isOpen: boolean
   onClose: () => void
-  onSave: (product: Product) => void | Promise<void>
+  onSave: (id: string, dto: UpdateProductDto) => void | Promise<void>
 }
 
 export function ProductDialog({
@@ -39,34 +37,10 @@ export function ProductDialog({
   onClose,
   onSave
 }: ProductDialogProps) {
-  const isNewProduct = !product
-  const [formData, setFormData] = useState<Partial<Product>>(
-    product || {
-      serialNumber: { value: '' },
-      modelId: '',
-      batchId: '',
-      unitCost: { value: '' },
-      salePrice: { value: '' },
-      status: 'IN_STOCK'
-    }
-  )
-
-  useEffect(() => {
-    if (isOpen) {
-      if (product) {
-        setFormData(product)
-      } else {
-        setFormData({
-          serialNumber: { value: '' },
-          modelId: '',
-          batchId: '',
-          unitCost: { value: '' },
-          salePrice: { value: '' },
-          status: 'IN_STOCK'
-        })
-      }
-    }
-  }, [isOpen, product])
+  const [formData, setFormData] = useState<Partial<UpdateProductDto>>({
+    unitCost: product?.unitCost.value || '',
+    salePrice: product?.salePrice.value || ''
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -76,49 +50,35 @@ export function ProductDialog({
     })
   }
 
-  const handleSelectChange = (name: string, value: string) => {
+  const handleClose = () => {
     setFormData({
-      ...formData,
-      [name]: value
+      unitCost: product?.unitCost.value || '',
+      salePrice: product?.salePrice.value || ''
     })
+    onClose()
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (
-      !formData.serialNumber ||
-      !formData.modelId ||
-      !formData.unitCost ||
-      !formData.salePrice
-    ) {
-      toast.error('Por favor, preencha todos os campos obrigatórios')
-      return
+    const dto = {
+      ...formData
     }
+    onSave(product!.id, dto)
+    onClose()
+  }
 
-    const productData: Product = {
-      id: formData.id || `temp-${Date.now()}`,
-      serialNumber: formData.serialNumber,
-      modelId: formData.modelId,
-      batchId: formData.batchId || '',
-      unitCost: formData.unitCost,
-      salePrice: formData.salePrice,
-      status: (formData.status as ProductStatus) || 'IN_STOCK'
-    }
-    await onSave(productData)
+  if (!product) {
+    return
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>
-              {isNewProduct ? 'Adicionar Produto' : 'Editar Produto'}
-            </DialogTitle>
+            <DialogTitle>Editar Produto</DialogTitle>
             <DialogDescription>
-              {isNewProduct
-                ? 'Preencha os detalhes para adicionar um novo produto ao catálogo.'
-                : 'Edite os detalhes do produto selecionado.'}
+              Edite os detalhes do produto selecionado.
             </DialogDescription>
           </DialogHeader>
 
@@ -129,20 +89,14 @@ export function ProductDialog({
                 <Input
                   id="serialNumber"
                   name="serialNumber"
-                  value={formData.serialNumber?.value || ''}
-                  onChange={handleChange}
+                  value={product.serialNumber.value || ''}
                   placeholder="SN-0001"
-                  required
                   disabled
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
-                <Select
-                  value={formData.status || 'IN_STOCK'}
-                  onValueChange={(value) => handleSelectChange('status', value)}
-                  disabled
-                >
+                <Select value={formData.status || 'IN_STOCK'} disabled>
                   <SelectTrigger id="status">
                     <SelectValue />
                   </SelectTrigger>
@@ -157,13 +111,7 @@ export function ProductDialog({
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="modelId">Modelo</Label>
-                <Select
-                  value={formData.modelId || ''}
-                  onValueChange={(value) =>
-                    handleSelectChange('modelId', value)
-                  }
-                  disabled
-                >
+                <Select value={product.modelId || ''} disabled>
                   <SelectTrigger id="modelId">
                     <SelectValue placeholder="Selecione um modelo" />
                   </SelectTrigger>
@@ -181,8 +129,7 @@ export function ProductDialog({
                 <Input
                   id="batchId"
                   name="batchId"
-                  value={formData.batchId || ''}
-                  onChange={handleChange}
+                  value={product.batchId || ''}
                   placeholder="ID do lote"
                   disabled
                 />
@@ -197,7 +144,7 @@ export function ProductDialog({
                   type="number"
                   step="0.01"
                   min="0"
-                  value={formData.unitCost?.value || ''}
+                  value={formData.unitCost || ''}
                   onChange={handleChange}
                   placeholder="0.00"
                   required
@@ -211,7 +158,7 @@ export function ProductDialog({
                   type="number"
                   step="0.01"
                   min="0"
-                  value={formData.salePrice?.value || ''}
+                  value={formData.salePrice || ''}
                   onChange={handleChange}
                   placeholder="0.00"
                   required
@@ -221,12 +168,10 @@ export function ProductDialog({
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit">
-              {isNewProduct ? 'Adicionar Produto' : 'Salvar Alterações'}
-            </Button>
+            <Button type="submit">Salvar Alterações</Button>
           </DialogFooter>
         </form>
       </DialogContent>

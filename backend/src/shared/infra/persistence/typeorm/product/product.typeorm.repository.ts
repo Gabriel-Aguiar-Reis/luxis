@@ -16,7 +16,7 @@ export class ProductTypeOrmRepository implements ProductRepository {
   ) {}
 
   async findAll(): Promise<Product[]> {
-    const entities = await this.repository.find()
+    const entities = await this.repository.find({ order: { serialNumber: 'ASC' } })
     return entities.map(ProductMapper.toDomain)
   }
 

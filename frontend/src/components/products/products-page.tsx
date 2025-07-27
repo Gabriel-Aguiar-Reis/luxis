@@ -1,151 +1,70 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { ProductDialog } from '@/components/products/product-dialog'
-import {
-  Category,
-  GetAllCategories,
-  GetAllProductModels,
-  GetAllProducts,
-  Product,
-  ProductModel
-} from '@/lib/api-types'
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
+import { Product } from '@/lib/api-types'
 import { ProductsTable } from '@/components/products/products-table'
-
-type GetAllProductsResponse =
-  GetAllProducts['responses']['200']['content']['application/json']
-
-type GetAllProductModelsResponse =
-  GetAllProductModels['responses']['200']['content']['application/json']
-
-type GetAllCategoriesResponse =
-  GetAllCategories['responses']['200']['content']['application/json']
+import {
+  UpdateProductDto,
+  useChangeProduct,
+  useGetProducts
+} from '@/hooks/use-products'
+import { useGetCategories } from '@/hooks/use-categories'
+import { useGetModels } from '@/hooks/use-product-models'
+import { useQueryClient } from '@tanstack/react-query'
+import { Ban } from 'lucide-react'
 
 export function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [productModels, setProductModels] = useState<ProductModel[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-      try {
-        const productsRes = await apiFetch<GetAllProductsResponse>(
-          apiPaths.products.base,
-          {},
-          true
-        )
-        setProducts(productsRes)
-
-        const modelsRes = await apiFetch<GetAllProductModelsResponse>(
-          apiPaths.productModels.base,
-          {},
-          true
-        )
-        setProductModels(modelsRes)
-
-        const categoriesRes = await apiFetch<GetAllCategoriesResponse>(
-          apiPaths.categories.base,
-          {},
-          true
-        )
-        setCategories(categoriesRes)
-      } catch (error) {
-        toast.error('Erro ao carregar produtos/modelos')
-        console.error(error)
-        setProducts([])
-        setProductModels([])
-        setCategories([])
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
+  const { data: products, isLoading: isLoadingProducts } = useGetProducts()
+  const { data: categories, isLoading: isLoadingCategories } =
+    useGetCategories()
+  const { data: models, isLoading: isLoadingModels } = useGetModels()
+  const { mutate: changeProduct } = useChangeProduct(useQueryClient())
 
   const handleEditProduct = (product: Product) => {
     setSelectedProduct(product)
     setIsDialogOpen(true)
   }
 
-  const handleSaveProduct = async (product: Product) => {
-    try {
-      const token = localStorage.getItem('accessToken')
-      const isNew = !product.id
-
-      const response = await fetch(
-        `/api/products${isNew ? '' : `/${product.id}`}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(product)
-        }
-      )
-
-      toast.success(`Produto ${isNew ? 'criado' : 'atualizado'} com sucesso!`)
-
-      const updatedProducts = products.map((p) =>
-        p.id === product.id ? product : p
-      )
-      setProducts(updatedProducts)
-      setIsDialogOpen(false)
-    } catch (error) {
-      toast.error(`Erro ao ${product.id ? 'atualizar' : 'criar'} produto`)
-      console.error(error)
-    }
+  const handleSaveProduct = async (id: string, dto: UpdateProductDto) => {
+    changeProduct({ id, dto })
   }
 
-  const handleDeleteProduct = async (productId: string) => {
-    if (!confirm('Tem certeza que deseja excluir este produto?')) {
-      return
-    }
+  const isLoading = isLoadingProducts || isLoadingCategories || isLoadingModels
 
-    try {
-      const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/products/${productId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error('Falha ao excluir produto')
-      }
-
-      toast.success('Produto excluído com sucesso!')
-
-      const updatedProducts = products.filter((p) => p.id !== productId)
-      setProducts(updatedProducts)
-    } catch (error) {
-      toast.error('Erro ao excluir produto')
-      console.error(error)
-    }
+  if (!products || !categories || !models || isLoading) {
+    return (
+      <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
+        <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
+          <Ban className="text-primary h-6 w-6" />
+        </div>
+        <h3 className="mt-4 text-lg font-semibold">
+          Nenhum produto encontrado!
+        </h3>
+        <p className="text-muted-foreground mt-2 text-sm">
+          Não há produtos registrados no sistema.
+        </p>
+      </div>
+    )
   }
 
   return (
     <div className="flex-1 space-y-4 p-4">
       <ProductsTable
-        productModels={productModels}
+        productModels={models}
         categories={categories}
         isLoading={isLoading}
         products={products}
         handleEditProduct={handleEditProduct}
-        handleDeleteProduct={handleDeleteProduct}
       />
 
       <ProductDialog
         product={selectedProduct}
-        models={productModels}
+        models={models}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onSave={handleSaveProduct}
