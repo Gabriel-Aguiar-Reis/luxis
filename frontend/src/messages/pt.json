@@ -94,6 +94,18 @@
     "authError": "Você precisa estar autenticado como revendedor para acessar esta área",
     "sessionExpired": "Sessão expirada"
   },
+  "Admin-Models": {
+    "title": "Modelos",
+    "description": "Gerencie seus modelos de produtos"
+  },
+  "Admin-Returns": {
+    "title": "Devoluções",
+    "description": "Gerencie suas devoluções"
+  },
+  "Admin-Transfers": {
+    "title": "Trocas",
+    "description": "Gerencie suas trocas"
+  },
   "Admin-Suppliers": {
     "title": "Fornecedores",
     "description": "Gerencie seus fornecedores"

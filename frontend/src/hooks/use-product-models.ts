@@ -1,10 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
-import { GetAllProductModels } from '@/lib/api-types'
+import { GetAllProductModels, UpdateProductModel } from '@/lib/api-types'
 
 type GetAllProductModelsResponse =
   GetAllProductModels['responses']['200']['content']['application/json']
+
+export type UpdateModelDto =
+  UpdateProductModel['requestBody']['content']['application/json']
+type UpdateModelResponse =
+  UpdateProductModel['responses']['200']['content']['application/json']
 
 export function useGetModels() {
   return useQuery({
@@ -17,5 +22,20 @@ export function useGetModels() {
       )
     },
     staleTime: 5 * 60 * 1000
+  })
+}
+
+export function useChangeProductModel() {
+  return useMutation({
+    mutationFn: async ({ id, dto }: { id: string; dto: UpdateModelDto }) => {
+      return await apiFetch<UpdateModelResponse>(
+        apiPaths.productModels.byId(id),
+        {
+          body: JSON.stringify(dto)
+        },
+        true,
+        'PATCH'
+      )
+    }
   })
 }

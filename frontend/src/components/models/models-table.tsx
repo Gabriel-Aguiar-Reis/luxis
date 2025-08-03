@@ -1,4 +1,4 @@
-import { ProductFilters } from '@/components/products/product-filters'
+import { ModelFilters } from '@/components/models/model-filters'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -15,134 +15,87 @@ import {
   TableBody,
   TableCell
 } from '@/components/ui/table'
-import { Category, Product, ProductModel } from '@/lib/api-types'
-import {
-  Filter,
-  FileEdit,
-  Trash2,
-  ChevronLeft,
-  ChevronRight
-} from 'lucide-react'
-
-type ProductStatus = Product['status']
-
-type ProductFiltersType = {
-  serialNumber?: string
-  status?: ProductStatus
-  categoryId?: string
-  modelId?: string
-  minPrice?: number
-  maxPrice?: number
-}
-
-type ProductsTableProps = {
-  productModels: ProductModel[]
-  categories: Category[]
-  isLoading: boolean
-  products: Product[]
-  productsPerPage?: number
-  handleEditProduct: (product: Product) => void
-}
-
+import { Category, ProductModel } from '@/lib/api-types'
+import { Filter, FileEdit, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
-export function ProductsTable({
-  productModels,
+type ModelsFiltersType = {
+  id?: string
+  name?: string
+  categoryName?: string
+  suggestedPrice?: string
+}
+
+type ModelsTableProps = {
+  models: ProductModel[]
+  categories: Category[]
+  isLoading: boolean
+  modelsPerPage?: number
+  handleEditModel: (model: ProductModel) => void
+}
+
+export function ModelsTable({
+  models,
   categories,
   isLoading,
-  products,
-  productsPerPage = 10,
-  handleEditProduct
-}: ProductsTableProps) {
+  modelsPerPage = 10,
+  handleEditModel
+}: ModelsTableProps) {
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
-  const [filters, setFilters] = useState<ProductFiltersType>({})
+  const [filters, setFilters] = useState<ModelsFiltersType>({})
   const [currentPage, setCurrentPage] = useState(1)
 
-  const applyFilters = (products: Product[], filters: ProductFiltersType) => {
-    let filteredProducts = [...products]
-    let filteredModels = [...productModels]
+  const applyFilters = (models: ProductModel[], filters: ModelsFiltersType) => {
+    let filteredModels = [...models]
 
-    if (filters.serialNumber) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.serialNumber.value
+    if (filters.id) {
+      filteredModels = filteredModels.filter((model) =>
+        model.id.toLowerCase().includes(filters.id!.toLowerCase())
+      )
+    }
+
+    if (filters.name) {
+      filteredModels = filteredModels.filter((model) =>
+        model.name.value.toLowerCase().includes(filters.name!.toLowerCase())
+      )
+    }
+
+    if (filters.categoryName) {
+      filteredModels = filteredModels.filter((model) =>
+        categories.some((category) =>
+          category.name.value
+            .toLowerCase()
+            .includes(filters.categoryName!.toLowerCase())
+        )
+      )
+    }
+
+    if (filters.suggestedPrice) {
+      filteredModels = filteredModels.filter((model) =>
+        model.suggestedPrice.value
           .toLowerCase()
-          .includes(filters.serialNumber!.toLowerCase())
+          .includes(filters.suggestedPrice!.toLowerCase())
       )
     }
-
-    if (filters.status) {
-      filteredProducts = filteredProducts.filter(
-        (product) => product.status === filters.status
-      )
-    }
-
-    if (filters.modelId) {
-      filteredProducts = filteredProducts.filter(
-        (product) => product.modelId === filters.modelId
-      )
-    }
-
-    if (filters.categoryId) {
-      filteredModels = filteredModels.filter(
-        (model) => model.categoryId === filters.categoryId
-      )
-      filteredProducts = filteredProducts.filter(
-        (product) =>
-          product.modelId &&
-          filteredModels.some((m) => m.id === product.modelId)
-      )
-    }
-
-    return filteredProducts
+    return filteredModels
   }
-
-  const filteredProducts = applyFilters(products, filters)
+  const filteredModels = applyFilters(models, filters)
   const totalPages = Math.max(
     1,
-    Math.ceil(filteredProducts.length / productsPerPage)
+    Math.ceil(filteredModels.length / modelsPerPage)
   )
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * productsPerPage,
-    currentPage * productsPerPage
+  const paginatedModels = filteredModels.slice(
+    (currentPage - 1) * modelsPerPage,
+    currentPage * modelsPerPage
   )
-  const emptyRows = productsPerPage - paginatedProducts.length
-  const formatStatus = (status: ProductStatus) => {
-    const statusMap: Record<
-      ProductStatus,
-      { label: string; className: string }
-    > = {
-      IN_STOCK: {
-        label: 'Em Estoque',
-        className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
-      },
-      ASSIGNED: {
-        label: 'Atribuído',
-        className: 'bg-[var(--badge-3)] text-[var(--badge-text-3)]'
-      },
-      SOLD: {
-        label: 'Vendido',
-        className: 'bg-[var(--badge-4)] text-[var(--badge-text-4)]'
-      }
-    }
-    const { label, className } = statusMap[status] || {
-      label: status,
-      className: ''
-    }
-    return (
-      <span
-        className={`rounded-full px-2 py-1 text-xs font-medium ${className}`}
-      >
-        {label}
-      </span>
-    )
-  }
+  const emptyRows = modelsPerPage - paginatedModels.length
 
   return (
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle>Gerenciamento de Produtos</CardTitle>
+            <CardTitle>Gerenciamento de Modelos de Produtos</CardTitle>
             <Button
               variant={isFiltersVisible ? 'secondary' : 'outline'}
               size="sm"
@@ -153,20 +106,19 @@ export function ProductsTable({
             </Button>
           </div>
           <CardDescription>
-            Visualize e edite produtos do catálogo
+            Visualize, edite e exclua modelos do catálogo
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {isFiltersVisible && (
-              <ProductFilters
+              <ModelFilters
                 onFilterChange={(newFilters) => {
                   setFilters(newFilters)
                   setCurrentPage(1)
                 }}
                 initialFilters={filters}
                 categories={categories}
-                productModels={productModels}
               />
             )}
 
@@ -180,26 +132,22 @@ export function ProductsTable({
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Nº Série</TableHead>
+                        <TableHead>Id</TableHead>
                         <TableHead>Foto</TableHead>
-                        <TableHead>Modelo</TableHead>
-                        <TableHead>Custo Unitário</TableHead>
-                        <TableHead>Preço de Venda</TableHead>
-                        <TableHead>Status</TableHead>
+                        <TableHead>Nome</TableHead>
+                        <TableHead>Nome da Categoria</TableHead>
+                        <TableHead>Preço Sugerido</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {paginatedProducts.length > 0 ? (
+                      {paginatedModels.length > 0 ? (
                         <>
-                          {paginatedProducts.map((product) => {
-                            const model = productModels.find(
-                              (m) => m.id === product.modelId
-                            )
+                          {paginatedModels.map((model) => {
                             return (
-                              <TableRow key={product.id}>
+                              <TableRow key={model.id}>
                                 <TableCell className="font-medium">
-                                  {product.serialNumber.value}
+                                  {model.id}
                                 </TableCell>
                                 <TableCell>
                                   {model?.photoUrl ? (
@@ -214,24 +162,25 @@ export function ProductsTable({
                                     </span>
                                   )}
                                 </TableCell>
+                                <TableCell>{model.name.value}</TableCell>
                                 <TableCell>
-                                  {model ? model.name.value : '-'}
+                                  {
+                                    categories.find(
+                                      (category) =>
+                                        category.id === model.categoryId
+                                    )?.name.value
+                                  }
                                 </TableCell>
                                 <TableCell>
-                                  R$ {product.unitCost.value.replace('.', ',')}
-                                </TableCell>
-                                <TableCell>
-                                  R$ {product.salePrice.value.replace('.', ',')}
-                                </TableCell>
-                                <TableCell>
-                                  {formatStatus(product.status)}
+                                  R${' '}
+                                  {model.suggestedPrice.value.replace('.', ',')}
                                 </TableCell>
                                 <TableCell className="text-right">
                                   <div className="flex justify-end gap-2">
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      onClick={() => handleEditProduct(product)}
+                                      onClick={() => handleEditModel(model)}
                                     >
                                       <FileEdit className="h-4 w-4" />
                                       <span className="sr-only">Editar</span>
@@ -262,7 +211,7 @@ export function ProductsTable({
                       ) : (
                         <TableRow>
                           <TableCell colSpan={7} className="h-24 text-center">
-                            Nenhum produto encontrado
+                            Nenhum modelo encontrado
                           </TableCell>
                         </TableRow>
                       )}

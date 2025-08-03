@@ -94,6 +94,18 @@
     "authError": "You need to be authenticated as a reseller to access this area",
     "sessionExpired": "Session expired"
   },
+  "Admin-Models": {
+    "title": "Models",
+    "description": "Manage your models"
+  },
+  "Admin-Returns": {
+    "title": "Returns",
+    "description": "Manage your returns"
+  },
+  "Admin-Transfers": {
+    "title": "Transfers",
+    "description": "Manage your transfers"
+  },
   "Admin-Suppliers": {
     "title": "Suppliers",
     "description": "Manage your suppliers"
