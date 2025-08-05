@@ -55,6 +55,20 @@ export class ProductModelController {
   ) {}
 
   @ApiOperation({
+    summary: 'Get Cloudinary upload signature',
+    operationId: 'getCloudinarySignature'
+  })
+  @ApiResponse({ status: 200, description: 'Signature generated' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @CheckPolicies(new CreateProductModelPolicy())
+  @HttpCode(200)
+  @Get('cloudinary-signature')
+  async getCloudinarySignature() {
+    return await this.updateProductModelUseCase['cloudinaryService'].generateUploadSignature('products-models-images')
+  }
+
+  @ApiOperation({
     summary: 'Get all product models',
     operationId: 'getAllProductModels'
   })

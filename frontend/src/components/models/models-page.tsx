@@ -12,8 +12,10 @@ import {
 } from '@/hooks/use-product-models'
 import { Ban } from 'lucide-react'
 import { ModelDeleteDialog } from '@/components/models/model-delete-dialog'
+import { useQueryClient } from '@tanstack/react-query'
 
 export function ModelsPage() {
+  const queryClient = useQueryClient()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedModel, setSelectedModel] = useState<ProductModel | undefined>(
@@ -24,7 +26,7 @@ export function ModelsPage() {
     useGetCategories()
   const { data: models, isLoading: isLoadingModels } = useGetModels()
 
-  const { mutate: changeProductModel } = useChangeProductModel()
+  const { mutate: changeProductModel } = useChangeProductModel(queryClient)
 
   const handleEditModel = (id: string, dto: UpdateModelDto) => {
     changeProductModel({ id, dto })
@@ -69,6 +71,7 @@ export function ModelsPage() {
 
       <ModelDialog
         model={selectedModel}
+        categories={categories}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onSave={(id, dto) => handleEditModel(id, dto)}

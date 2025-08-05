@@ -49,7 +49,8 @@ export const apiPaths = {
   // Product Models
   productModels: {
     base: '/product-models',
-    byId: (id: string) => `/product-models/${id}`
+    byId: (id: string) => `/product-models/${id}`,
+    cloudinarySignature: '/product-models/cloudinary-signature'
   },
 
   // Sales
