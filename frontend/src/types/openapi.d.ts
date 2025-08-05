@@ -1708,6 +1708,12 @@ export interface components {
              * @example https://example.com/iphone13.jpg
              */
             photoUrl?: components["schemas"]["ImageURL"];
+            /**
+             * @description The status of the product model
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status: "USED" | "ACTIVE" | "ARCHIVED";
         };
         CreateProductModelDto: {
             /**
@@ -1767,6 +1773,12 @@ export interface components {
              * @example https://example.com/photo.jpg
              */
             photoUrl?: string;
+            /**
+             * @description The status of the product model
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status?: "USED" | "ACTIVE" | "ARCHIVED";
         };
         Sale: {
             /**

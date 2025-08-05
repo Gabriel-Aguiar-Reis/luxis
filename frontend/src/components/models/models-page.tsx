@@ -11,9 +11,11 @@ import {
   useGetModels
 } from '@/hooks/use-product-models'
 import { Ban } from 'lucide-react'
+import { ModelDeleteDialog } from '@/components/models/model-delete-dialog'
 
 export function ModelsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedModel, setSelectedModel] = useState<ProductModel | undefined>(
     undefined
   )
@@ -26,6 +28,10 @@ export function ModelsPage() {
 
   const handleEditModel = (id: string, dto: UpdateModelDto) => {
     changeProductModel({ id, dto })
+  }
+  const handleDeleteProductModel = (modelId: string) => {
+    setSelectedModel(models?.find((model) => model.id === modelId))
+    setIsDeleteDialogOpen(true)
   }
 
   const handleOpenDialog = (model: ProductModel) => {
@@ -58,6 +64,7 @@ export function ModelsPage() {
         categories={categories}
         isLoading={isLoading}
         handleEditModel={handleOpenDialog}
+        handleDeleteProductModel={handleDeleteProductModel}
       />
 
       <ModelDialog
@@ -65,6 +72,12 @@ export function ModelsPage() {
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onSave={(id, dto) => handleEditModel(id, dto)}
+      />
+
+      <ModelDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        modelId={selectedModel?.id || ''}
       />
     </div>
   )

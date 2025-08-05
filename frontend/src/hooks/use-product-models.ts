@@ -39,3 +39,16 @@ export function useChangeProductModel() {
     }
   })
 }
+
+export function useDeleteProductModel() {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await apiFetch<void>(
+        apiPaths.productModels.byId(id),
+        {},
+        true,
+        'DELETE'
+      )
+    }
+  })
+}

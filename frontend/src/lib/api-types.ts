@@ -50,6 +50,7 @@ export type UpdateProductStatus = paths['/products/{id}/sell']['patch']
 // Product-models
 
 export type ProductModel = components['schemas']['ProductModel']
+export type ProductModelStatus = components['schemas']['ProductModel']['status']
 export type GetAllProductModels = paths['/product-models']['get']
 export type GetOneProductModel = paths['/product-models/{id}']['get']
 export type PostProductModel = paths['/product-models']['post']

@@ -15,8 +15,14 @@ import {
   TableBody,
   TableCell
 } from '@/components/ui/table'
-import { Category, ProductModel } from '@/lib/api-types'
-import { Filter, FileEdit, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Category, ProductModel, ProductModelStatus } from '@/lib/api-types'
+import {
+  Filter,
+  FileEdit,
+  ChevronLeft,
+  ChevronRight,
+  Trash2
+} from 'lucide-react'
 import { useState } from 'react'
 
 type ModelsFiltersType = {
@@ -32,6 +38,13 @@ type ModelsTableProps = {
   isLoading: boolean
   modelsPerPage?: number
   handleEditModel: (model: ProductModel) => void
+  handleDeleteProductModel: (id: string) => void
+}
+
+const productModelStatusMap: Record<ProductModelStatus, string> = {
+  USED: 'Usado',
+  ACTIVE: 'Ativo',
+  ARCHIVED: 'Arquivado'
 }
 
 export function ModelsTable({
@@ -39,7 +52,8 @@ export function ModelsTable({
   categories,
   isLoading,
   modelsPerPage = 10,
-  handleEditModel
+  handleEditModel,
+  handleDeleteProductModel
 }: ModelsTableProps) {
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [filters, setFilters] = useState<ModelsFiltersType>({})
@@ -137,6 +151,7 @@ export function ModelsTable({
                         <TableHead>Nome</TableHead>
                         <TableHead>Nome da Categoria</TableHead>
                         <TableHead>Preço Sugerido</TableHead>
+                        <TableHead>Status</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -175,6 +190,9 @@ export function ModelsTable({
                                   R${' '}
                                   {model.suggestedPrice.value.replace('.', ',')}
                                 </TableCell>
+                                <TableCell>
+                                  {productModelStatusMap[model.status]}
+                                </TableCell>
                                 <TableCell className="text-right">
                                   <div className="flex justify-end gap-2">
                                     <Button
@@ -185,16 +203,20 @@ export function ModelsTable({
                                       <FileEdit className="h-4 w-4" />
                                       <span className="sr-only">Editar</span>
                                     </Button>
-                                    {/* <Button
+                                    <Button
                                       variant="ghost"
                                       size="icon"
                                       onClick={() =>
-                                        handleDeleteProduct(product.id)
+                                        handleDeleteProductModel(model.id)
+                                      }
+                                      disabled={
+                                        model.status === 'ARCHIVED' ||
+                                        model.status === 'USED'
                                       }
                                     >
                                       <Trash2 className="h-4 w-4" />
                                       <span className="sr-only">Excluir</span>
-                                    </Button> */}
+                                    </Button>
                                   </div>
                                 </TableCell>
                               </TableRow>
