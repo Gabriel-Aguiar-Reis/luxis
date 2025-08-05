@@ -1,3 +1,4 @@
+import { ProductModelStatus } from '@/modules/product-model/domain/enums/product-model-status.enum'
 import { UUID } from 'crypto'
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 
@@ -20,4 +21,12 @@ export class ProductModelTypeOrmEntity {
 
   @Column({ name: 'photo_url' })
   photoUrl: string
+
+  @Column({
+    type: 'enum',
+    enum: ProductModelStatus,
+    default: ProductModelStatus.ACTIVE,
+    name: 'status'
+  })
+  status: ProductModelStatus
 }

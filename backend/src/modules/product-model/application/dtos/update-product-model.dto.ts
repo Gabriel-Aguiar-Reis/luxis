@@ -1,5 +1,6 @@
 import {
   IsCurrency,
+  IsEnum,
   IsOptional,
   IsString,
   IsUrl,
@@ -7,6 +8,7 @@ import {
 } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
+import { ProductModelStatus } from '@/modules/product-model/domain/enums/product-model-status.enum'
 
 export class UpdateProductModelDto {
   @ApiProperty({
@@ -67,4 +69,14 @@ export class UpdateProductModelDto {
   @IsUrl()
   @IsOptional()
   photoUrl?: string
+
+  @ApiProperty({
+    description: 'The status of the product model',
+    enum: ProductModelStatus,
+    example: ProductModelStatus.ACTIVE,
+    required: false
+  })
+  @IsEnum(ProductModelStatus)
+  @IsOptional()
+  status?: ProductModelStatus
 }

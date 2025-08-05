@@ -4,6 +4,7 @@ import { Description } from '@/shared/common/value-object/description.vo'
 import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
+import { ProductModelStatus } from '@/modules/product-model/domain/enums/product-model-status.enum'
 
 export class ProductModel {
   @ApiProperty({
@@ -50,13 +51,21 @@ export class ProductModel {
   })
   public photoUrl?: ImageURL
 
+  @ApiProperty({
+    description: 'The status of the product model',
+    enum: ProductModelStatus,
+    example: ProductModelStatus.ACTIVE
+  })
+  public status: ProductModelStatus
+
   constructor(
     id: UUID,
     name: ModelName,
     categoryId: UUID,
     suggestedPrice: Currency,
+    status: ProductModelStatus,
     description?: Description,
-    photoUrl?: ImageURL
+    photoUrl?: ImageURL,
   ) {
     this.id = id
     this.name = name
@@ -64,5 +73,6 @@ export class ProductModel {
     this.suggestedPrice = suggestedPrice
     this.description = description
     this.photoUrl = photoUrl
+    this.status = status
   }
 }
