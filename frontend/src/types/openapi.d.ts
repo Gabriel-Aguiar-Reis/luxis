@@ -201,6 +201,23 @@ export interface paths {
         patch: operations["sellProduct"];
         trace?: never;
     };
+    "/product-models/cloudinary-signature": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Cloudinary upload signature */
+        get: operations["getCloudinarySignature"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/product-models": {
         parameters: {
             query?: never;
@@ -236,23 +253,6 @@ export interface paths {
         head?: never;
         /** Update a product model */
         patch: operations["updateProductModel"];
-        trace?: never;
-    };
-    "/product-models/cloudinary-signature": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Cloudinary upload signature */
-        get: operations["getCloudinarySignature"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/sales": {
@@ -2297,12 +2297,12 @@ export interface components {
              * @description The name of the supplier
              * @example Apple Inc.
              */
-            name: string;
+            name: components["schemas"]["Name"];
             /**
              * @description The phone number of the supplier
              * @example +5511999999999
              */
-            phone: string;
+            phone: components["schemas"]["PhoneNumber"];
         };
         UpdateSupplierDto: {
             /**
@@ -3901,6 +3901,38 @@ export interface operations {
             };
         };
     };
+    getCloudinarySignature: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signature generated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getAllProductModels: {
         parameters: {
             query?: never;
@@ -4076,38 +4108,6 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ProductModel"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getCloudinarySignature: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Signature generated */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             /** @description Unauthorized */
             401: {
