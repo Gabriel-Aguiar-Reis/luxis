@@ -14,14 +14,14 @@ export class Supplier {
   @ApiProperty({
     description: 'The name of the supplier',
     example: 'Apple Inc.',
-    type: String
+    type: Name
   })
   public name: Name
 
   @ApiProperty({
     description: 'The phone number of the supplier',
     example: '+5511999999999',
-    type: String
+    type: PhoneNumber
   })
   public phone: PhoneNumber
 
