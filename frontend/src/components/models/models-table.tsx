@@ -41,12 +41,6 @@ type ModelsTableProps = {
   handleDeleteProductModel: (id: string) => void
 }
 
-const productModelStatusMap: Record<ProductModelStatus, string> = {
-  USED: 'Usado',
-  ACTIVE: 'Ativo',
-  ARCHIVED: 'Arquivado'
-}
-
 export function ModelsTable({
   models,
   categories,
@@ -103,6 +97,37 @@ export function ModelsTable({
     currentPage * modelsPerPage
   )
   const emptyRows = modelsPerPage - paginatedModels.length
+
+  const formatStatus = (status: ProductModelStatus) => {
+    const statusMap: Record<
+      ProductModelStatus,
+      { label: string; className: string }
+    > = {
+      USED: {
+        label: 'Usado',
+        className: 'bg-[var(--badge-4)] text-[var(--badge-text-4)]'
+      },
+      ACTIVE: {
+        label: 'Ativo',
+        className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
+      },
+      ARCHIVED: {
+        label: 'Arquivado',
+        className: 'bg-[var(--badge-6)] text-[var(--badge-text-6)]'
+      }
+    }
+    const { label, className } = statusMap[status] || {
+      label: status,
+      className: ''
+    }
+    return (
+      <span
+        className={`rounded-full px-2 py-1 text-xs font-medium ${className}`}
+      >
+        {label}
+      </span>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -191,7 +216,7 @@ export function ModelsTable({
                                   {model.suggestedPrice.value.replace('.', ',')}
                                 </TableCell>
                                 <TableCell>
-                                  {productModelStatusMap[model.status]}
+                                  {formatStatus(model.status)}
                                 </TableCell>
                                 <TableCell className="text-right">
                                   <div className="flex justify-end gap-2">
