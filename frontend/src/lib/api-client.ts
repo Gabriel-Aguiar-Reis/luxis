@@ -52,7 +52,7 @@ export async function apiFetch<T>(
   }
 
   if (!response.ok) {
-    toast.error(data?.message || 'Erro inesperado. Tente novamente mais tarde.')
+    // toast.error(data?.message || 'Erro inesperado. Tente novamente mais tarde.')
     throw new ApiError(
       data?.message || 'Erro inesperado',
       response.status,

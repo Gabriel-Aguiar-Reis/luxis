@@ -19,6 +19,13 @@ export const apiPaths = {
     status: (id: string) => `/ownership-transfers/${id}/status`
   },
 
+  // Inventory
+  inventory: {
+    byId(id: string) {
+      return `/inventory/${id}`
+    }
+  },
+
   // KPI - Ownership Transfers (Admin)
   kpiOwnershipTransfers: {
     byResellerId: (id: string) =>

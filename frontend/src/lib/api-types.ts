@@ -28,8 +28,16 @@ export type UpdateCategoryStatus = paths['/categories/{id}/status']['patch']
 // Ownership-transfers
 
 export type OwnershipTransfer = components['schemas']['OwnershipTransfer']
+export type OwnershipTransferStatus =
+  components['schemas']['OwnershipTransfer']['status']
 export type GetAllOwnershipTransfers = paths['/ownership-transfers']['get']
+export type GetAllOwnershipTransferReturn =
+  paths['/ownership-transfers']['get']['responses']['200']['content']['application/json']
 export type GetOneOwnershipTransfer = paths['/ownership-transfers/{id}']['get']
+export type GetOneOwnershipTransferReturn =
+  paths['/ownership-transfers/{id}']['get']['responses']['200']['content']['application/json']
+export type PostOwnershipTransferDto =
+  paths['/ownership-transfers']['post']['requestBody']['content']['application/json']
 export type PostOwnershipTransfer = paths['/ownership-transfers']['post']
 export type DeleteOwnershipTransfer =
   paths['/ownership-transfers/{id}']['delete']
@@ -37,6 +45,15 @@ export type UpdateOwnershipTransfer =
   paths['/ownership-transfers/{id}']['patch']
 export type UpdateOwnershipTransferStatus =
   paths['/ownership-transfers/{id}/status']['patch']
+export type UpdateOwnershipTransferStatusDto =
+  paths['/ownership-transfers/{id}/status']['patch']['requestBody']['content']['application/json']
+
+// Inventory
+export type GetInventoryByIdProduct =
+  components['schemas']['InventoryProductIdDto']
+export type GetInventoryById = paths['/inventory/{id}']['get']
+export type GetInventoryByIdReturn =
+  paths['/inventory/{id}']['get']['responses']['200']['content']['application/json']
 
 // Products
 

@@ -779,6 +779,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/inventory/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get inventory by ID */
+        get: operations["getInventoryById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/kpi/admin/products/in-stock/total": {
         parameters: {
             query?: never;
@@ -1387,7 +1404,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The arrival date of the batch
-             * @example 2024-01-01
+             * @example 2023-10-01T12:00:00Z
              */
             arrivalDate: string;
             /**
@@ -1437,7 +1454,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The arrival date of the batch
-             * @example 2021-01-01
+             * @example 2023-10-01T12:00:00Z
              */
             arrivalDate: string;
             /**
@@ -1521,6 +1538,55 @@ export interface components {
              */
             description?: string;
         };
+        OwnershipTransferWithSerialDto: {
+            /** @description The ID of the ownership transfer */
+            id: string;
+            /** @description The ID of the product */
+            productId: string;
+            /** @description The serial number of the product */
+            serialNumber: string;
+            /** @description The ID of the from reseller */
+            fromResellerId: string;
+            /** @description The name of the from reseller */
+            fromResellerName: string;
+            /** @description The ID of the to reseller */
+            toResellerId: string;
+            /** @description The name of the from reseller */
+            toResellerName: string;
+            /**
+             * Format: date-time
+             * @description The transfer date
+             */
+            transferDate: string;
+            /**
+             * @description The status of the ownership transfer
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
+        };
+        CreateOwnershipTransferDto: {
+            /**
+             * @description The ID of the product
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            productId: string;
+            /**
+             * @description The ID of the from reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            fromResellerId?: string;
+            /**
+             * @description The ID of the to reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            toResellerId: string;
+            /**
+             * Format: date-time
+             * @description The transfer date
+             * @example 2023-10-01T12:00:00Z
+             */
+            transferDate?: string;
+        };
         OwnershipTransfer: {
             /**
              * @description The ID of the ownership transfer
@@ -1545,7 +1611,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The transfer date
-             * @example 2021-01-01
+             * @example 2023-10-01T12:00:00Z
              */
             transferDate: string;
             /**
@@ -1554,39 +1620,6 @@ export interface components {
              * @enum {string}
              */
             status: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
-        };
-        /**
-         * @description The status of the ownership transfer
-         * @enum {string}
-         */
-        OwnershipTransferStatus: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
-        CreateOwnershipTransferDto: {
-            /**
-             * @description The ID of the product
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            productId: string;
-            /**
-             * @description The ID of the from reseller
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            fromResellerId?: string;
-            /**
-             * @description The ID of the to reseller
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            toResellerId: string;
-            /**
-             * Format: date-time
-             * @description The transfer date
-             * @example 2021-01-01
-             */
-            transferDate: string;
-            /**
-             * @description The status of the ownership transfer
-             * @example PENDING
-             */
-            status: components["schemas"]["OwnershipTransferStatus"];
         };
         UpdateOwnershipTransferDto: {
             /**
@@ -1610,6 +1643,18 @@ export interface components {
              * @example 2021-01-01
              */
             transferDate?: string;
+        };
+        /**
+         * @description The new status of the ownership transfer
+         * @enum {string}
+         */
+        OwnershipTransferStatus: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
+        UpdateOwnershipTransferStatusDto: {
+            /**
+             * @description The new status of the ownership transfer
+             * @example APPROVED
+             */
+            status: components["schemas"]["OwnershipTransferStatus"];
         };
         SerialNumber: {
             /**
@@ -2527,6 +2572,59 @@ export interface components {
              *     }
              */
             user: components["schemas"]["UserPayloadDto"];
+        };
+        InventoryProductIdDto: {
+            /**
+             * @description The ID of the product
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The model ID of the product
+             * @example model-1
+             */
+            modelId: string;
+            /**
+             * @description The serial number of the product
+             * @example SN-123456
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+        };
+        GetInventoryByIdReturnDto: {
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The full name of the reseller
+             * @example John Doe
+             */
+            resellerName: string;
+            /**
+             * @description The IDs of the products in the inventory
+             * @example [
+             *       {
+             *         "id": "123e4567-e89b-12d3-a456-426614174000",
+             *         "modelId": "model-1",
+             *         "serialNumber": "SN-123456"
+             *       },
+             *       {
+             *         "id": "123e4567-e89b-12d3-a456-426614174001",
+             *         "modelId": "model-2",
+             *         "serialNumber": "SN-123457"
+             *       }
+             *     ]
+             */
+            products: components["schemas"]["InventoryProductIdDto"][];
+            /**
+             * @description The model names of the products in the inventory
+             * @example [
+             *       "model-1",
+             *       "model-2"
+             *     ]
+             */
+            productModelNames: components["schemas"]["ModelName"][];
         };
         ParamsDto: {
             /**
@@ -3496,7 +3594,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OwnershipTransfer"][];
+                    "application/json": components["schemas"]["OwnershipTransferWithSerialDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -3571,7 +3669,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OwnershipTransfer"];
+                    "application/json": components["schemas"]["OwnershipTransferWithSerialDto"];
                 };
             };
             /** @description Unauthorized */
@@ -3654,7 +3752,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OwnershipTransfer"];
+                    "application/json": components["schemas"]["OwnershipTransferWithSerialDto"];
                 };
             };
             /** @description Unauthorized */
@@ -3685,7 +3783,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateOwnershipTransferDto"];
+                "application/json": components["schemas"]["UpdateOwnershipTransferStatusDto"];
             };
         };
         responses: {
@@ -5843,6 +5941,42 @@ export interface operations {
             };
             /** @description Unauthorized - Invalid token */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getInventoryById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Inventory returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetInventoryByIdReturnDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
