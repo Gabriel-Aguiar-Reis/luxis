@@ -34,7 +34,6 @@ export function SuppliersTable({
   onEdit,
   onDelete,
   phoneUtil,
-  onCreate,
   suppliersPerPage = 10
 }: SuppliersTableProps) {
   const [search, setSearch] = useState('')

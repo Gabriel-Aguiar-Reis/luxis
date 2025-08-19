@@ -206,7 +206,7 @@ export function TransfersTable({
                         <TableCell>{formatStatus(transfer.status)}</TableCell>
 
                         <TableCell className="text-right">
-                          <DropdownMenu>
+                          <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="sm">
                                 <Ellipsis />

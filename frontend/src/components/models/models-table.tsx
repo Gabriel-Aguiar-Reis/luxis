@@ -171,7 +171,6 @@ export function ModelsTable({
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Id</TableHead>
                         <TableHead>Foto</TableHead>
                         <TableHead>Nome</TableHead>
                         <TableHead>Nome da Categoria</TableHead>
@@ -186,9 +185,6 @@ export function ModelsTable({
                           {paginatedModels.map((model) => {
                             return (
                               <TableRow key={model.id}>
-                                <TableCell className="font-medium">
-                                  {model.id}
-                                </TableCell>
                                 <TableCell>
                                   {model?.photoUrl ? (
                                     <img
