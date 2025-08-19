@@ -24,7 +24,6 @@ export class OwnershipTransferSeed {
       fromResellerId,
       toResellerId,
       transferDate: new Date('2024-06-01'),
-      status: OwnershipTransferStatus.PENDING
     }
     const transfer = await this.createOwnershipTransferUseCase.execute(
       dto,
@@ -33,13 +32,13 @@ export class OwnershipTransferSeed {
 
     await this.updateStatusOwnershipTransferUseCase.execute(
       transfer.id,
-      OwnershipTransferStatus.APPROVED,
+      { status: OwnershipTransferStatus.APPROVED },
       user
     )
 
     await this.updateStatusOwnershipTransferUseCase.execute(
       transfer.id,
-      OwnershipTransferStatus.FINISHED,
+      { status: OwnershipTransferStatus.FINISHED },
       user
     )
     return transfer.id

@@ -27,7 +27,7 @@ export class CreateOwnershipTransferUseCase {
         input.productId,
         user.id,
         input.toResellerId,
-        new Date(),
+        input.transferDate || new Date(),
         OwnershipTransferStatus.PENDING
       )
     } else {
@@ -36,7 +36,7 @@ export class CreateOwnershipTransferUseCase {
         input.productId,
         input.fromResellerId,
         input.toResellerId,
-        new Date(),
+        input.transferDate || new Date(),
         OwnershipTransferStatus.PENDING
       )
     }

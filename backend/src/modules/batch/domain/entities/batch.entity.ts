@@ -12,7 +12,7 @@ export class Batch {
 
   @ApiProperty({
     description: 'The arrival date of the batch',
-    example: '2024-01-01',
+    example: '2023-10-01T12:00:00Z',
     type: Date
   })
   public arrivalDate: Date

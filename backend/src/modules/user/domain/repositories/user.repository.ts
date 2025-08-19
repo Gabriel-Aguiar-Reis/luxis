@@ -14,4 +14,5 @@ export abstract class UserRepository {
   abstract updateStatus(id: UUID, status: UserStatus): Promise<User>
   abstract delete(id: UUID): Promise<void>
   abstract disable(id: UUID): Promise<User>
+  abstract findManyByIds(ids: UUID[]): Promise<User[]>
 }

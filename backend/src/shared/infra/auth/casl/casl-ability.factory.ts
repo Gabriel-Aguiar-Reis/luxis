@@ -20,11 +20,13 @@ import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { Return } from '@/modules/return/domain/entities/return.entity'
 import { Customer } from '@/modules/customer/domain/entities/customer.entity'
+import { Inventory } from '@/modules/inventory/domain/entities/inventory.entity'
 
 type Subjects =
   | InferSubjects<typeof Batch>
   | InferSubjects<typeof Category>
   | InferSubjects<typeof Customer>
+  | InferSubjects<typeof Inventory>
   | InferSubjects<typeof OwnershipTransfer>
   | InferSubjects<typeof Product>
   | InferSubjects<typeof ProductModel>

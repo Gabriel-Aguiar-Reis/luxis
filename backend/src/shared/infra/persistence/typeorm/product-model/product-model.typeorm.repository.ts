@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
 import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
@@ -23,6 +23,11 @@ export class ProductModelTypeOrmRepository implements ProductModelRepository {
     const entity = await this.repository.findOne({ where: { id } })
     if (!entity) return null
     return ProductModelMapper.toDomain(entity)
+  }
+
+  async findManyByIds(ids: UUID[]): Promise<ProductModel[]> {
+    const entities = await this.repository.findBy({ id: In(ids) })
+    return entities.map(ProductModelMapper.toDomain)
   }
 
   async create(model: ProductModel): Promise<ProductModel> {

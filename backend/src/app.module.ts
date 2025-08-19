@@ -40,6 +40,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { AdminKpiModule } from '@/modules/kpi/admin/admin-kpi.module'
 import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
+import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rules'
 
 @Module({
   imports: [
@@ -111,6 +112,7 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
     SupplierCaslRule,
     ReturnCaslRule,
     CustomerCaslRule,
+    InventoryCaslRule,
     AdminKpiCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
@@ -126,7 +128,9 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         supplierRule: SupplierCaslRule,
         returnRule: ReturnCaslRule,
         customerRule: CustomerCaslRule,
-        adminKpiCaslRule: AdminKpiCaslRule
+        inventoryRule: InventoryCaslRule,
+        adminKpiCaslRule: AdminKpiCaslRule,
+
       ): CaslRuleBuilder[] => [
         saleRule,
         userRule,
@@ -139,6 +143,7 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         supplierRule,
         returnRule,
         customerRule,
+        inventoryRule,
         adminKpiCaslRule
       ],
       inject: [
@@ -153,6 +158,7 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         SupplierCaslRule,
         ReturnCaslRule,
         CustomerCaslRule,
+        InventoryCaslRule,
         AdminKpiCaslRule
       ]
     },

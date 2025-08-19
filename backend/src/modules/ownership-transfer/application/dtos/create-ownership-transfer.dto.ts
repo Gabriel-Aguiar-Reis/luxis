@@ -1,5 +1,4 @@
-import { OwnershipTransferStatus } from '@/modules/ownership-transfer/domain/enums/ownership-transfer-status.enum'
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsUUID } from 'class-validator'
+import { IsDate, IsNotEmpty, IsOptional, IsUUID } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 
@@ -36,22 +35,11 @@ export class CreateOwnershipTransferDto {
 
   @ApiProperty({
     description: 'The transfer date',
-    example: '2021-01-01',
+    example: '2023-10-01T12:00:00Z',
     type: Date,
-    required: true
+    required: false
   })
   @IsDate()
-  @IsNotEmpty()
-  transferDate: Date
-
-  @ApiProperty({
-    description: 'The status of the ownership transfer',
-    example: OwnershipTransferStatus.PENDING,
-    enum: OwnershipTransferStatus,
-    enumName: 'OwnershipTransferStatus',
-    required: true
-  })
-  @IsEnum(OwnershipTransferStatus)
-  @IsNotEmpty()
-  status: OwnershipTransferStatus
+  @IsOptional()
+  transferDate?: Date
 }
