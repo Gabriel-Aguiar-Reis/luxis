@@ -109,7 +109,7 @@ export function TransfersTable({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'dd/MM/yyyy', { locale: ptBR })
+      return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
     } catch (error) {
       return 'Data inválida'
     }
@@ -248,7 +248,7 @@ export function TransfersTable({
                     {Array.from({ length: emptyRows > 0 ? emptyRows : 0 }).map(
                       (_, idx) => (
                         <TableRow key={`empty-${idx}`}>
-                          <TableCell colSpan={3} style={{ height: 57 }} />
+                          <TableCell colSpan={6} style={{ height: 57 }} />
                         </TableRow>
                       )
                     )}
