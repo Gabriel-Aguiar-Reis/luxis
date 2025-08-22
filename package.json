@@ -2,7 +2,7 @@
   "name": "monorepo",
   "private": true,
   "scripts": {
-    "start": "concurrently -k -n BACKEND,FRONTEND -c cyan.bgGray,green.bgGray --prefix \"[{name}]\" \"yarn --cwd backend start:dev\" \"yarn --cwd frontend dev\""
+    "start": "concurrently -k -n BACKEND,FRONTEND -c cyan.bgGray,green.bgGray --prefix \"[{name}:{pid}]\" \"yarn --cwd backend start:dev\" \"yarn --cwd frontend dev\""
 
   },
   "devDependencies": {
