@@ -222,6 +222,7 @@ export function TransfersTable({
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 onClick={() => onEdit(transfer)}
+                                disabled={transfer.status !== 'PENDING'}
                               >
                                 <FilePen className="mr-2 h-4 w-4" />
                                 Infos

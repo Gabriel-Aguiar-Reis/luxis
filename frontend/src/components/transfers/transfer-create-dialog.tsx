@@ -27,7 +27,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { ChevronsUpDown, Square, SquareCheck } from 'lucide-react'
-import { GetInventoryByIdProduct } from '@/lib/api-types'
+import { GetInventoryByIdProduct, User } from '@/lib/api-types'
 import { useState } from 'react'
 
 export function TransferCreateDialog({
@@ -61,7 +61,7 @@ export function TransferCreateDialog({
     [users]
   )
 
-  function useMultipleInventories(resellers: any[]) {
+  function useMultipleInventories(resellers: User[]) {
     return resellers.map((reseller) => ({
       resellerId: reseller.id,
       query: useGetInventoryById(reseller.id)
