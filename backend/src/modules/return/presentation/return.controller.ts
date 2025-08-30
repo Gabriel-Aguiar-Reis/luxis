@@ -39,6 +39,9 @@ import {
 } from '@nestjs/swagger'
 import { Return } from '@/modules/return/domain/entities/return.entity'
 import { GetReturnsByResellerIdUseCase } from '@/modules/return/application/use-cases/get-returns-by-reseller-id.use-case'
+import { GetAllReturnDto } from '@/modules/return/application/dtos/get-all-return.dto'
+import { GetOneReturnDto } from '@/modules/return/application/dtos/get-one-return.dto'
+import { UpdateReturnStatusDto } from '@/modules/return/application/dtos/update-return-status.dto'
 
 @ApiTags('Returns')
 @ApiBearerAuth()
@@ -83,7 +86,7 @@ export class ReturnController {
   @ApiResponse({
     status: 200,
     description: 'List of returns returned successfully',
-    type: [Return]
+    type: [GetAllReturnDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -106,7 +109,7 @@ export class ReturnController {
   @ApiResponse({
     status: 200,
     description: 'Return found successfully',
-    type: Return
+    type: GetOneReturnDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -152,7 +155,7 @@ export class ReturnController {
     operationId: 'updateReturnStatus'
   })
   @ApiParam({ name: 'id', description: 'Return ID' })
-  @ApiBody({ type: UpdateReturnDto })
+  @ApiBody({ type: UpdateReturnStatusDto })
   @ApiResponse({
     status: 200,
     description: 'Return updated successfully',
@@ -165,14 +168,14 @@ export class ReturnController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
-    @Body() status: ReturnStatus,
+    @Body() dto: UpdateReturnStatusDto,
     @CurrentUser() user: UserPayload
   ) {
     this.logger.warn(
-      `Updating return status ${status} - Requested by user ${user.email}`,
+      `Updating return status ${dto.status} - Requested by user ${user.email}`,
       'ReturnController'
     )
-    return await this.updateReturnStatusUseCase.execute(id, status, user)
+    return await this.updateReturnStatusUseCase.execute(id, dto.status, user)
   }
 
   @ApiOperation({
