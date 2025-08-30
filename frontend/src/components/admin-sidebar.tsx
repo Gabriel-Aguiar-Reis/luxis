@@ -2,15 +2,18 @@
 
 import * as React from 'react'
 import {
+  ArrowLeftRight,
   BarChart3,
   Box,
   Cog,
+  FileBox,
   LogOut,
   PackageOpen,
   ShoppingBag,
   Sparkle,
   Store,
   Truck,
+  Undo2,
   Users
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -22,6 +25,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarSeparator
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
@@ -30,6 +36,8 @@ import { Link, usePathname, useRouter } from '@/lib/i18n/navigation'
 import { useAuthStore } from '@/stores/use-auth-store'
 import { useGetUsers } from '@/hooks/use-users'
 import { Badge } from '@/components/ui/badge'
+import { useGetTransfers } from '@/hooks/use-transfers'
+import { useGetReturns } from '@/hooks/use-returns'
 
 export function AdminSidebar({
   ...props
@@ -44,10 +52,17 @@ export function AdminSidebar({
   const tBatches = useTranslations('Admin-Batches')
   const tSuppliers = useTranslations('Admin-Suppliers')
   const tShipments = useTranslations('Admin-Shipments')
+  const tReturns = useTranslations('Admin-Returns')
+  const tTransfers = useTranslations('Admin-Transfers')
+  const tModels = useTranslations('Admin-Models')
 
   const { logout } = useAuthStore()
 
   const { data: users } = useGetUsers()
+
+  const { data: transfers } = useGetTransfers()
+
+  const { data: returns } = useGetReturns()
 
   const handleLogout = () => {
     logout()
@@ -55,7 +70,23 @@ export function AdminSidebar({
     router.push('/admin-login')
   }
 
-  const navItems = [
+  type subitemsProp = {
+    title: string
+    url: string
+    icon: React.ComponentType<{ className?: string }>
+    isActive: boolean
+    hasBadge?: boolean
+  }
+  type navItemsProp = {
+    title: string
+    routeKey: string
+    url: string
+    icon: React.ComponentType<{ className?: string }>
+    isActive: boolean
+    hasBadge?: boolean
+    items?: subitemsProp[]
+  }
+  const navItems: navItemsProp[] = [
     {
       title: t('Dashboard'),
       routeKey: 'home',
@@ -73,6 +104,14 @@ export function AdminSidebar({
       hasBadge: false
     },
     {
+      title: tModels('title'),
+      routeKey: 'models',
+      url: '/home/models',
+      icon: FileBox,
+      isActive: pathname.includes('/home/models'),
+      hasBadge: false
+    },
+    {
       title: tUsers('title'),
       routeKey: 'users',
       url: '/home/users',
@@ -80,6 +119,27 @@ export function AdminSidebar({
       isActive: pathname.includes('/home/users'),
       hasBadge:
         users && users?.filter((user) => user.status === 'PENDING').length > 0
+    },
+    {
+      title: tReturns('title'),
+      routeKey: 'returns',
+      url: '/home/returns',
+      icon: Undo2,
+      isActive: pathname.includes('/home/returns'),
+      hasBadge:
+        returns &&
+        returns.filter((returnItem) => returnItem.status === 'PENDING').length >
+          0
+    },
+    {
+      title: tTransfers('title'),
+      routeKey: 'transfers',
+      url: '/home/transfers',
+      icon: ArrowLeftRight,
+      isActive: pathname.includes('/home/transfers'),
+      hasBadge:
+        transfers &&
+        transfers.filter((transfer) => transfer.status === 'PENDING').length > 0
     },
     {
       title: tSales('title'),
@@ -152,6 +212,30 @@ export function AdminSidebar({
                   )}
                 </Link>
               </SidebarMenuButton>
+              {item.items?.length ? (
+                <SidebarMenuSub>
+                  {item.items.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton asChild isActive={subItem.isActive}>
+                        <Link
+                          href={subItem.url}
+                          className="flex justify-between"
+                        >
+                          <div className="flex items-center gap-2">
+                            <subItem.icon className="size-4" />
+                            <span>{subItem.title}</span>
+                          </div>
+                          {subItem.hasBadge && (
+                            <Badge className="ml-2 bg-[var(--badge-6)] text-[var(--badge-text-6)]">
+                              !
+                            </Badge>
+                          )}
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              ) : null}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

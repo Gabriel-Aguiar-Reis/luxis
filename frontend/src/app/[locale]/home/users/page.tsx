@@ -1,3 +1,4 @@
+import { UsersPage } from '@/components/users/users-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,10 +10,9 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslations } from 'next-intl'
-import { TransfersPage } from '@/components/transfers/transfers-page'
 
-export default function AdminUsersTransfersPage() {
-  const t = useTranslations('Admin-Transfers')
+export default function AdminUsersPage() {
+  const t = useTranslations('Admin-Users')
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -35,7 +35,7 @@ export default function AdminUsersTransfersPage() {
           </Breadcrumb>
         </div>
       </header>
-      <TransfersPage />
+      <UsersPage />
     </>
   )
 }
