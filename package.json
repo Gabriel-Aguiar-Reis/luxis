@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "start": "concurrently -k -n BACKEND,FRONTEND -c cyan.bgGray,green.bgGray --prefix \"[{name}:{pid}]\" \"yarn --cwd backend start:dev\" \"yarn --cwd frontend dev\""
-
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
