@@ -123,6 +123,7 @@ export type UpdateSupplier = paths['/suppliers/{id}']['patch']
 // Returns
 
 export type Return = components['schemas']['Return']
+export type ReturnProductDto = components['schemas']['ReturnProductDto']
 export type ReturnStatus = components['schemas']['Return']['status']
 export type GetAllReturns = paths['/returns']['get']
 export type GetOneReturn = paths['/returns/{id}']['get']
@@ -132,6 +133,8 @@ export type PostReturn = paths['/returns']['post']
 export type DeleteReturn = paths['/returns/{id}']['delete']
 export type UpdateReturn = paths['/returns/{id}']['patch']
 export type UpdateReturnStatus = paths['/returns/{id}/status']['patch']
+export type UpdateReturnStatusDto =
+  paths['/returns/{id}/status']['patch']['requestBody']['content']['application/json']
 
 // Customers
 

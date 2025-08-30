@@ -2408,6 +2408,109 @@ export interface components {
              */
             createdAt: string;
         };
+        ReturnProductDto: {
+            /**
+             * @description The ID of the product being returned
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            productId: string;
+            /**
+             * @description The reason for the return
+             * @example Defective item
+             */
+            productModelName: components["schemas"]["ModelName"];
+            /**
+             * @description The serial number of the product being returned
+             * @example SN123456
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+        };
+        GetAllReturnDto: {
+            /**
+             * @description The ID of the return
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The name of the reseller
+             * @example Reseller XYZ
+             */
+            resellerName: string;
+            /**
+             * @description The IDs of the products being returned
+             * @example [
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174000",
+             *         "productModelName": "Product A"
+             *       },
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174001",
+             *         "productModelName": "Product B"
+             *       }
+             *     ]
+             */
+            products: components["schemas"]["ReturnProductDto"][];
+            /**
+             * @description The status of the return
+             * @example PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "RETURNED" | "CANCELLED";
+            /**
+             * Format: date-time
+             * @description The creation date of the return
+             * @example 2024-01-01
+             */
+            createdAt: string;
+        };
+        GetOneReturnDto: {
+            /**
+             * @description The ID of the return
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The name of the reseller
+             * @example Reseller XYZ
+             */
+            resellerName: string;
+            /**
+             * @description The IDs of the products being returned
+             * @example [
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174000",
+             *         "productModelName": "Model XYZ"
+             *       },
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174001",
+             *         "productModelName": "Model ABC"
+             *       }
+             *     ]
+             */
+            products: components["schemas"]["ReturnProductDto"][];
+            /**
+             * @description The status of the return
+             * @example PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "RETURNED" | "CANCELLED";
+            /**
+             * Format: date-time
+             * @description The creation date of the return
+             * @example 2024-01-01
+             */
+            createdAt: string;
+        };
         UpdateReturnDto: {
             /**
              * @description The ID of the reseller
@@ -2422,6 +2525,14 @@ export interface components {
              *     ]
              */
             items?: string[];
+        };
+        UpdateReturnStatusDto: {
+            /**
+             * @description The status of the return
+             * @example CANCELLED
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "RETURNED" | "CANCELLED";
         };
         CreateCustomerDto: {
             /**
@@ -5242,7 +5353,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Return"][];
+                    "application/json": components["schemas"]["GetAllReturnDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -5317,7 +5428,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Return"];
+                    "application/json": components["schemas"]["GetOneReturnDto"];
                 };
             };
             /** @description Unauthorized */
@@ -5433,7 +5544,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateReturnDto"];
+                "application/json": components["schemas"]["UpdateReturnStatusDto"];
             };
         };
         responses: {
