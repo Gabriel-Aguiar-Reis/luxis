@@ -114,6 +114,11 @@
     "title": "Lotes de Fornecimentos",
     "description": "Gerencie seus lotes de fornecimentos"
   },
+  "Admin-Batch-Create": {
+    "title": "Criar Lote de Fornecimento",
+    "batches": "Lotes de Fornecimentos",
+    "description": "Preencha os dados para criar um novo lote de fornecimento."
+  },
   "Admin-Products": {
     "title": "Produtos",
     "description": "Gerencie seus produtos"

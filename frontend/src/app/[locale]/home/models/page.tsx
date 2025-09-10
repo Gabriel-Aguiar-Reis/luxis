@@ -10,8 +10,10 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslations } from 'next-intl'
+import { useRouter } from '@/lib/i18n/navigation'
 
 export default function AdminProductsModelsPage() {
+  const router = useRouter()
   const t = useTranslations('Admin-Models')
   return (
     <>
@@ -25,7 +27,13 @@ export default function AdminProductsModelsPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/home">Dashboard</BreadcrumbLink>
+                <BreadcrumbLink
+                  onClick={() => {
+                    router.push('/home')
+                  }}
+                >
+                  Dashboard
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>

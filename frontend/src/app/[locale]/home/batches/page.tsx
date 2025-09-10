@@ -1,4 +1,4 @@
-import { SuppliersPage } from '@/components/suppliers/suppliers-page'
+import { BatchesPage } from '@/components/batches/batches-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,12 +9,12 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
-export default function AdminSuppliersPage() {
-  const t = useTranslations('Admin-Suppliers')
+export default function AdminBatchesPage() {
   const router = useRouter()
+  const t = useTranslations('Admin-Batches')
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -43,7 +43,7 @@ export default function AdminSuppliersPage() {
           </Breadcrumb>
         </div>
       </header>
-      <SuppliersPage />
+      <BatchesPage />
     </>
   )
 }

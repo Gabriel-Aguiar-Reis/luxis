@@ -114,6 +114,11 @@
     "title": "Batches",
     "description": "Manage your batches"
   },
+  "Admin-Batch-Create": {
+    "title": "Create Batch",
+    "batches": "Batches",
+    "description": "Fill in the details to create a new batch."
+  },
   "Admin-Products": {
     "title": "Products",
     "description": "Manage your products"

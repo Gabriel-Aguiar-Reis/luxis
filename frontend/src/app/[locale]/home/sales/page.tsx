@@ -1,4 +1,4 @@
-import { SuppliersPage } from '@/components/suppliers/suppliers-page'
+import { SalesPage } from '@/components/sales/sales-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,8 +12,8 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/navigation'
 
-export default function AdminSuppliersPage() {
-  const t = useTranslations('Admin-Suppliers')
+export default function AdminSalesPage() {
+  const t = useTranslations('Admin-Sales')
   const router = useRouter()
   return (
     <>
@@ -43,7 +43,7 @@ export default function AdminSuppliersPage() {
           </Breadcrumb>
         </div>
       </header>
-      <SuppliersPage />
+      <SalesPage />
     </>
   )
 }

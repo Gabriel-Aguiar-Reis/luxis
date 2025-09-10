@@ -8,6 +8,7 @@ export type ParamsWithMandatoryPeriodDto =
 
 // Batches
 
+export type BatchProductDto = components['schemas']['GetBatchProductDto']
 export type Batch = components['schemas']['Batch']
 export type GetAllBatches = paths['/batches']['get']
 export type GetOneBatch = paths['/batches/{id}']['get']

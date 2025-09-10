@@ -1395,23 +1395,109 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        Batch: {
+        Currency: {
             /**
-             * @description The ID of the batch
+             * @description The currency value in string format
+             * @example 100.00
+             */
+            value: string;
+        };
+        SerialNumber: {
+            /**
+             * @description The serial number of the product
+             * @example 0424A-BR-BAB-001
+             */
+            value: string;
+        };
+        ModelName: {
+            /**
+             * @description The name of the product model
+             * @example iPhone 13 Pro Max
+             */
+            value: string;
+        };
+        GetBatchProductDto: {
+            /**
+             * @description The ID of the product
              * @example 123e4567-e89b-12d3-a456-426614174000
              */
             id: string;
             /**
+             * @description The serial number of the product
+             * @example 0424A-BR-BAB-001
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+            /**
+             * @description The ID of the product model
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            modelId: string;
+            /**
+             * @description The ID of the batch
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            batchId: string;
+            /**
+             * @description The unit cost of the product
+             * @example 100.00
+             */
+            unitCost: components["schemas"]["Currency"];
+            /**
+             * @description The sale price of the product
+             * @example 150.00
+             */
+            salePrice: components["schemas"]["Currency"];
+            /**
+             * @description The status of the product
+             * @example IN_STOCK
+             * @enum {string}
+             */
+            status: "IN_STOCK" | "ASSIGNED" | "SOLD";
+            /**
+             * @description The name of the product model
+             * @example iPhone 13
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description The quantity of the product
+             * @example 100
+             */
+            quantity: number;
+        };
+        GetBatchDto: {
+            /**
              * Format: date-time
              * @description The arrival date of the batch
-             * @example 2023-10-01T12:00:00Z
+             * @example 2023-10-01T00:00:00.000Z
              */
             arrivalDate: string;
             /**
-             * @description The ID of the supplier
-             * @example 123e4567-e89b-12d3-a456-426614174000
+             * @description The supplier ID of the batch
+             * @example 550e8400-e29b-41d4-a716-446655440000
              */
             supplierId: string;
+            /**
+             * @description The ID of the batch
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            id: string;
+            /**
+             * @description The supplier name of the batch
+             * @example Supplier Inc.
+             */
+            supplierName: string;
+            /**
+             * @description The total number of items in the batch
+             * @example 150
+             */
+            totalItems: number;
+            /**
+             * @description The total cost of the batch
+             * @example 1500.00
+             */
+            totalCost: components["schemas"]["Currency"];
+            /** @description The items in the batch */
+            items: components["schemas"]["GetBatchProductDto"][];
         };
         ProductEntryDto: {
             /**
@@ -1476,6 +1562,24 @@ export interface components {
              *     ]
              */
             entries: components["schemas"]["ProductEntryDto"][];
+        };
+        Batch: {
+            /**
+             * @description The ID of the batch
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * Format: date-time
+             * @description The arrival date of the batch
+             * @example 2023-10-01T12:00:00Z
+             */
+            arrivalDate: string;
+            /**
+             * @description The ID of the supplier
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            supplierId: string;
         };
         CategoryName: {
             /**
@@ -1656,20 +1760,6 @@ export interface components {
              */
             status: components["schemas"]["OwnershipTransferStatus"];
         };
-        SerialNumber: {
-            /**
-             * @description The serial number of the product
-             * @example 0424A-BR-BAB-001
-             */
-            value: string;
-        };
-        Currency: {
-            /**
-             * @description The currency value in string format
-             * @example 100.00
-             */
-            value: string;
-        };
         Product: {
             /**
              * @description The ID of the product
@@ -1724,13 +1814,6 @@ export interface components {
              * @example IN_STOCK
              */
             status?: string;
-        };
-        ModelName: {
-            /**
-             * @description The name of the product model
-             * @example iPhone 13 Pro Max
-             */
-            value: string;
         };
         ImageURL: {
             /**
@@ -3319,7 +3402,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Batch"][];
+                    "application/json": components["schemas"]["GetBatchDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -3394,7 +3477,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Batch"];
+                    "application/json": components["schemas"]["GetBatchDto"];
                 };
             };
             /** @description Unauthorized */

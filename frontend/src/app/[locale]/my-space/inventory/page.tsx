@@ -1,4 +1,4 @@
-import { SuppliersPage } from '@/components/suppliers/suppliers-page'
+import { InventoryPageWithQuery } from '@/components/inventory/inventory-page-with-query'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,8 +12,8 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/navigation'
 
-export default function AdminSuppliersPage() {
-  const t = useTranslations('Admin-Suppliers')
+export default function ResellerInventoryPage() {
+  const t = useTranslations('Inventory')
   const router = useRouter()
   return (
     <>
@@ -29,7 +29,7 @@ export default function AdminSuppliersPage() {
               <BreadcrumbItem>
                 <BreadcrumbLink
                   onClick={() => {
-                    router.push('/home')
+                    router.push('/my-space')
                   }}
                 >
                   Dashboard
@@ -43,7 +43,7 @@ export default function AdminSuppliersPage() {
           </Breadcrumb>
         </div>
       </header>
-      <SuppliersPage />
+      <InventoryPageWithQuery />
     </>
   )
 }
