@@ -34,6 +34,7 @@ import {
 import { ApiResponse } from '@nestjs/swagger'
 import { Batch } from '@/modules/batch/domain/entities/batch.entity'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
+import { GetBatchDto } from '@/modules/batch/application/dtos/get-batch.dto'
 
 @ApiTags('Batches')
 @ApiBearerAuth()
@@ -53,7 +54,7 @@ export class BatchController {
   @ApiResponse({
     status: 200,
     description: 'List of batches returned successfully',
-    type: [Batch]
+    type: [GetBatchDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -75,7 +76,7 @@ export class BatchController {
   @ApiResponse({
     status: 200,
     description: 'Batch found successfully',
-    type: Batch
+    type: GetBatchDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })

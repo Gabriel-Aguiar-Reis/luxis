@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { SupplierRepository } from '@/modules/supplier/domain/repositories/supplier.repository'
 import { SupplierTypeOrmEntity } from '@/shared/infra/persistence/typeorm/supplier/supplier.typeorm.entity'
@@ -37,6 +37,11 @@ export class SupplierTypeOrmRepository implements SupplierRepository {
 
   async delete(id: UUID): Promise<void> {
     await this.repository.delete(id)
+  }
+
+  async findManyByIds(ids: UUID[]): Promise<Supplier[]> {
+    const entities = await this.repository.findBy({ id: In(ids) })
+    return entities.map(SupplierMapper.toDomain)
   }
 
   async findAll(): Promise<Supplier[]> {

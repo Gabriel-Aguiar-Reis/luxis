@@ -19,6 +19,8 @@ import { AppModule } from '@/app.module'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { AppConfigService } from '@/shared/config/app-config.service'
+import { SupplierTypeOrmRepository } from '@/shared/infra/persistence/typeorm/supplier/supplier.typeorm.repository'
+import { SupplierTypeOrmEntity } from '@/shared/infra/persistence/typeorm/supplier/supplier.typeorm.entity'
 
 @Module({
   imports: [
@@ -26,7 +28,8 @@ import { AppConfigService } from '@/shared/config/app-config.service'
       BatchTypeOrmEntity,
       ProductTypeOrmEntity,
       CategoryTypeOrmEntity,
-      ProductModelTypeOrmEntity
+      ProductModelTypeOrmEntity,
+      SupplierTypeOrmEntity
     ]),
     forwardRef(() => AppModule)
   ],
@@ -46,6 +49,10 @@ import { AppConfigService } from '@/shared/config/app-config.service'
     {
       provide: 'ProductModelRepository',
       useClass: ProductModelTypeOrmRepository
+    },
+    {
+      provide: 'SupplierRepository',
+      useClass: SupplierTypeOrmRepository
     },
     { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }
   ]
