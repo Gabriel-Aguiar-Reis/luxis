@@ -1,3 +1,5 @@
+'use client'
+
 import { TransfersPageWithQuery } from '@/components/transfers/transfers-page-with-query'
 import {
   Breadcrumb,

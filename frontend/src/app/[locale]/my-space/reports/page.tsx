@@ -1,3 +1,5 @@
+'use client'
+
 import { ResellerReportsPageWithQuery } from '@/components/reseller-reports/reseller-reports-page-with-query'
 import {
   Breadcrumb,

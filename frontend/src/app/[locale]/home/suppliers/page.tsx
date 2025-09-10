@@ -1,3 +1,5 @@
+'use client'
+
 import { SuppliersPage } from '@/components/suppliers/suppliers-page'
 import {
   Breadcrumb,

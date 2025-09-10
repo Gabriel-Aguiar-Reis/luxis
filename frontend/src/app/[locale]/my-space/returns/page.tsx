@@ -1,3 +1,5 @@
+'use client'
+
 import { ReturnsPageWithQuery } from '@/components/returns/returns-page-with-query'
 import {
   Breadcrumb,

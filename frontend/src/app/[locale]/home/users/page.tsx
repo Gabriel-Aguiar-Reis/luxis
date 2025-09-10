@@ -1,3 +1,5 @@
+'use client'
+
 import { UsersPage } from '@/components/users/users-page'
 import {
   Breadcrumb,

@@ -1,3 +1,5 @@
+'use client'
+
 import { BatchesPage } from '@/components/batches/batches-page'
 import {
   Breadcrumb,

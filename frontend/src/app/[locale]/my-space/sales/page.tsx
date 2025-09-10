@@ -1,3 +1,5 @@
+'use client'
+
 import { ResellerSalesPageWithQuery } from '@/components/reseller-sales/reseller-sales-page-with-query'
 import {
   Breadcrumb,

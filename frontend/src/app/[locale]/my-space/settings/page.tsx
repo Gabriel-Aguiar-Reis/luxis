@@ -1,3 +1,5 @@
+'use client'
+
 import { ResellerSettingsPageWithQuery } from '@/components/settings/reseller-settings-page-with-query'
 import {
   Breadcrumb,

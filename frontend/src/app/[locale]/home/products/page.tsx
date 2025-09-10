@@ -1,3 +1,5 @@
+'use client'
+
 import { ProductsPage } from '@/components/products/products-page'
 import {
   Breadcrumb,

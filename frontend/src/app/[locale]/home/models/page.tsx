@@ -1,3 +1,5 @@
+'use client'
+
 import { ModelsPage } from '@/components/models/models-page'
 import {
   Breadcrumb,

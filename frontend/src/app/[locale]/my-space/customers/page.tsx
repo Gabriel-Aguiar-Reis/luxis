@@ -1,3 +1,5 @@
+'use client'
+
 import { CustomersPageWithQuery } from '@/components/customers/customers-page-with-query'
 import {
   Breadcrumb,

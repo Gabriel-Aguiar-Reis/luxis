@@ -1,3 +1,5 @@
+'use client'
+
 import { AdminSettingsPageWithQuery } from '@/components/settings/admin-settings-page-with-query'
 import {
   Breadcrumb,

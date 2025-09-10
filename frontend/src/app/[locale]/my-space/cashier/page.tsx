@@ -1,3 +1,5 @@
+'use client'
+
 import { CashierPage } from '@/components/cashier/cashier-page'
 import {
   Breadcrumb,

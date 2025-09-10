@@ -1,3 +1,5 @@
+'use client'
+
 import { ShipmentsPage } from '@/components/shipments/shipments-page'
 import {
   Breadcrumb,

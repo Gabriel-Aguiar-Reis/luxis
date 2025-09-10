@@ -1,3 +1,5 @@
+'use client'
+
 import { InventoryPageWithQuery } from '@/components/inventory/inventory-page-with-query'
 import {
   Breadcrumb,
