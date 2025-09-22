@@ -9,6 +9,8 @@ import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 import { ProductEntryDto } from '@/modules/batch/application/dtos/product-entry-dto'
 
+import { Type } from 'class-transformer'
+
 export class CreateBatchDto {
   @ApiProperty({
     description: 'The arrival date of the batch',
@@ -16,6 +18,7 @@ export class CreateBatchDto {
     type: Date,
     required: true
   })
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   arrivalDate: Date

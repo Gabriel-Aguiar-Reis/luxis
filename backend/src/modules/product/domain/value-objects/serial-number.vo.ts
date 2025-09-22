@@ -25,7 +25,7 @@ export class SerialNumber {
   ): SerialNumber {
     const batchCode = SerialNumber.formatBatchCode(batchDate, batchIndex)
     const modelAbbr = SerialNumber.abbreviate(modelName.getValue())
-    const seq = String(productIndex + 1).padStart(3, '0')
+    const seq = String(productIndex).padStart(3, '0')
     const serial = `${batchCode}-${categoryCode}-${modelAbbr}-${seq}`
     return new SerialNumber(serial)
   }

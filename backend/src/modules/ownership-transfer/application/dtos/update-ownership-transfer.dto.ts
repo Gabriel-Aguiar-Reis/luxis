@@ -1,6 +1,7 @@
 import { IsDate, IsOptional, IsUUID } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
 
 export class UpdateOwnershipTransferDto {
   @ApiProperty({
@@ -39,6 +40,7 @@ export class UpdateOwnershipTransferDto {
     type: Date,
     required: false
   })
+  @Type(() => Date)
   @IsDate()
   @IsOptional()
   transferDate?: Date
