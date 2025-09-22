@@ -116,7 +116,9 @@ export function TransfersFilters({
           </Select>
         </div>
         <div className="w-fit space-y-2">
-          <label className="text-xs font-medium">Data da Transferência</label>
+          <label className="block text-xs font-medium">
+            Data da Transferência
+          </label>
           <Popover>
             <PopoverTrigger asChild>
               <Button

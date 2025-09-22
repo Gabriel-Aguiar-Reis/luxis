@@ -41,9 +41,9 @@ export function SupplierCreateDialog({
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Editar Fornecedor</DialogTitle>
+            <DialogTitle>Criar Fornecedor</DialogTitle>
             <DialogDescription>
-              Edite os detalhes do fornecedor selecionado.
+              Preencha os detalhes do novo fornecedor.
             </DialogDescription>
           </DialogHeader>
 
@@ -61,7 +61,7 @@ export function SupplierCreateDialog({
                 <Label htmlFor="phone">Telefone</Label>
                 <Input
                   id="phone"
-                  placeholder="Telefone do Fornecedor"
+                  placeholder="12981234567"
                   {...register('phone')}
                 />
               </div>
@@ -72,7 +72,7 @@ export function SupplierCreateDialog({
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit">Salvar Alterações</Button>
+            <Button type="submit">Criar Fornecedor</Button>
           </DialogFooter>
         </form>
       </DialogContent>

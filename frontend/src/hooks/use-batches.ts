@@ -45,8 +45,8 @@ export function useCreateBatch(queryClient: QueryClient) {
       toast.success(`Lote criado com sucesso`)
       queryClient.invalidateQueries({ queryKey: ['batches'] })
     },
-    onError: () => {
-      toast.error('Erro ao criar lote')
+    onError: (e) => {
+      toast.error(e.message || 'Erro ao criar lote')
     }
   })
 }
@@ -60,8 +60,8 @@ export function useDeleteBatch(queryClient: QueryClient) {
       toast.success(`Lote deletado com sucesso`)
       queryClient.invalidateQueries({ queryKey: ['batches'] })
     },
-    onError: () => {
-      toast.error('Erro ao deletar lote')
+    onError: (e) => {
+      toast.error(e.message || 'Erro ao deletar lote')
     }
   })
 }
