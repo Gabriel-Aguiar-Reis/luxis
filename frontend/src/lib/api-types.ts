@@ -89,6 +89,8 @@ export type UpdateSaleInstallmentToPaid =
 // Shipments
 
 export type Shipment = components['schemas']['Shipment']
+export type ShipmentStatus = components['schemas']['Shipment']['status']
+export type ShipmentProductDto = components['schemas']['ShipmentProductDto']
 export type GetAllShipments = paths['/shipments']['get']
 export type GetOneShipment = paths['/shipments/{id}']['get']
 export type PostShipment = paths['/shipments']['post']

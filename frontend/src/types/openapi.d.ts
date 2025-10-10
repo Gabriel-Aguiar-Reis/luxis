@@ -2031,6 +2031,79 @@ export interface components {
              */
             installmentNumber: number;
         };
+        ShipmentProductDto: {
+            /**
+             * @description The ID of the product
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the product model
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            modelId: string;
+            /**
+             * @description The name of the product model
+             * @example Product Model Name
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description The serial number of the product
+             * @example SN123456789
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+            /**
+             * @description The sale price of the product
+             * @example 100.00
+             */
+            salePrice: components["schemas"]["Currency"];
+        };
+        GetShipmentDto: {
+            /**
+             * @description The ID of the shipment
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the reseller associated with the shipment
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The name of the reseller associated with the shipment
+             * @example John Doe
+             */
+            resellerName: string;
+            /**
+             * Format: date-time
+             * @description The creation date of the shipment
+             * @example 2023-10-05T14:48:00.000Z
+             */
+            createdAt: string;
+            /**
+             * @description The status of the shipment
+             * @example PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "DELIVERED" | "CANCELLED";
+            /** @description The products included in the shipment */
+            products: components["schemas"]["ShipmentProductDto"][];
+        };
+        CreateShipmentDto: {
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The IDs of the products
+             * @example [
+             *       "123e4567-e89b-12d3-a456-426614174000",
+             *       "123e4567-e89b-12d3-a456-426614174001"
+             *     ]
+             */
+            productIds: string[];
+        };
         Shipment: {
             /**
              * @description The ID of the shipment
@@ -2056,21 +2129,6 @@ export interface components {
             status: "PENDING" | "APPROVED" | "DELIVERED" | "CANCELLED";
             /**
              * @description The IDs of the products in the shipment
-             * @example [
-             *       "123e4567-e89b-12d3-a456-426614174000",
-             *       "123e4567-e89b-12d3-a456-426614174001"
-             *     ]
-             */
-            productIds: string[];
-        };
-        CreateShipmentDto: {
-            /**
-             * @description The ID of the reseller
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            resellerId: string;
-            /**
-             * @description The IDs of the products
              * @example [
              *       "123e4567-e89b-12d3-a456-426614174000",
              *       "123e4567-e89b-12d3-a456-426614174001"
@@ -2415,6 +2473,13 @@ export interface components {
              */
             phone: string;
         };
+        SupplierName: {
+            /**
+             * @description The name of the supplier
+             * @example Apple Inc.
+             */
+            value: string;
+        };
         Supplier: {
             /**
              * @description The ID of the supplier
@@ -2425,7 +2490,7 @@ export interface components {
              * @description The name of the supplier
              * @example Apple Inc.
              */
-            name: components["schemas"]["Name"];
+            name: components["schemas"]["SupplierName"];
             /**
              * @description The phone number of the supplier
              * @example +5511999999999
@@ -4665,7 +4730,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Shipment"][];
+                    "application/json": components["schemas"]["GetShipmentDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -4740,7 +4805,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Shipment"];
+                    "application/json": components["schemas"]["GetShipmentDto"];
                 };
             };
             /** @description Unauthorized */
