@@ -20,13 +20,19 @@ import { ShipmentDispatchedHandler } from '@/modules/inventory/application/handl
 import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.repository'
 import { InventoryService } from '@/modules/inventory/application/services/inventory.service'
 import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
+import { ProductModelTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.repository'
+import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/user.typeorm.repository'
+import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
+import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ShipmentTypeOrmEntity,
       ProductTypeOrmEntity,
-      InventoryTypeOrmEntity
+      InventoryTypeOrmEntity,
+      ProductModelTypeOrmEntity,
+      UserTypeOrmEntity
     ]),
     forwardRef(() => AppModule)
   ],
@@ -43,6 +49,8 @@ import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inven
     UpdateStatusShipmentUseCase,
     DeleteShipmentUseCase,
 
+    { provide: 'ProductModelRepository', useClass: ProductModelTypeOrmRepository },
+    { provide: 'UserRepository', useClass: UserTypeOrmRepository },
     { provide: 'InventoryService', useClass: InventoryService },
     { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },
     { provide: 'ShipmentRepository', useClass: ShipmentTypeOrmRepository },
