@@ -24,10 +24,6 @@ import {
   Expand
 } from 'lucide-react'
 import { useState } from 'react'
-import {
-  ReturnFiltersType,
-  ReturnsFilters
-} from '@/components/returns/returns-filters'
 import { Filter } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -39,13 +35,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu'
-import { ReturnProductsList } from '@/components/returns/return-products-list'
 import {
   GetAllShipmentsResponse,
   GetOneShipmentResponse,
   ShipmentStatus
 } from '@/hooks/use-shipments'
 import { ShipmentProductsList } from '@/components/shipments/shipment-products-list'
+import {
+  ShipmentFilters,
+  ShipmentFiltersType
+} from '@/components/shipments/shipments-filters'
 
 type ShipmentsTableProps = {
   shipments: GetAllShipmentsResponse
@@ -62,12 +61,9 @@ export function ShipmentsTable({
   onDelete,
   shipmentsPerPage = 10
 }: ShipmentsTableProps) {
-  const [filters, setFilters] = useState<ReturnFiltersType>({})
+  const [filters, setFilters] = useState<ShipmentFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false)
-  const [selectedShipment, setSelectedShipment] =
-    useState<GetOneShipmentResponse | null>(null)
 
   const filteredShipments = shipments.filter((shipment) => {
     let match = true
@@ -167,7 +163,7 @@ export function ShipmentsTable({
           </CardHeader>
           <CardContent>
             {isFiltersVisible && (
-              <ReturnsFilters
+              <ShipmentFilters
                 onFilterChange={(f) => {
                   setFilters(f)
                   setCurrentPage(1)

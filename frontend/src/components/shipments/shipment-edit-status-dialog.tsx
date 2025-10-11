@@ -76,7 +76,7 @@ export function ShipmentEditStatusDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar status da transferência</DialogTitle>
+          <DialogTitle>Editar status do romaneio</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <Select

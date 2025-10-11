@@ -57,11 +57,11 @@ export function useUpdateShipment(queryClient: QueryClient) {
       )
     },
     onSuccess: async () => {
-      toast.success('Fornecedor atualizado com sucesso!')
-      await queryClient.invalidateQueries({ queryKey: ['suppliers'] })
+      toast.success('Romaneio atualizado com sucesso!')
+      await queryClient.invalidateQueries({ queryKey: ['shipments'] })
     },
     onError: (error) => {
-      toast.error(`Erro ao atualizar fornecedor: ${error.message}`)
+      toast.error(`Erro ao atualizar romaneio: ${error.message}`)
     }
   })
 }
@@ -72,11 +72,11 @@ export function useDeleteShipment(queryClient: QueryClient) {
       return await apiFetch(apiPaths.shipments.byId(id), {}, true, 'DELETE')
     },
     onSuccess: async () => {
-      toast.success('Remessa deletada com sucesso!')
+      toast.success('Romaneio deletado com sucesso!')
       await queryClient.invalidateQueries({ queryKey: ['shipments'] })
     },
     onError: (error) => {
-      toast.error(`Erro ao deletar remessa: ${error.message}`)
+      toast.error(`Erro ao deletar romaneio: ${error.message}`)
     }
   })
 }
@@ -94,11 +94,11 @@ export function useCreateShipment(queryClient: QueryClient) {
       )
     },
     onSuccess: async () => {
-      toast.success('Remessa criada com sucesso!')
+      toast.success('Romaneio criado com sucesso!')
       await queryClient.invalidateQueries({ queryKey: ['shipments'] })
     },
     onError: (error) => {
-      toast.error(`Erro ao criar remessa: ${error.message}`)
+      toast.error(`Erro ao criar romaneio: ${error.message}`)
     }
   })
 }
@@ -112,21 +112,25 @@ export function useUpdateShipmentStatus(queryClient: QueryClient) {
       id: string
       dto: UpdateShipmentStatusDto
     }) => {
+      console.log(
+        'apiPaths.shipments.status(id): ',
+        apiPaths.shipments.status(id)
+      )
       return await apiFetch<UpdateShipmentResponse>(
-        apiPaths.shipments.byId(id),
+        `${apiPaths.shipments.status(id)}`,
         {
-          body: JSON.stringify({ status: dto })
+          body: JSON.stringify(dto)
         },
         true,
         'PATCH'
       )
     },
     onSuccess: async () => {
-      toast.success('Status da remessa atualizado com sucesso!')
+      toast.success('Status do romaneio atualizado com sucesso!')
       await queryClient.invalidateQueries({ queryKey: ['shipments'] })
     },
     onError: (error) => {
-      toast.error(`Erro ao atualizar status da remessa: ${error.message}`)
+      toast.error(`Erro ao atualizar status do romaneio: ${error.message}`)
     }
   })
 }
