@@ -16,7 +16,9 @@ export class ProductTypeOrmRepository implements ProductRepository {
   ) {}
 
   async findAll(): Promise<Product[]> {
-    const entities = await this.repository.find({ order: { serialNumber: 'ASC' } })
+    const entities = await this.repository.find({
+      order: { serialNumber: 'ASC' }
+    })
     return entities.map(ProductMapper.toDomain)
   }
 
@@ -26,8 +28,14 @@ export class ProductTypeOrmRepository implements ProductRepository {
     return ProductMapper.toDomain(entity)
   }
 
-  async findManyByIds(ids: UUID[]): Promise<Product[]> {
-    const entities = await this.repository.findBy({ id: In(ids) })
+  async findManyByIds(
+    ids: UUID[],
+    status?: ProductStatus[]
+  ): Promise<Product[]> {
+    const entities = await this.repository.findBy({
+      id: In(ids),
+      status: status ? In(status) : undefined
+    })
     return entities.map(ProductMapper.toDomain)
   }
 

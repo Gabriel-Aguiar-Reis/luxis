@@ -21,15 +21,15 @@ export class DeleteSaleUseCase {
     if (!sale) {
       throw new NotFoundException('Sale not found')
     }
-
+    if (sale.status !== 'PENDING') {
+      throw new ForbiddenException('Only pending sales can be deleted')
+    }
     if (user.role === Role.ADMIN) {
       return await this.saleRepository.delete(id)
     }
-
     if (sale.resellerId !== user.id) {
       throw new ForbiddenException('You are not authorized to delete this sale')
     }
-
     return await this.saleRepository.delete(id)
   }
 }

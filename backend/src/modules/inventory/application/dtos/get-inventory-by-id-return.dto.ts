@@ -1,5 +1,7 @@
 import { InventoryProductIdDto } from "@/modules/inventory/application/dtos/get-inventory-by-id-product-return.dto"
+import { ProductModel } from "@/modules/product-model/domain/entities/product-model.entity"
 import { ModelName } from "@/modules/product-model/domain/value-objects/model-name.vo"
+import { Product } from "@/modules/product/domain/entities/product.entity"
 import { ApiProperty } from "@nestjs/swagger"
 import { UUID } from "crypto"
 
@@ -19,27 +21,36 @@ export class GetInventoryByIdReturnDto {
     resellerName: string
 
     @ApiProperty({
-      description: 'The IDs of the products in the inventory',
+      description: 'The products in the inventory',
       example: [
         {
           id: '123e4567-e89b-12d3-a456-426614174000',
-          modelId: 'model-1',
-          serialNumber: 'SN-123456'
-        },
-        {
-          id: '123e4567-e89b-12d3-a456-426614174001',
-          modelId: 'model-2',
-          serialNumber: 'SN-123457'
+          serialNumber: '0424A-BR-BAB-001',
+          modelId: '123e4567-e89b-12d3-a456-426614174000',
+          batchId: '123e4567-e89b-12d3-a456-426614174000',
+          unitCost: '100.00',
+          salePrice: '150.00',
+          status: 'IN_STOCK'
         }
       ],
-      type: [InventoryProductIdDto],
+      type: [Product],
     })
-    products: InventoryProductIdDto[]
+    products: Product[]
 
     @ApiProperty({
-      description: 'The model names of the products in the inventory',
-      example: ['model-1', 'model-2'],
-      type: [ModelName]
+      description: 'The Product Models associated with the products in the inventory',
+      example: [
+        {
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'iPhone 13 Pro Max',
+          categoryId: '123e4567-e89b-12d3-a456-426614174000',
+          suggestedPrice: '999.99',
+          description: 'Latest iPhone model with advanced features',
+          photoUrl: 'https://example.com/iphone13.jpg',
+          status: 'ACTIVE'
+        }
+      ],
+      type: [ProductModel]
     })
-    productModelNames: ModelName[]
+    productModels: ProductModel[]
   }

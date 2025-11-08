@@ -14,12 +14,10 @@ export class SaleMapper {
       new Currency(entity.totalAmount),
       entity.paymentMethod,
       new Unit(entity.numberInstallments),
-      entity.status
+      entity.status,
+      new Unit(entity.installmentsInterval),
+      new Unit(entity.installmentsPaid || 0)
     )
-
-    for (let i = 0; i < (entity.installmentsPaid || 0); i++) {
-      sale.markInstallmentAsPaid(new Unit(i + 1))
-    }
 
     return sale
   }

@@ -50,7 +50,7 @@ export class Sale {
   @ApiProperty({
     description: 'The total amount of the sale',
     example: '1000.00',
-    type: String
+    type: Currency
   })
   public totalAmount: Currency
 
@@ -65,7 +65,7 @@ export class Sale {
   @ApiProperty({
     description: 'The number of installments',
     example: 12,
-    type: Number
+    type: Unit
   })
   public numberInstallments: Unit
 
@@ -80,9 +80,16 @@ export class Sale {
   @ApiProperty({
     description: 'The interval between installments in days',
     example: 30,
-    type: Number
+    type: Unit
   })
   public installmentsInterval: Unit
+
+  @ApiProperty({
+    description: 'The number of installments paid',
+    example: 3,
+    type: Unit
+  })
+  public installmentsPaid: Unit
 
   constructor(
     id: UUID,
@@ -94,7 +101,8 @@ export class Sale {
     paymentMethod: PaymentMethod,
     numberInstallments: Unit = new Unit(1),
     status: SaleStatus = SaleStatus.CONFIRMED,
-    installmentsInterval: Unit = new Unit(0)
+    installmentsInterval: Unit = new Unit(0),
+    installmentsPaid: Unit = new Unit(0)
   ) {
     this.id = id
     this.customerId = customerId
@@ -104,20 +112,18 @@ export class Sale {
     this.totalAmount = totalAmount
     this.paymentMethod = paymentMethod
     this.numberInstallments = numberInstallments
-    this.status = status
     this.installmentsInterval = installmentsInterval
-    this._initializeInstallments()
+    this.installmentsPaid = installmentsPaid
+    this._initializeInstallments(installmentsPaid.getValue())
+    // Mantém o status passado no construtor ao invés de sobrescrever
+    this.status = status
   }
 
-  private _initializeInstallments(): void {
+  private _initializeInstallments(paidCount: number = 0): void {
     this._installments = Array(this.numberInstallments.getValue()).fill(false)
-    if (
-      this.numberInstallments.getValue() === 1 &&
-      this.installmentsInterval.getValue() === 0
-    ) {
-      this.status = SaleStatus.INSTALLMENTS_PAID
-    } else {
-      this.status = SaleStatus.INSTALLMENTS_PENDING
+    // Marca as parcelas já pagas
+    for (let i = 0; i < paidCount && i < this._installments.length; i++) {
+      this._installments[i] = true
     }
   }
 
@@ -128,8 +134,15 @@ export class Sale {
     ) {
       throw new BadRequestException('Installment number out of range')
     }
-    this._installments[installmentNumber.getValue() - 1] = true
-    this._updateStatus()
+
+    const index = installmentNumber.getValue() - 1
+
+    // Só incrementa se a parcela ainda não estava paga
+    if (!this._installments[index]) {
+      this._installments[index] = true
+      this.installmentsPaid = new Unit(this.installmentsPaid.getValue() + 1)
+      this._updateStatus()
+    }
   }
 
   private _updateStatus(): void {

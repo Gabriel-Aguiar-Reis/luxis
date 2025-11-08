@@ -49,7 +49,10 @@ export class UpdateSaleResellerStrategy implements UpdateSaleStrategy {
       sale.saleDate,
       totalAmount,
       sale.paymentMethod,
-      sale.numberInstallments
+      sale.numberInstallments,
+      sale.status,
+      sale.installmentsInterval,
+      sale.installmentsPaid
     )
 
     return this.saleRepository.update(sale)

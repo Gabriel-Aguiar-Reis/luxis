@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class MarkInstallmentPaidDto {
   @ApiProperty({
-    description: 'The number of the installment to be marked as paid',
-    default: 1,
+    description: 'The number of installments to mark as paid',
+    example: 2,
     type: Number,
     required: true
   })

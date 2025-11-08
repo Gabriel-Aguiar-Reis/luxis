@@ -65,7 +65,7 @@ export class ProductModel {
     suggestedPrice: Currency,
     status: ProductModelStatus,
     description?: Description,
-    photoUrl?: ImageURL,
+    photoUrl?: ImageURL
   ) {
     this.id = id
     this.name = name

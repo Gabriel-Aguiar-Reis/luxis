@@ -54,9 +54,10 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The number of installments of the sale',
     default: 1,
-    type: String,
+    type: Number,
     required: true
   })
+  @Type(() => Number)
   @IsNumber()
   @IsPositive()
   @IsInt()
@@ -66,11 +67,11 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The interval of installments of the sale',
     default: 0,
-    type: String,
+    type: Number,
     required: true
   })
+  @Type(() => Number)
   @IsNumber()
-  @IsPositive()
   @IsInt()
   @Min(0)
   installmentsInterval: number = 0

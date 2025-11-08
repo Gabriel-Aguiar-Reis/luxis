@@ -29,12 +29,27 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { AppModule } from '@/app.module'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { MarkInstallmentPaidUseCase } from '@/modules/sale/application/use-cases/mark-installment-paid.use-case'
+import { UpdateSaleStatusUseCase } from '@/modules/sale/application/use-cases/update-sale-status.use-case'
+import { CustomerTypeOrmRepository } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.repository'
+import { CategoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/category/category.typeorm.repository'
+import { ProductModelTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.repository'
+import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/user.typeorm.repository'
+import { CategoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/category/category.typeorm.entity'
+import { CustomerTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.entity'
+import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
+import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
+import { GetAvailableProductsToSellUseCase } from '@/modules/sale/application/use-cases/get-available-products-to-sell.use-case'
+import { ConfirmSaleUseCase } from '@/modules/sale/application/use-cases/confirm-sale.use-case'
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       SaleTypeOrmEntity,
       ProductTypeOrmEntity,
-      InventoryTypeOrmEntity
+      InventoryTypeOrmEntity,
+      CustomerTypeOrmEntity,
+      CategoryTypeOrmEntity,
+      ProductModelTypeOrmEntity,
+      UserTypeOrmEntity
     ]),
     forwardRef(() => AppModule)
   ],
@@ -47,7 +62,10 @@ import { MarkInstallmentPaidUseCase } from '@/modules/sale/application/use-cases
     GetAllSaleUseCase,
     UpdateSaleUseCase,
     DeleteSaleUseCase,
+    ConfirmSaleUseCase,
+    UpdateSaleStatusUseCase,
     MarkInstallmentPaidUseCase,
+    GetAvailableProductsToSellUseCase,
     CreateSaleStrategyFactory,
     CreateSaleResellerStrategy,
     CreateSaleAdminStrategy,
@@ -64,6 +82,13 @@ import { MarkInstallmentPaidUseCase } from '@/modules/sale/application/use-cases
       useClass: InventoryOwnershipVerifierService
     },
     { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
+    { provide: 'CustomerRepository', useClass: CustomerTypeOrmRepository },
+    { provide: 'UserRepository', useClass: UserTypeOrmRepository },
+    { provide: 'CategoryRepository', useClass: CategoryTypeOrmRepository },
+    {
+      provide: 'ProductModelRepository',
+      useClass: ProductModelTypeOrmRepository
+    },
     { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },
     { provide: 'InventoryService', useClass: InventoryService },
     { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }

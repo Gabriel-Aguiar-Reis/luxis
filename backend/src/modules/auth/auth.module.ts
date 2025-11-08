@@ -22,7 +22,7 @@ import { EmailService } from '@/modules/auth/application/services/email.service'
       inject: [AppConfigService],
       useFactory: (config: AppConfigService) => ({
         secret: config.getJwtSecret(),
-        signOptions: { expiresIn: config.getJwtExpirationTime() }
+        signOptions: { expiresIn: config.getJwtExpirationTime() as any }
       })
     }),
     TypeOrmModule.forFeature([UserTypeOrmEntity])

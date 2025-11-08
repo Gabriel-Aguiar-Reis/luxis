@@ -24,12 +24,12 @@ export class UpdateSaleAdminStrategy implements UpdateSaleStrategy {
       throw new NotFoundException('Sale not found')
     }
 
-    const products = await this.productRepository.findManyByIds(dto.productIds)
-    const forSaleProducts = products.filter(
-      (product) => product.status !== ProductStatus.SOLD
+    const products = await this.productRepository.findManyByIds(
+      dto.productIds,
+      [ProductStatus.ASSIGNED, ProductStatus.IN_STOCK]
     )
 
-    if (forSaleProducts.length === 0) {
+    if (products.length === 0) {
       throw new ForbiddenException(
         'There are no new products to add to the sale'
       )
@@ -47,7 +47,10 @@ export class UpdateSaleAdminStrategy implements UpdateSaleStrategy {
       sale.saleDate,
       totalAmount,
       sale.paymentMethod,
-      sale.numberInstallments
+      sale.numberInstallments,
+      sale.status,
+      sale.installmentsInterval,
+      sale.installmentsPaid
     )
 
     return this.saleRepository.update(sale)

@@ -56,14 +56,14 @@ export class GetInventoryByIdUseCase {
     return {
       resellerId: inventory.resellerId,
       resellerName: getFullName(reseller),
-      products: new Array<InventoryProductIdDto>().concat(
-        ...Array.from(productMap.entries()).map(([id, product]) => ({
-          id,
-          modelId: product.modelId,
-          serialNumber: product.serialNumber
-        }))
-      ),
-      productModelNames: Array.from(modelMap.values()).map(m => m.name)
+      products: inventory.products.map(pid => {
+        const prod = productMap.get(pid)
+        if (!prod) {
+          throw new NotFoundException(`Product with ID ${pid} not found`)
+        }
+        return prod
+      }),
+      productModels: modelMap.size > 0 ? Array.from(modelMap.values()) : []
     }
   }
 }

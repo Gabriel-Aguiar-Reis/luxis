@@ -22,15 +22,6 @@ export class CreateSaleAdminStrategy implements CreateSaleStrategy {
   ) {}
 
   async execute(dto: CreateSaleDto, user: UserPayload): Promise<Sale> {
-    const products = await this.productRepository.findManyByIds(dto.productIds)
-    const allInStock = products.every(
-      (product) => product.status === ProductStatus.IN_STOCK
-    )
-
-    if (!allInStock) {
-      throw new ForbiddenException('Some products are not in stock')
-    }
-
     const totalAmount = await this.salePriceCalculator.calculateTotal(
       dto.productIds
     )
@@ -44,14 +35,10 @@ export class CreateSaleAdminStrategy implements CreateSaleStrategy {
       totalAmount,
       dto.paymentMethod,
       new Unit(dto.numberInstallments),
-      SaleStatus.CONFIRMED,
+      SaleStatus.PENDING,
       new Unit(dto.installmentsInterval)
     )
 
-    const saleConfirmed = await this.saleRepository.create(sale)
-
-    this.productRepository.updateManyStatus(dto.productIds, ProductStatus.SOLD)
-
-    return saleConfirmed
+    return await this.saleRepository.create(sale)
   }
 }
