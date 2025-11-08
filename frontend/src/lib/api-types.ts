@@ -50,8 +50,6 @@ export type UpdateOwnershipTransferStatusDto =
   paths['/ownership-transfers/{id}/status']['patch']['requestBody']['content']['application/json']
 
 // Inventory
-export type GetInventoryByIdProduct =
-  components['schemas']['InventoryProductIdDto']
 export type GetInventoryById = paths['/inventory/{id}']['get']
 export type GetInventoryByIdReturn =
   paths['/inventory/{id}']['get']['responses']['200']['content']['application/json']
@@ -78,12 +76,27 @@ export type UpdateProductModel = paths['/product-models/{id}']['patch']
 // Sales
 
 export type Sale = components['schemas']['Sale']
+export type SaleStatus = components['schemas']['Sale']['status']
+export type PaymentMethod = components['schemas']['Sale']['paymentMethod']
 export type GetAllSales = paths['/sales']['get']
 export type GetOneSale = paths['/sales/{id}']['get']
 export type PostSale = paths['/sales']['post']
 export type DeleteSale = paths['/sales/{id}']['delete']
 export type UpdateSale = paths['/sales/{id}']['patch']
 export type UpdateSaleInstallmentToPaid =
+  paths['/sales/{id}/installments/mark-paid']['patch']
+export type UpdateSaleStatus = paths['/sales/{id}/status']['patch']
+export type GetSaleProductDto = components['schemas']['GetSaleProductDto']
+export type GetAvailableProductsToSellDto =
+  components['schemas']['GetAvailableProductsToSellDto']
+export type GetAvailableCategoriesDto =
+  components['schemas']['GetAvailableCategoryDto'][]
+export type GetAvailableProductModelsDto =
+  components['schemas']['GetAvailableProductModelDto'][]
+export type GetAvailableProductDto =
+  components['schemas']['GetSaleProductDto'][]
+export type ConfirmSale = paths['/sales/{id}/confirm']['patch']
+export type MarkInstallmentPaid =
   paths['/sales/{id}/installments/mark-paid']['patch']
 
 // Shipments

@@ -135,6 +135,11 @@
     "title": "Vendas",
     "description": "Gerencie suas vendas"
   },
+  "Admin-Sale-Create": {
+    "title": "Criar Venda",
+    "sales": "Vendas",
+    "description": "Preencha os dados para criar uma nova venda."
+  },
   "HomeLayout": {
     "authError": "Você precisa estar autenticado como administrador para acessar esta área",
     "sessionExpired": "Sessão expirada"

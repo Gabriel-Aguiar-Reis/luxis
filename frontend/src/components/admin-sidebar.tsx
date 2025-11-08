@@ -195,7 +195,7 @@ export function AdminSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarSeparator />
-      <SidebarContent>
+      <SidebarContent className="mt-2">
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.url}>
@@ -206,7 +206,7 @@ export function AdminSidebar({
                     <span>{item.title}</span>
                   </div>
                   {item.hasBadge && (
-                    <Badge className="ml-2 bg-[var(--badge-6)] text-[var(--badge-text-6)]">
+                    <Badge className="bg-badge-6 text-badge-text-6 ml-2">
                       !
                     </Badge>
                   )}
@@ -226,7 +226,7 @@ export function AdminSidebar({
                             <span>{subItem.title}</span>
                           </div>
                           {subItem.hasBadge && (
-                            <Badge className="ml-2 bg-[var(--badge-6)] text-[var(--badge-text-6)]">
+                            <Badge className="bg-badge-6 text-badge-text-6 ml-2">
                               !
                             </Badge>
                           )}

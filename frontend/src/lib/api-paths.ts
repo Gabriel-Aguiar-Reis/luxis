@@ -64,7 +64,10 @@ export const apiPaths = {
   sales: {
     base: '/sales',
     byId: (id: string) => `/sales/${id}`,
-    markInstallmentPaid: (id: string) => `/sales/${id}/installments/mark-paid`
+    markInstallmentPaid: (id: string) => `/sales/${id}/installments/mark-paid`,
+    status: (id: string) => `/sales/${id}/status`,
+    availableProducts: '/sales/available-products',
+    confirm: (id: string) => `/sales/${id}/confirm`
   },
 
   // Shipments

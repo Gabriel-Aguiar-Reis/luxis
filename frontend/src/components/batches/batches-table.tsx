@@ -97,7 +97,7 @@ export function BatchesTable({
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle>Gerenciamento de Devoluções</CardTitle>
+              <CardTitle>Gerenciamento de Lotes</CardTitle>
               <Button
                 variant={isFiltersVisible ? 'secondary' : 'outline'}
                 size="sm"
@@ -108,7 +108,7 @@ export function BatchesTable({
               </Button>
             </div>
             <CardDescription>
-              Visualize, crie, edite e exclua devoluções do catálogo
+              Visualize, crie, edite e exclua lotes do catálogo
             </CardDescription>
           </CardHeader>
           <CardContent>

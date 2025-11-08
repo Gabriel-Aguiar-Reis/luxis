@@ -135,6 +135,11 @@
     "title": "Sales",
     "description": "Manage your sales"
   },
+  "Admin-Sale-Create": {
+    "title": "Create Sale",
+    "sales": "Sales",
+    "description": "Fill in the details to create a new sale."
+  },
   "HomeLayout": {
     "authError": "You need to be authenticated as an admin to access this area",
     "sessionExpired": "Session expired"

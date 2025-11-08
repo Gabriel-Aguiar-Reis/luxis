@@ -65,7 +65,7 @@ export function ModelFilters({
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      <div className="flex gap-4">
         <div className="w-48 space-y-2">
           <Label htmlFor="model-id-filter">Id</Label>
           <Input

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.2",
@@ -27,6 +28,7 @@
     "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-tabs": "^1.1.12",
     "@radix-ui/react-tooltip": "^1.2.7",
+    "@react-pdf/renderer": "^4.3.1",
     "@tanstack/react-query": "^5.79.0",
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
@@ -48,6 +50,7 @@
     "react-is": "^19.1.0",
     "react-resizable-panels": "^3.0.2",
     "recharts": "^3.0.2",
+    "shadcn": "^3.5.0",
     "sonner": "^2.0.3",
     "uuid": "^13.0.0",
     "zod": "^3.25.42",
@@ -61,6 +64,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-pdf": "^7.0.0",
     "@types/uuid": "^11.0.0",
     "openapi-typescript": "^7.8.0",
     "postcss": "^8.5.3",
@@ -71,6 +75,5 @@
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.9",
     "typescript": "^5"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }
