@@ -361,6 +361,7 @@ export function SalesTable({
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => onEditStatus(sale)}
+                                  disabled={sale.status === 'INSTALLMENTS_PAID'}
                                 >
                                   <FilePen className="mr-2 h-4 w-4" />
                                   Status
@@ -416,7 +417,7 @@ export function SalesTable({
                         length: emptyRows > 0 ? emptyRows : 0
                       }).map((_, idx) => (
                         <TableRow key={`empty-${idx}`}>
-                          <TableCell colSpan={9} style={{ height: 57 }} />
+                          <TableCell colSpan={9} style={{ height: 53 }} />
                         </TableRow>
                       ))}
                     </>
