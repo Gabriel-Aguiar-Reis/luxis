@@ -28,10 +28,12 @@ import {
   Zap,
   Repeat,
   CheckLine,
-  Coins
+  Coins,
+  Download,
+  Filter,
+  Loader2
 } from 'lucide-react'
-import { HTMLProps, JSX, useState } from 'react'
-import { Filter } from 'lucide-react'
+import { HTMLProps, JSX, useState, createElement } from 'react'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -53,6 +55,9 @@ import {
   SalesFilters,
   SalesFiltersType
 } from '@/components/sales/sales-filters'
+import { toast } from 'sonner'
+import * as ReactPDF from '@react-pdf/renderer'
+import { SaleReceiptPDF } from '@/components/sales/sale-receipt-pdf/sale-receipt-pdf'
 
 type SalesTableProps = {
   sales: GetAllSalesResponse
@@ -81,6 +86,44 @@ export function SalesTable({
   const [selectedSale, setSelectedSale] = useState<GetOneSaleResponse | null>(
     null
   )
+  const [downloadingSaleId, setDownloadingSaleId] = useState<string | null>(
+    null
+  )
+
+  const handleDownloadReceipt = async (sale: GetOneSaleResponse) => {
+    try {
+      setDownloadingSaleId(sale.id)
+
+      // Gerar nome do arquivo com data e hora
+      const now = new Date()
+      const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '')
+      const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '')
+      const fileName = `comprovante-${dateStr}-${timeStr}-luxis.pdf`
+
+      // Gerar o PDF diretamente do componente
+      const element = createElement(SaleReceiptPDF, { sale, phoneUtil })
+      // @ts-ignore - O tipo está correto, é um Document do react-pdf
+      const asPdf = ReactPDF.pdf(element)
+      const blob = await asPdf.toBlob()
+
+      // Criar link de download
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = fileName
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+
+      toast.success('Comprovante baixado com sucesso!')
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error)
+      toast.error('Erro ao gerar o comprovante')
+    } finally {
+      setDownloadingSaleId(null)
+    }
+  }
 
   const filteredSales = sales.filter((sale) => {
     let match = true
@@ -338,6 +381,23 @@ export function SalesTable({
                                 >
                                   <Coins className="mr-2 h-4 w-4" />
                                   Confirmar parcela
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => handleDownloadReceipt(sale)}
+                                  disabled={downloadingSaleId === sale.id}
+                                >
+                                  {downloadingSaleId === sale.id ? (
+                                    <>
+                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                      Gerando...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Download className="mr-2 h-4 w-4" />
+                                      Baixar comprovante
+                                    </>
+                                  )}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
