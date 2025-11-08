@@ -5,9 +5,11 @@ import { GetAllUserUseCase } from '@/modules/user/application/use-cases/get-all-
 import { GetOneUserUseCase } from '@/modules/user/application/use-cases/get-one-user.use-case'
 import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/update-user-role.use-case'
 import { UpdateUserUseCase } from '@/modules/user/application/use-cases/update-user.use-case'
+import { GetUserProductsUseCase } from '@/modules/user/application/use-cases/get-user-products.use-case'
 import { CreateUserDto } from '@/modules/user/application/dtos/create-user.dto'
 import { UpdateUserRoleDto } from '@/modules/user/application/dtos/update-user-role.dto'
 import { UpdateUserDto } from '@/modules/user/application/dtos/update-user.dto'
+import { UserProductDto } from '@/modules/user/application/dtos/user-product.dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
@@ -58,6 +60,7 @@ export class UserController {
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly disableUserUseCase: DisableUserUseCase,
     private readonly updateUserStatusUseCase: UpdateUserStatusUseCase,
+    private readonly getUserProductsUseCase: GetUserProductsUseCase,
     private readonly logger: CustomLogger
   ) {}
 
@@ -238,5 +241,34 @@ export class UserController {
       'UserController'
     )
     return await this.updateUserStatusUseCase.execute(id, dto, user)
+  }
+
+  @ApiOperation({
+    summary: 'Get user products',
+    operationId: 'getUserProducts'
+  })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'User products retrieved successfully',
+    type: [UserProductDto]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @CheckPolicies(new ReadUserPolicy())
+  @CacheKey('user-products')
+  @CacheTTL(60)
+  @HttpCode(200)
+  @Get(':id/products')
+  async getUserProducts(
+    @Param('id') id: UUID,
+    @CurrentUser() user: UserPayload
+  ) {
+    this.logger.log(
+      `Getting products for user ${id} - Requested by user ${user.email}`,
+      'UserController'
+    )
+    return await this.getUserProductsUseCase.execute(id, user)
   }
 }

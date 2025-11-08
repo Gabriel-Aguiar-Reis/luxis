@@ -65,6 +65,12 @@ export async function salesByReseller(
     SaleByResellerIdReturnRawResult & { resellerId: UUID }
   >()
   const allProductIds = [...new Set(rawSales.flatMap((s) => s.productIds))]
+
+  // Se não há produtos, retorna vazio
+  if (allProductIds.length === 0) {
+    return []
+  }
+
   const allProducts = await productRepo
     .createQueryBuilder('product')
     .innerJoin(ProductModelTypeOrmEntity, 'pm', 'pm.id = product.model_id')

@@ -47,6 +47,7 @@ import { GetOwnershipTransfersGivenByResellerIdKpiUseCase } from '@/modules/kpi/
 import { GetTotalOwnershipTransfersGivenByResellerIdKpiUseCase } from '@/modules/kpi/admin/application/use-cases/ownership-transfer/get-total-ownership-transfers-given-by-reseller-id-kpi.use-case'
 import { OwnershipTransferTypeOrmEntity } from '@/shared/infra/persistence/typeorm/ownership-transfer/ownership-transfer.typeorm.entity'
 import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/return.typeorm.entity'
+import { GetSalesAggregatedByDayUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-sales-aggregated-by-day-kpi.use-case'
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -83,6 +84,7 @@ import { ReturnTypeOrmEntity } from '@/shared/infra/persistence/typeorm/return/r
     GetTotalBillingByBatchIdUseCase,
     GetTotalBillingByResellerIdUseCase,
     GetTotalBillingInPeriodUseCase,
+    GetSalesAggregatedByDayUseCase,
     GetReturnsByResellerIdKpiUseCase,
     GetTotalReturnsByResellerIdKpiUseCase,
     GetReturnsByResellerUseCase,

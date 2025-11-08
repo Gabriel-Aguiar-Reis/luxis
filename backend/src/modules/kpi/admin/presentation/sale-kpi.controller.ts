@@ -21,6 +21,8 @@ import { GetTotalBillingInPeriodUseCase } from '@/modules/kpi/admin/application/
 import { CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { ApiBody } from '@nestjs/swagger'
 import { SalesInPeriodDto } from '@/modules/kpi/admin/application/dtos/sale/sales-in-period.dto'
+import { GetSalesAggregatedByDayUseCase } from '@/modules/kpi/admin/application/use-cases/sale/get-sales-aggregated-by-day-kpi.use-case'
+import { SalesAggregatedByDayDto } from '@/modules/kpi/admin/application/dtos/sale/sales-aggregated-by-day.dto'
 
 @ApiTags('Admins KPIs - Sales')
 @AdminKpiEndpoint()
@@ -36,7 +38,8 @@ export class AdminSaleKpiController {
     private readonly getTotalSalesByResellerUseCase: GetTotalSalesByResellerUseCase,
     private readonly getTotalBillingByBatchIdUseCase: GetTotalBillingByBatchIdUseCase,
     private readonly getTotalBillingByResellerIdUseCase: GetTotalBillingByResellerIdUseCase,
-    private readonly getTotalBillingInPeriodUseCase: GetTotalBillingInPeriodUseCase
+    private readonly getTotalBillingInPeriodUseCase: GetTotalBillingInPeriodUseCase,
+    private readonly getSalesAggregatedByDayUseCase: GetSalesAggregatedByDayUseCase
   ) {}
 
   @ApiOperation({
@@ -127,6 +130,29 @@ export class AdminSaleKpiController {
   async getTotalSalesInPeriod(@Query() qParams: ParamsWithMandatoryPeriodDto) {
     this.logger.log('Get Total Sales In Period', 'AdminKpiController')
     return this.getTotalSalesInPeriodUseCase.execute(qParams)
+  }
+
+  @ApiOperation({
+    summary: 'Get Sales Aggregated By Day',
+    operationId: 'getSalesAggregatedByDay'
+  })
+  @ApiBody({ type: ParamsWithMandatoryPeriodDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Sales aggregated by day returned successfully',
+    type: SalesAggregatedByDayDto
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @CacheTTL(60)
+  @CacheKey('sales-aggregated-by-day')
+  @HttpCode(200)
+  @Get('aggregated-by-day')
+  async getSalesAggregatedByDay(
+    @Query() qParams: ParamsWithMandatoryPeriodDto
+  ) {
+    this.logger.log('Get Sales Aggregated By Day', 'AdminKpiController')
+    return this.getSalesAggregatedByDayUseCase.execute(qParams)
   }
 
   @ApiOperation({

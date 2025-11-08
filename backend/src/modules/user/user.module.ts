@@ -8,6 +8,7 @@ import { UpdateUserUseCase } from '@/modules/user/application/use-cases/update-u
 import { DisableUserUseCase } from '@/modules/user/application/use-cases/disable-user.use-case'
 import { UpdateUserRoleUseCase } from '@/modules/user/application/use-cases/update-user-role.use-case'
 import { UpdateUserStatusUseCase } from '@/modules/user/application/use-cases/update-user-status.use-case'
+import { GetUserProductsUseCase } from '@/modules/user/application/use-cases/get-user-products.use-case'
 import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/user.typeorm.repository'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
@@ -15,10 +16,22 @@ import { AppModule } from '@/app.module'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { AppConfigService } from '@/shared/config/app-config.service'
+import { InventoryService } from '@/modules/inventory/application/services/inventory.service'
+import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.repository'
+import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
+import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
+import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
+import { ProductModelTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.repository'
+import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserTypeOrmEntity]),
+    TypeOrmModule.forFeature([
+      UserTypeOrmEntity,
+      InventoryTypeOrmEntity,
+      ProductTypeOrmEntity,
+      ProductModelTypeOrmEntity
+    ]),
     forwardRef(() => AppModule)
   ],
   controllers: [UserController],
@@ -33,7 +46,15 @@ import { AppConfigService } from '@/shared/config/app-config.service'
     UpdateUserRoleUseCase,
     DisableUserUseCase,
     UpdateUserStatusUseCase,
+    GetUserProductsUseCase,
     { provide: 'UserRepository', useClass: UserTypeOrmRepository },
+    { provide: 'InventoryService', useClass: InventoryService },
+    { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },
+    { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
+    {
+      provide: 'ProductModelRepository',
+      useClass: ProductModelTypeOrmRepository
+    },
     { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }
   ]
 })

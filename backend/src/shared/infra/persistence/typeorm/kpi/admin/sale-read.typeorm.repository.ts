@@ -20,6 +20,8 @@ import { totalBillingByBatchId } from '@/shared/infra/persistence/typeorm/kpi/ad
 import { totalBillingByResellerId } from '@/shared/infra/persistence/typeorm/kpi/admin/sale-read-methods/total-billing-by-reseller-id'
 import { totalBillingByPeriod } from '@/shared/infra/persistence/typeorm/kpi/admin/sale-read-methods/total-billing-by-period'
 import { salesByResellerId } from '@/shared/infra/persistence/typeorm/kpi/admin/sale-read-methods/sales-by-reseller-id'
+import { salesAggregatedByDay } from '@/shared/infra/persistence/typeorm/kpi/admin/sale-read-methods/sales-aggregated-by-day'
+import { SalesAggregatedByDayDto } from '@/modules/kpi/admin/application/dtos/sale/sales-aggregated-by-day.dto'
 
 export class SaleReadTypeormRepository implements SaleReadRepository {
   constructor(
@@ -95,5 +97,11 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
     qParams: ParamsWithMandatoryPeriodDto
   ): Promise<TotalBillingReturnDto> {
     return totalBillingByPeriod(this.saleRepo, qParams)
+  }
+
+  async salesAggregatedByDay(
+    qParams: ParamsWithMandatoryPeriodDto
+  ): Promise<SalesAggregatedByDayDto> {
+    return salesAggregatedByDay(this.saleRepo, qParams)
   }
 }
