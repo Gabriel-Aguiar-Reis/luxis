@@ -57,6 +57,7 @@ export type GetInventoryByIdReturn =
 // Products
 
 export type Product = components['schemas']['Product']
+export type ProductStatus = Product['status']
 export type GetAllProducts = paths['/products']['get']
 export type GetOneProduct = paths['/products/{id}']['get']
 export type DeleteProduct = paths['/products/{id}']['delete']
@@ -118,6 +119,7 @@ export type FederativeUnit = components['schemas']['FederativeUnit']
 export type Country = components['schemas']['Country']
 export type UserRole = components['schemas']['Role']
 export type UserStatus = components['schemas']['UserStatus']
+export type GetUserProducts = paths['/users/{id}/products']['get']
 export type GetAllUsers = paths['/users']['get']
 export type GetOneUser = paths['/users/{id}']['get']
 export type PostUser = paths['/users/signup']['post']

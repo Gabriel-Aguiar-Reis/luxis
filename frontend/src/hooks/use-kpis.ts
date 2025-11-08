@@ -169,6 +169,31 @@ export function useTotalSalesInPeriod(
   })
 }
 
+export function useSalesAggregatedByDay(query: { start: string; end: string }) {
+  return useQuery<{
+    start: Date
+    end: Date
+    data: Array<{
+      date: string
+      sales: number
+      totalAmount: string
+    }>
+  }>({
+    queryKey: ['kpi-sales-aggregated-by-day', query],
+    queryFn: () =>
+      apiFetch<{
+        start: Date
+        end: Date
+        data: Array<{
+          date: string
+          sales: number
+          totalAmount: string
+        }>
+      }>(apiPaths.kpiAdmin.salesAggregatedByDay(query), {}, true),
+    enabled: !!query?.start && !!query?.end
+  })
+}
+
 export function useSalesByReseller(
   query: GetSalesByReseller['parameters']['query']
 ) {

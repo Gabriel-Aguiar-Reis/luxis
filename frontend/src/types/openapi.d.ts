@@ -518,6 +518,23 @@ export interface paths {
         patch: operations["updateUserStatus"];
         trace?: never;
     };
+    "/users/{id}/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user products */
+        get: operations["getUserProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/suppliers": {
         parameters: {
             query?: never;
@@ -1009,6 +1026,23 @@ export interface paths {
         };
         /** Get Total Sales In Period */
         get: operations["getTotalSalesInPeriod"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kpi/admin/sales/aggregated-by-day": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Sales Aggregated By Day */
+        get: operations["getSalesAggregatedByDay"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2685,6 +2719,39 @@ export interface components {
              */
             status: components["schemas"]["UserStatus"];
         };
+        UserProductDto: {
+            /**
+             * @description Product ID
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description Product serial number
+             * @example SN123456
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+            /**
+             * @description Product model name
+             * @example Bolsa Louis Vuitton
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description Product model ID
+             * @example 123e4567-e89b-12d3-a456-426614174001
+             */
+            modelId: string;
+            /**
+             * @description Product status
+             * @example IN_STOCK
+             * @enum {string}
+             */
+            status: "IN_STOCK" | "ASSIGNED" | "SOLD";
+            /**
+             * @description Product price
+             * @example 1500.00
+             */
+            salePrice: components["schemas"]["Currency"];
+        };
         CreateSupplierDto: {
             /**
              * @description The name of the supplier
@@ -3456,6 +3523,24 @@ export interface components {
              * @example 1000
              */
             totalSales: number;
+        };
+        SaleAggregatedByDayDto: {
+            /**
+             * Format: date
+             * @example 2025-11-01
+             */
+            date: string;
+            /** @example 10 */
+            sales: number;
+            /** @example 15000.50 */
+            totalAmount: string;
+        };
+        SalesAggregatedByDayDto: {
+            /** Format: date-time */
+            start: string;
+            /** Format: date-time */
+            end: string;
+            data: components["schemas"]["SaleAggregatedByDayDto"][];
         };
         TotalBillingReturnDto: {
             /**
@@ -5602,6 +5687,50 @@ export interface operations {
             };
         };
     };
+    getUserProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User products retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserProductDto"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getAllSuppliers: {
         parameters: {
             query?: never;
@@ -6971,6 +7100,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TotalSalesInPeriodDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getSalesAggregatedByDay: {
+        parameters: {
+            query: {
+                start: string;
+                end: string;
+                limit?: number;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ParamsWithMandatoryPeriodDto"];
+            };
+        };
+        responses: {
+            /** @description Sales aggregated by day returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesAggregatedByDayDto"];
                 };
             };
             /** @description Unauthorized */

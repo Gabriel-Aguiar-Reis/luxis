@@ -84,7 +84,8 @@ export const apiPaths = {
     byId: (id: string) => `/users/${id}`,
     role: (id: string) => `/users/${id}/role`,
     status: (id: string) => `/users/${id}/status`,
-    disable: (id: string) => `/users/${id}/disable`
+    disable: (id: string) => `/users/${id}/disable`,
+    products: (id: string) => `/users/${id}/products`
   },
 
   // Suppliers
@@ -184,16 +185,19 @@ export const apiPaths = {
         start: params.start,
         end: params.end
       })
-      if (params.limit && params.page) {
-        url = apiPaths.kpiAdmin.withLimitAndPage(url, {
-          limit: params.limit,
-          page: params.page
-        })
+      if (params.limit) {
+        url += `&limit=${params.limit}`
+        if (params.page) {
+          url += `&page=${params.page}`
+        }
       }
       return url
     },
     salesByPeriodTotal: (params: { start: string; end: string }) =>
       `/kpi/admin/sales/total?start=${params.start}&end=${params.end}`,
+
+    salesAggregatedByDay: (params: { start: string; end: string }) =>
+      `/kpi/admin/sales/aggregated-by-day?start=${params.start}&end=${params.end}`,
 
     // --- Ownership Transfers ---
     ownershipTransfersByResellerId: (id: string) =>

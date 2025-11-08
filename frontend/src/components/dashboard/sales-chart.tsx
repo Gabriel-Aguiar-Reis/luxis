@@ -1,14 +1,16 @@
 'use client'
 
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, LabelList, XAxis } from 'recharts'
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart'
-import { useSalesInPeriod } from '@/hooks/use-sales'
-import { getSalesChartData } from '@/hooks/use-sales'
+import { useSalesAggregatedByDay } from '@/hooks/use-kpis'
+import { useMemo } from 'react'
+import { format, parseISO } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 const chartConfig = {
   sales: {
@@ -17,42 +19,90 @@ const chartConfig = {
   }
 } satisfies ChartConfig
 
-export function SalesChart({ start, end }: { start: string; end: string }) {
-  const { data, isLoading, isError } = useSalesInPeriod({ start, end })
+export function SalesChart({
+  start,
+  end,
+  timeframe = 'month'
+}: {
+  start: string
+  end: string
+  timeframe?: 'week' | 'month' | 'year'
+}) {
+  const { data, isLoading, isError } = useSalesAggregatedByDay({ start, end })
+
+  const salesData = data?.data || []
+
+  const chartData = useMemo(() => {
+    return salesData.map((item) => ({
+      day: parseISO(item.date).getTime(),
+      date: format(parseISO(item.date), 'dd/MM/yyyy', { locale: ptBR }),
+      sales: item.sales,
+      totalAmount: parseFloat(item.totalAmount)
+    }))
+  }, [salesData])
 
   if (isLoading) {
     return (
       <div className="flex h-[350px] w-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
       </div>
     )
   }
 
   if (isError) {
     return (
-      <div className="flex h-[350px] w-full items-center justify-center text-destructive">
+      <div className="text-destructive flex h-[350px] w-full items-center justify-center">
         Erro ao carregar vendas
       </div>
     )
   }
 
-  const sales = data?.sales || []
-  if (!sales || sales.length === 0) {
+  if (!salesData || salesData.length === 0) {
     return (
-      <div className="flex h-[350px] w-full items-center justify-center text-muted-foreground">
+      <div className="text-muted-foreground flex h-[350px] w-full items-center justify-center">
         Nenhuma venda encontrada no período selecionado
       </div>
     )
   }
-  console.log(getSalesChartData(sales))
+
+  // Determinar o formato do eixo X baseado no timeframe
+  const getXAxisFormatter = () => {
+    switch (timeframe) {
+      case 'week':
+        // Para semana: "Seg", "Ter", "Qua", etc
+        return (value: number) =>
+          new Intl.DateTimeFormat('pt-BR', {
+            weekday: 'short'
+          }).format(value)
+      case 'year':
+        // Para ano: "Jan", "Fev", "Mar", etc
+        return (value: number) =>
+          new Intl.DateTimeFormat('pt-BR', {
+            month: 'short'
+          }).format(value)
+      case 'month':
+      default:
+        // Para mês: "01 nov", "02 nov", etc
+        return (value: number) =>
+          new Intl.DateTimeFormat('pt-BR', {
+            day: '2-digit',
+            month: 'short'
+          }).format(value)
+    }
+  }
+
+  const xAxisFormatter = getXAxisFormatter()
+
   return (
     <ChartContainer config={chartConfig}>
       <AreaChart
         accessibilityLayer
-        data={getSalesChartData(sales)}
+        data={chartData}
         margin={{
-          left: 12,
-          right: 12
+          left: 32,
+          right: 32,
+          top: 32,
+          bottom: 8
         }}
       >
         <CartesianGrid vertical={false} />
@@ -61,18 +111,23 @@ export function SalesChart({ start, end }: { start: string; end: string }) {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickFormatter={(value) =>
-            new Intl.DateTimeFormat('pt-BR', {
-              month: 'short',
-              day: '2-digit'
-            }).format(value)
-          }
+          tickFormatter={xAxisFormatter}
           fontSize={12}
           stroke="var(--chart-1)"
         />
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent indicator="line" hideLabel />}
+          content={
+            <ChartTooltipContent
+              indicator="dot"
+              labelFormatter={(value, payload) => {
+                if (payload && payload.length > 0) {
+                  return payload[0].payload.date
+                }
+                return ''
+              }}
+            />
+          }
         />
         <defs>
           <linearGradient id="fillSales" x1="0" y1="0" x2="0" y2="1">
@@ -92,10 +147,22 @@ export function SalesChart({ start, end }: { start: string; end: string }) {
           dataKey="sales"
           type="natural"
           fill="url(#fillSales)"
+          dot={{
+            stroke: 'var(--color-sales)',
+            strokeWidth: 2,
+            fill: 'var(--color-sales)'
+          }}
           fillOpacity={0.4}
           stroke="var(--color-sales)"
-          stackId="a"
-        />
+          strokeWidth={2}
+        >
+          <LabelList
+            dataKey="sales"
+            position="top"
+            offset={12}
+            className="fill-foreground"
+          />
+        </Area>
       </AreaChart>
     </ChartContainer>
   )

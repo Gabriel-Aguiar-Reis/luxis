@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { UserEditDialog } from '@/components/users/user-edit-dialog'
 import { UserDetailsDialog } from '@/components/users/user-details-dialog'
+import { UserProductsDialog } from '@/components/users/user-products-dialog'
 import {
   Search,
   MoreHorizontal,
@@ -37,7 +38,8 @@ import {
   UserCog,
   Eye,
   UserX,
-  Filter
+  Filter,
+  Expand
 } from 'lucide-react'
 import { User } from '@/lib/api-types'
 import { useGetUsers } from '@/hooks/use-users'
@@ -57,6 +59,7 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false)
+  const [isProductsDialogOpen, setIsProductsDialogOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
 
@@ -116,6 +119,11 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
   const handleToggleUserStatus = (user: User) => {
     setSelectedUser(user)
     setIsStatusDialogOpen(true)
+  }
+
+  const handleViewUserProducts = (user: User) => {
+    setSelectedUser(user)
+    setIsProductsDialogOpen(true)
   }
 
   const currentUsers = filteredUsers.slice(
@@ -219,6 +227,7 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                     <TableHead>Telefone</TableHead>
                     <TableHead>Função</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Produtos</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -241,6 +250,30 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                           </TableCell>
                           <TableCell>{formatRole(user.role)}</TableCell>
                           <TableCell>{formatStatus(user.status)}</TableCell>
+                          <TableCell>
+                            {/* {user.role === 'RESELLER' ? (
+                              <Button
+                                className="h-8 w-8"
+                                variant="outline"
+                                size="icon"
+                                onClick={() => handleViewUserProducts(user)}
+                              >
+                                <Expand className="h-4 w-4" />
+                              </Button>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">
+                                -
+                              </span>
+                            )} */}
+                            <Button
+                              className="h-8 w-8"
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleViewUserProducts(user)}
+                            >
+                              <Expand className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -268,8 +301,8 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                                   onClick={() => handleToggleUserStatus(user)}
                                   className={
                                     user.status === 'ACTIVE'
-                                      ? 'text-[var(--text-destructive)]'
-                                      : 'text-[var(--text-success)]'
+                                      ? 'text-text-destructive'
+                                      : 'text-text-success'
                                   }
                                 >
                                   <UserX className="mr-2 h-4 w-4" />
@@ -289,13 +322,13 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                             : 0
                       }).map((_, idx) => (
                         <TableRow key={`empty-${idx}`}>
-                          <TableCell colSpan={6} style={{ height: 53 }} />
+                          <TableCell colSpan={7} style={{ height: 53 }} />
                         </TableRow>
                       ))}
                     </>
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center">
+                      <TableCell colSpan={7} className="h-24 text-center">
                         Nenhum usuário encontrado
                       </TableCell>
                     </TableRow>
@@ -356,6 +389,15 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
         isOpen={isStatusDialogOpen}
         onClose={() => setIsStatusDialogOpen(false)}
       />
+
+      {selectedUser && (
+        <UserProductsDialog
+          userId={selectedUser.id}
+          userName={`${selectedUser.name.value} ${selectedUser.surname.value}`}
+          open={isProductsDialogOpen}
+          onOpenChange={setIsProductsDialogOpen}
+        />
+      )}
     </Card>
   )
 }

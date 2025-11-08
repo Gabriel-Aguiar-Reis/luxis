@@ -189,6 +189,7 @@ export function AdminDashboard() {
               <SalesChart
                 start={dateRange.start.toISOString()}
                 end={dateRange.end.toISOString()}
+                timeframe={timeframe as 'week' | 'month' | 'year'}
               />
             )}
           </CardContent>

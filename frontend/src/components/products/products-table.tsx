@@ -15,7 +15,7 @@ import {
   TableBody,
   TableCell
 } from '@/components/ui/table'
-import { Category, Product, ProductModel } from '@/lib/api-types'
+import { Category, Product, ProductModel, ProductStatus } from '@/lib/api-types'
 import {
   Filter,
   FileEdit,
@@ -23,8 +23,6 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
-
-type ProductStatus = Product['status']
 
 type ProductFiltersType = {
   serialNumber?: string

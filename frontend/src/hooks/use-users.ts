@@ -2,6 +2,7 @@ import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
 import {
   GetAllUsers,
+  GetUserProducts,
   PostUser,
   UpdateUserRole,
   UpdateUserStatus,
@@ -26,6 +27,9 @@ export type UpdateUserRoleResponse =
   UpdateUserRole['responses']['200']['content']['application/json']
 export type UpdateUserStatusResponse =
   UpdateUserStatus['responses']['200']['content']['application/json']
+
+export type GetUserProductsResponse =
+  GetUserProducts['responses']['200']['content']['application/json']
 
 export type UpdateUserRoleDto = {
   userId: string
@@ -144,5 +148,20 @@ export function useGetUsers() {
       return await apiFetch<GetUsersResponse>(apiPaths.users.base, {}, true)
     },
     staleTime: 2 * 60 * 1000
+  })
+}
+
+export function useGetUserProducts(userId: string) {
+  return useQuery({
+    queryKey: ['user-products', userId],
+    queryFn: async () => {
+      return await apiFetch<GetUserProductsResponse>(
+        apiPaths.users.products(userId),
+        {},
+        true
+      )
+    },
+    enabled: !!userId,
+    staleTime: 60 * 1000
   })
 }
