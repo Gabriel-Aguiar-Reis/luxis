@@ -53,31 +53,29 @@ export function SaleMarkInstallmentPaidDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Confirmar Pagamento de Parcelas</AlertDialogTitle>
-          <AlertDialogDescription>
-            <div className="space-y-4">
-              <div>
-                Parcelas pagas: <strong>{alreadyPaid}</strong> de{' '}
-                <strong>{totalInstallments}</strong>
-                <br />
-                Restantes: <strong>{remaining}</strong>
-              </div>
-
-              <div>
-                <Label className="mb-2">Quantas parcelas deseja pagar?</Label>
-                <Input
-                  type="number"
-                  value={installmentNumber}
-                  min={1}
-                  max={remaining}
-                  onChange={(e) => setInstallmentNumber(Number(e.target.value))}
-                />
-                <p className="text-muted-foreground mt-2 text-xs">
-                  Isso pagará {installmentNumber} parcela(s), totalizando{' '}
-                  {alreadyPaid + installmentNumber} de {totalInstallments} pagas
-                </p>
-              </div>
+          <AlertDialogDescription className="space-y-4">
+            <div>
+              Parcelas pagas: <strong>{alreadyPaid}</strong> de{' '}
+              <strong>{totalInstallments}</strong>
+              <br />
+              Restantes: <strong>{remaining}</strong>
             </div>
           </AlertDialogDescription>
+
+          <div>
+            <Label className="mb-2">Quantas parcelas deseja pagar?</Label>
+            <Input
+              type="number"
+              value={installmentNumber}
+              min={1}
+              max={remaining}
+              onChange={(e) => setInstallmentNumber(Number(e.target.value))}
+            />
+            <p className="text-muted-foreground mt-2 text-xs">
+              Isso pagará {installmentNumber} parcela(s), totalizando{' '}
+              {alreadyPaid + installmentNumber} de {totalInstallments} pagas
+            </p>
+          </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button variant="secondary" onClick={onClose}>

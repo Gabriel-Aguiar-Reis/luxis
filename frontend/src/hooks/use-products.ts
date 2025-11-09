@@ -25,6 +25,20 @@ export function useGetProducts() {
   })
 }
 
+export function useGetAvailableProducts() {
+  return useQuery({
+    queryKey: ['products', 'available'],
+    queryFn: async () => {
+      return await apiFetch<GetAllProductsResponse>(
+        apiPaths.products.available,
+        {},
+        true
+      )
+    },
+    staleTime: 1 * 60 * 1000 // Cache menor para produtos disponíveis
+  })
+}
+
 export function useChangeProduct(queryClient: QueryClient) {
   return useMutation({
     mutationFn: async ({ id, dto }: { id: string; dto: UpdateProductDto }) => {

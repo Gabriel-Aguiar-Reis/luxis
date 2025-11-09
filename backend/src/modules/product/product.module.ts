@@ -4,6 +4,7 @@ import { DeleteProductUseCase } from '@/modules/product/application/use-cases/de
 import { GetAllProductUseCase } from '@/modules/product/application/use-cases/get-all-product.use-case'
 import { GetOneProductUseCase } from '@/modules/product/application/use-cases/get-one-product.use-case'
 import { UpdateProductUseCase } from '@/modules/product/application/use-cases/update-product.use-case'
+import { GetAvailableProductsUseCase } from '@/modules/product/application/use-cases/get-available-products.use-case'
 import { ProductController } from '@/modules/product/presentation/product.controller'
 import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
 import { Module, forwardRef } from '@nestjs/common'
@@ -29,6 +30,7 @@ import { SellProductUseCase } from '@/modules/product/application/use-cases/sell
     CreateProductUseCase,
     GetOneProductUseCase,
     GetAllProductUseCase,
+    GetAvailableProductsUseCase,
     UpdateProductUseCase,
     DeleteProductUseCase,
     SellProductUseCase,

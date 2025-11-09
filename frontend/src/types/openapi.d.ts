@@ -165,6 +165,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/available/in-stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get available products (IN_STOCK) */
+        get: operations["getAvailableProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/products/{id}": {
         parameters: {
             query?: never;
@@ -4377,6 +4394,40 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description List of products returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Product"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAvailableProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of available products returned successfully */
             200: {
                 headers: {
                     [name: string]: unknown;

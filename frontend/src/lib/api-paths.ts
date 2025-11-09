@@ -49,6 +49,7 @@ export const apiPaths = {
   // Products
   products: {
     base: '/products',
+    available: '/products/available/in-stock',
     byId: (id: string) => `/products/${id}`,
     sell: (id: string) => `/products/${id}/sell`
   },
