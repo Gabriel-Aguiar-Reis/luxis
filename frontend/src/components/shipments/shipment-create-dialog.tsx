@@ -8,9 +8,9 @@ import {
 } from '@/components/ui/dialog'
 import { useForm } from 'react-hook-form'
 import { Label } from '@/components/ui/label'
-import { CreateTransferDto } from '@/hooks/use-transfers'
 import { useGetUsers } from '@/hooks/use-users'
-import { useGetInventoryById } from '@/hooks/use-inventory'
+import { useGetAvailableProducts } from '@/hooks/use-products'
+import { useGetModels } from '@/hooks/use-product-models'
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,22 +27,9 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { ChevronsUpDown, Square, SquareCheck } from 'lucide-react'
-import {
-  GetInventoryByIdProduct,
-  ReturnProductDto,
-  User
-} from '@/lib/api-types'
 import { useState } from 'react'
-import { CreateReturnDto } from '@/hooks/use-returns'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
 import { CreateShipmentDto } from '@/hooks/use-shipments'
+import { AddShipmentProductDialog } from '@/components/shipments/add-shipment-product-dialog'
 
 export function ShipmentCreateDialog({
   isOpen,
@@ -61,58 +48,65 @@ export function ShipmentCreateDialog({
   })
 
   const [openFrom, setOpenFrom] = React.useState(false)
-  const [openProduct, setOpenProduct] = React.useState(false)
+  const [showProductsDialog, setShowProductsDialog] = React.useState(false)
 
   const resellerId = watch('resellerId')
   const productIds = watch('productIds')
 
   const { data: users } = useGetUsers()
+  const { data: availableProducts } = useGetAvailableProducts()
+  const { data: productModels } = useGetModels()
+
   const resellers = React.useMemo(
     () => users?.filter((u: any) => u.role === 'RESELLER') || [],
     [users]
   )
 
-  function useMultipleInventories(resellers: User[]) {
-    return resellers.map((reseller) => ({
-      resellerId: reseller.id,
-      query: useGetInventoryById(reseller.id)
-    }))
-  }
+  // Montar estrutura de inventário fake a partir dos produtos disponíveis
+  const availableInventory = React.useMemo(() => {
+    if (!availableProducts || !productModels) return undefined
 
-  const inventories = useMultipleInventories(resellers)
-
-  const selectedInventory = React.useMemo(() => {
-    if (!resellerId) return undefined
-    const inv = inventories.find((i) => i.resellerId === resellerId)
-    if (!inv || !inv.query.data || Array.isArray(inv.query.data))
-      return undefined
-    return inv.query.data
-  }, [resellerId, inventories])
-
-  // Monta productsWithModel igual ao transfer-create-dialog
-  const productsWithModel = React.useMemo(() => {
-    if (
-      !selectedInventory ||
-      !selectedInventory.products ||
-      !selectedInventory.productModelNames
-    )
-      return []
-    return selectedInventory.products.map(
-      (p: GetInventoryByIdProduct, idx: number) => ({
+    return {
+      resellerId: 'available',
+      resellerName: 'Produtos Disponíveis',
+      products: availableProducts.map((p: any) => ({
         id: p.id,
-        label: selectedInventory.productModelNames[idx]?.value || p.id,
-        serialNumber: p.serialNumber.value
+        serialNumber: { value: p.serialNumber?.value || '' },
+        modelId: p.modelId,
+        batchId: p.batchId,
+        unitCost: { value: p.unitCost?.value || '0' },
+        salePrice: { value: p.salePrice?.value || '0' },
+        status: p.status
+      })),
+      productModels: availableProducts.map((p: any) => {
+        const model = productModels.find((m: any) => m.id === p.modelId)
+        return {
+          id: model?.id || p.modelId,
+          name: { value: model?.name?.value || 'Desconhecido' },
+          categoryId: model?.categoryId || '',
+          suggestedPrice: { value: model?.suggestedPrice?.value || '0' },
+          description: model?.description,
+          photoUrl: model?.photoUrl,
+          status: model?.status || 'ACTIVE'
+        }
       })
-    )
-  }, [selectedInventory])
-
-  const selectedProducts = React.useMemo(() => {
-    if (!productIds || !productsWithModel) return []
-    return productsWithModel.filter((p: any) => productIds.includes(p.id))
-  }, [productIds, productsWithModel])
+    }
+  }, [availableProducts, productModels])
 
   const [searchFromValue, setSearchFromValue] = useState('')
   const [searchProductValue, setSearchProductValue] = useState('')
+
+  function toggleProduct(id: string) {
+    const current = productIds || []
+    if (current.includes(id)) {
+      setValue(
+        'productIds',
+        current.filter((p) => p !== id)
+      )
+    } else {
+      setValue('productIds', [...current, id])
+    }
+  }
 
   const onSubmit = (data: CreateShipmentDto) => {
     onCreate(data)
@@ -130,7 +124,7 @@ export function ShipmentCreateDialog({
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Nova Romaneio</DialogTitle>
+            <DialogTitle>Novo Romaneio</DialogTitle>
             <DialogDescription>
               Preencha os dados para criar um novo romaneio.
             </DialogDescription>
@@ -150,7 +144,11 @@ export function ShipmentCreateDialog({
                       className="w-full justify-between"
                     >
                       {resellerId
-                        ? selectedInventory?.resellerName
+                        ? resellers.find((r: any) => r.id === resellerId)?.name
+                            ?.value +
+                          ' ' +
+                          resellers.find((r: any) => r.id === resellerId)
+                            ?.surname?.value
                         : 'Selecionar revendedor'}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -206,99 +204,22 @@ export function ShipmentCreateDialog({
               {/* Produtos */}
               <div className="col-span-2 space-y-2">
                 <Label>Produtos</Label>
-                <Popover open={openProduct} onOpenChange={setOpenProduct}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={openProduct}
-                      className="w-full justify-between"
-                      disabled={
-                        !resellerId ||
-                        !selectedInventory ||
-                        selectedInventory.products.length === 0
-                      }
-                    >
-                      {productIds && productIds.length > 0
-                        ? `${productIds.length} produto(s) selecionado(s)`
-                        : 'Selecionar produtos'}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command shouldFilter={false}>
-                      <CommandInput
-                        placeholder="Buscar produto..."
-                        value={searchProductValue}
-                        onValueChange={setSearchProductValue}
-                      />
-                      <CommandList>
-                        <CommandEmpty>Nenhum produto encontrado.</CommandEmpty>
-                        <CommandGroup>
-                          {productsWithModel
-                            .filter((product) => {
-                              if (!searchProductValue) return true
-                              const label =
-                                `${product.serialNumber} - ${product.label}`.toLowerCase()
-                              return label.includes(
-                                searchProductValue.toLowerCase()
-                              )
-                            })
-                            .map((product: any) => {
-                              const checked = productIds?.includes(product.id)
-                              return (
-                                <CommandItem
-                                  key={product.id}
-                                  value={product.id}
-                                  className="flex justify-between"
-                                  onSelect={() => {
-                                    let newProductIds = Array.isArray(
-                                      productIds
-                                    )
-                                      ? [...productIds]
-                                      : []
-                                    if (checked) {
-                                      newProductIds = newProductIds.filter(
-                                        (id) => id !== product.id
-                                      )
-                                    } else {
-                                      newProductIds.push(product.id)
-                                    }
-                                    setValue('productIds', newProductIds)
-                                  }}
-                                >
-                                  {`${product.serialNumber} - ${product.label}`}
-                                  {checked ? (
-                                    <SquareCheck className={'h-4 w-4'} />
-                                  ) : (
-                                    <Square className={'h-4 w-4'} />
-                                  )}
-                                </CommandItem>
-                              )
-                            })}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                {/* Lista de produtos selecionados */}
-                {selectedProducts.length > 0 && (
-                  <div className="text-muted-foreground mt-2 text-sm">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Selecionados:</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {selectedProducts.map((product) => (
-                          <TableRow key={product.id}>
-                            <TableCell>{`${product.serialNumber} - ${product.label}`}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!resellerId}
+                  onClick={() => setShowProductsDialog(true)}
+                  className="w-full justify-start font-normal"
+                >
+                  <ChevronsUpDown className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                  {productIds && productIds.length > 0
+                    ? `${productIds.length} produto(s) selecionado(s)`
+                    : 'Selecionar produtos'}
+                </Button>
+                {productIds && productIds.length > 0 && (
+                  <p className="text-muted-foreground text-sm">
+                    {productIds.length} produto(s) selecionado(s)
+                  </p>
                 )}
               </div>
             </div>
@@ -312,6 +233,18 @@ export function ShipmentCreateDialog({
           </DialogFooter>
         </form>
       </DialogContent>
+
+      {availableInventory && (
+        <AddShipmentProductDialog
+          open={showProductsDialog}
+          onOpenChange={setShowProductsDialog}
+          inventory={availableInventory}
+          selectedProductIds={productIds || []}
+          onToggleProduct={toggleProduct}
+          searchValue={searchProductValue}
+          onSearchChange={setSearchProductValue}
+        />
+      )}
     </Dialog>
   )
 }

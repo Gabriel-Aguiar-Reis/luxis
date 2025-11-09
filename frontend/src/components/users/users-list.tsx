@@ -52,8 +52,11 @@ type UserStatus = User['status']
 
 export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
   const { data: users } = useGetUsers()
+  const nonPendingUsers = users?.filter((user) => user.role !== 'UNASSIGNED')
   const [filters, setFilters] = useState<UserFiltersType>({})
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(users || [])
+  const [filteredUsers, setFilteredUsers] = useState<User[]>(
+    nonPendingUsers ?? []
+  )
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
@@ -66,12 +69,12 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
   const usersPerPage = 10
 
   useEffect(() => {
-    setFilteredUsers(users || [])
-    setTotalPages(Math.ceil((users || []).length / usersPerPage))
+    setFilteredUsers(nonPendingUsers || [])
+    setTotalPages(Math.ceil((nonPendingUsers || []).length / usersPerPage))
     setCurrentPage(1)
 
     const applyFilters = (filters: UserFiltersType) => {
-      let filtered = users || []
+      let filtered = nonPendingUsers || []
 
       if (filters.name) {
         filtered = filtered.filter((user) =>

@@ -12,6 +12,7 @@ import { UpdateUserDto } from '@/modules/user/application/dtos/update-user.dto'
 import { UserProductDto } from '@/modules/user/application/dtos/user-product.dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
+import { Public } from '@/shared/infra/auth/decorators/public.decorator'
 import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
 import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
@@ -44,6 +45,7 @@ import { User } from '@/modules/user/domain/entities/user.entity'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { UpdateUserStatusDto } from '@/modules/user/application/dtos/update-user-status.dto'
 import { UpdateUserStatusUseCase } from '@/modules/user/application/use-cases/update-user-status.use-case'
+import { GetAllPendingUserUseCase } from '@/modules/user/application/use-cases/get-all-pending-user.use-case'
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -61,6 +63,7 @@ export class UserController {
     private readonly disableUserUseCase: DisableUserUseCase,
     private readonly updateUserStatusUseCase: UpdateUserStatusUseCase,
     private readonly getUserProductsUseCase: GetUserProductsUseCase,
+    private readonly getAllPendingUsersUseCase: GetAllPendingUserUseCase,
     private readonly logger: CustomLogger
   ) {}
 
@@ -83,6 +86,30 @@ export class UserController {
       'UserController'
     )
     return await this.getAllUsersUseCase.execute(user)
+  }
+
+  @ApiOperation({
+    summary: 'Get all pending users',
+    operationId: 'getAllPendingUsers'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of pending users returned successfully',
+    type: [User]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @CheckPolicies(new ReadUserPolicy())
+  @CacheKey('all-users')
+  @CacheTTL(300)
+  @HttpCode(200)
+  @Get('pending')
+  async getAllPending(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting all pending users - Requested by user ${user.email}`,
+      'UserController'
+    )
+    return await this.getAllPendingUsersUseCase.execute(user)
   }
 
   @ApiOperation({ summary: 'Get a specific user', operationId: 'getOneUser' })
@@ -113,8 +140,8 @@ export class UserController {
     description: 'User created successfully',
     type: User
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @Public()
   @HttpCode(201)
   @Post('signup')
   async create(@Body() dto: CreateUserDto) {

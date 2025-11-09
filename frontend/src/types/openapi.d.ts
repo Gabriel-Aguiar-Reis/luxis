@@ -448,6 +448,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all pending users */
+        get: operations["getAllPendingUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/{id}": {
         parameters: {
             query?: never;
@@ -5426,6 +5443,40 @@ export interface operations {
             };
         };
     };
+    getAllPendingUsers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of pending users returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getOneUser: {
         parameters: {
             query?: never;
@@ -5582,15 +5633,8 @@ export interface operations {
                     "application/json": components["schemas"]["User"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied */
-            403: {
+            /** @description Bad request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

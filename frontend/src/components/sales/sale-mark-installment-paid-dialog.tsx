@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { GetOneSaleResponse, MarkInstallmentPaidDto } from '@/hooks/use-sales'
-import { formatDate } from 'date-fns'
 import { useEffect, useState } from 'react'
 
 export function SaleMarkInstallmentPaidDialog({

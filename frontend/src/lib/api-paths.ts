@@ -86,7 +86,8 @@ export const apiPaths = {
     role: (id: string) => `/users/${id}/role`,
     status: (id: string) => `/users/${id}/status`,
     disable: (id: string) => `/users/${id}/disable`,
-    products: (id: string) => `/users/${id}/products`
+    products: (id: string) => `/users/${id}/products`,
+    pending: '/users/pending'
   },
 
   // Suppliers

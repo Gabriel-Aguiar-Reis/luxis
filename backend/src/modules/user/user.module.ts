@@ -23,6 +23,7 @@ import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/pro
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { ProductModelTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.repository'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
+import { GetAllPendingUserUseCase } from '@/modules/user/application/use-cases/get-all-pending-user.use-case'
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/pr
     DisableUserUseCase,
     UpdateUserStatusUseCase,
     GetUserProductsUseCase,
+    GetAllPendingUserUseCase,
     { provide: 'UserRepository', useClass: UserTypeOrmRepository },
     { provide: 'InventoryService', useClass: InventoryService },
     { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },

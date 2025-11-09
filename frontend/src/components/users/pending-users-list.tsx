@@ -35,7 +35,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   UpdateUserRoleDto,
-  useGetUsers,
+  useGetPendingUsers,
   useUpdateUserRole,
   useDeleteUser
 } from '@/hooks/use-users'
@@ -52,7 +52,7 @@ export function PendingUsersList({
   onHandleChange,
   phoneUtil
 }: PendingUsersListProps) {
-  const { data: users, isLoading } = useGetUsers()
+  const { data: users, isLoading } = useGetPendingUsers()
   const { mutate: changeUserRole } = useUpdateUserRole(useQueryClient())
   const { mutate: deleteUser } = useDeleteUser(useQueryClient())
 

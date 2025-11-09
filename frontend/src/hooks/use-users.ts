@@ -151,6 +151,16 @@ export function useGetUsers() {
   })
 }
 
+export function useGetPendingUsers() {
+  return useQuery({
+    queryKey: ['pending-users'],
+    queryFn: async () => {
+      return await apiFetch<GetUsersResponse>(apiPaths.users.pending, {}, true)
+    },
+    staleTime: 2 * 60 * 1000
+  })
+}
+
 export function useGetUserProducts(userId: string) {
   return useQuery({
     queryKey: ['user-products', userId],
