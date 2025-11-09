@@ -104,6 +104,7 @@ export function useUpdateUserRole(queryClient: QueryClient) {
         `Papel do usuário ${data.name.value} ${data.surname.value} atualizado para ${userRoles[data.role]}`
       )
       queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['pending-users'] })
     },
     onError: () => {
       toast.error('Erro ao atualizar o papel do usuário')
@@ -134,6 +135,7 @@ export function useUpdateUserStatus(queryClient: QueryClient) {
         `Status do usuário ${data.id} atualizado para ${data.status}`
       )
       queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['pending-users'] })
     },
     onError: () => {
       toast.error('Erro ao atualizar o status do usuário')
