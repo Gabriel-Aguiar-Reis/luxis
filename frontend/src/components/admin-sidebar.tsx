@@ -38,6 +38,56 @@ import { useGetUsers } from '@/hooks/use-users'
 import { Badge } from '@/components/ui/badge'
 import { useGetTransfers } from '@/hooks/use-transfers'
 import { useGetReturns } from '@/hooks/use-returns'
+import { useGetShipments } from '@/hooks/use-shipments'
+import { useGetSales } from '@/hooks/use-sales'
+
+// Hook para gerenciar badges visitados
+function useVisitedBadges() {
+  const [visitedSections, setVisitedSections] = React.useState<Set<string>>(
+    new Set()
+  )
+
+  React.useEffect(() => {
+    // Carregar do localStorage ao montar
+    const stored = localStorage.getItem('luxis-visited-badges')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        setVisitedSections(new Set(parsed))
+      } catch (e) {
+        console.error('Error parsing visited badges:', e)
+      }
+    }
+  }, [])
+
+  const markAsVisited = React.useCallback((routeKey: string) => {
+    setVisitedSections((prev) => {
+      const newSet = new Set(prev)
+      newSet.add(routeKey)
+      // Salvar no localStorage
+      localStorage.setItem(
+        'luxis-visited-badges',
+        JSON.stringify(Array.from(newSet))
+      )
+      return newSet
+    })
+  }, [])
+
+  const clearVisited = React.useCallback((routeKey: string) => {
+    setVisitedSections((prev) => {
+      const newSet = new Set(prev)
+      newSet.delete(routeKey)
+      // Salvar no localStorage
+      localStorage.setItem(
+        'luxis-visited-badges',
+        JSON.stringify(Array.from(newSet))
+      )
+      return newSet
+    })
+  }, [])
+
+  return { visitedSections, markAsVisited, clearVisited }
+}
 
 export function AdminSidebar({
   ...props
@@ -59,10 +109,95 @@ export function AdminSidebar({
   const { logout } = useAuthStore()
 
   const { data: users } = useGetUsers()
-
   const { data: transfers } = useGetTransfers()
-
   const { data: returns } = useGetReturns()
+  const { data: shipments } = useGetShipments()
+  const { data: sales } = useGetSales()
+
+  const { visitedSections, markAsVisited, clearVisited } = useVisitedBadges()
+
+  // Marcar como visitado quando a rota ativa mudar
+  React.useEffect(() => {
+    if (pathname.includes('/home/users') && !visitedSections.has('users')) {
+      markAsVisited('users')
+    }
+    if (pathname.includes('/home/returns') && !visitedSections.has('returns')) {
+      markAsVisited('returns')
+    }
+    if (
+      pathname.includes('/home/transfers') &&
+      !visitedSections.has('transfers')
+    ) {
+      markAsVisited('transfers')
+    }
+    if (
+      pathname.includes('/home/shipments') &&
+      !visitedSections.has('shipments')
+    ) {
+      markAsVisited('shipments')
+    }
+    if (pathname.includes('/home/sales') && !visitedSections.has('sales')) {
+      markAsVisited('sales')
+    }
+  }, [pathname, visitedSections, markAsVisited])
+
+  // Contar pendentes
+  const pendingUsersCount = React.useMemo(
+    () => users?.filter((user) => user.status === 'PENDING').length || 0,
+    [users]
+  )
+
+  const pendingReturnsCount = React.useMemo(
+    () =>
+      returns?.filter((returnItem) => returnItem.status === 'PENDING').length ||
+      0,
+    [returns]
+  )
+
+  const pendingTransfersCount = React.useMemo(
+    () =>
+      transfers?.filter((transfer) => transfer.status === 'PENDING').length ||
+      0,
+    [transfers]
+  )
+
+  const pendingShipmentsCount = React.useMemo(
+    () =>
+      shipments?.filter((shipment) => shipment.status === 'PENDING').length ||
+      0,
+    [shipments]
+  )
+
+  const pendingSalesCount = React.useMemo(
+    () => sales?.filter((sale) => sale.status === 'PENDING').length || 0,
+    [sales]
+  )
+
+  // Limpar "visitado" quando não houver mais pendentes
+  React.useEffect(() => {
+    if (pendingUsersCount === 0) {
+      clearVisited('users')
+    }
+    if (pendingReturnsCount === 0) {
+      clearVisited('returns')
+    }
+    if (pendingTransfersCount === 0) {
+      clearVisited('transfers')
+    }
+    if (pendingShipmentsCount === 0) {
+      clearVisited('shipments')
+    }
+    if (pendingSalesCount === 0) {
+      clearVisited('sales')
+    }
+  }, [
+    pendingUsersCount,
+    pendingReturnsCount,
+    pendingTransfersCount,
+    pendingShipmentsCount,
+    pendingSalesCount,
+    clearVisited
+  ])
 
   const handleLogout = () => {
     logout()
@@ -117,8 +252,7 @@ export function AdminSidebar({
       url: '/home/users',
       icon: Users,
       isActive: pathname.includes('/home/users'),
-      hasBadge:
-        users && users?.filter((user) => user.status === 'PENDING').length > 0
+      hasBadge: pendingUsersCount > 0 && !visitedSections.has('users')
     },
     {
       title: tReturns('title'),
@@ -126,10 +260,7 @@ export function AdminSidebar({
       url: '/home/returns',
       icon: Undo2,
       isActive: pathname.includes('/home/returns'),
-      hasBadge:
-        returns &&
-        returns.filter((returnItem) => returnItem.status === 'PENDING').length >
-          0
+      hasBadge: pendingReturnsCount > 0 && !visitedSections.has('returns')
     },
     {
       title: tTransfers('title'),
@@ -137,9 +268,7 @@ export function AdminSidebar({
       url: '/home/transfers',
       icon: ArrowLeftRight,
       isActive: pathname.includes('/home/transfers'),
-      hasBadge:
-        transfers &&
-        transfers.filter((transfer) => transfer.status === 'PENDING').length > 0
+      hasBadge: pendingTransfersCount > 0 && !visitedSections.has('transfers')
     },
     {
       title: tSales('title'),
@@ -147,7 +276,7 @@ export function AdminSidebar({
       url: '/home/sales',
       icon: ShoppingBag,
       isActive: pathname.includes('/home/sales'),
-      hasBadge: false
+      hasBadge: pendingSalesCount > 0 && !visitedSections.has('sales')
     },
     {
       title: tBatches('title'),
@@ -171,7 +300,7 @@ export function AdminSidebar({
       url: '/home/shipments',
       icon: Truck,
       isActive: pathname.includes('/home/shipments'),
-      hasBadge: false
+      hasBadge: pendingShipmentsCount > 0 && !visitedSections.has('shipments')
     }
   ]
 
