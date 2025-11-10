@@ -109,7 +109,7 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="sm:max-w-[700px]">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[700px]">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>Editar Venda</DialogTitle>

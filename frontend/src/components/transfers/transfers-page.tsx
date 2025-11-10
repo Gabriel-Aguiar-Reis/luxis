@@ -55,9 +55,14 @@ export function TransfersPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Transferências</h2>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Transferências
+        </h2>
+        <Button
+          onClick={() => setIsCreateDialogOpen(true)}
+          className="w-full sm:w-auto"
+        >
           <Plus className="mr-2 h-4 w-4" />
           Nova Transferência
         </Button>

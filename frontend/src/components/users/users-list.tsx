@@ -199,12 +199,15 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle>Gerenciamento de Usuários</CardTitle>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle className="text-lg sm:text-xl">
+            Gerenciamento de Usuários
+          </CardTitle>
           <Button
             variant={isFiltersVisible ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+            className="w-full sm:w-auto"
           >
             <Filter className="mr-2 h-4 w-4" />
             Filtros
@@ -225,17 +228,19 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
         )}
         <div className="space-y-4">
           <>
-            <div className="rounded-md border">
+            <div className="overflow-x-auto rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Telefone</TableHead>
-                    <TableHead>Função</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Produtos</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
+                    <TableHead className="min-w-[150px]">Nome</TableHead>
+                    <TableHead className="min-w-[180px]">Email</TableHead>
+                    <TableHead className="min-w-[120px]">Telefone</TableHead>
+                    <TableHead className="min-w-[100px]">Função</TableHead>
+                    <TableHead className="min-w-[100px]">Status</TableHead>
+                    <TableHead className="min-w-20">Produtos</TableHead>
+                    <TableHead className="min-w-[100px] text-right">
+                      Ações
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -335,32 +340,34 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
 
             {/* Paginação */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-end space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="sr-only">Página anterior</span>
-                </Button>
+              <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
                 <div className="text-sm">
                   Página {currentPage} de {totalPages}
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                  <span className="sr-only">Próxima página</span>
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Página anterior</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                    <span className="sr-only">Próxima página</span>
+                  </Button>
+                </div>
               </div>
             )}
           </>

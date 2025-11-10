@@ -73,7 +73,7 @@ export function ProductDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle>Editar Produto</DialogTitle>
@@ -83,7 +83,7 @@ export function ProductDialog({
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="serialNumber">Nº de Série</Label>
                 <Input
@@ -108,7 +108,7 @@ export function ProductDialog({
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="modelId">Modelo</Label>
                 <Select value={product.modelId || ''} disabled>
@@ -135,7 +135,7 @@ export function ProductDialog({
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="unitCost">Custo Unitário (R$) *</Label>
                 <Input

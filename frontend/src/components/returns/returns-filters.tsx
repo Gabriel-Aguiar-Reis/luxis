@@ -57,21 +57,22 @@ export function ReturnsFilters({
   }
 
   return (
-    <div className="rounded-md border p-4">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="mb-4 rounded-md border p-4">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-sm font-medium">Filtros</h3>
         <Button
           variant="ghost"
           size="sm"
           onClick={clearAllFilters}
           disabled={Object.keys(filters).length === 0}
+          className="w-full sm:w-auto"
         >
           <X className="mr-2 h-3 w-3" />
           Limpar filtros
         </Button>
       </div>
-      <div className="flex gap-4">
-        <div className="w-80 space-y-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="w-full space-y-2">
           <label className="block text-xs font-medium">Revendedor</label>
           <Input
             placeholder="Nome do revendedor"
@@ -79,13 +80,13 @@ export function ReturnsFilters({
             onChange={(e) => updateFilter('reseller', e.target.value)}
           />
         </div>
-        <div className="w-fit space-y-2">
+        <div className="w-full space-y-2">
           <label className="block text-xs font-medium">Status</label>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
           >
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -97,13 +98,13 @@ export function ReturnsFilters({
             </SelectContent>
           </Select>
         </div>
-        <div className="w-fit space-y-2">
+        <div className="w-full space-y-2">
           <label className="block text-xs font-medium">Data da devolução</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-40 justify-between font-normal"
+                className="w-full justify-between font-normal"
               >
                 {filters.createdAt
                   ? new Date(filters.createdAt).toLocaleDateString()

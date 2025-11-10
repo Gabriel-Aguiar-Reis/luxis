@@ -82,20 +82,21 @@ export function SalesFilters({
 
   return (
     <div className="mb-4 rounded-md border p-4">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-sm font-medium">Filtros</h3>
         <Button
           variant="ghost"
           size="sm"
           onClick={clearAllFilters}
           disabled={Object.keys(filters).length === 0}
+          className="w-full sm:w-auto"
         >
           <X className="mr-2 h-3 w-3" />
           Limpar filtros
         </Button>
       </div>
-      <div className="flex gap-4">
-        <div className="w-80 space-y-2" id="reseller-name-field">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-wrap">
+        <div className="w-full space-y-2 xl:w-80" id="reseller-name-field">
           <Label>Revendedor</Label>
           <Input
             placeholder="Nome do revendedor"
@@ -103,13 +104,13 @@ export function SalesFilters({
             onChange={(e) => updateFilter('resellerName', e.target.value)}
           />
         </div>
-        <div className="w-fit space-y-2" id="status-field">
+        <div className="w-full space-y-2 xl:w-fit" id="status-field">
           <Label>Status</Label>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
           >
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full xl:w-40">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -121,13 +122,13 @@ export function SalesFilters({
             </SelectContent>
           </Select>
         </div>
-        <div className="w-fit space-y-2" id="sale-date-field">
+        <div className="w-full space-y-2 xl:w-fit" id="sale-date-field">
           <Label>Data da venda</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-40 justify-between font-normal"
+                className="w-full justify-between font-normal xl:w-40"
               >
                 {filters.saleDate
                   ? new Date(filters.saleDate).toLocaleDateString()
@@ -156,13 +157,13 @@ export function SalesFilters({
             </PopoverContent>
           </Popover>
         </div>
-        <div className="w-fit space-y-2" id="payment-method-field">
+        <div className="w-full space-y-2 xl:w-fit" id="payment-method-field">
           <Label>Método de Pagamento</Label>
           <Select
             value={filters.paymentMethod || ''}
             onValueChange={(v) => updateFilter('paymentMethod', v || undefined)}
           >
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full xl:w-40">
               <SelectValue placeholder="Método de Pagamento" />
             </SelectTrigger>
             <SelectContent>
@@ -174,13 +175,14 @@ export function SalesFilters({
             </SelectContent>
           </Select>
         </div>
-        <div className="w-fit space-y-2" id="total-amount-min-field">
+        <div className="w-full space-y-2 xl:w-fit" id="total-amount-min-field">
           <Label>Valor Mínimo (R$)</Label>
           <Input
             type="number"
             placeholder="R$ 0,00"
             step={0.01}
             min={0}
+            className="w-full"
             value={filters.totalAmountMin || ''}
             onChange={(e) => {
               const value = e.target.value ? Number(e.target.value) : undefined
@@ -188,13 +190,14 @@ export function SalesFilters({
             }}
           />
         </div>
-        <div className="w-fit space-y-2" id="total-amount-max-field">
+        <div className="w-full space-y-2 xl:w-fit" id="total-amount-max-field">
           <Label>Valor Máximo (R$)</Label>
           <Input
             type="number"
             placeholder="R$ 0,00"
             step={0.01}
             min={0}
+            className="w-full"
             value={filters.totalAmountMax || ''}
             onChange={(e) => {
               const value = e.target.value ? Number(e.target.value) : undefined

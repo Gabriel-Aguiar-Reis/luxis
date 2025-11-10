@@ -225,11 +225,13 @@ export function SaleCreateForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex w-full justify-center"
+          className="flex w-full justify-center px-4"
         >
-          <Card className="flex max-h-[80vh] min-w-[40vw] flex-col">
+          <Card className="flex max-h-[85vh] w-full max-w-2xl flex-col">
             <CardHeader className="shrink-0">
-              <CardTitle className="mb-2 text-2xl">Criar Venda</CardTitle>
+              <CardTitle className="mb-2 text-xl sm:text-2xl">
+                Criar Venda
+              </CardTitle>
               <CardDescription>
                 Preencha os dados abaixo para registrar uma nova venda.
               </CardDescription>
@@ -530,7 +532,7 @@ export function SaleCreateForm() {
               {((paymentMethod === 'CASH' && !isCashPayment) ||
                 (paymentMethod === 'PIX' && !isCashPayment)) && (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <FormField
                       control={form.control}
                       disabled={isCashPayment}
@@ -581,16 +583,21 @@ export function SaleCreateForm() {
                 </>
               )}
             </CardContent>
-            <CardFooter className="flex justify-end gap-2 border-t px-6 py-4 backdrop-blur-sm">
+            <CardFooter className="flex flex-col gap-2 border-t px-6 py-4 backdrop-blur-sm sm:flex-row sm:justify-end">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.back()}
                 disabled={isSubmitting}
+                className="w-full sm:w-auto"
               >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full sm:w-auto"
+              >
                 {isSubmitting ? 'Salvando...' : 'Criar venda'}
               </Button>
             </CardFooter>

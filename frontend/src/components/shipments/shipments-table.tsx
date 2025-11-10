@@ -52,6 +52,7 @@ type ShipmentsTableProps = {
   onEditStatus?: (shipment: GetOneShipmentResponse) => void
   onDelete?: (shipment: GetOneShipmentResponse) => void
   shipmentsPerPage?: number
+  role?: 'ADMIN' | 'RESELLER'
 }
 
 export function ShipmentsTable({
@@ -59,7 +60,8 @@ export function ShipmentsTable({
   onEdit,
   onEditStatus,
   onDelete,
-  shipmentsPerPage = 10
+  shipmentsPerPage = 10,
+  role = 'ADMIN'
 }: ShipmentsTableProps) {
   const [filters, setFilters] = useState<ShipmentFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
@@ -146,12 +148,15 @@ export function ShipmentsTable({
       <div className="flex flex-col gap-4">
         <Card>
           <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle>Gerenciamento de Romaneios</CardTitle>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <CardTitle className="text-lg sm:text-xl">
+                Gerenciamento de Romaneios
+              </CardTitle>
               <Button
                 variant={isFiltersVisible ? 'secondary' : 'outline'}
                 size="sm"
                 onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+                className="w-full sm:w-auto"
               >
                 <Filter className="mr-2 h-4 w-4" />
                 Filtros
@@ -171,15 +176,21 @@ export function ShipmentsTable({
                 initialFilters={filters}
               />
             )}
-            <div className="rounded-md border">
+            <div className="overflow-x-auto rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Data do romaneio</TableHead>
-                    <TableHead>Revendedor</TableHead>
-                    <TableHead>Produtos</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
+                    <TableHead className="min-w-[130px]">
+                      Data do romaneio
+                    </TableHead>
+                    <TableHead className="min-w-[150px]">Revendedor</TableHead>
+                    <TableHead className="min-w-20">Produtos</TableHead>
+                    <TableHead className="min-w-[100px]">Status</TableHead>
+                    {role === 'ADMIN' && (
+                      <TableHead className="min-w-[100px] text-right">
+                        Ações
+                      </TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -203,66 +214,74 @@ export function ShipmentsTable({
                           </TableCell>
                           <TableCell>{formatStatus(shipment.status)}</TableCell>
 
-                          <TableCell className="text-right">
-                            <DropdownMenu modal={false}>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <Ellipsis />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>
-                                  <div className="flex items-center">
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    Editar
-                                  </div>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                {onEdit && (
-                                  <DropdownMenuItem
-                                    onClick={() => onEdit(shipment)}
-                                    disabled={shipment.status !== 'PENDING'}
-                                  >
-                                    <FilePen className="mr-2 h-4 w-4" />
-                                    Infos
-                                  </DropdownMenuItem>
-                                )}
-                                {onEditStatus && (
-                                  <DropdownMenuItem
-                                    onClick={() => onEditStatus(shipment)}
-                                  >
-                                    <FilePen className="mr-2 h-4 w-4" />
-                                    Status
-                                  </DropdownMenuItem>
-                                )}
-                                {(onEdit || onEditStatus) && onDelete && (
+                          {role === 'ADMIN' && (
+                            <TableCell className="text-right">
+                              <DropdownMenu modal={false}>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <Ellipsis />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuLabel>
+                                    <div className="flex items-center">
+                                      <Pencil className="mr-2 h-4 w-4" />
+                                      Editar
+                                    </div>
+                                  </DropdownMenuLabel>
                                   <DropdownMenuSeparator />
-                                )}
-                                {onDelete && (
-                                  <DropdownMenuItem
-                                    className="text-text-destructive"
-                                    onClick={() => onDelete(shipment)}
-                                  >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Excluir
-                                  </DropdownMenuItem>
-                                )}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
+                                  {onEdit && (
+                                    <DropdownMenuItem
+                                      onClick={() => onEdit(shipment)}
+                                      disabled={shipment.status !== 'PENDING'}
+                                    >
+                                      <FilePen className="mr-2 h-4 w-4" />
+                                      Infos
+                                    </DropdownMenuItem>
+                                  )}
+                                  {onEditStatus && (
+                                    <DropdownMenuItem
+                                      onClick={() => onEditStatus(shipment)}
+                                    >
+                                      <FilePen className="mr-2 h-4 w-4" />
+                                      Status
+                                    </DropdownMenuItem>
+                                  )}
+                                  {(onEdit || onEditStatus) && onDelete && (
+                                    <DropdownMenuSeparator />
+                                  )}
+                                  {onDelete && (
+                                    <DropdownMenuItem
+                                      className="text-text-destructive"
+                                      onClick={() => onDelete(shipment)}
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Excluir
+                                    </DropdownMenuItem>
+                                  )}
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          )}
                         </TableRow>
                       ))}
                       {Array.from({
                         length: emptyRows > 0 ? emptyRows : 0
                       }).map((_, idx) => (
                         <TableRow key={`empty-${idx}`}>
-                          <TableCell colSpan={6} style={{ height: 57 }} />
+                          <TableCell
+                            colSpan={role === 'ADMIN' ? 5 : 4}
+                            style={{ height: 57 }}
+                          />
                         </TableRow>
                       ))}
                     </>
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center">
+                      <TableCell
+                        colSpan={role === 'ADMIN' ? 5 : 4}
+                        className="h-24 text-center"
+                      >
                         Nenhum romaneio encontrado
                       </TableCell>
                     </TableRow>
@@ -271,32 +290,34 @@ export function ShipmentsTable({
               </Table>
             </div>
             {totalPages > 1 && (
-              <div className="mt-4 flex items-center justify-end space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="sr-only">Página anterior</span>
-                </Button>
+              <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
                 <div className="text-sm">
                   Página {currentPage} de {totalPages}
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                  <span className="sr-only">Próxima página</span>
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Página anterior</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                    <span className="sr-only">Próxima página</span>
+                  </Button>
+                </div>
               </div>
             )}
           </CardContent>

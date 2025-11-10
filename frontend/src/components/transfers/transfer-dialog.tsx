@@ -173,7 +173,7 @@ export function TransferDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Editar Transferência</DialogTitle>
@@ -183,7 +183,7 @@ export function TransferDialog({
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Doador */}
               <div className="space-y-2">
                 <Label>Doador</Label>
@@ -311,7 +311,7 @@ export function TransferDialog({
                 </Popover>
               </div>
               {/* Produto */}
-              <div className="col-span-2 space-y-2">
+              <div className="space-y-2 sm:col-span-2">
                 <Label>Produto</Label>
                 <Popover open={openProduct} onOpenChange={setOpenProduct}>
                   <PopoverTrigger asChild>

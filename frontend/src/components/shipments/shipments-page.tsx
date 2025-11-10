@@ -73,6 +73,7 @@ export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
       </div>
       <ShipmentsTable
         shipments={shipments}
+        role={role}
         onEdit={
           canEdit
             ? (shipment) => {

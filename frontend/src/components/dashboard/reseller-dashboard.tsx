@@ -108,14 +108,16 @@ export function ResellerDashboard() {
 
   return (
     <div className="flex-1 space-y-4">
-      <div className="flex items-center justify-between px-4 pt-6">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      <div className="flex flex-col gap-4 px-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Dashboard
+        </h2>
         <Tabs
           defaultValue="month"
           value={timeframe}
           onValueChange={setTimeframe}
         >
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-3 sm:w-auto">
             <TabsTrigger value="week">Semana</TabsTrigger>
             <TabsTrigger value="month">Mês</TabsTrigger>
             <TabsTrigger value="year">Ano</TabsTrigger>
@@ -163,7 +165,7 @@ export function ResellerDashboard() {
       </div>
 
       <div className="grid gap-4 px-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+        <Card className="md:col-span-2 lg:col-span-4">
           <CardHeader>
             <CardTitle>Evolução de Vendas</CardTitle>
             <CardDescription>
@@ -181,7 +183,7 @@ export function ResellerDashboard() {
             )}
           </CardContent>
         </Card>
-        <Card className="col-span-3">
+        <Card className="md:col-span-2 lg:col-span-3">
           <CardHeader>
             <CardTitle>Produtos Mais Vendidos</CardTitle>
             <CardDescription>Top produtos por vendas</CardDescription>
@@ -196,7 +198,7 @@ export function ResellerDashboard() {
       </div>
 
       <div className="grid gap-4 px-4 pb-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+        <Card className="md:col-span-2 lg:col-span-4">
           <CardHeader>
             <CardTitle>Produtos em Estoque</CardTitle>
             <CardDescription>
@@ -211,7 +213,7 @@ export function ResellerDashboard() {
             )}
           </CardContent>
         </Card>
-        <Card className="col-span-3">
+        <Card className="md:col-span-2 lg:col-span-3">
           <CardHeader>
             <CardTitle>Insights e Recomendações</CardTitle>
             <CardDescription>
@@ -225,8 +227,10 @@ export function ResellerDashboard() {
                   <TrendingUp className="text-primary h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">Analise seus produtos</p>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-sm font-medium sm:text-base">
+                    Analise seus produtos
+                  </p>
+                  <p className="text-muted-foreground text-xs sm:text-sm">
                     Identifique produtos parados há muito tempo e considere
                     promoções ou devoluções
                   </p>
@@ -237,8 +241,10 @@ export function ResellerDashboard() {
                   <ShoppingBag className="text-primary h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">Foque nos mais vendidos</p>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-sm font-medium sm:text-base">
+                    Foque nos mais vendidos
+                  </p>
+                  <p className="text-muted-foreground text-xs sm:text-sm">
                     Mantenha estoque dos produtos que mais vendem para maximizar
                     suas vendas
                   </p>
@@ -249,8 +255,10 @@ export function ResellerDashboard() {
                   <Package className="text-primary h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">Gerencie seu inventário</p>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-sm font-medium sm:text-base">
+                    Gerencie seu inventário
+                  </p>
+                  <p className="text-muted-foreground text-xs sm:text-sm">
                     Mantenha um equilíbrio entre produtos em estoque e
                     velocidade de vendas
                   </p>

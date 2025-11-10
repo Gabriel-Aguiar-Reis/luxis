@@ -30,18 +30,18 @@ interface KpiCarouselProps {
 
 export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
   return (
-    <div className="flex justify-center px-12">
+    <div className="flex justify-center px-4 sm:px-8 md:px-12">
       <Carousel
         className="w-full max-w-5xl"
         opts={{ loop: true, align: 'center' }}
         plugins={[Autoplay({ delay: 6000 })]}
       >
-        <CarouselContent>
+        <CarouselContent className="-ml-2 md:-ml-4">
           {isLoading
             ? Array.from({ length: Math.max(1, kpis.length) }).map((_, i) => (
                 <CarouselItem
                   key={i}
-                  className="w-full max-w-xs justify-center"
+                  className="basis-full pl-2 sm:basis-1/2 md:basis-1/3 md:pl-4"
                 >
                   <Skeleton className="h-44 w-full" />
                 </CarouselItem>
@@ -49,14 +49,14 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
             : kpis.map((kpi, i) => (
                 <CarouselItem
                   key={kpi.title}
-                  className="w-full max-w-xs justify-center"
+                  className="basis-full pl-2 sm:basis-1/2 md:basis-1/3 md:pl-4"
                 >
                   <KpiCard {...kpi} />
                 </CarouselItem>
               ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="hidden sm:flex" />
+        <CarouselNext className="hidden sm:flex" />
       </Carousel>
     </div>
   )
