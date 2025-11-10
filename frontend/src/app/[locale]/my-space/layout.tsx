@@ -7,6 +7,7 @@ import { useRouter } from '@/lib/i18n/navigation'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAuthStore } from '@/stores/use-auth-store'
+import { OnboardingModal } from '@/components/onboarding/onboarding-modal'
 
 export default function ResellerLayout({
   children
@@ -69,6 +70,7 @@ export default function ResellerLayout({
     <SidebarProvider>
       <ResellerSidebar />
       <SidebarInset className="flex flex-col">{children}</SidebarInset>
+      <OnboardingModal />
     </SidebarProvider>
   )
 }

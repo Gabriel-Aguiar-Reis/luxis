@@ -220,5 +220,33 @@
     "Settings": "Settings",
     "Logout": "Logout",
     "Dashboard": "Dashboard"
+  },
+  "Onboarding": {
+    "welcome": {
+      "title": "Welcome to Luxis! ✨",
+      "description": "We're glad to have you here! Let's take a quick tour of the main features of the inventory management system."
+    },
+    "inventory": {
+      "title": "Manage Your Inventory",
+      "description": "Control all your products, batches and movements in one place. Get full visibility of your inventory in real time."
+    },
+    "customers": {
+      "title": "Customers & Portfolio",
+      "description": "Manage your customers, track sales history and keep your portfolio organized with ease."
+    },
+    "sales": {
+      "title": "Sales & Reports",
+      "description": "Record sales, issue shipments and track your business performance with detailed reports and real-time KPIs."
+    },
+    "dashboard": {
+      "title": "Intuitive Dashboard",
+      "description": "View important metrics, charts and performance indicators. Everything you need to make informed decisions."
+    },
+    "step": "Step",
+    "of": "of",
+    "next": "Next",
+    "previous": "Previous",
+    "getStarted": "Get Started",
+    "skip": "Skip"
   }
 }

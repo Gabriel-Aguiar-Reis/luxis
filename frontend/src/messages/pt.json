@@ -219,5 +219,33 @@
     "Settings": "Configurações",
     "Logout": "Sair",
     "Dashboard": "Dashboard"
+  },
+  "Onboarding": {
+    "welcome": {
+      "title": "Bem-vindo ao Luxis! ✨",
+      "description": "Estamos felizes em ter você aqui! Vamos fazer um tour rápido pelas principais funcionalidades do sistema de gestão de estoque."
+    },
+    "inventory": {
+      "title": "Gerencie seu Estoque",
+      "description": "Controle todos os seus produtos, lotes e movimentações em um só lugar. Tenha visibilidade completa do seu inventário em tempo real."
+    },
+    "customers": {
+      "title": "Clientes e Portfólio",
+      "description": "Gerencie seus clientes, acompanhe o histórico de vendas e mantenha seu portfólio organizado com facilidade."
+    },
+    "sales": {
+      "title": "Vendas e Relatórios",
+      "description": "Registre vendas, emita romaneios e acompanhe o desempenho do seu negócio com relatórios detalhados e KPIs em tempo real."
+    },
+    "dashboard": {
+      "title": "Dashboard Intuitivo",
+      "description": "Visualize métricas importantes, gráficos e indicadores de desempenho. Tudo que você precisa para tomar decisões informadas."
+    },
+    "step": "Passo",
+    "of": "de",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "getStarted": "Começar",
+    "skip": "Pular"
   }
 }
