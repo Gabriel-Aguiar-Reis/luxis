@@ -16,7 +16,10 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Luxis'
+  title: 'Luxis',
+  icons: {
+    icon: '/sparkle.svg'
+  }
 }
 
 export default async function RootLayout({
@@ -29,7 +32,6 @@ export default async function RootLayout({
   return (
     <html lang={params.locale} suppressHydrationWarning>
       <head />
-      <link rel="icon" href="/favicon.ico" />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

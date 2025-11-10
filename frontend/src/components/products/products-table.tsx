@@ -23,6 +23,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
+import { useAuthStore } from '@/stores/use-auth-store'
 
 type ProductFiltersType = {
   serialNumber?: string
@@ -52,6 +53,7 @@ export function ProductsTable({
   productsPerPage = 10,
   handleEditProduct
 }: ProductsTableProps) {
+  const { user } = useAuthStore()
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [filters, setFilters] = useState<ProductFiltersType>({})
   const [currentPage, setCurrentPage] = useState(1)
@@ -237,14 +239,18 @@ export function ProductsTable({
                                 </TableCell>
                                 <TableCell className="text-right">
                                   <div className="flex justify-end gap-2">
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() => handleEditProduct(product)}
-                                    >
-                                      <FileEdit className="h-4 w-4" />
-                                      <span className="sr-only">Editar</span>
-                                    </Button>
+                                    {user?.role !== 'RESELLER' && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() =>
+                                          handleEditProduct(product)
+                                        }
+                                      >
+                                        <FileEdit className="h-4 w-4" />
+                                        <span className="sr-only">Editar</span>
+                                      </Button>
+                                    )}
                                     {/* <Button
                                       variant="ghost"
                                       size="icon"

@@ -105,13 +105,16 @@ export function SecurityForm() {
           </div>
 
           {!showPasswordForm ? (
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-muted-foreground text-sm">
                   Altere sua senha regularmente para manter sua conta segura.
                 </p>
               </div>
-              <Button onClick={() => setShowPasswordForm(true)}>
+              <Button
+                onClick={() => setShowPasswordForm(true)}
+                className="w-full sm:w-auto"
+              >
                 Alterar Senha
               </Button>
             </div>
@@ -136,7 +139,7 @@ export function SecurityForm() {
                           />
                           <button
                             type="button"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
+                            className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
                             aria-label={
                               showNewPassword
                                 ? 'Ocultar senha'
@@ -172,7 +175,7 @@ export function SecurityForm() {
                           />
                           <button
                             type="button"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
+                            className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
                             aria-label={
                               showConfirmPassword
                                 ? 'Ocultar senha'
@@ -193,15 +196,20 @@ export function SecurityForm() {
                   )}
                 />
 
-                <div className="flex justify-end space-x-2">
+                <div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:space-x-2">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => setShowPasswordForm(false)}
+                    className="w-full sm:w-auto"
                   >
                     Cancelar
                   </Button>
-                  <Button type="submit" disabled={isLoading}>
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full sm:w-auto"
+                  >
                     {isLoading ? 'Salvando...' : 'Salvar nova senha'}
                   </Button>
                 </div>

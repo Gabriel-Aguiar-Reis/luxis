@@ -293,8 +293,8 @@ export function ProfileForm() {
           <CardTitle className="mx-4 text-lg font-medium">Endereço</CardTitle>
           <CardContent>
             <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-2">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="md:col-span-2">
                   <FormField
                     control={form.control}
                     name="street"
@@ -419,12 +419,13 @@ export function ProfileForm() {
             </div>
           </CardContent>
         </Card>
-        <div className="flex justify-end gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
           <Button
             type="button"
             variant="destructive"
             onClick={() => setIsEditing(false)}
             disabled={!isEditing}
+            className="w-full sm:w-auto"
           >
             Cancelar
           </Button>
@@ -433,10 +434,15 @@ export function ProfileForm() {
             variant={isEditing ? 'ghost' : 'secondary'}
             onClick={() => setIsEditing(true)}
             disabled={isEditing}
+            className="w-full sm:w-auto"
           >
             Editar
           </Button>
-          <Button type="submit" disabled={isLoading || !isEditing}>
+          <Button
+            type="submit"
+            disabled={isLoading || !isEditing}
+            className="w-full sm:w-auto"
+          >
             {isLoading ? 'Salvando...' : 'Salvar alterações'}
           </Button>
         </div>
