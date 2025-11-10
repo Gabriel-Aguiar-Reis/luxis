@@ -35,4 +35,11 @@ export class ProductInInventoryDto {
     type: String
   })
   public salePrice: string
+
+  @ApiProperty({
+    description: 'The date when the product was acquired (batch arrival date)',
+    example: '2024-01-01T00:00:00.000Z',
+    type: String
+  })
+  public dateAcquired: string
 }

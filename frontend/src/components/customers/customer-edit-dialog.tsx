@@ -55,8 +55,8 @@ export function CustomerDialog({
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
-      name: customer?.name || '',
-      phone: customer?.phone || ''
+      name: customer?.name.value || '',
+      phone: customer?.phone.value || ''
     }
   })
 
@@ -64,8 +64,8 @@ export function CustomerDialog({
   useEffect(() => {
     if (customer) {
       form.reset({
-        name: customer.name,
-        phone: customer.phone
+        name: customer.name.value,
+        phone: customer.phone.value
       })
     } else {
       form.reset({

@@ -3080,12 +3080,12 @@ export interface components {
              * @description The name of the customer
              * @example John Doe
              */
-            name: string;
+            name: components["schemas"]["Name"];
             /**
              * @description The phone number of the customer
              * @example +5511999999999
              */
-            phone: string;
+            phone: components["schemas"]["PhoneNumber"];
         };
         UpdateCustomerDto: {
             /**
@@ -3844,6 +3844,11 @@ export interface components {
              * @example 150.00
              */
             salePrice: string;
+            /**
+             * @description The date when the product was acquired (batch arrival date)
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            dateAcquired: string;
         };
     };
     responses: never;

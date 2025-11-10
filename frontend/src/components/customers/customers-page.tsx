@@ -13,7 +13,8 @@ import {
 } from '@/hooks/use-customers'
 import { CustomersTable } from '@/components/customers/customers-table'
 import { CustomerDialog } from '@/components/customers/customer-edit-dialog'
-import type { GetAllCustomersResponse } from '@/hooks/use-customers'
+import { GetAllCustomersResponse } from '@/hooks/use-customers'
+import { PhoneNumberUtil } from 'google-libphonenumber'
 
 export function CustomersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -22,6 +23,7 @@ export function CustomersPage() {
   >(null)
 
   const queryClient = useQueryClient()
+  const phoneUtil = PhoneNumberUtil.getInstance()
 
   const { data: customers, isLoading } = useGetCustomers()
   const { mutate: createCustomer } = useCreateCustomer(queryClient)
@@ -74,7 +76,11 @@ export function CustomersPage() {
         </Button>
       </div>
 
-      <CustomersTable customers={customers} onEdit={handleEditCustomer} />
+      <CustomersTable
+        customers={customers}
+        onEdit={handleEditCustomer}
+        phoneUtil={phoneUtil}
+      />
 
       <CustomerDialog
         customer={selectedCustomer}

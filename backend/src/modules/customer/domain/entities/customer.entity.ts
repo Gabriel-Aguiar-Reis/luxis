@@ -14,14 +14,14 @@ export class Customer {
   @ApiProperty({
     description: 'The name of the customer',
     example: 'John Doe',
-    type: String
+    type: Name
   })
   public name: Name
 
   @ApiProperty({
     description: 'The phone number of the customer',
     example: '+5511999999999',
-    type: String
+    type: PhoneNumber
   })
   public phone: PhoneNumber
 

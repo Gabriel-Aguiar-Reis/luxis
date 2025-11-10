@@ -111,18 +111,22 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
     const qb = this.productRepo
       .createQueryBuilder('product')
       .innerJoin(BatchTypeOrmEntity, 'batch', 'batch.id = product.batch_id')
+      .addSelect('batch.arrival_date')
       .where('product.id IN (:...productIds)', {
         productIds: inventory.productIds
       })
       .andWhere('product.status = :status', { status: ProductStatus.ASSIGNED })
-      .orderBy('batch.created_at', 'ASC')
+      .orderBy('batch.arrival_date', 'ASC')
 
-    const filteredProducts = baseWhere(qb, qParams, 'batch.created_at')
-    const products = await filteredProducts.getMany()
+    const filteredProducts = baseWhere(qb, qParams, 'batch.arrival_date')
+    const rawProducts = await filteredProducts.getRawAndEntities()
 
-    if (products.length === 0) {
+    if (rawProducts.entities.length === 0) {
       return []
     }
+
+    const products = rawProducts.entities
+    const rawData = rawProducts.raw
 
     const modelIds = [...new Set(products.map((product) => product.modelId))]
     const productModels = await this.productModelRepo
@@ -138,14 +142,16 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
       {} as Record<string, ProductModelTypeOrmEntity>
     )
 
-    return products.slice(0, 10).map((product) => {
+    return products.slice(0, 10).map((product, index) => {
       const model = modelsById[product.modelId]
+      const raw = rawData[index]
       return {
         id: product.id.toString(),
         serialNumber: product.serialNumber,
         modelId: model.id.toString(),
         modelName: model.name,
-        salePrice: product.salePrice.toString()
+        salePrice: product.salePrice.toString(),
+        dateAcquired: raw.batch_arrival_date
       }
     })
   }

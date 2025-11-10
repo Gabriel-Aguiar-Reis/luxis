@@ -1,4 +1,5 @@
 import { AdminKpiCaslRule } from './shared/infra/auth/casl/rules/admin-kpi.rules'
+import { ResellerKpiCaslRule } from './shared/infra/auth/casl/rules/reseller-kpi.rules'
 import { ConfigModule } from '@/shared/config/config.module'
 import { databaseConfig } from '@/shared/config/database.config'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
@@ -114,6 +115,7 @@ import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/pas
     CustomerCaslRule,
     InventoryCaslRule,
     AdminKpiCaslRule,
+    ResellerKpiCaslRule,
     PasswordResetRequestCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
@@ -131,6 +133,7 @@ import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/pas
         customerRule: CustomerCaslRule,
         inventoryRule: InventoryCaslRule,
         adminKpiCaslRule: AdminKpiCaslRule,
+        resellerKpiCaslRule: ResellerKpiCaslRule,
         passwordResetRequestRule: PasswordResetRequestCaslRule
       ): CaslRuleBuilder[] => [
         saleRule,
@@ -146,6 +149,7 @@ import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/pas
         customerRule,
         inventoryRule,
         adminKpiCaslRule,
+        resellerKpiCaslRule,
         passwordResetRequestRule
       ],
       inject: [
@@ -162,6 +166,7 @@ import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/pas
         CustomerCaslRule,
         InventoryCaslRule,
         AdminKpiCaslRule,
+        ResellerKpiCaslRule,
         PasswordResetRequestCaslRule
       ]
     },

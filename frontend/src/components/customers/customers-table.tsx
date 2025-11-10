@@ -37,17 +37,20 @@ import {
   CustomersFilters,
   CustomersFiltersType
 } from '@/components/customers/customers-filters'
+import { PhoneNumberUtil } from 'google-libphonenumber'
 
 type CustomersTableProps = {
   customers: GetAllCustomersResponse
   onEdit: (customer: GetAllCustomersResponse[0]) => void
   customersPerPage?: number
+  phoneUtil: PhoneNumberUtil
 }
 
 export function CustomersTable({
   customers,
   onEdit,
-  customersPerPage = 10
+  customersPerPage = 10,
+  phoneUtil
 }: CustomersTableProps) {
   const [filters, setFilters] = useState<CustomersFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
@@ -59,11 +62,11 @@ export function CustomersTable({
     if (filters.name) {
       match =
         match &&
-        customer.name.toLowerCase().includes(filters.name.toLowerCase())
+        customer.name.value.toLowerCase().includes(filters.name.toLowerCase())
     }
 
     if (filters.phone) {
-      match = match && customer.phone.includes(filters.phone)
+      match = match && customer.phone.value.includes(filters.phone)
     }
 
     return match
@@ -124,12 +127,17 @@ export function CustomersTable({
                       {paginatedCustomers.map((customer) => (
                         <TableRow key={customer.id}>
                           <TableCell className="font-medium">
-                            {customer.name}
+                            {customer.name.value}
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
                               <Phone className="text-muted-foreground h-4 w-4" />
-                              {customer.phone}
+                              {phoneUtil.formatInOriginalFormat(
+                                phoneUtil.parseAndKeepRawInput(
+                                  customer.phone.value,
+                                  'BR'
+                                )
+                              )}
                             </div>
                           </TableCell>
                           <TableCell className="text-right">
