@@ -76,7 +76,7 @@ export function AppearanceForm() {
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="grid grid-cols-3"
+                      className="grid grid-cols-1 gap-4 sm:grid-cols-3"
                     >
                       <FormItem>
                         <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
@@ -132,7 +132,11 @@ export function AppearanceForm() {
           </CardContent>
         </Card>
         <div className="flex justify-end">
-          <Button type="submit" disabled={isLoading}>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full sm:w-auto"
+          >
             {isLoading ? 'Salvando...' : 'Salvar preferências'}
           </Button>
         </div>

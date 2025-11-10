@@ -56,15 +56,6 @@ export function ReturnDialog({
     [users]
   )
 
-  function useMultipleInventories(resellers: User[]) {
-    return resellers.map((reseller) => ({
-      resellerId: reseller.id,
-      query: useGetInventoryById(reseller.id)
-    }))
-  }
-
-  const inventories = useMultipleInventories(resellers)
-
   React.useEffect(() => {
     if (ret) {
       setValue('items', ret.products.map((p) => p.productId) || [])
@@ -85,13 +76,19 @@ export function ReturnDialog({
   const [searchResellerValue, setSearchResellerValue] = useState('')
   const [searchProductValue, setSearchProductValue] = useState('')
 
+  // Buscar inventário apenas do revendedor selecionado
+  const { data: selectedInventoryData } = useGetInventoryById(resellerId || '')
+
   const selectedInventory = React.useMemo(() => {
-    if (!resellerId) return undefined
-    const inv = inventories.find((i) => i.resellerId === resellerId)
-    if (!inv || !inv.query.data || Array.isArray(inv.query.data))
+    if (
+      !resellerId ||
+      !selectedInventoryData ||
+      Array.isArray(selectedInventoryData)
+    ) {
       return undefined
-    return inv.query.data
-  }, [resellerId, inventories])
+    }
+    return selectedInventoryData
+  }, [resellerId, selectedInventoryData])
 
   const productsWithModel = React.useMemo(() => {
     if (
