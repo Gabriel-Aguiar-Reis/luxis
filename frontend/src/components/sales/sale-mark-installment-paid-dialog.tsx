@@ -53,12 +53,10 @@ export function SaleMarkInstallmentPaidDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Confirmar Pagamento de Parcelas</AlertDialogTitle>
           <AlertDialogDescription className="space-y-4">
-            <div>
-              Parcelas pagas: <strong>{alreadyPaid}</strong> de{' '}
-              <strong>{totalInstallments}</strong>
-              <br />
-              Restantes: <strong>{remaining}</strong>
-            </div>
+            Parcelas pagas: <strong>{alreadyPaid}</strong> de{' '}
+            <strong>{totalInstallments}</strong>
+            <br />
+            Restantes: <strong>{remaining}</strong>
           </AlertDialogDescription>
 
           <div>
