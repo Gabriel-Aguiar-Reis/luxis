@@ -19,7 +19,7 @@ export class OwnershipTransferTypeOrmRepository
 
   async findAllByResellerId(resellerId: UUID): Promise<OwnershipTransfer[]> {
     const entities = await this.repository.find({
-      where: { fromResellerId: resellerId, toResellerId: resellerId }
+      where: [{ fromResellerId: resellerId }, { toResellerId: resellerId }]
     })
     return entities.map(OwnershipTransferMapper.toDomain)
   }

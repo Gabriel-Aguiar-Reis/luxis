@@ -54,6 +54,7 @@ import { AddCustomerDialog } from '@/components/sales/add-customer-dialog'
 import { AddProductDialog } from '@/components/sales/add-product-dialog'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { useAuthStore } from '@/stores/use-auth-store'
 
 const saleSchema = z
   .object({
@@ -112,6 +113,7 @@ export function SaleCreateForm() {
   const { mutate: createSale, isPending: isSubmitting } =
     useCreateSale(queryClient)
   const [isCashPayment, setIsCashPayment] = useState(true)
+  const { user } = useAuthStore()
 
   const router = useRouter()
 
@@ -145,7 +147,8 @@ export function SaleCreateForm() {
     }
     createSale(payload, {
       onSuccess: (response) => {
-        router.push(`/home/sales/new/confirmation?saleId=${response.id}`)
+        const basePath = user?.role === 'ADMIN' ? '/home' : '/my-space'
+        router.push(`${basePath}/sales/new/confirmation?saleId=${response.id}`)
       }
     })
   }

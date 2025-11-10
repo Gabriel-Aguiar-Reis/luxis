@@ -69,14 +69,9 @@ export function TransferDialog({
     [users]
   )
 
-  function useMultipleInventories(resellers: User[]) {
-    return resellers.map((reseller) => ({
-      resellerId: reseller.id,
-      query: useGetInventoryById(reseller.id)
-    }))
-  }
-
-  const inventories = useMultipleInventories(resellers)
+  // Carrega apenas os inventários necessários (doador e recebedor)
+  const { data: fromInventory } = useGetInventoryById(fromResellerId || '')
+  const { data: toInventory } = useGetInventoryById(toResellerId || '')
 
   React.useEffect(() => {
     if (transfer) {
@@ -93,20 +88,16 @@ export function TransferDialog({
   }, [transfer, setValue, reset])
 
   const selectedInventory = React.useMemo(() => {
-    if (!fromResellerId) return undefined
-    const inv = inventories.find((i) => i.resellerId === fromResellerId)
-    if (!inv || !inv.query.data || Array.isArray(inv.query.data))
-      return undefined
-    return inv.query.data
-  }, [fromResellerId, inventories])
+    if (!fromResellerId || !fromInventory) return undefined
+    if (Array.isArray(fromInventory)) return undefined
+    return fromInventory
+  }, [fromResellerId, fromInventory])
 
   const selectedToInventory = React.useMemo(() => {
-    if (!toResellerId) return undefined
-    const inv = inventories.find((i) => i.resellerId === toResellerId)
-    if (!inv || !inv.query.data || Array.isArray(inv.query.data))
-      return undefined
-    return inv.query.data
-  }, [toResellerId, inventories])
+    if (!toResellerId || !toInventory) return undefined
+    if (Array.isArray(toInventory)) return undefined
+    return toInventory
+  }, [toResellerId, toInventory])
 
   const selectedProduct = React.useMemo(() => {
     if (!productId || !selectedInventory) return ''

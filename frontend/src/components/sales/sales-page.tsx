@@ -53,7 +53,7 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
 
   // Permissões baseadas no role
   const canEdit = role === 'ADMIN'
-  const canDelete = role === 'ADMIN'
+  const canDelete = true
 
   if (!sales || isLoading) {
     return (

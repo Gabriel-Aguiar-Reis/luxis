@@ -72,22 +72,14 @@ export function ReturnCreateDialog({
     [users]
   )
 
-  function useMultipleInventories(resellers: User[]) {
-    return resellers.map((reseller) => ({
-      resellerId: reseller.id,
-      query: useGetInventoryById(reseller.id)
-    }))
-  }
-
-  const inventories = useMultipleInventories(resellers)
+  // Carrega apenas o inventário do revendedor selecionado
+  const { data: inventory } = useGetInventoryById(resellerId || '')
 
   const selectedInventory = React.useMemo(() => {
-    if (!resellerId) return undefined
-    const inv = inventories.find((i) => i.resellerId === resellerId)
-    if (!inv || !inv.query.data || Array.isArray(inv.query.data))
-      return undefined
-    return inv.query.data
-  }, [resellerId, inventories])
+    if (!resellerId || !inventory) return undefined
+    if (Array.isArray(inventory)) return undefined
+    return inventory
+  }, [resellerId, inventory])
 
   // Monta productsWithModel igual ao transfer-create-dialog
   const productsWithModel = React.useMemo(() => {
@@ -135,7 +127,7 @@ export function ReturnCreateDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Nova Devolução</DialogTitle>
@@ -145,7 +137,7 @@ export function ReturnCreateDialog({
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Revendedor */}
               <div className="space-y-2">
                 <Label>Revendedor</Label>
@@ -212,7 +204,7 @@ export function ReturnCreateDialog({
                 </Popover>
               </div>
               {/* Produtos */}
-              <div className="col-span-2 space-y-2">
+              <div className="space-y-2 sm:col-span-2">
                 <Label>Produtos</Label>
                 <Popover open={openProduct} onOpenChange={setOpenProduct}>
                   <PopoverTrigger asChild>
@@ -290,31 +282,42 @@ export function ReturnCreateDialog({
                 {/* Lista de produtos selecionados */}
                 {selectedProducts.length > 0 && (
                   <div className="text-muted-foreground mt-2 text-sm">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Selecionados:</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {selectedProducts.map((product) => (
-                          <TableRow key={product.id}>
-                            <TableCell>{`${product.serialNumber} - ${product.label}`}</TableCell>
+                    <div className="overflow-x-auto rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="min-w-[200px]">
+                              Selecionados:
+                            </TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHeader>
+                        <TableBody>
+                          {selectedProducts.map((product) => (
+                            <TableRow key={product.id}>
+                              <TableCell>{`${product.serialNumber} - ${product.label}`}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              className="w-full sm:w-auto"
+            >
               Cancelar
             </Button>
-            <Button type="submit">Criar Devolução</Button>
+            <Button type="submit" className="w-full sm:w-auto">
+              Criar Devolução
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

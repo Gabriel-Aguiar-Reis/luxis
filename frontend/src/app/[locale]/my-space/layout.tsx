@@ -16,9 +16,17 @@ export default function ResellerLayout({
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const t = useTranslations('MySpaceLayout')
-  const { verify, logout } = useAuthStore()
+  const { verify, logout, isAuthenticated, user } = useAuthStore()
 
   useEffect(() => {
+    // Se já está autenticado e tem user, não precisa verificar novamente
+    if (isAuthenticated && user) {
+      if (user.role === 'RESELLER' && user.status === 'ACTIVE') {
+        setIsLoading(false)
+        return
+      }
+    }
+
     const checkAuth = async () => {
       try {
         const result = await verify()
@@ -47,7 +55,7 @@ export default function ResellerLayout({
     }
 
     checkAuth()
-  }, [verify, logout, router, t])
+  }, []) // Removido dependências para executar apenas no mount inicial
 
   if (isLoading) {
     return (

@@ -434,6 +434,7 @@ export function SalesTable({
                                     <DropdownMenuItem
                                       className="text-text-destructive"
                                       onClick={() => onDelete(sale)}
+                                      disabled={sale.status !== 'PENDING'}
                                     >
                                       <Trash2 className="mr-2 h-4 w-4" />
                                       Excluir

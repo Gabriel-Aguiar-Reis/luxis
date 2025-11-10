@@ -61,30 +61,21 @@ export function TransferCreateDialog({
     [users]
   )
 
-  function useMultipleInventories(resellers: User[]) {
-    return resellers.map((reseller) => ({
-      resellerId: reseller.id,
-      query: useGetInventoryById(reseller.id)
-    }))
-  }
-
-  const inventories = useMultipleInventories(resellers)
+  // Carrega apenas os inventários necessários (doador e recebedor)
+  const { data: fromInventory } = useGetInventoryById(fromResellerId || '')
+  const { data: toInventory } = useGetInventoryById(toResellerId || '')
 
   const selectedInventory = React.useMemo(() => {
-    if (!fromResellerId) return undefined
-    const inv = inventories.find((i) => i.resellerId === fromResellerId)
-    if (!inv || !inv.query.data || Array.isArray(inv.query.data))
-      return undefined
-    return inv.query.data
-  }, [fromResellerId, inventories])
+    if (!fromResellerId || !fromInventory) return undefined
+    if (Array.isArray(fromInventory)) return undefined
+    return fromInventory
+  }, [fromResellerId, fromInventory])
 
   const selectedToInventory = React.useMemo(() => {
-    if (!toResellerId) return undefined
-    const inv = inventories.find((i) => i.resellerId === toResellerId)
-    if (!inv || !inv.query.data || Array.isArray(inv.query.data))
-      return undefined
-    return inv.query.data
-  }, [toResellerId, inventories])
+    if (!toResellerId || !toInventory) return undefined
+    if (Array.isArray(toInventory)) return undefined
+    return toInventory
+  }, [toResellerId, toInventory])
 
   const selectedProduct = React.useMemo(() => {
     if (!productId || !selectedInventory) return ''
@@ -142,7 +133,7 @@ export function TransferCreateDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Nova Transferência</DialogTitle>
@@ -153,7 +144,7 @@ export function TransferCreateDialog({
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Doador */}
               <div className="space-y-2">
                 <Label>Doador</Label>
@@ -281,7 +272,7 @@ export function TransferCreateDialog({
                 </Popover>
               </div>
               {/* Produto */}
-              <div className="col-span-2 space-y-2">
+              <div className="space-y-2 sm:col-span-2">
                 <Label>Produto</Label>
                 <Popover open={openProduct} onOpenChange={setOpenProduct}>
                   <PopoverTrigger asChild>
@@ -345,11 +336,18 @@ export function TransferCreateDialog({
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              className="w-full sm:w-auto"
+            >
               Cancelar
             </Button>
-            <Button type="submit">Criar Transferência</Button>
+            <Button type="submit" className="w-full sm:w-auto">
+              Criar Transferência
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

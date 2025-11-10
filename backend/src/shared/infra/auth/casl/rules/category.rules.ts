@@ -19,6 +19,9 @@ export class CategoryCaslRule implements CaslRuleBuilder {
       case Role.ASSISTANT:
         can(Actions.Read, Category)
         break
+      case Role.RESELLER:
+        can(Actions.Read, Category)
+        break
     }
   }
 }
