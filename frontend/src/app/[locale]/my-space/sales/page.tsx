@@ -1,6 +1,6 @@
 'use client'
 
-import { ResellerSalesPageWithQuery } from '@/components/reseller-sales/reseller-sales-page-with-query'
+import { SalesPage } from '@/components/sales/sales-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,7 +45,7 @@ export default function ResellerSalesPage() {
           </Breadcrumb>
         </div>
       </header>
-      <ResellerSalesPageWithQuery />
+      <SalesPage role="RESELLER" />
     </>
   )
 }

@@ -22,7 +22,11 @@ import { SaleMarkInstallmentPaidDialog } from '@/components/sales/sale-mark-inst
 import { SaleDialog } from '@/components/sales/sale-dialog'
 import { SaleConfirmDialog } from '@/components/sales/sale-confirm-dialog'
 
-export function SalesPage() {
+type SalesPageProps = {
+  role?: 'ADMIN' | 'RESELLER'
+}
+
+export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isEditStatusDialogOpen, setIsEditStatusDialogOpen] = useState(false)
@@ -47,6 +51,11 @@ export function SalesPage() {
 
   const phoneUtil = PhoneNumberUtil.getInstance()
 
+  // Permissões baseadas no role
+  const canCreate = role === 'ADMIN'
+  const canEdit = role === 'ADMIN'
+  const canDelete = role === 'ADMIN'
+
   if (!sales || isLoading) {
     return (
       <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
@@ -67,26 +76,46 @@ export function SalesPage() {
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Vendas</h2>
-        <Button onClick={() => router.push('/home/sales/create')}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nova Venda
-        </Button>
+        {canCreate && (
+          <Button
+            onClick={() =>
+              router.push(
+                `/${role === 'ADMIN' ? 'home' : 'my-space'}/sales/create`
+              )
+            }
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Nova Venda
+          </Button>
+        )}
       </div>
       <SalesTable
         sales={sales}
         phoneUtil={phoneUtil}
-        onEdit={(sale) => {
-          setSelectedSale(sale)
-          setIsDialogOpen(true)
-        }}
-        onEditStatus={(sale) => {
-          setSelectedSale(sale)
-          setIsEditStatusDialogOpen(true)
-        }}
-        onDelete={(sale) => {
-          setSelectedSale(sale)
-          setIsDeleteDialogOpen(true)
-        }}
+        onEdit={
+          canEdit
+            ? (sale) => {
+                setSelectedSale(sale)
+                setIsDialogOpen(true)
+              }
+            : undefined
+        }
+        onEditStatus={
+          canEdit
+            ? (sale) => {
+                setSelectedSale(sale)
+                setIsEditStatusDialogOpen(true)
+              }
+            : undefined
+        }
+        onDelete={
+          canDelete
+            ? (sale) => {
+                setSelectedSale(sale)
+                setIsDeleteDialogOpen(true)
+              }
+            : undefined
+        }
         onMarkInstallmentPaid={(sale) => {
           setSelectedSale(sale)
           setIsMarkInstallmentPaidDialogOpen(true)

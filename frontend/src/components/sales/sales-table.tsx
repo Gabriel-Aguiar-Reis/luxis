@@ -61,11 +61,11 @@ import { SaleReceiptPDF } from '@/components/sales/sale-receipt-pdf/sale-receipt
 
 type SalesTableProps = {
   sales: GetAllSalesResponse
-  onEdit: (sale: GetOneSaleResponse) => void
-  onEditStatus: (sale: GetOneSaleResponse) => void
-  onConfirm: (sale: GetOneSaleResponse) => void
-  onMarkInstallmentPaid: (sale: GetOneSaleResponse) => void
-  onDelete: (sale: GetOneSaleResponse) => void
+  onEdit?: (sale: GetOneSaleResponse) => void
+  onEditStatus?: (sale: GetOneSaleResponse) => void
+  onConfirm?: (sale: GetOneSaleResponse) => void
+  onMarkInstallmentPaid?: (sale: GetOneSaleResponse) => void
+  onDelete?: (sale: GetOneSaleResponse) => void
   phoneUtil: PhoneNumberUtil
   salesPerPage?: number
 }
@@ -345,44 +345,61 @@ export function SalesTable({
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>
-                                  <div className="flex items-center">
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    Editar
-                                  </div>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => onEdit(sale)}
-                                  disabled={sale.status !== 'PENDING'}
-                                >
-                                  <FilePen className="mr-2 h-4 w-4" />
-                                  Infos
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => onEditStatus(sale)}
-                                  disabled={sale.status === 'INSTALLMENTS_PAID'}
-                                >
-                                  <FilePen className="mr-2 h-4 w-4" />
-                                  Status
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => onConfirm(sale)}
-                                  disabled={sale.status !== 'PENDING'}
-                                >
-                                  <CheckLine className="mr-2 h-4 w-4" />
-                                  Confirmar
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => onMarkInstallmentPaid(sale)}
-                                  disabled={
-                                    sale.status !== 'INSTALLMENTS_PENDING' &&
-                                    sale.status !== 'INSTALLMENTS_OVERDUE'
-                                  }
-                                >
-                                  <Coins className="mr-2 h-4 w-4" />
-                                  Confirmar parcela
-                                </DropdownMenuItem>
+                                {(onEdit ||
+                                  onEditStatus ||
+                                  onConfirm ||
+                                  onMarkInstallmentPaid) && (
+                                  <>
+                                    <DropdownMenuLabel>
+                                      <div className="flex items-center">
+                                        <Pencil className="mr-2 h-4 w-4" />
+                                        Editar
+                                      </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                  </>
+                                )}
+                                {onEdit && (
+                                  <DropdownMenuItem
+                                    onClick={() => onEdit(sale)}
+                                    disabled={sale.status !== 'PENDING'}
+                                  >
+                                    <FilePen className="mr-2 h-4 w-4" />
+                                    Infos
+                                  </DropdownMenuItem>
+                                )}
+                                {onEditStatus && (
+                                  <DropdownMenuItem
+                                    onClick={() => onEditStatus(sale)}
+                                    disabled={
+                                      sale.status === 'INSTALLMENTS_PAID'
+                                    }
+                                  >
+                                    <FilePen className="mr-2 h-4 w-4" />
+                                    Status
+                                  </DropdownMenuItem>
+                                )}
+                                {onConfirm && (
+                                  <DropdownMenuItem
+                                    onClick={() => onConfirm(sale)}
+                                    disabled={sale.status !== 'PENDING'}
+                                  >
+                                    <CheckLine className="mr-2 h-4 w-4" />
+                                    Confirmar
+                                  </DropdownMenuItem>
+                                )}
+                                {onMarkInstallmentPaid && (
+                                  <DropdownMenuItem
+                                    onClick={() => onMarkInstallmentPaid(sale)}
+                                    disabled={
+                                      sale.status !== 'INSTALLMENTS_PENDING' &&
+                                      sale.status !== 'INSTALLMENTS_OVERDUE'
+                                    }
+                                  >
+                                    <Coins className="mr-2 h-4 w-4" />
+                                    Confirmar parcela
+                                  </DropdownMenuItem>
+                                )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   onClick={() => handleDownloadReceipt(sale)}
@@ -400,14 +417,18 @@ export function SalesTable({
                                     </>
                                   )}
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  className="text-text-destructive"
-                                  onClick={() => onDelete(sale)}
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Excluir
-                                </DropdownMenuItem>
+                                {onDelete && (
+                                  <>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                      className="text-text-destructive"
+                                      onClick={() => onDelete(sale)}
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Excluir
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </TableCell>
