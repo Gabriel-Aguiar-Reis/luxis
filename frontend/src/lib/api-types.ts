@@ -174,6 +174,13 @@ export type ResetPassword = paths['/auth/reset-password']['post']
 export type ChangePassword = paths['/auth/change-password']['post']
 export type Verify = paths['/auth/verify']['post']
 
+// Password Reset Requests
+
+export type PasswordResetRequestStatus =
+  components['schemas']['PasswordResetRequestResponseDto']['status']
+export type PasswordResetRequest =
+  components['schemas']['PasswordResetRequestResponseDto']
+
 // KPI - Admin
 
 export type GetTotalInStockProducts =

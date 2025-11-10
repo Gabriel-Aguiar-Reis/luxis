@@ -21,6 +21,7 @@ import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { Return } from '@/modules/return/domain/entities/return.entity'
 import { Customer } from '@/modules/customer/domain/entities/customer.entity'
 import { Inventory } from '@/modules/inventory/domain/entities/inventory.entity'
+import { PasswordResetRequest } from '@/modules/auth/domain/entities/password-reset-request.entity'
 
 type Subjects =
   | InferSubjects<typeof Batch>
@@ -28,6 +29,7 @@ type Subjects =
   | InferSubjects<typeof Customer>
   | InferSubjects<typeof Inventory>
   | InferSubjects<typeof OwnershipTransfer>
+  | InferSubjects<typeof PasswordResetRequest>
   | InferSubjects<typeof Product>
   | InferSubjects<typeof ProductModel>
   | InferSubjects<typeof Return>

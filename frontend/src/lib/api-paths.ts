@@ -119,7 +119,12 @@ export const apiPaths = {
     forgotPassword: '/auth/forgot-password',
     resetPassword: '/auth/reset-password',
     changePassword: '/auth/change-password',
-    verify: '/auth/verify'
+    verify: '/auth/verify',
+    passwordResetRequests: {
+      base: '/auth/password-reset-requests',
+      approve: (id: string) => `/auth/password-reset-requests/${id}/approve`,
+      reject: (id: string) => `/auth/password-reset-requests/${id}/reject`
+    }
   },
 
   // KPI - Admin

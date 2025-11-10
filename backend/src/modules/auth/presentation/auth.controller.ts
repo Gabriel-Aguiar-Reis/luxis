@@ -8,7 +8,10 @@ import {
   UseInterceptors,
   Headers,
   UnauthorizedException,
-  HttpCode
+  HttpCode,
+  Patch,
+  Param,
+  UseGuards
 } from '@nestjs/common'
 import { AuthService } from '@/modules/auth/application/services/auth.service'
 import { LoginDto } from '@/modules/auth/application/dtos/login.dto'
@@ -17,7 +20,8 @@ import {
   ApiBody,
   ApiResponse,
   ApiTags,
-  ApiQuery
+  ApiQuery,
+  ApiBearerAuth
 } from '@nestjs/swagger'
 import { RequestPasswordResetDto } from '@/modules/auth/application/dtos/request-password-reset-dto'
 import { ResetPasswordDto } from '@/modules/auth/application/dtos/reset-password.dto'
@@ -31,6 +35,17 @@ import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
 import { AccessTokenDto } from '@/modules/auth/application/dtos/access-token.dto'
 import { UUID } from 'crypto'
 import { ChangePasswordDto } from '@/modules/auth/application/dtos/change-password.dto'
+import { RequestPasswordResetUseCase } from '@/modules/auth/application/use-cases/request-password-reset.use-case'
+import { ListPasswordResetRequestsUseCase } from '@/modules/auth/application/use-cases/list-password-reset-requests.use-case'
+import { ApprovePasswordResetRequestUseCase } from '@/modules/auth/application/use-cases/approve-password-reset-request.use-case'
+import { RejectPasswordResetRequestUseCase } from '@/modules/auth/application/use-cases/reject-password-reset-request.use-case'
+import { ResetPasswordUseCase } from '@/modules/auth/application/use-cases/reset-password.use-case'
+import { PasswordResetRequestResponseDto } from '@/modules/auth/application/dtos/password-reset-request-response.dto'
+import { JwtAuthGuard } from '@/shared/infra/auth/guards/jwt-auth.guard'
+import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
+import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
+import { ReadPasswordResetRequestPolicy } from '@/shared/infra/auth/policies/password-reset-request/read-password-reset-request.policy'
+import { UpdatePasswordResetRequestPolicy } from '@/shared/infra/auth/policies/password-reset-request/update-password-reset-request.policy'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -47,7 +62,12 @@ export class AuthController {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly logger: CustomLogger
+    private readonly logger: CustomLogger,
+    private readonly requestPasswordResetUseCase: RequestPasswordResetUseCase,
+    private readonly listPasswordResetRequestsUseCase: ListPasswordResetRequestsUseCase,
+    private readonly approvePasswordResetRequestUseCase: ApprovePasswordResetRequestUseCase,
+    private readonly rejectPasswordResetRequestUseCase: RejectPasswordResetRequestUseCase,
+    private readonly resetPasswordUseCase: ResetPasswordUseCase
   ) {}
 
   @ApiOperation({ summary: 'Login', operationId: 'login' })
@@ -70,12 +90,69 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Forgot password', operationId: 'forgot-password' })
   @ApiBody({ type: RequestPasswordResetDto })
-  @ApiResponse({ status: 204, description: 'Forgot password successful' })
+  @ApiResponse({
+    status: 201,
+    description: 'Password reset request created',
+    type: PasswordResetRequestResponseDto
+  })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @HttpCode(204)
+  @HttpCode(201)
   @Post('forgot-password')
-  async forgotPassword(@Body() dto: RequestPasswordResetDto): Promise<void> {
-    return this.authService.forgotPassword(new Email(dto.email))
+  async forgotPassword(
+    @Body() dto: RequestPasswordResetDto
+  ): Promise<PasswordResetRequestResponseDto> {
+    const request = await this.requestPasswordResetUseCase.execute(dto.email)
+    return request as any
+  }
+
+  @ApiOperation({
+    summary: 'List password reset requests (Admin only)',
+    operationId: 'list-password-reset-requests'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset requests retrieved',
+    type: [PasswordResetRequestResponseDto]
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies(new ReadPasswordResetRequestPolicy())
+  @Get('password-reset-requests')
+  async listPasswordResetRequests(): Promise<
+    PasswordResetRequestResponseDto[]
+  > {
+    const requests = await this.listPasswordResetRequestsUseCase.execute()
+    return requests as any
+  }
+
+  @ApiOperation({
+    summary: 'Approve password reset request (Admin only)',
+    operationId: 'approve-password-reset-request'
+  })
+  @ApiResponse({ status: 204, description: 'Request approved' })
+  @ApiResponse({ status: 404, description: 'Request not found' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies(new UpdatePasswordResetRequestPolicy())
+  @HttpCode(204)
+  @Patch('password-reset-requests/:id/approve')
+  async approvePasswordResetRequest(@Param('id') id: string): Promise<void> {
+    await this.approvePasswordResetRequestUseCase.execute(id)
+  }
+
+  @ApiOperation({
+    summary: 'Reject password reset request (Admin only)',
+    operationId: 'reject-password-reset-request'
+  })
+  @ApiResponse({ status: 204, description: 'Request rejected' })
+  @ApiResponse({ status: 404, description: 'Request not found' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies(new UpdatePasswordResetRequestPolicy())
+  @HttpCode(204)
+  @Patch('password-reset-requests/:id/reject')
+  async rejectPasswordResetRequest(@Param('id') id: string): Promise<void> {
+    await this.rejectPasswordResetRequestUseCase.execute(id)
   }
 
   @ApiOperation({ summary: 'Reset password', operationId: 'reset-password' })
@@ -85,7 +162,7 @@ export class AuthController {
   @HttpCode(204)
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
-    await this.authService.resetPassword(dto.token, dto.newPassword)
+    await this.resetPasswordUseCase.execute(dto.token, dto.newPassword)
   }
 
   @ApiOperation({
@@ -94,11 +171,14 @@ export class AuthController {
   })
   @ApiBody({
     type: ChangePasswordDto,
-    description: 'Change password request',
+    description: 'Change password request'
   })
   @ApiResponse({ status: 204, description: 'Password changed successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid current password' })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid current password'
+  })
   @HttpCode(204)
   @Post('change-password')
   async changePassword(@Body() dto: ChangePasswordDto) {

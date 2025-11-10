@@ -24,7 +24,9 @@ export const envSchema = z.object({
   EMAIL_PASSWORD: z.string().optional(),
   EMAIL_HOST: z.string().optional(),
   EMAIL_PORT: z.string().transform(Number).optional(),
-  EMAIL_RESET_PASSWORD_URL: z.string().url().optional()
+  EMAIL_RESET_PASSWORD_URL: z.string().url().optional(),
+  MAILERSEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().optional()
 })
 
 export type EnvVars = z.infer<typeof envSchema>

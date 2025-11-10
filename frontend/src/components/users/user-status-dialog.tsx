@@ -43,7 +43,7 @@ export function UserStatusDialog({
           <AlertDialogDescription>
             Tem certeza que deseja{' '}
             {user?.status === 'ACTIVE' ? 'desativar' : 'ativar'} o usuário{' '}
-            {user?.name.value} {user?.surname.value}?
+            {user?.name?.value ?? 'N/A'} {user?.surname?.value ?? ''}?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -94,14 +94,15 @@ export function UserDetailsDialog({
         <DialogHeader>
           <DialogTitle>Detalhes do Usuário</DialogTitle>
           <DialogDescription>
-            Informações detalhadas sobre {user.name.value} {user.surname.value}.
+            Informações detalhadas sobre {user.name?.value ?? 'N/A'}{' '}
+            {user.surname?.value ?? ''}.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-4">
             <h3 className="text-lg font-semibold">
-              {user.name.value} {user.surname.value}
+              {user.name?.value ?? 'N/A'} {user.surname?.value ?? ''}
             </h3>
             <div className="flex items-center gap-2">
               {formatRole(user.role)}
@@ -112,24 +113,27 @@ export function UserDetailsDialog({
           <div className="grid gap-4">
             <div className="flex items-center gap-2">
               <Mail className="text-muted-foreground h-4 w-4" />
-              <span>{user.email.value}</span>
+              <span>{user.email?.value ?? 'N/A'}</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="text-muted-foreground h-4 w-4" />
               <span>
-                {phoneUtil.formatInOriginalFormat(
-                  phoneUtil.parseAndKeepRawInput(user.phone.value, 'BR')
-                )}
+                {user.phone?.value
+                  ? phoneUtil.formatInOriginalFormat(
+                      phoneUtil.parseAndKeepRawInput(user.phone.value, 'BR')
+                    )
+                  : 'N/A'}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <MapPinHouse className="text-muted-foreground h-4 w-4" />
               <span>
-                {user.residence.address.street}, {user.residence.address.number}
-                , {user.residence.address.neighborhood} -{' '}
-                {user.residence.address.city} -{' '}
-                {user.residence.address.federativeUnit},{' '}
-                {user.residence.address.postalCode.value}
+                {user.residence?.address?.street ?? 'N/A'},{' '}
+                {user.residence?.address?.number ?? 'N/A'},{' '}
+                {user.residence?.address?.neighborhood ?? 'N/A'} -{' '}
+                {user.residence?.address?.city ?? 'N/A'} -{' '}
+                {user.residence?.address?.federativeUnit ?? 'N/A'},{' '}
+                {user.residence?.address?.postalCode?.value ?? 'N/A'}
               </span>
             </div>
           </div>

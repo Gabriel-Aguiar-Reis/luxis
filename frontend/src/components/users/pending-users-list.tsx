@@ -127,13 +127,18 @@ export function PendingUsersList({
                 {users.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">
-                      {user.name.value}
+                      {user.name?.value ?? 'N/A'}
                     </TableCell>
-                    <TableCell>{user.email.value}</TableCell>
+                    <TableCell>{user.email?.value ?? 'N/A'}</TableCell>
                     <TableCell>
-                      {phoneUtil.formatInOriginalFormat(
-                        phoneUtil.parseAndKeepRawInput(user.phone.value, 'BR')
-                      )}
+                      {user.phone?.value
+                        ? phoneUtil.formatInOriginalFormat(
+                            phoneUtil.parseAndKeepRawInput(
+                              user.phone.value,
+                              'BR'
+                            )
+                          )
+                        : 'N/A'}
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>

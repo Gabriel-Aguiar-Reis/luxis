@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UsersList } from '@/components/users/users-list'
 import { PendingUsersList } from '@/components/users/pending-users-list'
+import { PasswordResetRequestsList } from '@/components/password-reset/password-reset-requests-list'
 import { Badge } from '@/components/ui/badge'
 import { useGetUsers } from '@/hooks/use-users'
 import { PhoneNumberUtil } from 'google-libphonenumber'
@@ -22,11 +23,10 @@ export function UsersPage() {
             Aprovações Pendentes{' '}
             {users &&
               users?.filter((user) => user.status === 'PENDING').length > 0 && (
-                <Badge className="bg-[var(--badge-6)] text-[var(--badge-text-6)]">
-                  !
-                </Badge>
+                <Badge className="bg-badge-6 text-badge-text-6">!</Badge>
               )}
           </TabsTrigger>
+          <TabsTrigger value="password-resets">Redefinições</TabsTrigger>
         </TabsList>
         <TabsContent value="all" className="mt-4">
           <UsersList phoneUtil={phoneUtil} />
@@ -36,6 +36,9 @@ export function UsersPage() {
             onHandleChange={() => setActiveTab('all')}
             phoneUtil={phoneUtil}
           />
+        </TabsContent>
+        <TabsContent value="password-resets" className="mt-4">
+          <PasswordResetRequestsList />
         </TabsContent>
       </Tabs>
     </div>

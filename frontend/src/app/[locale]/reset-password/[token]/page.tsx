@@ -1,14 +1,15 @@
 'use client'
+import { use } from 'react'
 import { ResetPasswordForm } from '@/components/auth/reset-password-form'
 
 interface ResetPasswordPageProps {
-  params: {
+  params: Promise<{
     token: string
-  }
+  }>
 }
 
 export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
-  const { token } = params
+  const { token } = use(params)
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">

@@ -781,6 +781,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/password-reset-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List password reset requests (Admin only) */
+        get: operations["list-password-reset-requests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/password-reset-requests/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Approve password reset request (Admin only) */
+        patch: operations["approve-password-reset-request"];
+        trace?: never;
+    };
+    "/auth/password-reset-requests/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Reject password reset request (Admin only) */
+        patch: operations["reject-password-reset-request"];
+        trace?: never;
+    };
     "/auth/reset-password": {
         parameters: {
             query?: never;
@@ -3085,6 +3136,25 @@ export interface components {
              * @example john.doe@example.com
              */
             email: string;
+        };
+        PasswordResetRequestResponseDto: {
+            id: string;
+            userId: string;
+            username: string;
+            email: components["schemas"]["Email"];
+            phone: components["schemas"]["PhoneNumber"];
+            token: string;
+            /** @enum {string} */
+            status: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED";
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            approvedAt?: string;
+            /** Format: date-time */
+            rejectedAt?: string;
+            /** Format: date-time */
+            completedAt?: string;
+            user?: Record<string, never>;
         };
         ResetPasswordDto: {
             /**
@@ -6574,14 +6644,90 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Forgot password successful */
+            /** @description Password reset request created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetRequestResponseDto"];
+                };
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "list-password-reset-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Password reset requests retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetRequestResponseDto"][];
+                };
+            };
+        };
+    };
+    "approve-password-reset-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request approved */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description User not found */
+            /** @description Request not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "reject-password-reset-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request rejected */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request not found */
             404: {
                 headers: {
                     [name: string]: unknown;

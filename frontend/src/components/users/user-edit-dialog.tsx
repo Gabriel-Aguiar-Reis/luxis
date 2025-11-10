@@ -59,7 +59,8 @@ export function UserEditDialog({ user, isOpen, onClose }: UserDialogProps) {
         <DialogHeader>
           <DialogTitle>Editar Função do Usuário</DialogTitle>
           <DialogDescription>
-            Altere a função do usuário {user?.name.value} {user?.surname.value}.
+            Altere a função do usuário {user?.name?.value ?? 'N/A'}{' '}
+            {user?.surname?.value ?? ''}.
           </DialogDescription>
         </DialogHeader>
 

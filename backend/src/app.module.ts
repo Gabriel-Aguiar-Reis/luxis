@@ -41,6 +41,7 @@ import { APP_GUARD } from '@nestjs/core'
 import { AdminKpiModule } from '@/modules/kpi/admin/admin-kpi.module'
 import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
 import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rules'
+import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/password-reset-request.rules'
 
 @Module({
   imports: [
@@ -49,10 +50,9 @@ import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rule
       throttlers: [
         {
           ttl: 10000,
-          limit: 10,
-
-        },
-      ],
+          limit: 10
+        }
+      ]
     }),
     CacheModule.register({
       isGlobal: true,
@@ -70,7 +70,7 @@ import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rule
             translateTime: 'SYS:standard'
           }
         },
-        level: 'trace'
+        level: 'debug'
       }
     }),
     LoggingModule,
@@ -114,6 +114,7 @@ import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rule
     CustomerCaslRule,
     InventoryCaslRule,
     AdminKpiCaslRule,
+    PasswordResetRequestCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
       useFactory: (
@@ -130,7 +131,7 @@ import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rule
         customerRule: CustomerCaslRule,
         inventoryRule: InventoryCaslRule,
         adminKpiCaslRule: AdminKpiCaslRule,
-
+        passwordResetRequestRule: PasswordResetRequestCaslRule
       ): CaslRuleBuilder[] => [
         saleRule,
         userRule,
@@ -144,7 +145,8 @@ import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rule
         returnRule,
         customerRule,
         inventoryRule,
-        adminKpiCaslRule
+        adminKpiCaslRule,
+        passwordResetRequestRule
       ],
       inject: [
         SaleCaslRule,
@@ -159,7 +161,8 @@ import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rule
         ReturnCaslRule,
         CustomerCaslRule,
         InventoryCaslRule,
-        AdminKpiCaslRule
+        AdminKpiCaslRule,
+        PasswordResetRequestCaslRule
       ]
     },
     {

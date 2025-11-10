@@ -78,19 +78,23 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
 
       if (filters.name) {
         filtered = filtered.filter((user) =>
-          user.name.value.toLowerCase().includes(filters.name!.toLowerCase())
+          user.name?.value?.toLowerCase().includes(filters.name!.toLowerCase())
         )
       }
 
       if (filters.email) {
         filtered = filtered.filter((user) =>
-          user.email.value.toLowerCase().includes(filters.email!.toLowerCase())
+          user.email?.value
+            ?.toLowerCase()
+            .includes(filters.email!.toLowerCase())
         )
       }
 
       if (filters.phone) {
         filtered = filtered.filter((user) =>
-          user.phone.value.toLowerCase().includes(filters.phone!.toLowerCase())
+          user.phone?.value
+            ?.toLowerCase()
+            .includes(filters.phone!.toLowerCase())
         )
       }
 
@@ -240,34 +244,23 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                       {currentUsers.map((user) => (
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">
-                            {user.name.value} {user.surname.value}
+                            {user.name?.value ?? 'N/A'}{' '}
+                            {user.surname?.value ?? ''}
                           </TableCell>
-                          <TableCell>{user.email.value}</TableCell>
+                          <TableCell>{user.email?.value ?? 'N/A'}</TableCell>
                           <TableCell>
-                            {phoneUtil.formatInOriginalFormat(
-                              phoneUtil.parseAndKeepRawInput(
-                                user.phone.value,
-                                'BR'
-                              )
-                            )}
+                            {user.phone?.value
+                              ? phoneUtil.formatInOriginalFormat(
+                                  phoneUtil.parseAndKeepRawInput(
+                                    user.phone.value,
+                                    'BR'
+                                  )
+                                )
+                              : 'N/A'}
                           </TableCell>
                           <TableCell>{formatRole(user.role)}</TableCell>
                           <TableCell>{formatStatus(user.status)}</TableCell>
                           <TableCell>
-                            {/* {user.role === 'RESELLER' ? (
-                              <Button
-                                className="h-8 w-8"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleViewUserProducts(user)}
-                              >
-                                <Expand className="h-4 w-4" />
-                              </Button>
-                            ) : (
-                              <span className="text-muted-foreground text-sm">
-                                -
-                              </span>
-                            )} */}
                             <Button
                               className="h-8 w-8"
                               variant="outline"
@@ -396,7 +389,7 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
       {selectedUser && (
         <UserProductsDialog
           userId={selectedUser.id}
-          userName={`${selectedUser.name.value} ${selectedUser.surname.value}`}
+          userName={`${selectedUser.name?.value ?? 'N/A'} ${selectedUser.surname?.value ?? ''}`}
           open={isProductsDialogOpen}
           onOpenChange={setIsProductsDialogOpen}
         />
