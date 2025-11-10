@@ -1,6 +1,6 @@
 'use client'
 
-import { AdminSettingsPageWithQuery } from '@/components/settings/admin-settings-page-with-query'
+import { SettingsPage } from '@/components/settings/settings-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,7 +45,7 @@ export default function AdminSettingsPage() {
           </Breadcrumb>
         </div>
       </header>
-      <AdminSettingsPageWithQuery />
+      <SettingsPage />
     </>
   )
 }

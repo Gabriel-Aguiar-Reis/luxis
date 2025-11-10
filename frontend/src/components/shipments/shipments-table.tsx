@@ -48,9 +48,9 @@ import {
 
 type ShipmentsTableProps = {
   shipments: GetAllShipmentsResponse
-  onEdit: (shipment: GetOneShipmentResponse) => void
-  onEditStatus: (shipment: GetOneShipmentResponse) => void
-  onDelete: (shipment: GetOneShipmentResponse) => void
+  onEdit?: (shipment: GetOneShipmentResponse) => void
+  onEditStatus?: (shipment: GetOneShipmentResponse) => void
+  onDelete?: (shipment: GetOneShipmentResponse) => void
   shipmentsPerPage?: number
 }
 
@@ -218,27 +218,35 @@ export function ShipmentsTable({
                                   </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => onEdit(shipment)}
-                                  disabled={shipment.status !== 'PENDING'}
-                                >
-                                  <FilePen className="mr-2 h-4 w-4" />
-                                  Infos
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => onEditStatus(shipment)}
-                                >
-                                  <FilePen className="mr-2 h-4 w-4" />
-                                  Status
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  className="text-[var(--text-destructive)]"
-                                  onClick={() => onDelete(shipment)}
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Excluir
-                                </DropdownMenuItem>
+                                {onEdit && (
+                                  <DropdownMenuItem
+                                    onClick={() => onEdit(shipment)}
+                                    disabled={shipment.status !== 'PENDING'}
+                                  >
+                                    <FilePen className="mr-2 h-4 w-4" />
+                                    Infos
+                                  </DropdownMenuItem>
+                                )}
+                                {onEditStatus && (
+                                  <DropdownMenuItem
+                                    onClick={() => onEditStatus(shipment)}
+                                  >
+                                    <FilePen className="mr-2 h-4 w-4" />
+                                    Status
+                                  </DropdownMenuItem>
+                                )}
+                                {(onEdit || onEditStatus) && onDelete && (
+                                  <DropdownMenuSeparator />
+                                )}
+                                {onDelete && (
+                                  <DropdownMenuItem
+                                    className="text-text-destructive"
+                                    onClick={() => onDelete(shipment)}
+                                  >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Excluir
+                                  </DropdownMenuItem>
+                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </TableCell>
@@ -255,7 +263,7 @@ export function ShipmentsTable({
                   ) : (
                     <TableRow>
                       <TableCell colSpan={6} className="h-24 text-center">
-                        Nenhuma devolução encontrada
+                        Nenhum romaneio encontrado
                       </TableCell>
                     </TableRow>
                   )}

@@ -1,6 +1,6 @@
 'use client'
 
-import { InventoryPageWithQuery } from '@/components/inventory/inventory-page-with-query'
+import { ProductsPage } from '@/components/products/products-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,7 +45,7 @@ export default function ResellerInventoryPage() {
           </Breadcrumb>
         </div>
       </header>
-      <InventoryPageWithQuery />
+      <ProductsPage />
     </>
   )
 }

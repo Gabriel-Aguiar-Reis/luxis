@@ -1,6 +1,6 @@
 'use client'
 
-import { ResellerShipmentsPageWithQuery } from '@/components/reseller-shipments/reseller-shipments-page-with-query'
+import { ShipmentsPage } from '@/components/shipments/shipments-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,7 +45,7 @@ export default function ResellerShipmentsPage() {
           </Breadcrumb>
         </div>
       </header>
-      <ResellerShipmentsPageWithQuery />
+      <ShipmentsPage role="RESELLER" />
     </>
   )
 }

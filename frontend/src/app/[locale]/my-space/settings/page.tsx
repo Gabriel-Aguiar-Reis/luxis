@@ -1,6 +1,6 @@
 'use client'
 
-import { ResellerSettingsPageWithQuery } from '@/components/settings/reseller-settings-page-with-query'
+import { SettingsPage } from '@/components/settings/settings-page'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,7 +45,7 @@ export default function ResellerSettingsPage() {
           </Breadcrumb>
         </div>
       </header>
-      <ResellerSettingsPageWithQuery />
+      <SettingsPage />
     </>
   )
 }

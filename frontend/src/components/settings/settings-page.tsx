@@ -7,7 +7,7 @@ import { ProfileForm } from '@/components/settings/profile-form'
 import { SecurityForm } from '@/components/settings/security-form'
 import { useTranslations } from 'next-intl'
 
-export function AdminSettingsPageWithQuery() {
+export function SettingsPage() {
   const t = useTranslations('Settings')
 
   return (

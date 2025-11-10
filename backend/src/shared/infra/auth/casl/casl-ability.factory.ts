@@ -5,7 +5,8 @@ import {
   AbilityBuilder,
   PureAbility,
   InferSubjects,
-  ExtractSubjectType
+  ExtractSubjectType,
+  fieldPatternMatcher
 } from '@casl/ability'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
@@ -57,9 +58,18 @@ export class CaslAbilityFactory {
       builderFn.buildFor(user, builder)
     }
 
+    const conditionsMatcher = (matchConditions: Record<string, any>) => {
+      return (object: Record<string, any>) => {
+        return Object.keys(matchConditions).every((key) => {
+          return object[key] === matchConditions[key]
+        })
+      }
+    }
+
     return builder.build({
       detectSubjectType: (item) =>
-        item.constructor as ExtractSubjectType<Subjects>
+        item.constructor as ExtractSubjectType<Subjects>,
+      conditionsMatcher
     })
   }
 }

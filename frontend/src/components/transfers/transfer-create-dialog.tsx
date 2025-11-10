@@ -88,29 +88,40 @@ export function TransferCreateDialog({
 
   const selectedProduct = React.useMemo(() => {
     if (!productId || !selectedInventory) return ''
-    const productIndex = selectedInventory.products.findIndex(
+
+    const product = selectedInventory.products.find(
       (p: GetInventoryByIdProduct) => p.id === productId
     )
-    if (productIndex === -1) return ''
-    const product = selectedInventory.products[productIndex]
-    const modelName =
-      selectedInventory.productModelNames?.[productIndex]?.value || product.id
+    if (!product) return ''
+
+    const model = selectedInventory.productModels?.find(
+      (m) => m.id === product.modelId
+    )
+    const modelName = model?.name?.value || product.id
     return `${product.serialNumber.value} - ${modelName}`
   }, [productId, selectedInventory])
+
   const productsWithModel = React.useMemo(() => {
     if (
       !selectedInventory ||
       !selectedInventory.products ||
-      !selectedInventory.productModelNames
+      !selectedInventory.productModels
     )
       return []
-    return selectedInventory.products.map(
-      (p: GetInventoryByIdProduct, idx: number) => ({
-        id: p.id,
-        label: selectedInventory.productModelNames[idx]?.value || p.id,
-        serialNumber: p.serialNumber.value
-      })
+
+    // Criar um map de modelId -> productModel para facilitar a busca
+    const modelMap = new Map(
+      selectedInventory.productModels.map((model) => [model.id, model])
     )
+
+    return selectedInventory.products.map((p: GetInventoryByIdProduct) => {
+      const model = modelMap.get(p.modelId)
+      return {
+        id: p.id,
+        label: model?.name?.value || p.id,
+        serialNumber: p.serialNumber.value
+      }
+    })
   }, [selectedInventory])
 
   const [searchFromValue, setSearchFromValue] = useState('')

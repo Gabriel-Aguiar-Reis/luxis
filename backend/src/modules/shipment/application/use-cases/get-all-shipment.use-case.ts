@@ -21,19 +21,22 @@ export class GetAllShipmentUseCase {
   ) {}
 
   async execute(user: UserPayload): Promise<GetShipmentDto[]> {
-    function getFullName(user?: { name?: { getValue?: () => string }, surname?: { getValue?: () => string } }) {
+    function getFullName(user?: {
+      name?: { getValue?: () => string }
+      surname?: { getValue?: () => string }
+    }) {
       if (!user) return ''
       const name = user.name?.getValue?.() || ''
       const surname = user.surname?.getValue?.() || ''
       return (name + ' ' + surname).trim()
     }
-    
+
     if (user.role === Role.RESELLER) {
-      const shipments =
-        await this.shipmentRepository.findAllByResellerId(user.id)
+      const shipments = await this.shipmentRepository.findAllByResellerId(
+        user.id
+      )
       const allProductIds = shipments.flatMap((s) => s.productIds)
-      const products =
-        await this.productRepository.findManyByIds(allProductIds)
+      const products = await this.productRepository.findManyByIds(allProductIds)
       const productMap = new Map(products.map((p) => [p.id, p]))
       const allModelIds = products.map((p) => p.modelId)
       const models =
@@ -47,7 +50,7 @@ export class GetAllShipmentUseCase {
       return shipments.map((shipment) => {
         const productsForShipment = shipment.productIds
           .map((id) => productMap.get(id))
-          .filter((p): p is typeof products[number] => !!p)
+          .filter((p): p is (typeof products)[number] => !!p)
           .map((p) => {
             const model = modelMap.get(p.modelId)
             if (!model) return undefined
@@ -72,13 +75,13 @@ export class GetAllShipmentUseCase {
     }
 
     const shipments = await this.shipmentRepository.findAll()
-    const resellerIds = [...new Set(shipments.flatMap(s => s.resellerId))]
+    const resellerIds = [...new Set(shipments.flatMap((s) => s.resellerId))]
     const allProductIds = shipments.flatMap((s) => s.productIds)
     const resellers = await this.userRepository.findManyByIds(resellerIds)
     const products = await this.productRepository.findManyByIds(allProductIds)
     const allModelIds = products.map((p) => p.modelId)
     const models = await this.productModelRepository.findManyByIds(allModelIds)
-    const resellerMap = new Map(resellers.map(r => [r.id, r]))
+    const resellerMap = new Map(resellers.map((r) => [r.id, r]))
     const productMap = new Map(products.map((p) => [p.id, p]))
     const modelMap = new Map(models.map((m) => [m.id, m]))
     return shipments.map((shipment) => {
@@ -92,7 +95,7 @@ export class GetAllShipmentUseCase {
         status: shipment.status,
         products: shipment.productIds
           .map((id) => productMap.get(id))
-          .filter((p): p is typeof products[number] => !!p)
+          .filter((p): p is (typeof products)[number] => !!p)
           .map((p) => {
             const model = modelMap.get(p.modelId)
             if (!model) return undefined
@@ -107,6 +110,5 @@ export class GetAllShipmentUseCase {
           .filter((p): p is NonNullable<typeof p> => !!p)
       }
     })
-          }
-      
+  }
 }
