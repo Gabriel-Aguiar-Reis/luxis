@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+
 export async function POST(request: NextRequest) {
   try {
     const { token, password } = await request.json()
@@ -11,16 +13,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const response = await fetch(
-      'http://localhost:3000/api/auth/reset-password',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token, password })
-      }
-    )
+    const response = await fetch(`${API_URL}/api/auth/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token, password })
+    })
 
     if (!response.ok) {
       const error = await response.json()

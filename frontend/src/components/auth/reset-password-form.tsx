@@ -171,7 +171,7 @@ export function ResetPasswordForm({
             <img
               src="/luxis-light.png"
               alt="Image"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.9]"
             />
           </div>
         </CardContent>

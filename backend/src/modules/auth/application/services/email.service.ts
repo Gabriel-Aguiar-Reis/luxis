@@ -48,9 +48,7 @@ export class EmailService {
       expiresIn: '1h'
     })
 
-    const resetUrl = this.configService.isProduction()
-      ? `${this.configService.getEmailResetPasswordUrl()}?token=${token}`
-      : `http://localhost:3001/reset-password?token=${token}`
+    const resetUrl = `${this.configService.getEmailResetPasswordUrl()}?token=${token}`
 
     const fromEmail =
       this.configService.getEmailFrom() || 'noreply@luxis.com.br'
