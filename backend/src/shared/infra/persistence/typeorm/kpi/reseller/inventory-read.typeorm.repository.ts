@@ -41,7 +41,7 @@ export class InventoryReadTypeormRepository implements InventoryReadRepository {
       })
       .andWhere('product.status = :status', { status: ProductStatus.ASSIGNED })
 
-    const filteredProducts = baseWhere(qb, qParams, 'non-usable')
+    const filteredProducts = baseWhere(qb, qParams, 'product.created_at')
 
     const products = await filteredProducts.getMany()
 

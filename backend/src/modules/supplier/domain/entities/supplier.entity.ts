@@ -2,6 +2,7 @@ import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo
 import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
+import { SupplierName } from '@/modules/supplier/domain/value-objects/supplier-name.vo'
 
 export class Supplier {
   @ApiProperty({
@@ -14,18 +15,18 @@ export class Supplier {
   @ApiProperty({
     description: 'The name of the supplier',
     example: 'Apple Inc.',
-    type: String
+    type: SupplierName
   })
-  public name: Name
+  public name: SupplierName
 
   @ApiProperty({
     description: 'The phone number of the supplier',
     example: '+5511999999999',
-    type: String
+    type: PhoneNumber
   })
   public phone: PhoneNumber
 
-  constructor(id: UUID, name: Name, phone: PhoneNumber) {
+  constructor(id: UUID, name: SupplierName, phone: PhoneNumber) {
     this.id = id
     this.name = name
     this.phone = phone

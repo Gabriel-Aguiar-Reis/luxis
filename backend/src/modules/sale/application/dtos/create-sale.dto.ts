@@ -13,6 +13,7 @@ import {
 import { UUID } from 'crypto'
 import { PaymentMethod } from '@/modules/sale/domain/enums/payment-method.enum'
 import { ApiProperty } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
 
 export class CreateSaleDto {
   @ApiProperty({
@@ -34,6 +35,7 @@ export class CreateSaleDto {
     type: Date,
     required: true
   })
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   saleDate: Date
@@ -52,9 +54,10 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The number of installments of the sale',
     default: 1,
-    type: String,
+    type: Number,
     required: true
   })
+  @Type(() => Number)
   @IsNumber()
   @IsPositive()
   @IsInt()
@@ -64,11 +67,11 @@ export class CreateSaleDto {
   @ApiProperty({
     description: 'The interval of installments of the sale',
     default: 0,
-    type: String,
+    type: Number,
     required: true
   })
+  @Type(() => Number)
   @IsNumber()
-  @IsPositive()
   @IsInt()
   @Min(0)
   installmentsInterval: number = 0

@@ -19,6 +19,13 @@ export const apiPaths = {
     status: (id: string) => `/ownership-transfers/${id}/status`
   },
 
+  // Inventory
+  inventory: {
+    byId(id: string) {
+      return `/inventory/${id}`
+    }
+  },
+
   // KPI - Ownership Transfers (Admin)
   kpiOwnershipTransfers: {
     byResellerId: (id: string) =>
@@ -42,6 +49,7 @@ export const apiPaths = {
   // Products
   products: {
     base: '/products',
+    available: '/products/available/in-stock',
     byId: (id: string) => `/products/${id}`,
     sell: (id: string) => `/products/${id}/sell`
   },
@@ -49,14 +57,18 @@ export const apiPaths = {
   // Product Models
   productModels: {
     base: '/product-models',
-    byId: (id: string) => `/product-models/${id}`
+    byId: (id: string) => `/product-models/${id}`,
+    cloudinarySignature: '/product-models/cloudinary-signature'
   },
 
   // Sales
   sales: {
     base: '/sales',
     byId: (id: string) => `/sales/${id}`,
-    markInstallmentPaid: (id: string) => `/sales/${id}/installments/mark-paid`
+    markInstallmentPaid: (id: string) => `/sales/${id}/installments/mark-paid`,
+    status: (id: string) => `/sales/${id}/status`,
+    availableProducts: '/sales/available-products',
+    confirm: (id: string) => `/sales/${id}/confirm`
   },
 
   // Shipments
@@ -73,7 +85,9 @@ export const apiPaths = {
     byId: (id: string) => `/users/${id}`,
     role: (id: string) => `/users/${id}/role`,
     status: (id: string) => `/users/${id}/status`,
-    disable: (id: string) => `/users/${id}/disable`
+    disable: (id: string) => `/users/${id}/disable`,
+    products: (id: string) => `/users/${id}/products`,
+    pending: '/users/pending'
   },
 
   // Suppliers
@@ -86,7 +100,8 @@ export const apiPaths = {
   returns: {
     base: '/returns',
     byId: (id: string) => `/returns/${id}`,
-    status: (id: string) => `/returns/${id}/status`
+    status: (id: string) => `/returns/${id}/status`,
+    reseller: (resellerId: string) => `/returns/reseller/${resellerId}`
   },
 
   // Customers
@@ -104,7 +119,12 @@ export const apiPaths = {
     forgotPassword: '/auth/forgot-password',
     resetPassword: '/auth/reset-password',
     changePassword: '/auth/change-password',
-    verify: '/auth/verify'
+    verify: '/auth/verify',
+    passwordResetRequests: {
+      base: '/auth/password-reset-requests',
+      approve: (id: string) => `/auth/password-reset-requests/${id}/approve`,
+      reject: (id: string) => `/auth/password-reset-requests/${id}/reject`
+    }
   },
 
   // KPI - Admin
@@ -172,16 +192,19 @@ export const apiPaths = {
         start: params.start,
         end: params.end
       })
-      if (params.limit && params.page) {
-        url = apiPaths.kpiAdmin.withLimitAndPage(url, {
-          limit: params.limit,
-          page: params.page
-        })
+      if (params.limit) {
+        url += `&limit=${params.limit}`
+        if (params.page) {
+          url += `&page=${params.page}`
+        }
       }
       return url
     },
     salesByPeriodTotal: (params: { start: string; end: string }) =>
       `/kpi/admin/sales/total?start=${params.start}&end=${params.end}`,
+
+    salesAggregatedByDay: (params: { start: string; end: string }) =>
+      `/kpi/admin/sales/aggregated-by-day?start=${params.start}&end=${params.end}`,
 
     // --- Ownership Transfers ---
     ownershipTransfersByResellerId: (id: string) =>

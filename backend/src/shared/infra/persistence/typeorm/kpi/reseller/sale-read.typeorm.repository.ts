@@ -27,23 +27,32 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
 
     const sales = await filteredSales.getMany()
 
+    if (sales.length === 0) {
+      return []
+    }
+
     const monthlySales = sales.reduce(
       (acc, sale) => {
-        const month = sale.saleDate.getMonth()
-        if (!acc[month]) {
-          acc[month] = {
+        const saleDate = new Date(sale.saleDate)
+        const month = saleDate.getMonth()
+        const year = saleDate.getFullYear()
+        const key = `${year}-${String(month + 1).padStart(2, '0')}`
+
+        if (!acc[key]) {
+          acc[key] = {
             month,
+            year,
             countSales: 0,
             totalAmount: '0'
           }
         }
-        acc[month].countSales++
-        acc[month].totalAmount = (
-          Number(acc[month].totalAmount) + Number(sale.totalAmount)
+        acc[key].countSales++
+        acc[key].totalAmount = (
+          Number(acc[key].totalAmount) + Number(sale.totalAmount)
         ).toString()
         return acc
       },
-      {} as Record<number, MonthlySalesDto>
+      {} as Record<string, MonthlySalesDto & { year: number }>
     )
 
     return Object.values(monthlySales)
@@ -57,6 +66,10 @@ export class SaleReadTypeormRepository implements SaleReadRepository {
     const filteredSales = baseWhere(qb, qParams, 'sale.sale_date')
 
     const sales = await filteredSales.getMany()
+
+    if (sales.length === 0) {
+      return 0
+    }
 
     const totalAmount = sales.reduce((acc, sale) => {
       return acc + Number(sale.totalAmount)

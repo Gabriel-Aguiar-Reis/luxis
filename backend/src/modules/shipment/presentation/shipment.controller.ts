@@ -4,7 +4,6 @@ import { GetAllShipmentUseCase } from '@/modules/shipment/application/use-cases/
 import { GetOneShipmentUseCase } from '@/modules/shipment/application/use-cases/get-one-shipment.use-case'
 import { UpdateShipmentUseCase } from '@/modules/shipment/application/use-cases/update-shipment.use-case'
 import { UpdateStatusShipmentUseCase } from '@/modules/shipment/application/use-cases/update-status-shipment.use-case'
-import { ShipmentStatus } from '@/modules/shipment/domain/enums/shipment-status.enum'
 import { CreateShipmentDto } from '@/modules/shipment/application/dtos/create-shipment-dto'
 import { UpdateShipmentDto } from '@/modules/shipment/application/dtos/update-shipment-dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
@@ -25,7 +24,6 @@ import {
   Delete,
   Get,
   Patch,
-  ParseEnumPipe,
   HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
@@ -39,7 +37,8 @@ import {
   ApiBearerAuth
 } from '@nestjs/swagger'
 import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
-import { UpdateStatusShipmentDto } from '@/modules/shipment/application/dtos/update-status-shipment'
+import { UpdateStatusShipmentDto } from '@/modules/shipment/application/dtos/update-status-shipment.dto'
+import { GetShipmentDto } from '@/modules/shipment/application/dtos/get-shipment.dto'
 
 @ApiTags('Shipments')
 @ApiBearerAuth()
@@ -63,7 +62,7 @@ export class ShipmentController {
   @ApiResponse({
     status: 200,
     description: 'List of shipments returned successfully',
-    type: [Shipment]
+    type: [GetShipmentDto],
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -86,7 +85,7 @@ export class ShipmentController {
   @ApiResponse({
     status: 200,
     description: 'Shipment found successfully',
-    type: Shipment
+    type: GetShipmentDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })

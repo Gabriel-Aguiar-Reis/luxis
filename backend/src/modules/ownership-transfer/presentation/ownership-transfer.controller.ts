@@ -37,7 +37,9 @@ import {
   ApiTags,
   ApiBearerAuth
 } from '@nestjs/swagger'
+import { OwnershipTransferWithSerialDto } from '@/modules/ownership-transfer/application/dtos/ownership-transfer-with-serial.dto'
 import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
+import { UpdateOwnershipTransferStatusDto } from '@/modules/ownership-transfer/application/dtos/update-ownership-transfer-status.dto'
 
 @ApiTags('Ownership Transfers')
 @ApiBearerAuth()
@@ -61,14 +63,14 @@ export class OwnershipTransferController {
   @ApiResponse({
     status: 200,
     description: 'List of ownership transfers returned successfully',
-    type: [OwnershipTransfer]
+    type: [OwnershipTransferWithSerialDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadOwnershipTransferPolicy())
   @HttpCode(200)
   @Get()
-  async getAll(@CurrentUser() user: UserPayload) {
+  async getAll(@CurrentUser() user: UserPayload): Promise<OwnershipTransferWithSerialDto[]> {
     this.logger.log(
       `Getting all ownership transfers - Requested by user ${user.email}`,
       'OwnershipTransferController'
@@ -84,7 +86,7 @@ export class OwnershipTransferController {
   @ApiResponse({
     status: 200,
     description: 'Ownership transfer found successfully',
-    type: OwnershipTransfer
+    type: OwnershipTransferWithSerialDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -135,7 +137,7 @@ export class OwnershipTransferController {
   @ApiResponse({
     status: 200,
     description: 'Ownership transfer updated successfully',
-    type: OwnershipTransfer
+    type: OwnershipTransferWithSerialDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -159,7 +161,7 @@ export class OwnershipTransferController {
     operationId: 'updateOwnershipTransferStatus'
   })
   @ApiParam({ name: 'id', description: 'Ownership transfer ID' })
-  @ApiBody({ type: UpdateOwnershipTransferDto })
+  @ApiBody({ type: UpdateOwnershipTransferStatusDto })
   @ApiResponse({
     status: 200,
     description: 'Ownership transfer updated successfully'
@@ -171,16 +173,16 @@ export class OwnershipTransferController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
-    @Body('status') status: OwnershipTransferStatus,
+    @Body() dto: UpdateOwnershipTransferStatusDto,
     @CurrentUser() user: UserPayload
   ) {
     this.logger.warn(
-      `Updating status of ownership transfer ${id} to ${status} - Requested by user ${user.email}`,
+      `Updating status of ownership transfer ${id} to ${dto.status} - Requested by user ${user.email}`,
       'OwnershipTransferController'
     )
     return await this.updateStatusOwnershipTransferUseCase.execute(
       id,
-      status,
+      dto,
       user
     )
   }

@@ -33,7 +33,7 @@ export class OwnershipTransfer {
 
   @ApiProperty({
     description: 'The transfer date',
-    example: '2021-01-01',
+    example: '2023-10-01T12:00:00Z',
     type: Date
   })
   public transferDate: Date

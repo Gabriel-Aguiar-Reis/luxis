@@ -6,6 +6,7 @@ import { UUID } from 'crypto'
 
 export abstract class UserRepository {
   abstract findAll(): Promise<User[]>
+  abstract findAllPending(): Promise<User[]>
   abstract findById(id: UUID): Promise<User | null>
   abstract findByEmail(email: Email): Promise<User | null>
   abstract create(user: User): Promise<User>
@@ -14,4 +15,5 @@ export abstract class UserRepository {
   abstract updateStatus(id: UUID, status: UserStatus): Promise<User>
   abstract delete(id: UUID): Promise<void>
   abstract disable(id: UUID): Promise<User>
+  abstract findManyByIds(ids: UUID[]): Promise<User[]>
 }

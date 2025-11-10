@@ -2,8 +2,8 @@ import { CreateSupplierDto } from '@/modules/supplier/application/dtos/create-su
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { SupplierRepository } from '@/modules/supplier/domain/repositories/supplier.repository'
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
-import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { Inject, Injectable } from '@nestjs/common'
+import { SupplierName } from '@/modules/supplier/domain/value-objects/supplier-name.vo'
 
 @Injectable()
 export class CreateSupplierUseCase {
@@ -15,7 +15,7 @@ export class CreateSupplierUseCase {
   async execute(dto: CreateSupplierDto): Promise<Supplier> {
     const supplier = new Supplier(
       crypto.randomUUID(),
-      new Name(dto.name),
+      new SupplierName(dto.name),
       new PhoneNumber(dto.phone)
     )
 

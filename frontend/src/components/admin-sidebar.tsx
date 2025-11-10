@@ -2,15 +2,18 @@
 
 import * as React from 'react'
 import {
+  ArrowLeftRight,
   BarChart3,
   Box,
   Cog,
+  FileBox,
   LogOut,
   PackageOpen,
   ShoppingBag,
   Sparkle,
   Store,
   Truck,
+  Undo2,
   Users
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -21,12 +24,70 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarSeparator
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation'
 import { useAuthStore } from '@/stores/use-auth-store'
+import { useGetUsers } from '@/hooks/use-users'
+import { Badge } from '@/components/ui/badge'
+import { useGetTransfers } from '@/hooks/use-transfers'
+import { useGetReturns } from '@/hooks/use-returns'
+import { useGetShipments } from '@/hooks/use-shipments'
+import { useGetSales } from '@/hooks/use-sales'
+
+// Hook para gerenciar badges visitados
+function useVisitedBadges() {
+  const [visitedSections, setVisitedSections] = React.useState<Set<string>>(
+    new Set()
+  )
+
+  React.useEffect(() => {
+    // Carregar do localStorage ao montar
+    const stored = localStorage.getItem('luxis-visited-badges')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        setVisitedSections(new Set(parsed))
+      } catch (e) {
+        console.error('Error parsing visited badges:', e)
+      }
+    }
+  }, [])
+
+  const markAsVisited = React.useCallback((routeKey: string) => {
+    setVisitedSections((prev) => {
+      const newSet = new Set(prev)
+      newSet.add(routeKey)
+      // Salvar no localStorage
+      localStorage.setItem(
+        'luxis-visited-badges',
+        JSON.stringify(Array.from(newSet))
+      )
+      return newSet
+    })
+  }, [])
+
+  const clearVisited = React.useCallback((routeKey: string) => {
+    setVisitedSections((prev) => {
+      const newSet = new Set(prev)
+      newSet.delete(routeKey)
+      // Salvar no localStorage
+      localStorage.setItem(
+        'luxis-visited-badges',
+        JSON.stringify(Array.from(newSet))
+      )
+      return newSet
+    })
+  }, [])
+
+  return { visitedSections, markAsVisited, clearVisited }
+}
 
 export function AdminSidebar({
   ...props
@@ -41,8 +102,102 @@ export function AdminSidebar({
   const tBatches = useTranslations('Admin-Batches')
   const tSuppliers = useTranslations('Admin-Suppliers')
   const tShipments = useTranslations('Admin-Shipments')
+  const tReturns = useTranslations('Admin-Returns')
+  const tTransfers = useTranslations('Admin-Transfers')
+  const tModels = useTranslations('Admin-Models')
 
   const { logout } = useAuthStore()
+
+  const { data: users } = useGetUsers()
+  const { data: transfers } = useGetTransfers()
+  const { data: returns } = useGetReturns()
+  const { data: shipments } = useGetShipments()
+  const { data: sales } = useGetSales()
+
+  const { visitedSections, markAsVisited, clearVisited } = useVisitedBadges()
+
+  // Marcar como visitado quando a rota ativa mudar
+  React.useEffect(() => {
+    if (pathname.includes('/home/users') && !visitedSections.has('users')) {
+      markAsVisited('users')
+    }
+    if (pathname.includes('/home/returns') && !visitedSections.has('returns')) {
+      markAsVisited('returns')
+    }
+    if (
+      pathname.includes('/home/transfers') &&
+      !visitedSections.has('transfers')
+    ) {
+      markAsVisited('transfers')
+    }
+    if (
+      pathname.includes('/home/shipments') &&
+      !visitedSections.has('shipments')
+    ) {
+      markAsVisited('shipments')
+    }
+    if (pathname.includes('/home/sales') && !visitedSections.has('sales')) {
+      markAsVisited('sales')
+    }
+  }, [pathname, visitedSections, markAsVisited])
+
+  // Contar pendentes
+  const pendingUsersCount = React.useMemo(
+    () => users?.filter((user) => user.status === 'PENDING').length || 0,
+    [users]
+  )
+
+  const pendingReturnsCount = React.useMemo(
+    () =>
+      returns?.filter((returnItem) => returnItem.status === 'PENDING').length ||
+      0,
+    [returns]
+  )
+
+  const pendingTransfersCount = React.useMemo(
+    () =>
+      transfers?.filter((transfer) => transfer.status === 'PENDING').length ||
+      0,
+    [transfers]
+  )
+
+  const pendingShipmentsCount = React.useMemo(
+    () =>
+      shipments?.filter((shipment) => shipment.status === 'PENDING').length ||
+      0,
+    [shipments]
+  )
+
+  const pendingSalesCount = React.useMemo(
+    () => sales?.filter((sale) => sale.status === 'PENDING').length || 0,
+    [sales]
+  )
+
+  // Limpar "visitado" quando não houver mais pendentes
+  React.useEffect(() => {
+    if (pendingUsersCount === 0) {
+      clearVisited('users')
+    }
+    if (pendingReturnsCount === 0) {
+      clearVisited('returns')
+    }
+    if (pendingTransfersCount === 0) {
+      clearVisited('transfers')
+    }
+    if (pendingShipmentsCount === 0) {
+      clearVisited('shipments')
+    }
+    if (pendingSalesCount === 0) {
+      clearVisited('sales')
+    }
+  }, [
+    pendingUsersCount,
+    pendingReturnsCount,
+    pendingTransfersCount,
+    pendingShipmentsCount,
+    pendingSalesCount,
+    clearVisited
+  ])
 
   const handleLogout = () => {
     logout()
@@ -50,55 +205,102 @@ export function AdminSidebar({
     router.push('/admin-login')
   }
 
-  const navItems = [
+  type subitemsProp = {
+    title: string
+    url: string
+    icon: React.ComponentType<{ className?: string }>
+    isActive: boolean
+    hasBadge?: boolean
+  }
+  type navItemsProp = {
+    title: string
+    routeKey: string
+    url: string
+    icon: React.ComponentType<{ className?: string }>
+    isActive: boolean
+    hasBadge?: boolean
+    items?: subitemsProp[]
+  }
+  const navItems: navItemsProp[] = [
     {
       title: t('Dashboard'),
       routeKey: 'home',
       url: '/home',
       icon: BarChart3,
-      isActive: pathname === '/home' || pathname.endsWith('/home')
+      isActive: pathname === '/home' || pathname.endsWith('/home'),
+      hasBadge: false
     },
     {
       title: tProducts('title'),
       routeKey: 'products',
       url: '/home/products',
       icon: Box,
-      isActive: pathname.includes('/home/products')
+      isActive: pathname.includes('/home/products'),
+      hasBadge: false
+    },
+    {
+      title: tModels('title'),
+      routeKey: 'models',
+      url: '/home/models',
+      icon: FileBox,
+      isActive: pathname.includes('/home/models'),
+      hasBadge: false
     },
     {
       title: tUsers('title'),
       routeKey: 'users',
       url: '/home/users',
       icon: Users,
-      isActive: pathname.includes('/home/users')
+      isActive: pathname.includes('/home/users'),
+      hasBadge: pendingUsersCount > 0 && !visitedSections.has('users')
+    },
+    {
+      title: tReturns('title'),
+      routeKey: 'returns',
+      url: '/home/returns',
+      icon: Undo2,
+      isActive: pathname.includes('/home/returns'),
+      hasBadge: pendingReturnsCount > 0 && !visitedSections.has('returns')
+    },
+    {
+      title: tTransfers('title'),
+      routeKey: 'transfers',
+      url: '/home/transfers',
+      icon: ArrowLeftRight,
+      isActive: pathname.includes('/home/transfers'),
+      hasBadge: pendingTransfersCount > 0 && !visitedSections.has('transfers')
     },
     {
       title: tSales('title'),
       routeKey: 'sales',
       url: '/home/sales',
       icon: ShoppingBag,
-      isActive: pathname.includes('/home/sales')
+      isActive: pathname.includes('/home/sales'),
+      hasBadge: pendingSalesCount > 0 && !visitedSections.has('sales')
     },
     {
       title: tBatches('title'),
       routeKey: 'batches',
       url: '/home/batches',
       icon: PackageOpen,
-      isActive: pathname.includes('/home/batches')
+      isActive: pathname.includes('/home/batches'),
+      hasBadge: false
     },
     {
       title: tSuppliers('title'),
       routeKey: 'suppliers',
       url: '/home/suppliers',
       icon: Store,
-      isActive: pathname.includes('/home/suppliers')
+      isActive: pathname.includes('/home/suppliers'),
+      hasBadge: false
     },
     {
       title: tShipments('title'),
       routeKey: 'shipments',
       url: '/home/shipments',
       icon: Truck,
-      isActive: pathname.includes('/home/shipments')
+      isActive: pathname.includes('/home/shipments'),
+      hasBadge: pendingShipmentsCount > 0 && !visitedSections.has('shipments')
     }
   ]
 
@@ -110,7 +312,7 @@ export function AdminSidebar({
             <SidebarMenuButton size="lg" asChild>
               <Link href="/home">
                 <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Sparkle className="size-4 fill-accent" />
+                  <Sparkle className="fill-accent size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">Luxis</span>
@@ -121,20 +323,53 @@ export function AdminSidebar({
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarSeparator />
+      <SidebarContent className="mt-2">
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.url}>
               <SidebarMenuButton asChild isActive={item.isActive}>
-                <Link href={item.url}>
-                  <item.icon className="size-4" />
-                  <span>{item.title}</span>
+                <Link href={item.url} className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <item.icon className="size-4" />
+                    <span>{item.title}</span>
+                  </div>
+                  {item.hasBadge && (
+                    <Badge className="bg-badge-6 text-badge-text-6 ml-2">
+                      !
+                    </Badge>
+                  )}
                 </Link>
               </SidebarMenuButton>
+              {item.items?.length ? (
+                <SidebarMenuSub>
+                  {item.items.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton asChild isActive={subItem.isActive}>
+                        <Link
+                          href={subItem.url}
+                          className="flex justify-between"
+                        >
+                          <div className="flex items-center gap-2">
+                            <subItem.icon className="size-4" />
+                            <span>{subItem.title}</span>
+                          </div>
+                          {subItem.hasBadge && (
+                            <Badge className="bg-badge-6 text-badge-text-6 ml-2">
+                              !
+                            </Badge>
+                          )}
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              ) : null}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarContent>
+      <SidebarSeparator />
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>

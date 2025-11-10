@@ -3,6 +3,7 @@ import { GetAllProductUseCase } from '@/modules/product/application/use-cases/ge
 import { GetOneProductUseCase } from '@/modules/product/application/use-cases/get-one-product.use-case'
 import { SellProductUseCase } from '@/modules/product/application/use-cases/sell-product.use-case'
 import { UpdateProductUseCase } from '@/modules/product/application/use-cases/update-product.use-case'
+import { GetAvailableProductsUseCase } from '@/modules/product/application/use-cases/get-available-products.use-case'
 import { UpdateProductDto } from '@/modules/product/application/dtos/update-product.dto'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
@@ -48,6 +49,7 @@ export class ProductController {
     private readonly getOneProductUseCase: GetOneProductUseCase,
     private readonly deleteProductUseCase: DeleteProductUseCase,
     private readonly sellProductUseCase: SellProductUseCase,
+    private readonly getAvailableProductsUseCase: GetAvailableProductsUseCase,
     private readonly logger: CustomLogger
   ) {}
 
@@ -70,6 +72,30 @@ export class ProductController {
       'ProductController'
     )
     return await this.getAllProductUseCase.execute(user)
+  }
+
+  @ApiOperation({
+    summary: 'Get available products (IN_STOCK)',
+    operationId: 'getAvailableProducts'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of available products returned successfully',
+    type: [Product]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @CheckPolicies(new ReadProductPolicy())
+  @CacheKey('available-products')
+  @CacheTTL(60)
+  @HttpCode(200)
+  @Get('available/in-stock')
+  async getAvailable(@CurrentUser() user: UserPayload) {
+    this.logger.log(
+      `Getting available products - Requested by user ${user.email}`,
+      'ProductController'
+    )
+    return await this.getAvailableProductsUseCase.execute()
   }
 
   @ApiOperation({

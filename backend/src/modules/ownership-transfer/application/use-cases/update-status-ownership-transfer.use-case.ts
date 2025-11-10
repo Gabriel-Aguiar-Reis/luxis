@@ -1,3 +1,4 @@
+import { UpdateOwnershipTransferStatusDto } from '@/modules/ownership-transfer/application/dtos/update-ownership-transfer-status.dto'
 import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
 import { OwnershipTransferStatus } from '@/modules/ownership-transfer/domain/enums/ownership-transfer-status.enum'
 import { OwnershipTransferDispatchedEvent } from '@/modules/ownership-transfer/domain/events/ownership-transfer-dispatcher.event'
@@ -29,7 +30,7 @@ export class UpdateStatusOwnershipTransferUseCase {
 
   async execute(
     id: UUID,
-    status: OwnershipTransferStatus,
+    dto: UpdateOwnershipTransferStatusDto,
     user: UserPayload
   ): Promise<OwnershipTransfer> {
     let ownershipTransfer = await this.ownershipTransferRepository.findById(id)
@@ -40,16 +41,17 @@ export class UpdateStatusOwnershipTransferUseCase {
     if (
       !OwnershipTransferStatusManager.canTransition(
         ownershipTransfer.status,
-        status
+        dto.status
       )
     ) {
+      console.log(dto)
       throw new BadRequestException(
-        `Invalid status transition: ${ownershipTransfer.status} -> ${status}`
+        `Invalid status transition: ${ownershipTransfer.status} -> ${dto.status}`
       )
     }
-
-    if (status !== OwnershipTransferStatus.FINISHED) {
-      return await this.ownershipTransferRepository.updateStatus(id, status)
+ 
+    if (dto.status !== OwnershipTransferStatus.FINISHED) {
+      return await this.ownershipTransferRepository.updateStatus(id, dto.status)
     }
 
     const product = await this.productRepository.findById(
@@ -85,6 +87,6 @@ export class UpdateStatusOwnershipTransferUseCase {
       )
     )
 
-    return await this.ownershipTransferRepository.updateStatus(id, status)
+    return await this.ownershipTransferRepository.updateStatus(id, dto.status)
   }
 }

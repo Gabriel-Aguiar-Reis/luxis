@@ -18,10 +18,24 @@ import { InventoryTypeOrmRepository } from '@/shared/infra/persistence/typeorm/i
 import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
 import { AppModule } from '@/app.module'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
+import { GetReturnsByResellerIdUseCase } from '@/modules/return/application/use-cases/get-returns-by-reseller-id.use-case'
+import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
+import { UserTypeOrmRepository } from '@/shared/infra/persistence/typeorm/user/user.typeorm.repository'
+import { ProductTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product/product.typeorm.repository'
+import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
+import { ProductModelTypeOrmRepository } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.repository'
+import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ReturnTypeOrmEntity, InventoryTypeOrmEntity]),
+    TypeOrmModule.forFeature(
+      [
+        ReturnTypeOrmEntity,
+        InventoryTypeOrmEntity,
+        UserTypeOrmEntity,
+        ProductTypeOrmEntity,
+        ProductModelTypeOrmEntity
+      ]),
     forwardRef(() => AppModule)
   ],
   controllers: [ReturnController],
@@ -34,12 +48,16 @@ import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factor
     UpdateReturnUseCase,
     DeleteReturnUseCase,
     UpdateReturnStatusUseCase,
+    GetReturnsByResellerIdUseCase,
     ReturnConfirmedHandler,
     EventDispatcher,
     { provide: 'ReturnRepository', useClass: ReturnTypeOrmRepository },
     { provide: 'InventoryService', useClass: InventoryService },
     { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },
-    { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory }
+    { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory },
+    { provide: 'UserRepository', useClass: UserTypeOrmRepository },
+    { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
+    { provide: 'ProductModelRepository', useClass: ProductModelTypeOrmRepository }
   ]
 })
 export class ReturnModule {}

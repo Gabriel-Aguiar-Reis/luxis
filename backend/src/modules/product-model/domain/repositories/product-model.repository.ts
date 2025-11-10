@@ -7,4 +7,5 @@ export abstract class ProductModelRepository {
   abstract create(model: ProductModel): Promise<ProductModel>
   abstract update(model: ProductModel): Promise<ProductModel>
   abstract delete(id: UUID): Promise<void>
+  abstract findManyByIds(ids: UUID[]): Promise<ProductModel[]>
 }

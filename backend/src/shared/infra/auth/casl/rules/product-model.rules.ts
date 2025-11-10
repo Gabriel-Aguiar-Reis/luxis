@@ -21,6 +21,9 @@ export class ProductModelCaslRule implements CaslRuleBuilder {
         can(Actions.Update, ProductModel)
         can(Actions.Create, ProductModel)
         break
+      case Role.RESELLER:
+        can(Actions.Read, ProductModel)
+        break
     }
   }
 }

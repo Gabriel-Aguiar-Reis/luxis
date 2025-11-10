@@ -15,7 +15,7 @@ import {
   TableBody,
   TableCell
 } from '@/components/ui/table'
-import { Category, Product, ProductModel } from '@/lib/api-types'
+import { Category, Product, ProductModel, ProductStatus } from '@/lib/api-types'
 import {
   Filter,
   FileEdit,
@@ -23,8 +23,6 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
-
-type ProductStatus = Product['status']
 
 type ProductFiltersType = {
   serialNumber?: string
@@ -42,7 +40,6 @@ type ProductsTableProps = {
   products: Product[]
   productsPerPage?: number
   handleEditProduct: (product: Product) => void
-  handleDeleteProduct: (productId: string) => void
 }
 
 import { useState } from 'react'
@@ -53,8 +50,7 @@ export function ProductsTable({
   isLoading,
   products,
   productsPerPage = 10,
-  handleEditProduct,
-  handleDeleteProduct
+  handleEditProduct
 }: ProductsTableProps) {
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [filters, setFilters] = useState<ProductFiltersType>({})
@@ -143,19 +139,22 @@ export function ProductsTable({
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle>Gerenciamento de Produtos</CardTitle>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle className="text-lg sm:text-xl">
+              Gerenciamento de Produtos
+            </CardTitle>
             <Button
               variant={isFiltersVisible ? 'secondary' : 'outline'}
               size="sm"
               onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+              className="w-full sm:w-auto"
             >
               <Filter className="mr-2 h-4 w-4" />
               Filtros
             </Button>
           </div>
           <CardDescription>
-            Visualize, edite e exclua produtos do catálogo
+            Visualize e edite produtos do catálogo
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -178,17 +177,25 @@ export function ProductsTable({
               </div>
             ) : (
               <>
-                <div className="rounded-md border">
+                <div className="overflow-x-auto rounded-md border">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Nº Série</TableHead>
-                        <TableHead>Foto</TableHead>
-                        <TableHead>Modelo</TableHead>
-                        <TableHead>Custo Unitário</TableHead>
-                        <TableHead>Preço de Venda</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
+                        <TableHead className="min-w-[100px]">
+                          Nº Série
+                        </TableHead>
+                        <TableHead className="min-w-20">Foto</TableHead>
+                        <TableHead className="min-w-[120px]">Modelo</TableHead>
+                        <TableHead className="min-w-[100px]">
+                          Custo Unitário
+                        </TableHead>
+                        <TableHead className="min-w-[100px]">
+                          Preço de Venda
+                        </TableHead>
+                        <TableHead className="min-w-[100px]">Status</TableHead>
+                        <TableHead className="min-w-[100px] text-right">
+                          Ações
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -238,7 +245,7 @@ export function ProductsTable({
                                       <FileEdit className="h-4 w-4" />
                                       <span className="sr-only">Editar</span>
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                       variant="ghost"
                                       size="icon"
                                       onClick={() =>
@@ -247,7 +254,7 @@ export function ProductsTable({
                                     >
                                       <Trash2 className="h-4 w-4" />
                                       <span className="sr-only">Excluir</span>
-                                    </Button>
+                                    </Button> */}
                                   </div>
                                 </TableCell>
                               </TableRow>
@@ -273,32 +280,36 @@ export function ProductsTable({
                 </div>
 
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-end space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                      }
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      <span className="sr-only">Página anterior</span>
-                    </Button>
+                  <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
                     <div className="text-sm">
                       Página {currentPage} de {totalPages}
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                      }
-                      disabled={currentPage === totalPages}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                      <span className="sr-only">Próxima página</span>
-                    </Button>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        <span className="sr-only">Página anterior</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setCurrentPage((prev) =>
+                            Math.min(prev + 1, totalPages)
+                          )
+                        }
+                        disabled={currentPage === totalPages}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                        <span className="sr-only">Próxima página</span>
+                      </Button>
+                    </div>
                   </div>
                 )}
               </>

@@ -36,6 +36,11 @@ export async function returnsByReseller(
 
   const allProductIds = [...new Set(resReturns.flatMap((r) => r.productIds))]
 
+  // Se não há produtos, retorna vazio
+  if (allProductIds.length === 0) {
+    return []
+  }
+
   const products = await productRepo
     .createQueryBuilder('product')
     .innerJoin(

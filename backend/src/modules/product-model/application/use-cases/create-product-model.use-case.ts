@@ -7,6 +7,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { Description } from '@/shared/common/value-object/description.vo'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
+import { ProductModelStatus } from '@/modules/product-model/domain/enums/product-model-status.enum'
 
 @Injectable()
 export class CreateProductModelUseCase {
@@ -31,6 +32,7 @@ export class CreateProductModelUseCase {
       new ModelName(input.name),
       input.categoryId,
       new Currency(input.suggestedPrice),
+      ProductModelStatus.ACTIVE,
       input.description ? new Description(input.description) : undefined,
       photoUrl
     )

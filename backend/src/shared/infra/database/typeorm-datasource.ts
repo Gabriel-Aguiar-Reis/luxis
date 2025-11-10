@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config'
 import * as dotenv from 'dotenv'
 import { BadRequestException } from '@nestjs/common'
 import { Init1749406833692 } from '@/shared/infra/database/migrations/1749406833692-Init'
-
+import { PasswordResetRequestTypeOrmEntity } from '@/shared/infra/persistence/typeorm/auth/password-reset-requests/password-reset-requests.typeorm.entity'
 dotenv.config({ path: '.env.development' })
 
 const commonConfig = {
@@ -30,7 +30,8 @@ const commonConfig = {
     CategoryTypeOrmEntity,
     ProductModelTypeOrmEntity,
     SupplierTypeOrmEntity,
-    ReturnTypeOrmEntity
+    ReturnTypeOrmEntity,
+    PasswordResetRequestTypeOrmEntity
   ],
   migrations: [Init1749406833692],
   synchronize: false

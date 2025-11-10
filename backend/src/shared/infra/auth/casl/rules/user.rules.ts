@@ -17,7 +17,7 @@ export class UserCaslRule implements CaslRuleBuilder {
         can(Actions.Manage, User)
         break
       case Role.RESELLER:
-        can(Actions.Read, User, { id: user.id })
+        can(Actions.Read, User)
         can(Actions.Update, User, { id: user.id })
         break
       case Role.ASSISTANT:

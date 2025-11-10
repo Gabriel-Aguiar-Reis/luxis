@@ -1,0 +1,433 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { UserEditDialog } from '@/components/users/user-edit-dialog'
+import { UserDetailsDialog } from '@/components/users/user-details-dialog'
+import { UserProductsDialog } from '@/components/users/user-products-dialog'
+import {
+  Search,
+  MoreHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  UserCog,
+  Eye,
+  UserX,
+  Filter,
+  Expand
+} from 'lucide-react'
+import { User } from '@/lib/api-types'
+import { useGetUsers } from '@/hooks/use-users'
+import { UserStatusDialog } from '@/components/users/user-status-dialog'
+import { PhoneNumberUtil } from 'google-libphonenumber'
+import { UserFilters, UserFiltersType } from '@/components/users/user-filters'
+
+type UserRole = User['role']
+type UserStatus = User['status']
+
+export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
+  const { data: users } = useGetUsers()
+  const nonPendingUsers = users?.filter((user) => user.role !== 'UNASSIGNED')
+  const [filters, setFilters] = useState<UserFiltersType>({})
+  const [filteredUsers, setFilteredUsers] = useState<User[]>(
+    nonPendingUsers ?? []
+  )
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
+  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false)
+  const [isProductsDialogOpen, setIsProductsDialogOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false)
+
+  const usersPerPage = 10
+
+  useEffect(() => {
+    setFilteredUsers(nonPendingUsers || [])
+    setTotalPages(Math.ceil((nonPendingUsers || []).length / usersPerPage))
+    setCurrentPage(1)
+
+    const applyFilters = (filters: UserFiltersType) => {
+      let filtered = nonPendingUsers || []
+
+      if (filters.name) {
+        filtered = filtered.filter((user) =>
+          user.name?.value?.toLowerCase().includes(filters.name!.toLowerCase())
+        )
+      }
+
+      if (filters.email) {
+        filtered = filtered.filter((user) =>
+          user.email?.value
+            ?.toLowerCase()
+            .includes(filters.email!.toLowerCase())
+        )
+      }
+
+      if (filters.phone) {
+        filtered = filtered.filter((user) =>
+          user.phone?.value
+            ?.toLowerCase()
+            .includes(filters.phone!.toLowerCase())
+        )
+      }
+
+      if (filters.role) {
+        filtered = filtered.filter((user) => user.role === filters.role)
+      }
+
+      if (filters.status) {
+        filtered = filtered.filter((user) => user.status === filters.status)
+      }
+
+      setFilteredUsers(filtered)
+      setTotalPages(Math.ceil(filtered.length / usersPerPage))
+      setCurrentPage(1)
+    }
+    applyFilters(filters)
+  }, [users, filters])
+
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user)
+    setIsEditDialogOpen(true)
+  }
+
+  const handleViewUserDetails = (user: User) => {
+    setSelectedUser(user)
+    setIsDetailsDialogOpen(true)
+  }
+
+  const handleToggleUserStatus = (user: User) => {
+    setSelectedUser(user)
+    setIsStatusDialogOpen(true)
+  }
+
+  const handleViewUserProducts = (user: User) => {
+    setSelectedUser(user)
+    setIsProductsDialogOpen(true)
+  }
+
+  const currentUsers = filteredUsers.slice(
+    (currentPage - 1) * usersPerPage,
+    currentPage * usersPerPage
+  )
+
+  const formatRole = (role: UserRole) => {
+    const roleMap: Record<UserRole, { label: string; className: string }> = {
+      ADMIN: {
+        label: 'Administrador',
+        className: 'bg-[var(--badge-1)] text-[var(--badge-text-1)]'
+      },
+      RESELLER: {
+        label: 'Revendedor',
+        className: 'bg-[var(--badge-2)] text-[var(--badge-text-2)]'
+      },
+      ASSISTANT: {
+        label: 'Assistente',
+        className: 'bg-[var(--badge-3)] text-[var(--badge-text-3)]'
+      },
+      UNASSIGNED: {
+        label: 'Não Atribuído',
+        className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
+      }
+    }
+
+    const { label, className } = roleMap[role] || { label: role, className: '' }
+
+    return (
+      <Badge variant="outline" className={className}>
+        {label}
+      </Badge>
+    )
+  }
+
+  const formatStatus = (status: UserStatus) => {
+    const statusMap: Record<UserStatus, { label: string; className: string }> =
+      {
+        ACTIVE: {
+          label: 'Ativo',
+          className: 'bg-[var(--badge-4)] text-[var(--badge-text-4)]'
+        },
+        DISABLED: {
+          label: 'Desativado',
+          className: 'bg-[var(--badge-6)] text-[var(--badge-text-6)]'
+        },
+        PENDING: {
+          label: 'Pendente',
+          className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
+        }
+      }
+
+    const { label, className } = statusMap[status] || {
+      label: status,
+      className: ''
+    }
+
+    return (
+      <Badge variant="outline" className={className}>
+        {label}
+      </Badge>
+    )
+  }
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle className="text-base sm:text-lg md:text-xl">
+            Gerenciamento de Usuários
+          </CardTitle>
+          <Button
+            variant={isFiltersVisible ? 'secondary' : 'outline'}
+            size="sm"
+            onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+            className="w-full text-xs sm:w-auto sm:text-sm"
+          >
+            <Filter className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+            Filtros
+          </Button>
+        </div>
+        <CardDescription className="text-xs sm:text-sm">
+          Visualize, edite e gerencie usuários do sistema
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isFiltersVisible && (
+          <UserFilters
+            onFilterChange={(newFilters) => {
+              setFilters(newFilters)
+              setCurrentPage(1)
+            }}
+          />
+        )}
+        <div className="space-y-3 sm:space-y-4">
+          <>
+            <div className="overflow-x-auto rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="min-w-[150px] text-xs sm:text-sm">
+                      Nome
+                    </TableHead>
+                    <TableHead className="min-w-[180px] text-xs sm:text-sm">
+                      Email
+                    </TableHead>
+                    <TableHead className="min-w-[120px] text-xs sm:text-sm">
+                      Telefone
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-xs sm:text-sm">
+                      Função
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-xs sm:text-sm">
+                      Status
+                    </TableHead>
+                    <TableHead className="min-w-20 text-xs sm:text-sm">
+                      Produtos
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-right text-xs sm:text-sm">
+                      Ações
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentUsers.length > 0 ? (
+                    <>
+                      {currentUsers.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell className="text-xs font-medium sm:text-sm">
+                            {user.name?.value ?? 'N/A'}{' '}
+                            {user.surname?.value ?? ''}
+                          </TableCell>
+                          <TableCell className="text-xs sm:text-sm">
+                            {user.email?.value ?? 'N/A'}
+                          </TableCell>
+                          <TableCell className="text-xs sm:text-sm">
+                            {user.phone?.value
+                              ? phoneUtil.formatInOriginalFormat(
+                                  phoneUtil.parseAndKeepRawInput(
+                                    user.phone.value,
+                                    'BR'
+                                  )
+                                )
+                              : 'N/A'}
+                          </TableCell>
+                          <TableCell>{formatRole(user.role)}</TableCell>
+                          <TableCell>{formatStatus(user.status)}</TableCell>
+                          <TableCell>
+                            <Button
+                              className="h-7 w-7 sm:h-8 sm:w-8"
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleViewUserProducts(user)}
+                            >
+                              <Expand className="h-3 w-3 sm:h-4 sm:w-4" />
+                            </Button>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7 sm:h-8 sm:w-8"
+                                >
+                                  <MoreHorizontal className="h-3 w-3 sm:h-4 sm:w-4" />
+                                  <span className="sr-only">Abrir menu</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel className="text-xs sm:text-sm">
+                                  Ações
+                                </DropdownMenuLabel>
+                                <DropdownMenuItem
+                                  onClick={() => handleViewUserDetails(user)}
+                                  className="text-xs sm:text-sm"
+                                >
+                                  <Eye className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                                  Ver detalhes
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleEditUser(user)}
+                                  className="text-xs sm:text-sm"
+                                >
+                                  <UserCog className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                                  Editar função
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => handleToggleUserStatus(user)}
+                                  className={`text-xs sm:text-sm ${
+                                    user.status === 'ACTIVE'
+                                      ? 'text-text-destructive'
+                                      : 'text-text-success'
+                                  }`}
+                                >
+                                  <UserX className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                                  {user.status === 'ACTIVE'
+                                    ? 'Desativar'
+                                    : 'Ativar'}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                      {Array.from({
+                        length:
+                          usersPerPage - currentUsers.length > 0
+                            ? usersPerPage - currentUsers.length
+                            : 0
+                      }).map((_, idx) => (
+                        <TableRow key={`empty-${idx}`}>
+                          <TableCell colSpan={7} style={{ height: 53 }} />
+                        </TableRow>
+                      ))}
+                    </>
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={7}
+                        className="h-24 text-center text-xs sm:text-sm"
+                      >
+                        Nenhum usuário encontrado
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Paginação */}
+            {totalPages > 1 && (
+              <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
+                <div className="text-xs sm:text-sm">
+                  Página {currentPage} de {totalPages}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                    className="h-8 text-xs sm:h-9 sm:text-sm"
+                  >
+                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="sr-only">Página anterior</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="h-8 text-xs sm:h-9 sm:text-sm"
+                  >
+                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="sr-only">Próxima página</span>
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
+        </div>
+      </CardContent>
+
+      <UserEditDialog
+        user={selectedUser}
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+      />
+
+      <UserDetailsDialog
+        user={selectedUser}
+        isOpen={isDetailsDialogOpen}
+        onClose={() => setIsDetailsDialogOpen(false)}
+        phoneUtil={phoneUtil}
+      />
+
+      <UserStatusDialog
+        user={selectedUser}
+        isOpen={isStatusDialogOpen}
+        onClose={() => setIsStatusDialogOpen(false)}
+      />
+
+      {selectedUser && (
+        <UserProductsDialog
+          userId={selectedUser.id}
+          userName={`${selectedUser.name?.value ?? 'N/A'} ${selectedUser.surname?.value ?? ''}`}
+          open={isProductsDialogOpen}
+          onOpenChange={setIsProductsDialogOpen}
+        />
+      )}
+    </Card>
+  )
+}

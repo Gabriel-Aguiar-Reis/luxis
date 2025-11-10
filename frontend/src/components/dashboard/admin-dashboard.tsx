@@ -105,14 +105,16 @@ export function AdminDashboard() {
 
   return (
     <div className="flex-1 space-y-4">
-      <div className="flex items-center justify-between px-4 pt-6">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      <div className="flex flex-col gap-4 px-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Dashboard
+        </h2>
         <Tabs
           defaultValue="year"
           value={timeframe}
           onValueChange={setTimeframe}
         >
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-3 sm:w-auto">
             <TabsTrigger value="week">Semana</TabsTrigger>
             <TabsTrigger value="month">Mês</TabsTrigger>
             <TabsTrigger value="year">Ano</TabsTrigger>
@@ -175,7 +177,7 @@ export function AdminDashboard() {
       </div>
 
       <div className="grid gap-4 px-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+        <Card className="md:col-span-2 lg:col-span-4">
           <CardHeader>
             <CardTitle>Vendas</CardTitle>
             <CardDescription>
@@ -189,11 +191,12 @@ export function AdminDashboard() {
               <SalesChart
                 start={dateRange.start.toISOString()}
                 end={dateRange.end.toISOString()}
+                timeframe={timeframe as 'week' | 'month' | 'year'}
               />
             )}
           </CardContent>
         </Card>
-        <Card className="col-span-3">
+        <Card className="md:col-span-2 lg:col-span-3">
           <CardHeader>
             <CardTitle>Vendas Recentes</CardTitle>
             <CardDescription>Últimas vendas realizadas</CardDescription>
@@ -212,7 +215,7 @@ export function AdminDashboard() {
       </div>
 
       <div className="grid gap-4 px-4 pb-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-3">
+        <Card className="md:col-span-2 lg:col-span-3">
           <CardHeader>
             <CardTitle>Distribuição de Estoque</CardTitle>
             <CardDescription>
@@ -227,7 +230,7 @@ export function AdminDashboard() {
             )}
           </CardContent>
         </Card>
-        <Card className="col-span-4">
+        <Card className="md:col-span-2 lg:col-span-4">
           <CardHeader>
             <CardTitle>Devoluções Realizadas no Período</CardTitle>
           </CardHeader>

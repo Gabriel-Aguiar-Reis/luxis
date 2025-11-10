@@ -6,7 +6,10 @@ export class BatchTypeOrmEntity {
   @PrimaryColumn('uuid')
   id: UUID
 
-  @Column('date', { name: 'arrival_date' })
+  @Column('timestamp', {
+    name: 'arrival_date',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   arrivalDate: Date
 
   @Column('uuid', { name: 'supplier_id' })

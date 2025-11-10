@@ -44,6 +44,10 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
 
     const soldProductIds = sales.flatMap((sale) => sale.productIds)
 
+    if (soldProductIds.length === 0) {
+      return []
+    }
+
     const productCount = soldProductIds.reduce(
       (acc, productId) => {
         acc[productId] = (acc[productId] || 0) + 1
@@ -66,60 +70,6 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
       .where('product.id IN (:...productIds)', { productIds: topProductIds })
       .getMany()
 
-    const modelIds = [...new Set(products.map((product) => product.modelId))]
-    const productModels = await this.productModelRepo
-      .createQueryBuilder('model')
-      .where('model.id IN (:...modelIds)', { modelIds })
-      .getMany()
-
-    const modelsById = productModels.reduce(
-      (acc, model) => {
-        acc[model.id] = model
-        return acc
-      },
-      {} as Record<string, ProductModelTypeOrmEntity>
-    )
-
-    return products
-      .map((product) => {
-        const model = modelsById[product.modelId]
-        const quantity = productCount[product.id]
-        const salePrice = product.salePrice.toString()
-        return {
-          modelId: model.id.toString(),
-          modelName: model.name,
-          quantity,
-          salePrice,
-          totalValue: (Number(salePrice) * quantity).toString()
-        }
-      })
-      .sort((a, b) => b.quantity - a.quantity)
-  }
-
-  async productsWithLongestTimeInInventory(
-    resellerId: UUID,
-    qParams: ParamsDto
-  ): Promise<ProductInInventoryDto[]> {
-    const inventory = await this.inventoryRepo.findOne({
-      where: { resellerId }
-    })
-
-    if (!inventory || inventory.productIds.length === 0) {
-      return []
-    }
-
-    const qb = this.productRepo
-      .createQueryBuilder('product')
-      .innerJoin(BatchTypeOrmEntity, 'batch', 'batch.id = product.batch_id')
-      .where('product.id IN (:...productIds)', {
-        productIds: inventory.productIds
-      })
-      .andWhere('product.status = :status', { status: ProductStatus.ASSIGNED })
-      .orderBy('batch.created_at', 'ASC')
-
-    const filteredProducts = baseWhere(qb, qParams, 'batch.created_at')
-    const products = await filteredProducts.getMany()
-
     if (products.length === 0) {
       return []
     }
@@ -138,14 +88,94 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
       {} as Record<string, ProductModelTypeOrmEntity>
     )
 
-    return products.slice(0, 10).map((product) => {
+    // Agrupar produtos por modelo
+    const modelGroups = products.reduce(
+      (acc, product) => {
+        const modelId = product.modelId
+        if (!acc[modelId]) {
+          const model = modelsById[modelId]
+          if (model) {
+            acc[modelId] = {
+              modelId: model.id.toString(),
+              modelName: model.name,
+              quantity: 0,
+              salePrice: product.salePrice.toString(),
+              totalValue: '0'
+            }
+          }
+        }
+        if (acc[modelId]) {
+          const count = productCount[product.id] || 0
+          acc[modelId].quantity += count
+          acc[modelId].totalValue = (
+            Number(acc[modelId].totalValue) +
+            Number(product.salePrice) * count
+          ).toString()
+        }
+        return acc
+      },
+      {} as Record<string, SellingProductDto>
+    )
+
+    return Object.values(modelGroups).sort((a, b) => b.quantity - a.quantity)
+  }
+
+  async productsWithLongestTimeInInventory(
+    resellerId: UUID,
+    qParams: ParamsDto
+  ): Promise<ProductInInventoryDto[]> {
+    const inventory = await this.inventoryRepo.findOne({
+      where: { resellerId }
+    })
+
+    if (!inventory || inventory.productIds.length === 0) {
+      return []
+    }
+
+    const qb = this.productRepo
+      .createQueryBuilder('product')
+      .innerJoin(BatchTypeOrmEntity, 'batch', 'batch.id = product.batch_id')
+      .addSelect('batch.arrival_date')
+      .where('product.id IN (:...productIds)', {
+        productIds: inventory.productIds
+      })
+      .andWhere('product.status = :status', { status: ProductStatus.ASSIGNED })
+      .orderBy('batch.arrival_date', 'ASC')
+
+    const filteredProducts = baseWhere(qb, qParams, 'batch.arrival_date')
+    const rawProducts = await filteredProducts.getRawAndEntities()
+
+    if (rawProducts.entities.length === 0) {
+      return []
+    }
+
+    const products = rawProducts.entities
+    const rawData = rawProducts.raw
+
+    const modelIds = [...new Set(products.map((product) => product.modelId))]
+    const productModels = await this.productModelRepo
+      .createQueryBuilder('model')
+      .where('model.id IN (:...modelIds)', { modelIds })
+      .getMany()
+
+    const modelsById = productModels.reduce(
+      (acc, model) => {
+        acc[model.id] = model
+        return acc
+      },
+      {} as Record<string, ProductModelTypeOrmEntity>
+    )
+
+    return products.slice(0, 10).map((product, index) => {
       const model = modelsById[product.modelId]
+      const raw = rawData[index]
       return {
         id: product.id.toString(),
         serialNumber: product.serialNumber,
         modelId: model.id.toString(),
         modelName: model.name,
-        salePrice: product.salePrice.toString()
+        salePrice: product.salePrice.toString(),
+        dateAcquired: raw.batch_arrival_date
       }
     })
   }

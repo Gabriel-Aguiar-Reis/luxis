@@ -15,6 +15,7 @@ import { ProductEntryDto } from '@/modules/batch/application/dtos/product-entry-
 import { ResolvedProductEntry } from '@/modules/batch/application/models/resolved-product-entry.model'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 import { Unit } from '@/shared/common/value-object/unit.vo'
+import { ProductModelStatus } from '@/modules/product-model/domain/enums/product-model-status.enum'
 
 @Injectable()
 export class ProductEntryResolver {
@@ -50,6 +51,7 @@ export class ProductEntryResolver {
           new ModelName(entry.modelName!),
           entry.categoryId!,
           new Currency(entry.salePrice!),
+          ProductModelStatus.USED,
           new Description(''),
           new ImageURL(
             entry.photoUrl ??

@@ -29,7 +29,7 @@ import {
   GetOwnershipTransfersGivenByResellerId,
   GetTotalOwnershipTransfersGivenByResellerId,
   // Returns
-  GetReturnsByResellerId,
+  GetReturnsByResellerIdKpi,
   GetTotalReturnsByResellerId,
   GetReturnsByReseller,
   GetTotalReturnsByReseller,
@@ -165,6 +165,31 @@ export function useTotalSalesInPeriod(
       apiFetch<
         GetTotalSalesInPeriod['responses']['200']['content']['application/json']
       >(apiPaths.kpiAdmin.salesByPeriodTotal(query), {}, true),
+    enabled: !!query?.start && !!query?.end
+  })
+}
+
+export function useSalesAggregatedByDay(query: { start: string; end: string }) {
+  return useQuery<{
+    start: Date
+    end: Date
+    data: Array<{
+      date: string
+      sales: number
+      totalAmount: string
+    }>
+  }>({
+    queryKey: ['kpi-sales-aggregated-by-day', query],
+    queryFn: () =>
+      apiFetch<{
+        start: Date
+        end: Date
+        data: Array<{
+          date: string
+          sales: number
+          totalAmount: string
+        }>
+      }>(apiPaths.kpiAdmin.salesAggregatedByDay(query), {}, true),
     enabled: !!query?.start && !!query?.end
   })
 }
@@ -366,12 +391,12 @@ export function useTotalOwnershipTransfersGivenByResellerId(id: string) {
 // --- Returns ---
 export function useReturnsByResellerId(id: string) {
   return useQuery<
-    GetReturnsByResellerId['responses']['200']['content']['application/json']
+    GetReturnsByResellerIdKpi['responses']['200']['content']['application/json']
   >({
     queryKey: ['kpi-returns-by-reseller', id],
     queryFn: () =>
       apiFetch<
-        GetReturnsByResellerId['responses']['200']['content']['application/json']
+        GetReturnsByResellerIdKpi['responses']['200']['content']['application/json']
       >(apiPaths.kpiAdmin.returnsByResellerId(id), {}, true),
     enabled: !!id
   })
@@ -447,5 +472,126 @@ export function useTotalReturnsInPeriod(
         GetTotalReturnsInPeriod['responses']['200']['content']['application/json']
       >(apiPaths.kpiAdmin.totalReturnsInPeriod(query), {}, true),
     enabled: !!query?.start && !!query?.end
+  })
+}
+
+// --- Reseller KPIs ---
+export function useMonthlySales(params?: { start?: string; end?: string }) {
+  return useQuery({
+    queryKey: ['kpi-my-space-monthly-sales', params],
+    queryFn: async () => {
+      const result = await apiFetch(
+        apiPaths.kpiMySpace.monthlySales,
+        {
+          method: 'POST',
+          body: JSON.stringify(params || {})
+        },
+        true
+      )
+      return result ?? []
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
+  })
+}
+
+export function useAverageTicket(params?: { start?: string; end?: string }) {
+  return useQuery<number>({
+    queryKey: ['kpi-my-space-average-ticket', params],
+    queryFn: async () => {
+      const result = await apiFetch<number>(
+        apiPaths.kpiMySpace.averageTicket,
+        {
+          method: 'POST',
+          body: JSON.stringify(params || {})
+        },
+        true
+      )
+      return result ?? 0
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
+  })
+}
+
+export function useCurrentInventory(params?: { start?: string; end?: string }) {
+  return useQuery({
+    queryKey: ['kpi-my-space-current-inventory', params],
+    queryFn: async () => {
+      const result = await apiFetch(
+        apiPaths.kpiMySpace.currentInventory,
+        {
+          method: 'POST',
+          body: JSON.stringify(params || {})
+        },
+        true
+      )
+      return result ?? []
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
+  })
+}
+
+export function useTopSellingProducts(params?: {
+  start?: string
+  end?: string
+}) {
+  return useQuery({
+    queryKey: ['kpi-my-space-top-selling-products', params],
+    queryFn: async () => {
+      const result = await apiFetch(
+        apiPaths.kpiMySpace.topSellingProducts,
+        {
+          method: 'POST',
+          body: JSON.stringify(params || {})
+        },
+        true
+      )
+      return result ?? []
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
+  })
+}
+
+export function useLongestTimeInInventory(params?: {
+  start?: string
+  end?: string
+}) {
+  return useQuery({
+    queryKey: ['kpi-my-space-longest-time-in-inventory', params],
+    queryFn: async () => {
+      const result = await apiFetch(
+        apiPaths.kpiMySpace.longestTimeInInventory,
+        {
+          method: 'POST',
+          body: JSON.stringify(params || {})
+        },
+        true
+      )
+      return result ?? []
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
+  })
+}
+
+export function useReturnCount(params?: { start?: string; end?: string }) {
+  return useQuery<number>({
+    queryKey: ['kpi-my-space-return-count', params],
+    queryFn: async () => {
+      const result = await apiFetch<number>(
+        apiPaths.kpiMySpace.returnCount,
+        {
+          method: 'POST',
+          body: JSON.stringify(params || {})
+        },
+        true
+      )
+      return result ?? 0
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
   })
 }

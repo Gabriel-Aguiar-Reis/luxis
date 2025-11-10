@@ -72,6 +72,8 @@ export const useAuthStore = create<AuthState>()(
             user: null,
             accessToken: null
           })
+          // Re-lança o erro para que o componente possa tratá-lo
+          throw error
         }
       },
 
@@ -209,19 +211,15 @@ export const useAuthStore = create<AuthState>()(
         accessToken: state.accessToken
       }),
       onRehydrateStorage: () => (state) => {
-        if (state?.accessToken && state?.user) {
-          return {
-            ...state,
-            isAuthenticated: true,
-            hydrated: true
-          }
-        } else {
-          return {
-            ...state,
-            isAuthenticated: false,
-            accessToken: null,
-            user: null,
-            hydrated: true
+        if (state) {
+          if (state.accessToken && state.user) {
+            state.isAuthenticated = true
+            state.hydrated = true
+          } else {
+            state.isAuthenticated = false
+            state.accessToken = null
+            state.user = null
+            state.hydrated = true
           }
         }
       }

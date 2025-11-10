@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { User } from '@/modules/user/domain/entities/user.entity'
 import { UserRepository } from '@/modules/user/domain/repositories/user.repository'
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
@@ -18,7 +18,17 @@ export class UserTypeOrmRepository implements UserRepository {
   ) {}
 
   async findAll(): Promise<User[]> {
-    const entities = await this.repository.find()
+    const entities = await this.repository.find({
+      order: { name: 'ASC', surname: 'ASC' }
+    })
+    return entities.map(UserMapper.toDomain)
+  }
+
+  async findAllPending(): Promise<User[]> {
+    const entities = await this.repository.find({
+      where: { status: UserStatus.PENDING },
+      order: { name: 'ASC', surname: 'ASC' }
+    })
     return entities.map(UserMapper.toDomain)
   }
 
@@ -28,6 +38,10 @@ export class UserTypeOrmRepository implements UserRepository {
     return UserMapper.toDomain(entity)
   }
 
+  async findManyByIds(ids: UUID[]): Promise<User[]> {
+    const entities = await this.repository.findBy({ id: In(ids) })
+    return entities.map(UserMapper.toDomain)
+  }
   async findByEmail(email: Email): Promise<User | null> {
     const entity = await this.repository.findOne({
       where: { email: email.getValue() }

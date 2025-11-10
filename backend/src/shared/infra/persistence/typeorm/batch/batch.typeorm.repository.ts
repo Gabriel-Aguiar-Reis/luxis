@@ -41,7 +41,7 @@ export class BatchTypeOrmRepository implements BatchRepository {
   }
 
   async findAll(): Promise<Batch[]> {
-    const entities = await this.repository.find()
+    const entities = await this.repository.find({ order: { arrivalDate: 'DESC' } })
     return entities.map(BatchMapper.toDomain)
   }
 

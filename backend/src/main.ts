@@ -17,7 +17,13 @@ async function bootstrap() {
 
   app.useLogger(app.get(PinoLogger))
   const port = config.getPort() ?? 3000
-  app.enableCors({ origin: '*' })
+
+  app.enableCors({
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -34,7 +40,7 @@ async function bootstrap() {
   )
   SwaggerModule.setup('api/docs', app, document)
 
-  await app.listen(port)
+  await app.listen(port, '0.0.0.0')
   Logger.log(`App running on http://localhost:${port}`, 'Bootstrap')
   Logger.log(
     `Swagger docs available at http://localhost:${port}/api/docs`,

@@ -12,6 +12,7 @@ export class ProductModelMapper {
       new ModelName(entity.name),
       entity.categoryId,
       new Currency(entity.suggestedPrice),
+      entity.status,
       entity.description ? new Description(entity.description) : undefined,
       entity.photoUrl ? new ImageURL(entity.photoUrl) : undefined
     )
@@ -23,6 +24,7 @@ export class ProductModelMapper {
     entity.name = model.name.getValue()
     entity.categoryId = model.categoryId
     entity.suggestedPrice = model.suggestedPrice.getValue()
+    entity.status = model.status
     entity.description = model.description?.getValue() ?? ''
     entity.photoUrl = model.photoUrl?.getValue() ?? ''
     return entity
@@ -35,7 +37,8 @@ export class ProductModelMapper {
       categoryId: productModel.categoryId,
       suggestedPrice: productModel.suggestedPrice.getValue(),
       description: productModel.description?.getValue(),
-      photoUrl: productModel.photoUrl?.getValue()
+      photoUrl: productModel.photoUrl?.getValue(),
+      status: productModel.status
     }
   }
 
@@ -46,7 +49,8 @@ export class ProductModelMapper {
       categoryId: productModel.categoryId,
       suggestedPrice: productModel.suggestedPrice.getValue(),
       description: productModel.description?.getValue(),
-      photoUrl: productModel.photoUrl?.getValue()
+      photoUrl: productModel.photoUrl?.getValue(),
+      status: productModel.status
     }
   }
 }

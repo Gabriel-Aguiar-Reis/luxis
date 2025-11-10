@@ -32,7 +32,7 @@ export class CreateBatchUseCase {
       input.entries.map((entry) => this.productEntryResolver.resolve(entry))
     )
 
-    const { batch, products } = await BatchFactory.create(
+    const { batch, products } = BatchFactory.create(
       batchId,
       input.arrivalDate,
       input.supplierId,

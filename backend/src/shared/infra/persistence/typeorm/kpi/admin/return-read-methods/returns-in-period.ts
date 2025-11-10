@@ -35,6 +35,15 @@ export async function returnsInPeriod(
 
   const allProductIds = [...new Set(resReturns.flatMap((r) => r.productIds))]
 
+  // Se não há retornos ou produtos, retorna vazio
+  if (allProductIds.length === 0) {
+    return {
+      start: qParams.start,
+      end: qParams.end,
+      returns: []
+    }
+  }
+
   const products = await productRepo
     .createQueryBuilder('product')
     .innerJoin(

@@ -16,14 +16,29 @@ export default function AdminLayout({
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const t = useTranslations('HomeLayout')
-  const { verify, logout } = useAuthStore()
+  const { verify, logout, isAuthenticated, user } = useAuthStore()
+
   useEffect(() => {
+    // Se já está autenticado e tem user, não precisa verificar novamente
+    if (isAuthenticated && user) {
+      if (user.role === 'ADMIN' && user.status === 'ACTIVE') {
+        setIsLoading(false)
+        return
+      }
+    }
+
     const checkAuth = async () => {
       try {
-        const user = (await verify()).user
-        if (!user || user.role !== 'ADMIN' || user.status !== 'ACTIVE') {
+        const result = await verify()
+
+        if (
+          !result.user ||
+          result.user.role !== 'ADMIN' ||
+          result.user.status !== 'ACTIVE'
+        ) {
           throw new Error(t('authError'))
         }
+
         setIsLoading(false)
       } catch (error) {
         const errorMessage =
@@ -37,7 +52,7 @@ export default function AdminLayout({
     }
 
     checkAuth()
-  }, [router, t])
+  }, []) // Removido dependências para executar apenas no mount inicial
 
   if (isLoading) {
     return (
@@ -50,7 +65,7 @@ export default function AdminLayout({
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <SidebarInset className="flex flex-col">{children}</SidebarInset>
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   )
 }

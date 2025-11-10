@@ -5,7 +5,8 @@ import {
   AbilityBuilder,
   PureAbility,
   InferSubjects,
-  ExtractSubjectType
+  ExtractSubjectType,
+  fieldPatternMatcher
 } from '@casl/ability'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { Sale } from '@/modules/sale/domain/entities/sale.entity'
@@ -20,12 +21,16 @@ import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { Return } from '@/modules/return/domain/entities/return.entity'
 import { Customer } from '@/modules/customer/domain/entities/customer.entity'
+import { Inventory } from '@/modules/inventory/domain/entities/inventory.entity'
+import { PasswordResetRequest } from '@/modules/auth/domain/entities/password-reset-request.entity'
 
 type Subjects =
   | InferSubjects<typeof Batch>
   | InferSubjects<typeof Category>
   | InferSubjects<typeof Customer>
+  | InferSubjects<typeof Inventory>
   | InferSubjects<typeof OwnershipTransfer>
+  | InferSubjects<typeof PasswordResetRequest>
   | InferSubjects<typeof Product>
   | InferSubjects<typeof ProductModel>
   | InferSubjects<typeof Return>
@@ -53,9 +58,18 @@ export class CaslAbilityFactory {
       builderFn.buildFor(user, builder)
     }
 
+    const conditionsMatcher = (matchConditions: Record<string, any>) => {
+      return (object: Record<string, any>) => {
+        return Object.keys(matchConditions).every((key) => {
+          return object[key] === matchConditions[key]
+        })
+      }
+    }
+
     return builder.build({
       detectSubjectType: (item) =>
-        item.constructor as ExtractSubjectType<Subjects>
+        item.constructor as ExtractSubjectType<Subjects>,
+      conditionsMatcher
     })
   }
 }

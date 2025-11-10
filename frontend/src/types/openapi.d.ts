@@ -165,6 +165,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/available/in-stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get available products (IN_STOCK) */
+        get: operations["getAvailableProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/products/{id}": {
         parameters: {
             query?: never;
@@ -199,6 +216,23 @@ export interface paths {
         head?: never;
         /** Sell a product */
         patch: operations["sellProduct"];
+        trace?: never;
+    };
+    "/product-models/cloudinary-signature": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Cloudinary upload signature */
+        get: operations["getCloudinarySignature"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/product-models": {
@@ -238,6 +272,23 @@ export interface paths {
         patch: operations["updateProductModel"];
         trace?: never;
     };
+    "/sales/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Confirm a sale */
+        patch: operations["confirmSale"];
+        trace?: never;
+    };
     "/sales": {
         parameters: {
             query?: never;
@@ -250,6 +301,23 @@ export interface paths {
         put?: never;
         /** Create a new sale */
         post: operations["createSale"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sales/available-products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get available products to sell */
+        get: operations["getAvailableProductsToSell"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -290,6 +358,23 @@ export interface paths {
         head?: never;
         /** Mark installment as paid */
         patch: operations["markInstallmentPaid"];
+        trace?: never;
+    };
+    "/sales/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update sale status */
+        patch: operations["updateSaleStatus"];
         trace?: never;
     };
     "/shipments": {
@@ -355,6 +440,23 @@ export interface paths {
         };
         /** Get all users */
         get: operations["getAllUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all pending users */
+        get: operations["getAllPendingUsers"];
         put?: never;
         post?: never;
         delete?: never;
@@ -450,6 +552,23 @@ export interface paths {
         patch: operations["updateUserStatus"];
         trace?: never;
     };
+    "/users/{id}/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user products */
+        get: operations["getUserProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/suppliers": {
         parameters: {
             query?: never;
@@ -539,6 +658,23 @@ export interface paths {
         head?: never;
         /** Update the status of a return */
         patch: operations["updateReturnStatus"];
+        trace?: never;
+    };
+    "/returns/reseller/{resellerId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get returns by reseller ID */
+        get: operations["getReturnsByResellerId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/customers": {
@@ -645,6 +781,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/password-reset-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List password reset requests (Admin only) */
+        get: operations["list-password-reset-requests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/password-reset-requests/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Approve password reset request (Admin only) */
+        patch: operations["approve-password-reset-request"];
+        trace?: never;
+    };
+    "/auth/password-reset-requests/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Reject password reset request (Admin only) */
+        patch: operations["reject-password-reset-request"];
+        trace?: never;
+    };
     "/auth/reset-password": {
         parameters: {
             query?: never;
@@ -739,6 +926,23 @@ export interface paths {
         put?: never;
         /** Verify JWT token */
         post: operations["verify-token"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/inventory/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get inventory by ID */
+        get: operations["getInventoryById"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -907,6 +1111,23 @@ export interface paths {
         };
         /** Get Total Sales In Period */
         get: operations["getTotalSalesInPeriod"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kpi/admin/sales/aggregated-by-day": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Sales Aggregated By Day */
+        get: operations["getSalesAggregatedByDay"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1344,23 +1565,109 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        Batch: {
+        Currency: {
             /**
-             * @description The ID of the batch
+             * @description The currency value in string format
+             * @example 100.00
+             */
+            value: string;
+        };
+        SerialNumber: {
+            /**
+             * @description The serial number of the product
+             * @example 0424A-BR-BAB-001
+             */
+            value: string;
+        };
+        ModelName: {
+            /**
+             * @description The name of the product model
+             * @example iPhone 13 Pro Max
+             */
+            value: string;
+        };
+        GetBatchProductDto: {
+            /**
+             * @description The ID of the product
              * @example 123e4567-e89b-12d3-a456-426614174000
              */
             id: string;
             /**
+             * @description The serial number of the product
+             * @example 0424A-BR-BAB-001
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+            /**
+             * @description The ID of the product model
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            modelId: string;
+            /**
+             * @description The ID of the batch
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            batchId: string;
+            /**
+             * @description The unit cost of the product
+             * @example 100.00
+             */
+            unitCost: components["schemas"]["Currency"];
+            /**
+             * @description The sale price of the product
+             * @example 150.00
+             */
+            salePrice: components["schemas"]["Currency"];
+            /**
+             * @description The status of the product
+             * @example IN_STOCK
+             * @enum {string}
+             */
+            status: "IN_STOCK" | "ASSIGNED" | "SOLD";
+            /**
+             * @description The name of the product model
+             * @example iPhone 13
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description The quantity of the product
+             * @example 100
+             */
+            quantity: number;
+        };
+        GetBatchDto: {
+            /**
              * Format: date-time
              * @description The arrival date of the batch
-             * @example 2024-01-01
+             * @example 2023-10-01T00:00:00.000Z
              */
             arrivalDate: string;
             /**
-             * @description The ID of the supplier
-             * @example 123e4567-e89b-12d3-a456-426614174000
+             * @description The supplier ID of the batch
+             * @example 550e8400-e29b-41d4-a716-446655440000
              */
             supplierId: string;
+            /**
+             * @description The ID of the batch
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            id: string;
+            /**
+             * @description The supplier name of the batch
+             * @example Supplier Inc.
+             */
+            supplierName: string;
+            /**
+             * @description The total number of items in the batch
+             * @example 150
+             */
+            totalItems: number;
+            /**
+             * @description The total cost of the batch
+             * @example 1500.00
+             */
+            totalCost: components["schemas"]["Currency"];
+            /** @description The items in the batch */
+            items: components["schemas"]["GetBatchProductDto"][];
         };
         ProductEntryDto: {
             /**
@@ -1403,7 +1710,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The arrival date of the batch
-             * @example 2021-01-01
+             * @example 2023-10-01T12:00:00Z
              */
             arrivalDate: string;
             /**
@@ -1425,6 +1732,24 @@ export interface components {
              *     ]
              */
             entries: components["schemas"]["ProductEntryDto"][];
+        };
+        Batch: {
+            /**
+             * @description The ID of the batch
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * Format: date-time
+             * @description The arrival date of the batch
+             * @example 2023-10-01T12:00:00Z
+             */
+            arrivalDate: string;
+            /**
+             * @description The ID of the supplier
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            supplierId: string;
         };
         CategoryName: {
             /**
@@ -1487,6 +1812,55 @@ export interface components {
              */
             description?: string;
         };
+        OwnershipTransferWithSerialDto: {
+            /** @description The ID of the ownership transfer */
+            id: string;
+            /** @description The ID of the product */
+            productId: string;
+            /** @description The serial number of the product */
+            serialNumber: string;
+            /** @description The ID of the from reseller */
+            fromResellerId: string;
+            /** @description The name of the from reseller */
+            fromResellerName: string;
+            /** @description The ID of the to reseller */
+            toResellerId: string;
+            /** @description The name of the from reseller */
+            toResellerName: string;
+            /**
+             * Format: date-time
+             * @description The transfer date
+             */
+            transferDate: string;
+            /**
+             * @description The status of the ownership transfer
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
+        };
+        CreateOwnershipTransferDto: {
+            /**
+             * @description The ID of the product
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            productId: string;
+            /**
+             * @description The ID of the from reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            fromResellerId?: string;
+            /**
+             * @description The ID of the to reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            toResellerId: string;
+            /**
+             * Format: date-time
+             * @description The transfer date
+             * @example 2023-10-01T12:00:00Z
+             */
+            transferDate?: string;
+        };
         OwnershipTransfer: {
             /**
              * @description The ID of the ownership transfer
@@ -1511,7 +1885,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The transfer date
-             * @example 2021-01-01
+             * @example 2023-10-01T12:00:00Z
              */
             transferDate: string;
             /**
@@ -1520,39 +1894,6 @@ export interface components {
              * @enum {string}
              */
             status: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
-        };
-        /**
-         * @description The status of the ownership transfer
-         * @enum {string}
-         */
-        OwnershipTransferStatus: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
-        CreateOwnershipTransferDto: {
-            /**
-             * @description The ID of the product
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            productId: string;
-            /**
-             * @description The ID of the from reseller
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            fromResellerId?: string;
-            /**
-             * @description The ID of the to reseller
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            toResellerId: string;
-            /**
-             * Format: date-time
-             * @description The transfer date
-             * @example 2021-01-01
-             */
-            transferDate: string;
-            /**
-             * @description The status of the ownership transfer
-             * @example PENDING
-             */
-            status: components["schemas"]["OwnershipTransferStatus"];
         };
         UpdateOwnershipTransferDto: {
             /**
@@ -1577,19 +1918,17 @@ export interface components {
              */
             transferDate?: string;
         };
-        SerialNumber: {
+        /**
+         * @description The new status of the ownership transfer
+         * @enum {string}
+         */
+        OwnershipTransferStatus: "PENDING" | "APPROVED" | "FINISHED" | "CANCELLED";
+        UpdateOwnershipTransferStatusDto: {
             /**
-             * @description The serial number of the product
-             * @example 0424A-BR-BAB-001
+             * @description The new status of the ownership transfer
+             * @example APPROVED
              */
-            value: string;
-        };
-        Currency: {
-            /**
-             * @description The currency value in string format
-             * @example 100.00
-             */
-            value: string;
+            status: components["schemas"]["OwnershipTransferStatus"];
         };
         Product: {
             /**
@@ -1646,13 +1985,6 @@ export interface components {
              */
             status?: string;
         };
-        ModelName: {
-            /**
-             * @description The name of the product model
-             * @example iPhone 13 Pro Max
-             */
-            value: string;
-        };
         ImageURL: {
             /**
              * @description The URL of the product model photo
@@ -1691,6 +2023,12 @@ export interface components {
              * @example https://example.com/iphone13.jpg
              */
             photoUrl?: components["schemas"]["ImageURL"];
+            /**
+             * @description The status of the product model
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status: "USED" | "ACTIVE" | "ARCHIVED";
         };
         CreateProductModelDto: {
             /**
@@ -1750,6 +2088,211 @@ export interface components {
              * @example https://example.com/photo.jpg
              */
             photoUrl?: string;
+            /**
+             * @description The status of the product model
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status?: "USED" | "ACTIVE" | "ARCHIVED";
+        };
+        Name: {
+            /** @description The name of the user */
+            value: string;
+        };
+        PhoneNumber: {
+            /** @description The phone number of the user */
+            value: string;
+        };
+        GetSaleProductDto: {
+            /**
+             * @description The ID of the sale product
+             * @example 123e4567-e89b-12d3-a456-426614174003
+             */
+            id: string;
+            /**
+             * @description The serial number of the product
+             * @example SN123456789
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+            /**
+             * @description The sale price of the product
+             * @example 500.00
+             */
+            salePrice: components["schemas"]["Currency"];
+            /**
+             * @description The name of the product model
+             * @example iPhone 13 Pro Max
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description The name of the category
+             * @example Smartphones
+             */
+            categoryName: components["schemas"]["CategoryName"];
+            /**
+             * @description The ID of the product model
+             * @example 123e4567-e89b-12d3-a456-426614174002
+             */
+            modelId: string;
+            /**
+             * @description The ID of the category
+             * @example 123e4567-e89b-12d3-a456-426614174001
+             */
+            categoryId: string;
+        };
+        Unit: {
+            /** @description The unit value */
+            value: number;
+        };
+        GetSaleDto: {
+            /**
+             * @description The ID of the sale
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the customer
+             * @example 123e4567-e89b-12d3-a456-426614174001
+             */
+            customerId: string;
+            /**
+             * @description The name of the customer
+             * @example John Doe
+             */
+            customerName: components["schemas"]["Name"];
+            /**
+             * @description The phone number of the customer
+             * @example +5511999999999
+             */
+            customerPhone: components["schemas"]["PhoneNumber"];
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174002
+             */
+            resellerId: string;
+            /**
+             * @description The name of the reseller
+             * @example Reseller Name
+             */
+            resellerName: string;
+            /** @description The products in the sale */
+            products: components["schemas"]["GetSaleProductDto"][];
+            /**
+             * Format: date-time
+             * @description The date of the sale
+             * @example 2024-01-01
+             */
+            saleDate: string;
+            /**
+             * @description The total amount of the sale
+             * @example 1000.00
+             */
+            totalAmount: components["schemas"]["Currency"];
+            /**
+             * @description The payment method of the sale
+             * @example DEBIT
+             * @enum {string}
+             */
+            paymentMethod: "CASH" | "PIX" | "DEBIT" | "CREDIT" | "EXCHANGE";
+            /**
+             * @description The number of installments
+             * @example 12
+             */
+            numberInstallments: components["schemas"]["Unit"];
+            /**
+             * @description The status of the sale
+             * @example INSTALLMENTS_PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
+            /**
+             * @description The interval between installments in days
+             * @example 30
+             */
+            installmentsInterval: components["schemas"]["Unit"];
+            /**
+             * @description The number of installments paid
+             * @example 3
+             */
+            installmentsPaid: components["schemas"]["Unit"];
+        };
+        GetAvailableProductModelDto: {
+            /**
+             * @description The ID of the product model
+             * @example 123e4567-e89b-12d3-a456-426614174001
+             */
+            id: string;
+            /**
+             * @description The name of the product model
+             * @example Product Model Name
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description The image URL of the product model
+             * @example https://example.com/product-model.jpg
+             */
+            imageUrl?: components["schemas"]["ImageURL"];
+            /** @description The available products for the model */
+            products: components["schemas"]["GetSaleProductDto"][];
+        };
+        GetAvailableCategoryDto: {
+            /**
+             * @description The ID of the category
+             * @example a3bb189e-8bf9-3888-9912-ace4e6543002
+             */
+            categoryId: string;
+            /**
+             * @description The name of the category
+             * @example Smartphones
+             */
+            categoryName: components["schemas"]["CategoryName"];
+            /** @description The available product models */
+            models: components["schemas"]["GetAvailableProductModelDto"][];
+        };
+        GetAvailableProductsToSellDto: {
+            /** @description The available categories with their product models and products */
+            data: components["schemas"]["GetAvailableCategoryDto"][];
+        };
+        /**
+         * @description The payment method of the sale
+         * @enum {string}
+         */
+        PaymentMethod: "CASH" | "PIX" | "DEBIT" | "CREDIT" | "EXCHANGE";
+        CreateSaleDto: {
+            /**
+             * @description The IDs of the products
+             * @example [
+             *       "123e4567-e89b-12d3-a456-426614174000",
+             *       "123e4567-e89b-12d3-a456-426614174001"
+             *     ]
+             */
+            productIds: string[];
+            /**
+             * Format: date-time
+             * @description The date of the sale
+             * @example 2021-01-01
+             */
+            saleDate: string;
+            /**
+             * @description The payment method of the sale
+             * @example CREDIT
+             */
+            paymentMethod: components["schemas"]["PaymentMethod"];
+            /**
+             * @description The number of installments of the sale
+             * @default 1
+             */
+            numberInstallments: number;
+            /**
+             * @description The interval of installments of the sale
+             * @default 0
+             */
+            installmentsInterval: number;
+            /**
+             * @description The ID of the consumer
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            customerId: string;
         };
         Sale: {
             /**
@@ -1785,7 +2328,7 @@ export interface components {
              * @description The total amount of the sale
              * @example 1000.00
              */
-            totalAmount: string;
+            totalAmount: components["schemas"]["Currency"];
             /**
              * @description The payment method of the sale
              * @example DEBIT
@@ -1796,25 +2339,25 @@ export interface components {
              * @description The number of installments
              * @example 12
              */
-            numberInstallments: number;
+            numberInstallments: components["schemas"]["Unit"];
             /**
              * @description The status of the sale
              * @example CONFIRMED
              * @enum {string}
              */
-            status: "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
+            status: "PENDING" | "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
             /**
              * @description The interval between installments in days
              * @example 30
              */
-            installmentsInterval: number;
+            installmentsInterval: components["schemas"]["Unit"];
+            /**
+             * @description The number of installments paid
+             * @example 3
+             */
+            installmentsPaid: components["schemas"]["Unit"];
         };
-        /**
-         * @description The payment method of the sale
-         * @enum {string}
-         */
-        PaymentMethod: "CASH" | "PIX" | "DEBIT" | "CREDIT" | "EXCHANGE";
-        CreateSaleDto: {
+        UpdateSaleDto: {
             /**
              * @description The IDs of the products
              * @example [
@@ -1823,39 +2366,94 @@ export interface components {
              *     ]
              */
             productIds: string[];
-            /**
-             * Format: date-time
-             * @description The date of the sale
-             * @example 2021-01-01
-             */
-            saleDate: string;
-            /**
-             * @description The payment method of the sale
-             * @example CREDIT
-             */
-            paymentMethod: components["schemas"]["PaymentMethod"];
-            /**
-             * @description The number of installments of the sale
-             * @default 1
-             */
-            numberInstallments: string;
-            /**
-             * @description The interval of installments of the sale
-             * @default 0
-             */
-            installmentsInterval: string;
-            /**
-             * @description The ID of the consumer
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            customerId: string;
         };
         MarkInstallmentPaidDto: {
             /**
-             * @description The number of the installment to be marked as paid
-             * @default 1
+             * @description The number of installments to mark as paid
+             * @example 2
              */
             installmentNumber: number;
+        };
+        UpdateSaleStatusDto: {
+            /**
+             * @description The new status of the sale
+             * @example INSTALLMENTS_PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
+        };
+        ShipmentProductDto: {
+            /**
+             * @description The ID of the product
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the product model
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            modelId: string;
+            /**
+             * @description The name of the product model
+             * @example Product Model Name
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description The serial number of the product
+             * @example SN123456789
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+            /**
+             * @description The sale price of the product
+             * @example 100.00
+             */
+            salePrice: components["schemas"]["Currency"];
+        };
+        GetShipmentDto: {
+            /**
+             * @description The ID of the shipment
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the reseller associated with the shipment
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The name of the reseller associated with the shipment
+             * @example John Doe
+             */
+            resellerName: string;
+            /**
+             * Format: date-time
+             * @description The creation date of the shipment
+             * @example 2023-10-05T14:48:00.000Z
+             */
+            createdAt: string;
+            /**
+             * @description The status of the shipment
+             * @example PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "DELIVERED" | "CANCELLED";
+            /** @description The products included in the shipment */
+            products: components["schemas"]["ShipmentProductDto"][];
+        };
+        CreateShipmentDto: {
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The IDs of the products
+             * @example [
+             *       "123e4567-e89b-12d3-a456-426614174000",
+             *       "123e4567-e89b-12d3-a456-426614174001"
+             *     ]
+             */
+            productIds: string[];
         };
         Shipment: {
             /**
@@ -1889,21 +2487,6 @@ export interface components {
              */
             productIds: string[];
         };
-        CreateShipmentDto: {
-            /**
-             * @description The ID of the reseller
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            resellerId: string;
-            /**
-             * @description The IDs of the products
-             * @example [
-             *       "123e4567-e89b-12d3-a456-426614174000",
-             *       "123e4567-e89b-12d3-a456-426614174001"
-             *     ]
-             */
-            productIds: string[];
-        };
         UpdateShipmentDto: {
             /**
              * @description The ID of the reseller
@@ -1926,14 +2509,6 @@ export interface components {
              * @enum {string}
              */
             status: "PENDING" | "APPROVED" | "DELIVERED" | "CANCELLED";
-        };
-        Name: {
-            /** @description The name of the user */
-            value: string;
-        };
-        PhoneNumber: {
-            /** @description The phone number of the user */
-            value: string;
         };
         Email: {
             /** @description The email address of the user */
@@ -2229,6 +2804,39 @@ export interface components {
              */
             status: components["schemas"]["UserStatus"];
         };
+        UserProductDto: {
+            /**
+             * @description Product ID
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description Product serial number
+             * @example SN123456
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+            /**
+             * @description Product model name
+             * @example Bolsa Louis Vuitton
+             */
+            modelName: components["schemas"]["ModelName"];
+            /**
+             * @description Product model ID
+             * @example 123e4567-e89b-12d3-a456-426614174001
+             */
+            modelId: string;
+            /**
+             * @description Product status
+             * @example IN_STOCK
+             * @enum {string}
+             */
+            status: "IN_STOCK" | "ASSIGNED" | "SOLD";
+            /**
+             * @description Product price
+             * @example 1500.00
+             */
+            salePrice: components["schemas"]["Currency"];
+        };
         CreateSupplierDto: {
             /**
              * @description The name of the supplier
@@ -2241,6 +2849,13 @@ export interface components {
              */
             phone: string;
         };
+        SupplierName: {
+            /**
+             * @description The name of the supplier
+             * @example Apple Inc.
+             */
+            value: string;
+        };
         Supplier: {
             /**
              * @description The ID of the supplier
@@ -2251,12 +2866,12 @@ export interface components {
              * @description The name of the supplier
              * @example Apple Inc.
              */
-            name: string;
+            name: components["schemas"]["SupplierName"];
             /**
              * @description The phone number of the supplier
              * @example +5511999999999
              */
-            phone: string;
+            phone: components["schemas"]["PhoneNumber"];
         };
         UpdateSupplierDto: {
             /**
@@ -2317,6 +2932,109 @@ export interface components {
              */
             createdAt: string;
         };
+        ReturnProductDto: {
+            /**
+             * @description The ID of the product being returned
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            productId: string;
+            /**
+             * @description The reason for the return
+             * @example Defective item
+             */
+            productModelName: components["schemas"]["ModelName"];
+            /**
+             * @description The serial number of the product being returned
+             * @example SN123456
+             */
+            serialNumber: components["schemas"]["SerialNumber"];
+        };
+        GetAllReturnDto: {
+            /**
+             * @description The ID of the return
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The name of the reseller
+             * @example Reseller XYZ
+             */
+            resellerName: string;
+            /**
+             * @description The IDs of the products being returned
+             * @example [
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174000",
+             *         "productModelName": "Product A"
+             *       },
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174001",
+             *         "productModelName": "Product B"
+             *       }
+             *     ]
+             */
+            products: components["schemas"]["ReturnProductDto"][];
+            /**
+             * @description The status of the return
+             * @example PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "RETURNED" | "CANCELLED";
+            /**
+             * Format: date-time
+             * @description The creation date of the return
+             * @example 2024-01-01
+             */
+            createdAt: string;
+        };
+        GetOneReturnDto: {
+            /**
+             * @description The ID of the return
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            id: string;
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The name of the reseller
+             * @example Reseller XYZ
+             */
+            resellerName: string;
+            /**
+             * @description The IDs of the products being returned
+             * @example [
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174000",
+             *         "productModelName": "Model XYZ"
+             *       },
+             *       {
+             *         "productId": "123e4567-e89b-12d3-a456-426614174001",
+             *         "productModelName": "Model ABC"
+             *       }
+             *     ]
+             */
+            products: components["schemas"]["ReturnProductDto"][];
+            /**
+             * @description The status of the return
+             * @example PENDING
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "RETURNED" | "CANCELLED";
+            /**
+             * Format: date-time
+             * @description The creation date of the return
+             * @example 2024-01-01
+             */
+            createdAt: string;
+        };
         UpdateReturnDto: {
             /**
              * @description The ID of the reseller
@@ -2331,6 +3049,14 @@ export interface components {
              *     ]
              */
             items?: string[];
+        };
+        UpdateReturnStatusDto: {
+            /**
+             * @description The status of the return
+             * @example CANCELLED
+             * @enum {string}
+             */
+            status: "PENDING" | "APPROVED" | "RETURNED" | "CANCELLED";
         };
         CreateCustomerDto: {
             /**
@@ -2354,12 +3080,12 @@ export interface components {
              * @description The name of the customer
              * @example John Doe
              */
-            name: string;
+            name: components["schemas"]["Name"];
             /**
              * @description The phone number of the customer
              * @example +5511999999999
              */
-            phone: string;
+            phone: components["schemas"]["PhoneNumber"];
         };
         UpdateCustomerDto: {
             /**
@@ -2410,6 +3136,25 @@ export interface components {
              * @example john.doe@example.com
              */
             email: string;
+        };
+        PasswordResetRequestResponseDto: {
+            id: string;
+            userId: string;
+            username: string;
+            email: components["schemas"]["Email"];
+            phone: components["schemas"]["PhoneNumber"];
+            token: string;
+            /** @enum {string} */
+            status: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED";
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            approvedAt?: string;
+            /** Format: date-time */
+            rejectedAt?: string;
+            /** Format: date-time */
+            completedAt?: string;
+            user?: Record<string, never>;
         };
         ResetPasswordDto: {
             /**
@@ -2481,6 +3226,48 @@ export interface components {
              *     }
              */
             user: components["schemas"]["UserPayloadDto"];
+        };
+        GetInventoryByIdReturnDto: {
+            /**
+             * @description The ID of the reseller
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            resellerId: string;
+            /**
+             * @description The full name of the reseller
+             * @example John Doe
+             */
+            resellerName: string;
+            /**
+             * @description The products in the inventory
+             * @example [
+             *       {
+             *         "id": "123e4567-e89b-12d3-a456-426614174000",
+             *         "serialNumber": "0424A-BR-BAB-001",
+             *         "modelId": "123e4567-e89b-12d3-a456-426614174000",
+             *         "batchId": "123e4567-e89b-12d3-a456-426614174000",
+             *         "unitCost": "100.00",
+             *         "salePrice": "150.00",
+             *         "status": "IN_STOCK"
+             *       }
+             *     ]
+             */
+            products: components["schemas"]["Product"][];
+            /**
+             * @description The Product Models associated with the products in the inventory
+             * @example [
+             *       {
+             *         "id": "123e4567-e89b-12d3-a456-426614174000",
+             *         "name": "iPhone 13 Pro Max",
+             *         "categoryId": "123e4567-e89b-12d3-a456-426614174000",
+             *         "suggestedPrice": "999.99",
+             *         "description": "Latest iPhone model with advanced features",
+             *         "photoUrl": "https://example.com/iphone13.jpg",
+             *         "status": "ACTIVE"
+             *       }
+             *     ]
+             */
+            productModels: components["schemas"]["ProductModel"][];
         };
         ParamsDto: {
             /**
@@ -2660,7 +3447,7 @@ export interface components {
              * @example CONFIRMED
              * @enum {string}
              */
-            status: "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
+            status: "PENDING" | "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
         };
         SalesByResellerDto: {
             /**
@@ -2804,7 +3591,7 @@ export interface components {
              * @example CONFIRMED
              * @enum {string}
              */
-            status: "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
+            status: "PENDING" | "CONFIRMED" | "CANCELLED" | "INSTALLMENTS_PENDING" | "INSTALLMENTS_PAID" | "INSTALLMENTS_OVERDUE";
         };
         SalesInPeriodDto: {
             /**
@@ -2840,6 +3627,24 @@ export interface components {
              * @example 1000
              */
             totalSales: number;
+        };
+        SaleAggregatedByDayDto: {
+            /**
+             * Format: date
+             * @example 2025-11-01
+             */
+            date: string;
+            /** @example 10 */
+            sales: number;
+            /** @example 15000.50 */
+            totalAmount: string;
+        };
+        SalesAggregatedByDayDto: {
+            /** Format: date-time */
+            start: string;
+            /** Format: date-time */
+            end: string;
+            data: components["schemas"]["SaleAggregatedByDayDto"][];
         };
         TotalBillingReturnDto: {
             /**
@@ -3039,6 +3844,11 @@ export interface components {
              * @example 150.00
              */
             salePrice: string;
+            /**
+             * @description The date when the product was acquired (batch arrival date)
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            dateAcquired: string;
         };
     };
     responses: never;
@@ -3064,7 +3874,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Batch"][];
+                    "application/json": components["schemas"]["GetBatchDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -3139,7 +3949,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Batch"];
+                    "application/json": components["schemas"]["GetBatchDto"];
                 };
             };
             /** @description Unauthorized */
@@ -3450,7 +4260,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OwnershipTransfer"][];
+                    "application/json": components["schemas"]["OwnershipTransferWithSerialDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -3525,7 +4335,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OwnershipTransfer"];
+                    "application/json": components["schemas"]["OwnershipTransferWithSerialDto"];
                 };
             };
             /** @description Unauthorized */
@@ -3608,7 +4418,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OwnershipTransfer"];
+                    "application/json": components["schemas"]["OwnershipTransferWithSerialDto"];
                 };
             };
             /** @description Unauthorized */
@@ -3639,7 +4449,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateOwnershipTransferDto"];
+                "application/json": components["schemas"]["UpdateOwnershipTransferStatusDto"];
             };
         };
         responses: {
@@ -3676,6 +4486,40 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description List of products returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Product"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAvailableProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of available products returned successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3834,6 +4678,38 @@ export interface operations {
         responses: {
             /** @description Product sold successfully */
             204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getCloudinarySignature: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signature generated */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4047,6 +4923,26 @@ export interface operations {
             };
         };
     };
+    confirmSale: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description sale ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getAllSales: {
         parameters: {
             query?: never;
@@ -4062,7 +4958,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Sale"][];
+                    "application/json": components["schemas"]["GetSaleDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -4119,6 +5015,40 @@ export interface operations {
             };
         };
     };
+    getAvailableProductsToSell: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of available products to sell returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetAvailableProductsToSellDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getOneSale: {
         parameters: {
             query?: never;
@@ -4137,7 +5067,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Sale"];
+                    "application/json": components["schemas"]["GetSaleDto"];
                 };
             };
             /** @description Unauthorized */
@@ -4210,7 +5140,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateSaleDto"];
+                "application/json": components["schemas"]["UpdateSaleDto"];
             };
         };
         responses: {
@@ -4280,6 +5210,47 @@ export interface operations {
             };
         };
     };
+    updateSaleStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Sale ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSaleStatusDto"];
+            };
+        };
+        responses: {
+            /** @description Sale status updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Sale"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getAllShipments: {
         parameters: {
             query?: never;
@@ -4295,7 +5266,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Shipment"][];
+                    "application/json": components["schemas"]["GetShipmentDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -4370,7 +5341,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Shipment"];
+                    "application/json": components["schemas"]["GetShipmentDto"];
                 };
             };
             /** @description Unauthorized */
@@ -4523,6 +5494,40 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description List of users returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAllPendingUsers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of pending users returned successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -4703,15 +5708,8 @@ export interface operations {
                     "application/json": components["schemas"]["User"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied */
-            403: {
+            /** @description Bad request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4834,6 +5832,50 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getUserProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User products retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserProductDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -5066,7 +6108,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Return"][];
+                    "application/json": components["schemas"]["GetAllReturnDto"][];
                 };
             };
             /** @description Unauthorized */
@@ -5141,7 +6183,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Return"];
+                    "application/json": components["schemas"]["GetOneReturnDto"];
                 };
             };
             /** @description Unauthorized */
@@ -5257,7 +6299,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateReturnDto"];
+                "application/json": components["schemas"]["UpdateReturnStatusDto"];
             };
         };
         responses: {
@@ -5279,6 +6321,50 @@ export interface operations {
             };
             /** @description Access denied */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getReturnsByResellerId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Reseller ID */
+                resellerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns for the reseller returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Return"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Reseller not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5563,14 +6649,90 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Forgot password successful */
+            /** @description Password reset request created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetRequestResponseDto"];
+                };
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "list-password-reset-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Password reset requests retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetRequestResponseDto"][];
+                };
+            };
+        };
+    };
+    "approve-password-reset-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request approved */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description User not found */
+            /** @description Request not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "reject-password-reset-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request rejected */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5721,6 +6883,42 @@ export interface operations {
             };
             /** @description Unauthorized - Invalid token */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getInventoryById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Inventory returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetInventoryByIdReturnDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6148,6 +7346,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TotalSalesInPeriodDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getSalesAggregatedByDay: {
+        parameters: {
+            query: {
+                start: string;
+                end: string;
+                limit?: number;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ParamsWithMandatoryPeriodDto"];
+            };
+        };
+        responses: {
+            /** @description Sales aggregated by day returned successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesAggregatedByDayDto"];
                 };
             };
             /** @description Unauthorized */

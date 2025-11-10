@@ -15,15 +15,15 @@
     "test:integration": "cross-env NODE_ENV=test jest --testPathPattern=test/integration --maxWorkers=1",
     "test:watch": "cross-env NODE_ENV=test jest --watch --maxWorkers=1",
     "test:cov": "cross-env NODE_ENV=test jest --coverage",
-    "test:debug": "cross-env NODE_ENV=test node --inspect-brk -r tsconfig-paths/register ./node_modules/.bin/jest -r ts-node/register node_modules",
+    "test:debug": "cross-env NODE_ENV=test node --inspect-brk -r tsconfig-paths/register ../node_modules/.bin/jest -r ts-node/register node_modules",
     "test:e2e": "cross-env NODE_ENV=test jest --testPathPattern=test/e2e --maxWorkers=1",
     "typeorm": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/shared/infra/database/typeorm-datasource.ts",
-    "migration:generate": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d src/shared/infra/database/typeorm-datasource.ts",
-    "migration:run": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/shared/infra/database/typeorm-datasource.ts",
-    "migration:revert": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d src/shared/infra/database/typeorm-datasource.ts",
-    "prod:migration:generate": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d src/shared/infra/database/typeorm-datasource.ts",
-    "prod:migration:run": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/shared/infra/database/typeorm-datasource.ts",
-    "prod:migration:revert": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d src/shared/infra/database/typeorm-datasource.ts",
+    "migration:generate": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:generate -d src/shared/infra/database/typeorm-datasource.ts",
+    "migration:run": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:run -d src/shared/infra/database/typeorm-datasource.ts",
+    "migration:revert": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:revert -d src/shared/infra/database/typeorm-datasource.ts",
+    "prod:migration:generate": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:generate -d src/shared/infra/database/typeorm-datasource.ts",
+    "prod:migration:run": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:run -d src/shared/infra/database/typeorm-datasource.ts",
+    "prod:migration:revert": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:revert -d src/shared/infra/database/typeorm-datasource.ts",
     "reset:test": "rm -f test.sqlite && yarn migration:run && yarn test:seed",
     "seed": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/shared/infra/database/seeds/main.seed.ts",
     "seed:superuser": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/shared/infra/database/seeds/superuser.seed.ts"
@@ -47,8 +47,8 @@
     "cloudinary": "^2.6.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
+    "mailersend": "^2.6.0",
     "nestjs-pino": "^4.4.0",
-    "nodemailer": "^7.0.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.14.1",
@@ -81,6 +81,5 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }

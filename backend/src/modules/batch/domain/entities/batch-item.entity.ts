@@ -5,6 +5,7 @@ import { Unit } from '@/shared/common/value-object/unit.vo'
 import { UUID } from 'crypto'
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 import { ApiProperty } from '@nestjs/swagger'
+import { ProductModelStatus } from '@/modules/product-model/domain/enums/product-model-status.enum'
 
 export class BatchItem {
   @ApiProperty({
@@ -96,7 +97,13 @@ export class BatchItem {
     modelRepo: ProductModelRepository
   ): Promise<BatchItem> {
     const productModel = await modelRepo.create(
-      new ProductModel(crypto.randomUUID(), modelName, categoryId, salePrice)
+      new ProductModel(
+        crypto.randomUUID(),
+        modelName,
+        categoryId,
+        salePrice,
+        ProductModelStatus.USED
+      )
     )
 
     return new BatchItem(id, productModel.id, quantity, unitCost, salePrice)

@@ -19,9 +19,7 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
     @Inject('SalePriceCalculator')
     private readonly salePriceCalculator: ISalePriceCalculator,
     @Inject('InventoryOwnershipVerifier')
-    private readonly inventoryOwnershipVerifier: IInventoryOwnershipVerifier,
-    @Inject('ProductRepository')
-    private readonly productRepository: ProductRepository
+    private readonly inventoryOwnershipVerifier: IInventoryOwnershipVerifier
   ) {}
 
   async execute(dto: CreateSaleDto, user: UserPayload): Promise<Sale> {
@@ -44,13 +42,10 @@ export class CreateSaleResellerStrategy implements CreateSaleStrategy {
       totalAmount,
       dto.paymentMethod,
       new Unit(dto.numberInstallments),
-      SaleStatus.CONFIRMED,
+      SaleStatus.PENDING,
       new Unit(dto.installmentsInterval)
     )
 
-    const saleConfirmed = await this.saleRepository.create(sale)
-
-    this.productRepository.updateManyStatus(dto.productIds, ProductStatus.SOLD)
-    return saleConfirmed
+    return await this.saleRepository.create(sale)
   }
 }

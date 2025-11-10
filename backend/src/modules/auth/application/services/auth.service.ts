@@ -27,12 +27,15 @@ export class AuthService {
     private readonly logger: CustomLogger,
     @Inject('EmailService')
     private readonly emailService: EmailService
-  ) { }
+  ) {}
 
   async changePassword(dto: ChangePasswordDto): Promise<void> {
     const user = await this.userRepository.findById(dto.userId)
     if (!user) {
-      this.logger.error(`User not found for change password: ${dto.userId}`, 'AuthService')
+      this.logger.error(
+        `User not found for change password: ${dto.userId}`,
+        'AuthService'
+      )
       throw new NotFoundException('User not found')
     }
 
@@ -41,7 +44,10 @@ export class AuthService {
     user.passwordHash = passwordHash
     await this.userRepository.update(user)
 
-    this.logger.log(`Password changed successfully for user: ${user.email.getValue()}`, 'AuthService')
+    this.logger.log(
+      `Password changed successfully for user: ${user.email.getValue()}`,
+      'AuthService'
+    )
   }
 
   async login(dto: LoginDto): Promise<{ accessToken: string }> {
@@ -88,6 +94,10 @@ export class AuthService {
     }
   }
 
+  /**
+   * @deprecated This method is no longer used. Password reset now uses manual approval flow.
+   * See RequestPasswordResetUseCase for the current implementation.
+   */
   async forgotPassword(email: Email): Promise<void> {
     const user = await this.userRepository.findByEmail(email)
     if (!user) {
@@ -106,7 +116,12 @@ export class AuthService {
       return
     }
 
-    await this.emailService.sendResetPasswordLink(email)
+    // NOTE: Email sending removed - password reset now requires manual admin approval
+    // await this.emailService.sendResetPasswordLink(email)
+    this.logger.log(
+      `Password reset request created for ${email.getValue()} - awaiting admin approval`,
+      'AuthService'
+    )
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {

@@ -1,7 +1,7 @@
 import { AdminKpiCaslRule } from './shared/infra/auth/casl/rules/admin-kpi.rules'
+import { ResellerKpiCaslRule } from './shared/infra/auth/casl/rules/reseller-kpi.rules'
 import { ConfigModule } from '@/shared/config/config.module'
 import { databaseConfig } from '@/shared/config/database.config'
-import { throttlerConfig } from '@/shared/config/throttler.config'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CaslRuleBuilder } from '@/shared/infra/auth/casl/interfaces/casl-rules.builder'
 import { SaleCaslRule } from '@/shared/infra/auth/casl/rules/sale.rules'
@@ -37,16 +37,24 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { InventoryModule } from '@/modules/inventory/inventory.module'
 import { SeedsModule } from '@/shared/infra/database/seeds/seeds.module'
 import { CacheModule } from '@nestjs/cache-manager'
-import { ThrottlerModule } from '@nestjs/throttler'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
-import { CustomThrottlerGuard } from '@/shared/infra/guards/throttler.guard'
 import { AdminKpiModule } from '@/modules/kpi/admin/admin-kpi.module'
 import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
+import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rules'
+import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/password-reset-request.rules'
 
 @Module({
   imports: [
     ConfigModule,
-    ThrottlerModule.forRoot(throttlerConfig()),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 10000,
+          limit: 10
+        }
+      ]
+    }),
     CacheModule.register({
       isGlobal: true,
       ttl: 60000,
@@ -63,7 +71,7 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
             translateTime: 'SYS:standard'
           }
         },
-        level: 'trace'
+        level: 'debug'
       }
     }),
     LoggingModule,
@@ -105,7 +113,10 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
     SupplierCaslRule,
     ReturnCaslRule,
     CustomerCaslRule,
+    InventoryCaslRule,
     AdminKpiCaslRule,
+    ResellerKpiCaslRule,
+    PasswordResetRequestCaslRule,
     {
       provide: 'CASL_RULE_BUILDERS',
       useFactory: (
@@ -120,7 +131,10 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         supplierRule: SupplierCaslRule,
         returnRule: ReturnCaslRule,
         customerRule: CustomerCaslRule,
-        adminKpiCaslRule: AdminKpiCaslRule
+        inventoryRule: InventoryCaslRule,
+        adminKpiCaslRule: AdminKpiCaslRule,
+        resellerKpiCaslRule: ResellerKpiCaslRule,
+        passwordResetRequestRule: PasswordResetRequestCaslRule
       ): CaslRuleBuilder[] => [
         saleRule,
         userRule,
@@ -133,7 +147,10 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         supplierRule,
         returnRule,
         customerRule,
-        adminKpiCaslRule
+        inventoryRule,
+        adminKpiCaslRule,
+        resellerKpiCaslRule,
+        passwordResetRequestRule
       ],
       inject: [
         SaleCaslRule,
@@ -147,12 +164,15 @@ import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
         SupplierCaslRule,
         ReturnCaslRule,
         CustomerCaslRule,
-        AdminKpiCaslRule
+        InventoryCaslRule,
+        AdminKpiCaslRule,
+        ResellerKpiCaslRule,
+        PasswordResetRequestCaslRule
       ]
     },
     {
       provide: APP_GUARD,
-      useClass: CustomThrottlerGuard
+      useClass: ThrottlerGuard
     }
   ],
   exports: [CaslAbilityFactory, 'CASL_RULE_BUILDERS']

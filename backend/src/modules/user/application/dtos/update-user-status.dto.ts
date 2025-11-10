@@ -1,5 +1,6 @@
 import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsEnum, IsNotEmpty } from 'class-validator'
 
 export class UpdateUserStatusDto {
   @ApiProperty({
@@ -9,5 +10,7 @@ export class UpdateUserStatusDto {
     enumName: 'UserStatus',
     required: true
   })
+  @IsEnum(UserStatus)
+  @IsNotEmpty()
   status: UserStatus
 }

@@ -11,11 +11,6 @@ export class GetAllUserUseCase {
   ) {}
 
   async execute(user: UserPayload): Promise<User[]> {
-    if (user.role === Role.RESELLER) {
-      throw new UnauthorizedException(
-        'You do not have permission to access this resource'
-      )
-    }
     return await this.userRepository.findAll()
   }
 }

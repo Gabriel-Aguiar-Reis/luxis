@@ -40,6 +40,7 @@ export class UpdateProductModelUseCase {
       input.suggestedPrice
         ? new Currency(input.suggestedPrice)
         : model.suggestedPrice,
+      input.status ?? model.status,
       input.description
         ? new Description(input.description)
         : model.description,

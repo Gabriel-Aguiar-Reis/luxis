@@ -8,6 +8,7 @@ export type ParamsWithMandatoryPeriodDto =
 
 // Batches
 
+export type BatchProductDto = components['schemas']['GetBatchProductDto']
 export type Batch = components['schemas']['Batch']
 export type GetAllBatches = paths['/batches']['get']
 export type GetOneBatch = paths['/batches/{id}']['get']
@@ -28,8 +29,16 @@ export type UpdateCategoryStatus = paths['/categories/{id}/status']['patch']
 // Ownership-transfers
 
 export type OwnershipTransfer = components['schemas']['OwnershipTransfer']
+export type OwnershipTransferStatus =
+  components['schemas']['OwnershipTransfer']['status']
 export type GetAllOwnershipTransfers = paths['/ownership-transfers']['get']
+export type GetAllOwnershipTransferReturn =
+  paths['/ownership-transfers']['get']['responses']['200']['content']['application/json']
 export type GetOneOwnershipTransfer = paths['/ownership-transfers/{id}']['get']
+export type GetOneOwnershipTransferReturn =
+  paths['/ownership-transfers/{id}']['get']['responses']['200']['content']['application/json']
+export type PostOwnershipTransferDto =
+  paths['/ownership-transfers']['post']['requestBody']['content']['application/json']
 export type PostOwnershipTransfer = paths['/ownership-transfers']['post']
 export type DeleteOwnershipTransfer =
   paths['/ownership-transfers/{id}']['delete']
@@ -37,10 +46,18 @@ export type UpdateOwnershipTransfer =
   paths['/ownership-transfers/{id}']['patch']
 export type UpdateOwnershipTransferStatus =
   paths['/ownership-transfers/{id}/status']['patch']
+export type UpdateOwnershipTransferStatusDto =
+  paths['/ownership-transfers/{id}/status']['patch']['requestBody']['content']['application/json']
 
+// Inventory
+export type GetInventoryById = paths['/inventory/{id}']['get']
+export type GetInventoryByIdReturn =
+  paths['/inventory/{id}']['get']['responses']['200']['content']['application/json']
+export type GetInventoryByIdProduct = Product
 // Products
 
 export type Product = components['schemas']['Product']
+export type ProductStatus = Product['status']
 export type GetAllProducts = paths['/products']['get']
 export type GetOneProduct = paths['/products/{id}']['get']
 export type DeleteProduct = paths['/products/{id}']['delete']
@@ -50,6 +67,7 @@ export type UpdateProductStatus = paths['/products/{id}/sell']['patch']
 // Product-models
 
 export type ProductModel = components['schemas']['ProductModel']
+export type ProductModelStatus = components['schemas']['ProductModel']['status']
 export type GetAllProductModels = paths['/product-models']['get']
 export type GetOneProductModel = paths['/product-models/{id}']['get']
 export type PostProductModel = paths['/product-models']['post']
@@ -59,6 +77,8 @@ export type UpdateProductModel = paths['/product-models/{id}']['patch']
 // Sales
 
 export type Sale = components['schemas']['Sale']
+export type SaleStatus = components['schemas']['Sale']['status']
+export type PaymentMethod = components['schemas']['Sale']['paymentMethod']
 export type GetAllSales = paths['/sales']['get']
 export type GetOneSale = paths['/sales/{id}']['get']
 export type PostSale = paths['/sales']['post']
@@ -66,10 +86,25 @@ export type DeleteSale = paths['/sales/{id}']['delete']
 export type UpdateSale = paths['/sales/{id}']['patch']
 export type UpdateSaleInstallmentToPaid =
   paths['/sales/{id}/installments/mark-paid']['patch']
+export type UpdateSaleStatus = paths['/sales/{id}/status']['patch']
+export type GetSaleProductDto = components['schemas']['GetSaleProductDto']
+export type GetAvailableProductsToSellDto =
+  components['schemas']['GetAvailableProductsToSellDto']
+export type GetAvailableCategoriesDto =
+  components['schemas']['GetAvailableCategoryDto'][]
+export type GetAvailableProductModelsDto =
+  components['schemas']['GetAvailableProductModelDto'][]
+export type GetAvailableProductDto =
+  components['schemas']['GetSaleProductDto'][]
+export type ConfirmSale = paths['/sales/{id}/confirm']['patch']
+export type MarkInstallmentPaid =
+  paths['/sales/{id}/installments/mark-paid']['patch']
 
 // Shipments
 
 export type Shipment = components['schemas']['Shipment']
+export type ShipmentStatus = components['schemas']['Shipment']['status']
+export type ShipmentProductDto = components['schemas']['ShipmentProductDto']
 export type GetAllShipments = paths['/shipments']['get']
 export type GetOneShipment = paths['/shipments/{id}']['get']
 export type PostShipment = paths['/shipments']['post']
@@ -84,6 +119,7 @@ export type FederativeUnit = components['schemas']['FederativeUnit']
 export type Country = components['schemas']['Country']
 export type UserRole = components['schemas']['Role']
 export type UserStatus = components['schemas']['UserStatus']
+export type GetUserProducts = paths['/users/{id}/products']['get']
 export type GetAllUsers = paths['/users']['get']
 export type GetOneUser = paths['/users/{id}']['get']
 export type PostUser = paths['/users/signup']['post']
@@ -105,12 +141,18 @@ export type UpdateSupplier = paths['/suppliers/{id}']['patch']
 // Returns
 
 export type Return = components['schemas']['Return']
+export type ReturnProductDto = components['schemas']['ReturnProductDto']
+export type ReturnStatus = components['schemas']['Return']['status']
 export type GetAllReturns = paths['/returns']['get']
 export type GetOneReturn = paths['/returns/{id}']['get']
+export type GetReturnsByResellerId =
+  paths['/returns/reseller/{resellerId}']['get']
 export type PostReturn = paths['/returns']['post']
 export type DeleteReturn = paths['/returns/{id}']['delete']
 export type UpdateReturn = paths['/returns/{id}']['patch']
 export type UpdateReturnStatus = paths['/returns/{id}/status']['patch']
+export type UpdateReturnStatusDto =
+  paths['/returns/{id}/status']['patch']['requestBody']['content']['application/json']
 
 // Customers
 
@@ -131,6 +173,13 @@ export type ForgotPassword = paths['/auth/forgot-password']['post']
 export type ResetPassword = paths['/auth/reset-password']['post']
 export type ChangePassword = paths['/auth/change-password']['post']
 export type Verify = paths['/auth/verify']['post']
+
+// Password Reset Requests
+
+export type PasswordResetRequestStatus =
+  components['schemas']['PasswordResetRequestResponseDto']['status']
+export type PasswordResetRequest =
+  components['schemas']['PasswordResetRequestResponseDto']
 
 // KPI - Admin
 
@@ -180,7 +229,7 @@ export type GetTotalOwnershipTransfersGivenByResellerId =
   paths['/kpi/admin/ownership-transfers/given/by-reseller/{id}/total']['get']
 
 // KPI - Admin (Returns)
-export type GetReturnsByResellerId =
+export type GetReturnsByResellerIdKpi =
   paths['/kpi/admin/returns/by-reseller/{id}']['get']
 export type GetTotalReturnsByResellerId =
   paths['/kpi/admin/returns/by-reseller/{id}/total']['get']

@@ -38,6 +38,10 @@ import {
   ApiBearerAuth
 } from '@nestjs/swagger'
 import { Return } from '@/modules/return/domain/entities/return.entity'
+import { GetReturnsByResellerIdUseCase } from '@/modules/return/application/use-cases/get-returns-by-reseller-id.use-case'
+import { GetAllReturnDto } from '@/modules/return/application/dtos/get-all-return.dto'
+import { GetOneReturnDto } from '@/modules/return/application/dtos/get-one-return.dto'
+import { UpdateReturnStatusDto } from '@/modules/return/application/dtos/update-return-status.dto'
 
 @ApiTags('Returns')
 @ApiBearerAuth()
@@ -51,6 +55,7 @@ export class ReturnController {
     private readonly updateReturnUseCase: UpdateReturnUseCase,
     private readonly deleteReturnUseCase: DeleteReturnUseCase,
     private readonly updateReturnStatusUseCase: UpdateReturnStatusUseCase,
+    private readonly getReturnsByResellerIdUseCase: GetReturnsByResellerIdUseCase,
     private readonly logger: CustomLogger
   ) {}
 
@@ -81,7 +86,7 @@ export class ReturnController {
   @ApiResponse({
     status: 200,
     description: 'List of returns returned successfully',
-    type: [Return]
+    type: [GetAllReturnDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -104,7 +109,7 @@ export class ReturnController {
   @ApiResponse({
     status: 200,
     description: 'Return found successfully',
-    type: Return
+    type: GetOneReturnDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -150,7 +155,7 @@ export class ReturnController {
     operationId: 'updateReturnStatus'
   })
   @ApiParam({ name: 'id', description: 'Return ID' })
-  @ApiBody({ type: UpdateReturnDto })
+  @ApiBody({ type: UpdateReturnStatusDto })
   @ApiResponse({
     status: 200,
     description: 'Return updated successfully',
@@ -163,14 +168,14 @@ export class ReturnController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: UUID,
-    @Body() status: ReturnStatus,
+    @Body() dto: UpdateReturnStatusDto,
     @CurrentUser() user: UserPayload
   ) {
     this.logger.warn(
-      `Updating return status ${status} - Requested by user ${user.email}`,
+      `Updating return status ${dto.status} - Requested by user ${user.email}`,
       'ReturnController'
     )
-    return await this.updateReturnStatusUseCase.execute(id, status, user)
+    return await this.updateReturnStatusUseCase.execute(id, dto.status, user)
   }
 
   @ApiOperation({
@@ -194,5 +199,32 @@ export class ReturnController {
       'ReturnController'
     )
     return await this.deleteReturnUseCase.execute(id)
+  }
+
+  @ApiOperation({
+    summary: 'Get returns by reseller ID',
+    operationId: 'getReturnsByResellerId'
+  })
+  @ApiParam({ name: 'resellerId', description: 'Reseller ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns for the reseller returned successfully',
+    type: [Return]
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({ status: 404, description: 'Reseller not found' })
+  @CheckPolicies(new ReadReturnPolicy())
+  @HttpCode(200)
+  @Get('reseller/:resellerId')
+  async getReturnsByResellerId(
+    @CurrentUser() user: UserPayload,
+    @Param('resellerId') resellerId: UUID
+  ) {
+    this.logger.log(
+      `Getting returns for reseller ${resellerId} - Requested by user ${user.email}`,
+      'ReturnController'
+    )
+    return await this.getReturnsByResellerIdUseCase.execute(user, resellerId)
   }
 }

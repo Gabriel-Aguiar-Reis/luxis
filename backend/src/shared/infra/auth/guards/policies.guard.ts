@@ -1,5 +1,6 @@
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
 import { CHECK_POLICIES_KEY } from '@/shared/infra/auth/decorators/check-policies.decorator'
+import { IS_PUBLIC_KEY } from '@/shared/infra/auth/decorators/public.decorator'
 import {
   IPolicy,
   PolicyCallback
@@ -21,6 +22,15 @@ export class PoliciesGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass()
+    ])
+
+    if (isPublic) {
+      return true
+    }
+
     const handlers =
       this.reflector.get<IPolicy[]>(CHECK_POLICIES_KEY, context.getHandler()) ||
       []

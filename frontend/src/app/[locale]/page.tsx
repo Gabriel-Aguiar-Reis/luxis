@@ -1,24 +1,26 @@
-import Image from 'next/image'
-import { ModeToggle } from '@/components/mode-toggle'
-import { LanguageSwitcher } from '@/components/language-switcher'
+'use client'
+import { useAuthStore } from '@/stores/use-auth-store'
+import { useRouter } from '@/lib/i18n/navigation'
+import { useEffect } from 'react'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <ModeToggle />
-          <LanguageSwitcher />
-        </div>
-      </main>
-    </div>
-  )
+  const router = useRouter()
+  const { user } = useAuthStore()
+
+  useEffect(() => {
+    if (!user || user.role === 'UNASSIGNED') {
+      router.push(`/sign-up`)
+      return
+    }
+    if (user.role === 'ADMIN' || user.role === 'ASSISTANT') {
+      router.push(`/home`)
+      return
+    }
+    if (user.role === 'RESELLER') {
+      router.push(`/my-space`)
+      return
+    }
+  }, [user, router])
+
+  return null
 }

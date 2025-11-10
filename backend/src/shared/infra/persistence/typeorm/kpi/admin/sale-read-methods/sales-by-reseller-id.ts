@@ -53,6 +53,18 @@ export async function salesByResellerId(
   const resSales =
     await filteredSales.getRawMany<SaleByResellerIdReturnRawResult>()
   const allProductIds = [...new Set(resSales.flatMap((s) => s.productIds))]
+
+  // Se não há produtos, retorna vazio
+  if (allProductIds.length === 0) {
+    return {
+      resellerId: reseller.id,
+      resellerName: `${reseller.name} ${reseller.surname}`,
+      sales: [],
+      totalSales: '0',
+      salesCount: 0
+    }
+  }
+
   const products = await productRepo
     .createQueryBuilder('product')
     .innerJoin(

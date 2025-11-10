@@ -13,6 +13,9 @@
     "loading": "Logging in...",
     "restrictedArea": "This area is restricted for admins, if you want to access the reseller area, click here",
     "restrictedAreaHref": "Reseller Area",
+    "restrictedAreaReseller": "This area is restricted for resellers, if you want to access the admin area, click here",
+    "restrictedAreaHrefReseller": "Admin Area",
+
     "authErrorReseller": "You need to be authenticated as a reseller to access this area",
     "dontHaveAccount": "Don't have an account?",
     "signUp": "Sign Up",
@@ -61,13 +64,13 @@
   },
   "ForgotPassword": {
     "title": "Forgot Password",
-    "button": "Send Reset Link",
+    "button": "Request Recovery",
     "loading": "Sending...",
-    "description": "Enter your email and we'll send you a link to reset your password.",
+    "description": "Enter your email to request password recovery. An administrator will review your request.",
     "email": "Email",
     "backToLogin": "Back to login",
-    "successMessage": "Password reset link sent to your email",
-    "errorMessage": "Failed to send reset link",
+    "successMessage": "Request submitted. Please wait for administrator approval.",
+    "errorMessage": "Failed to send recovery request",
     "termsText": "By clicking continue, you agree to our",
     "termsLink": "Terms of Service",
     "andText": "and",
@@ -88,11 +91,17 @@
     "andText": "and",
     "privacyLink": "Privacy Policy"
   },
-  "Cashier": {
-    "title": "Cashier",
-    "description": "Register your sales quickly and efficiently",
-    "authError": "You need to be authenticated as a reseller to access this area",
-    "sessionExpired": "Session expired"
+  "Admin-Models": {
+    "title": "Models",
+    "description": "Manage your models"
+  },
+  "Admin-Returns": {
+    "title": "Returns",
+    "description": "Manage your returns"
+  },
+  "Admin-Transfers": {
+    "title": "Transfers",
+    "description": "Manage your transfers"
   },
   "Admin-Suppliers": {
     "title": "Suppliers",
@@ -101,6 +110,11 @@
   "Admin-Batches": {
     "title": "Batches",
     "description": "Manage your batches"
+  },
+  "Admin-Batch-Create": {
+    "title": "Create Batch",
+    "batches": "Batches",
+    "description": "Fill in the details to create a new batch."
   },
   "Admin-Products": {
     "title": "Products",
@@ -117,6 +131,11 @@
   "Admin-Sales": {
     "title": "Sales",
     "description": "Manage your sales"
+  },
+  "Sale-Create": {
+    "title": "Create Sale",
+    "sales": "Sales",
+    "description": "Fill in the details to create a new sale."
   },
   "HomeLayout": {
     "authError": "You need to be authenticated as an admin to access this area",
@@ -183,8 +202,6 @@
     "inventory": "inventory",
     "reports": "reports",
     "settings": "settings",
-    "cart": "cart",
-    "cashier": "cashier",
     "batches": "batches",
     "orders": "orders",
     "products": "products",
