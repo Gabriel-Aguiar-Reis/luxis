@@ -10,6 +10,8 @@
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
+> **Idioma**: [English](README.md) | [Português (BR)](#)
+
 Sistema de gestão de estoque desenvolvido com NestJS, seguindo os princípios da Clean Architecture e Domain-Driven Design (DDD).
 
 ## ✨ Funcionalidades

@@ -2,7 +2,7 @@
 
 # 🌟 Luxis
 
-### Sistema Inteligente de Gestão de Estoque para Revendedores
+### Smart Inventory Management System for Resellers
 
 [![NestJS](https://img.shields.io/badge/NestJS-EA2845?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -10,144 +10,146 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
 
-**Uma plataforma completa e moderna para transformar a gestão de estoque em vantagem competitiva.**
+**A complete and modern platform to transform inventory management into a competitive advantage.**
 
-[📖 Documentação](#-documentação) • [✨ Funcionalidades](#-funcionalidades-principais) • [🚀 Começar](#-começar-agora) • [🏗️ Arquitetura](#️-arquitetura)
+[📖 Documentation](#-documentation) • [✨ Features](#-key-features) • [🚀 Getting Started](#-getting-started) • [🏗️ Architecture](#️-architecture)
 
 ---
 
 </div>
 
-## 🎯 Sobre o Luxis
+> **Language**: [English](#) | [Português (BR)](README.PT_BR.md)
 
-Luxis é uma **solução empresarial completa** projetada especificamente para revendedores e distribuidores que precisam de controle total sobre seu estoque, vendas e operações. Desenvolvido com as tecnologias mais modernas do mercado, Luxis combina **performance**, **segurança** e **escalabilidade** em uma plataforma intuitiva e poderosa.
+## 🎯 About Luxis
 
-### 💡 Por que Luxis?
+Luxis is a **complete business solution** designed specifically for resellers and distributors who need total control over their inventory, sales, and operations. Built with the most modern technologies on the market, Luxis combines **performance**, **security**, and **scalability** in an intuitive and powerful platform.
 
-- **🎨 Interface Moderna**: Experiência de usuário excepcional com design responsivo e intuitivo
-- **🔐 Segurança de Nível Empresarial**: Autenticação JWT, controle de acesso baseado em funções (RBAC) e proteção contra ataques
-- **📊 Analytics em Tempo Real**: KPIs e métricas que transformam dados em decisões estratégicas
-- **🌐 Multi-idioma**: Suporte completo para português e inglês
-- **📱 Totalmente Responsivo**: Funciona perfeitamente em desktop, tablet e smartphone
-- **⚡ Performance Excepcional**: Arquitetura otimizada para milhares de operações simultâneas
-- **🔄 Rastreabilidade Total**: Controle completo do ciclo de vida dos produtos, do estoque à venda
+### 💡 Why Luxis?
 
----
-
-## ✨ Funcionalidades Principais
-
-### 👥 Gestão de Usuários e Permissões
-
-- Múltiplos perfis de acesso (Administrador, Revendedor, Assistente)
-- Sistema de aprovação de novos usuários
-- Controle granular de permissões com CASL
-- Histórico completo de ações
-
-### 📦 Controle de Inventário Inteligente
-
-- Gerenciamento de produtos por modelo, categoria e lote
-- Rastreamento de localização e status de cada item
-- Sistema de transferência de propriedade entre revendedores
-- Inventário em tempo real com alertas automáticos
-- Controle de estoque mínimo e máximo
-
-### 💰 Gestão Completa de Vendas
-
-- Processamento de vendas à vista e parceladas
-- Cálculo automático de preços e margens
-- Emissão de comprovantes e notas
-- Controle de parcelas e recebimentos
-- Histórico detalhado de transações
-
-### 📊 Analytics e Relatórios
-
-- **Dashboard Executivo**: Visão 360° do seu negócio
-- **KPIs em Tempo Real**:
-  - Produtos em estoque
-  - Tempo médio de permanência no estoque
-  - Ticket médio de vendas
-  - Performance por revendedor
-  - Taxa de retorno e devoluções
-- **Relatórios Personalizados**: Exports em PDF e CSV
-
-### 📮 Sistema de Envios e Logística
-
-- Controle de remessas e entregas
-- Rastreamento de status de envio
-- Integração com sistemas de logística
-- Notificações automáticas
-
-### 🔄 Gestão de Devoluções
-
-- Processamento simplificado de devoluções
-- Reintegração automática ao estoque
-- Análise de motivos de devolução
-- Impacto financeiro calculado automaticamente
-
-### 🏢 Gestão de Clientes e Fornecedores
-
-- Cadastro completo de clientes
-- Histórico de compras e preferências
-- Gestão de fornecedores
-- Portfólio de clientes por revendedor
-
-### 🖼️ Gestão de Imagens
-
-- Upload otimizado via Cloudinary
-- Compressão automática de imagens
-- Múltiplas imagens por produto
-- Visualização responsiva
-
-### 📧 Notificações Inteligentes
-
-- Sistema de emails transacionais via MailerSend
-- Recuperação de senha
-- Notificações de vendas e transferências
-- Alertas personalizáveis
+- **🎨 Modern Interface**: Exceptional user experience with responsive and intuitive design
+- **🔐 Enterprise-Level Security**: JWT authentication, role-based access control (RBAC), and attack protection
+- **📊 Real-Time Analytics**: KPIs and metrics that transform data into strategic decisions
+- **🌐 Multi-language**: Full support for Portuguese and English
+- **📱 Fully Responsive**: Works perfectly on desktop, tablet, and smartphone
+- **⚡ Exceptional Performance**: Architecture optimized for thousands of simultaneous operations
+- **🔄 Total Traceability**: Complete control of product lifecycle, from inventory to sale
 
 ---
 
-## 🏗️ Arquitetura
+## ✨ Key Features
 
-Luxis é construído sobre uma arquitetura moderna, escalável e mantível:
+### 👥 User and Permission Management
+
+- Multiple access profiles (Administrator, Reseller, Assistant)
+- New user approval system
+- Granular permission control with CASL
+- Complete action history
+
+### 📦 Smart Inventory Control
+
+- Product management by model, category, and batch
+- Location and status tracking for each item
+- Ownership transfer system between resellers
+- Real-time inventory with automatic alerts
+- Minimum and maximum stock control
+
+### 💰 Complete Sales Management
+
+- Cash and installment sales processing
+- Automatic price and margin calculation
+- Receipt and invoice issuance
+- Installment and payment control
+- Detailed transaction history
+
+### 📊 Analytics and Reports
+
+- **Executive Dashboard**: 360° view of your business
+- **Real-Time KPIs**:
+  - Products in stock
+  - Average time in inventory
+  - Average sales ticket
+  - Performance by reseller
+  - Return and refund rate
+- **Custom Reports**: PDF and CSV exports
+
+### 📮 Shipping and Logistics System
+
+- Shipment and delivery control
+- Shipping status tracking
+- Integration with logistics systems
+- Automatic notifications
+
+### 🔄 Returns Management
+
+- Simplified returns processing
+- Automatic stock reintegration
+- Return reason analysis
+- Financial impact calculated automatically
+
+### 🏢 Customer and Supplier Management
+
+- Complete customer registration
+- Purchase history and preferences
+- Supplier management
+- Customer portfolio by reseller
+
+### 🖼️ Image Management
+
+- Optimized upload via Cloudinary
+- Automatic image compression
+- Multiple images per product
+- Responsive visualization
+
+### 📧 Smart Notifications
+
+- Transactional email system via MailerSend
+- Password recovery
+- Sales and transfer notifications
+- Customizable alerts
+
+---
+
+## 🏗️ Architecture
+
+Luxis is built on a modern, scalable, and maintainable architecture:
 
 ### Backend - Clean Architecture + DDD
 
 ```
 backend/
 ├── src/
-│   ├── modules/              # Módulos de domínio
-│   │   ├── auth/            # Autenticação e autorização
-│   │   ├── user/            # Gestão de usuários
-│   │   ├── product/         # Produtos
-│   │   ├── category/        # Categorias
-│   │   ├── batch/           # Lotes
-│   │   ├── inventory/       # Inventário
-│   │   ├── sale/            # Vendas
-│   │   ├── shipment/        # Envios
-│   │   ├── return/          # Devoluções
-│   │   ├── customer/        # Clientes
-│   │   ├── supplier/        # Fornecedores
-│   │   ├── ownership-transfer/  # Transferências
-│   │   └── kpi/             # Indicadores de performance
-│   │       ├── admin/       # KPIs administrativos
-│   │       └── reseller/    # KPIs de revendedores
-│   └── shared/              # Código compartilhado
-│       ├── config/          # Configurações
-│       ├── infra/           # Infraestrutura
+│   ├── modules/              # Domain modules
+│   │   ├── auth/            # Authentication and authorization
+│   │   ├── user/            # User management
+│   │   ├── product/         # Products
+│   │   ├── category/        # Categories
+│   │   ├── batch/           # Batches
+│   │   ├── inventory/       # Inventory
+│   │   ├── sale/            # Sales
+│   │   ├── shipment/        # Shipments
+│   │   ├── return/          # Returns
+│   │   ├── customer/        # Customers
+│   │   ├── supplier/        # Suppliers
+│   │   ├── ownership-transfer/  # Transfers
+│   │   └── kpi/             # Performance indicators
+│   │       ├── admin/       # Administrative KPIs
+│   │       └── reseller/    # Reseller KPIs
+│   └── shared/              # Shared code
+│       ├── config/          # Configurations
+│       ├── infra/           # Infrastructure
 │       │   ├── auth/        # JWT, CASL, Guards
 │       │   ├── database/    # TypeORM, Migrations
-│       │   └── logging/     # Sistema de logs
+│       │   └── logging/     # Logging system
 │       └── events/          # Event-driven architecture
-└── test/                    # Testes completos
-    ├── unit/               # Testes unitários
-    ├── integration/        # Testes de integração
-    └── e2e/                # Testes end-to-end
+└── test/                    # Complete tests
+    ├── unit/               # Unit tests
+    ├── integration/        # Integration tests
+    └── e2e/                # End-to-end tests
 ```
 
-**Padrões Arquiteturais:**
+**Architectural Patterns:**
 
-- ✅ Clean Architecture (camadas bem definidas)
+- ✅ Clean Architecture (well-defined layers)
 - ✅ Domain-Driven Design (DDD)
 - ✅ SOLID Principles
 - ✅ Repository Pattern
@@ -161,42 +163,42 @@ backend/
 frontend/
 ├── src/
 │   ├── app/                 # App Router (Next.js 15)
-│   │   ├── [locale]/       # Rotas internacionalizadas
-│   │   ├── login/          # Autenticação
-│   │   ├── admin-login/    # Login administrativo
-│   │   ├── sign-up/        # Cadastro
-│   │   └── my-space/       # Área do usuário
-│   ├── components/         # Componentes React
-│   │   ├── ui/            # Componentes base (shadcn/ui)
+│   │   ├── [locale]/       # Internationalized routes
+│   │   ├── login/          # Authentication
+│   │   ├── admin-login/    # Administrative login
+│   │   ├── sign-up/        # Registration
+│   │   └── my-space/       # User area
+│   ├── components/         # React components
+│   │   ├── ui/            # Base components (shadcn/ui)
 │   │   ├── dashboard/     # Dashboard
-│   │   ├── products/      # Produtos
-│   │   ├── sales/         # Vendas
+│   │   ├── products/      # Products
+│   │   ├── sales/         # Sales
 │   │   └── ...
 │   ├── hooks/             # Custom hooks
-│   ├── stores/            # Estado global (Zustand)
-│   ├── lib/               # Utilitários
-│   │   ├── api-client.ts  # Cliente HTTP
-│   │   ├── api-types.ts   # Tipos TypeScript
-│   │   └── i18n/          # Internacionalização
-│   └── messages/          # Traduções (pt, en)
-└── middleware.ts          # Proteção de rotas
+│   ├── stores/            # Global state (Zustand)
+│   ├── lib/               # Utilities
+│   │   ├── api-client.ts  # HTTP client
+│   │   ├── api-types.ts   # TypeScript types
+│   │   └── i18n/          # Internationalization
+│   └── messages/          # Translations (pt, en)
+└── middleware.ts          # Route protection
 ```
 
-**Stack Frontend:**
+**Frontend Stack:**
 
-- ✅ Next.js 15 com App Router e Turbopack
-- ✅ React 19 com Server Components
-- ✅ TypeScript estrito
-- ✅ Tailwind CSS para estilização
-- ✅ shadcn/ui para componentes
-- ✅ Zustand para estado global
-- ✅ React Hook Form + Zod para formulários
-- ✅ TanStack Query para cache de dados
-- ✅ next-intl para i18n
+- ✅ Next.js 15 with App Router and Turbopack
+- ✅ React 19 with Server Components
+- ✅ Strict TypeScript
+- ✅ Tailwind CSS for styling
+- ✅ shadcn/ui for components
+- ✅ Zustand for global state
+- ✅ React Hook Form + Zod for forms
+- ✅ TanStack Query for data caching
+- ✅ next-intl for i18n
 
 ---
 
-## 🚀 Stack Tecnológica
+## 🚀 Technology Stack
 
 ### Backend
 
@@ -238,49 +240,49 @@ frontend/
 
 ---
 
-## 🚀 Começar Agora
+## 🚀 Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
-- **Node.js** 18+ (LTS recomendado)
+- **Node.js** 18+ (LTS recommended)
 - **PostgreSQL** 14+
 - **Yarn** 4+
-- Contas em:
-  - [Cloudinary](https://cloudinary.com/) (upload de imagens)
-  - [MailerSend](https://www.mailersend.com/) (envio de emails)
+- Accounts on:
+  - [Cloudinary](https://cloudinary.com/) (image upload)
+  - [MailerSend](https://www.mailersend.com/) (email sending)
 
-### Instalação Rápida
+### Quick Installation
 
 ```bash
-# 1. Clone o repositório
+# 1. Clone the repository
 git clone https://github.com/gabriel-aguiar-reis/luxis.git
 cd luxis
 
-# 2. Instale as dependências
+# 2. Install dependencies
 yarn install
 
-# 3. Configure o Backend
+# 3. Configure Backend
 cd backend
 cp .env.example .env
-# Edite o .env com suas credenciais
+# Edit .env with your credentials
 
-# 4. Execute as migrações
+# 4. Run migrations
 yarn migration:run
 
-# 5. Crie o superusuário
+# 5. Create superuser
 yarn seed:superuser
 
-# 6. Configure o Frontend
+# 6. Configure Frontend
 cd ../frontend
 cp .env.example .env
-# Edite o .env com a URL do backend
+# Edit .env with backend URL
 
-# 7. Volte para a raiz e inicie tudo
+# 7. Go back to root and start everything
 cd ..
 yarn start
 ```
 
-Pronto! 🎉
+Done! 🎉
 
 - **Backend**: http://localhost:3000
 - **Frontend**: http://localhost:3001
@@ -288,160 +290,160 @@ Pronto! 🎉
 
 ---
 
-## 📖 Documentação
+## 📖 Documentation
 
 ### Backend
 
-Após iniciar o servidor backend, acesse a documentação interativa da API:
+After starting the backend server, access the interactive API documentation:
 
 🔗 **Swagger UI**: http://localhost:3000/api/docs
 
-A documentação inclui:
+Documentation includes:
 
-- Todos os endpoints disponíveis
-- Schemas de request/response
-- Autenticação e autorização
-- Exemplos de uso
-- Testes interativos
+- All available endpoints
+- Request/response schemas
+- Authentication and authorization
+- Usage examples
+- Interactive tests
 
-### Scripts Disponíveis
+### Available Scripts
 
 #### Backend
 
 ```bash
-yarn start:dev          # Inicia em modo desenvolvimento
-yarn start:prod         # Inicia em modo produção
-yarn build              # Compila o projeto
-yarn test:unit          # Testes unitários
-yarn test:integration   # Testes de integração
-yarn test:e2e           # Testes end-to-end
-yarn test:cov           # Cobertura de testes
-yarn migration:generate # Gera nova migration
-yarn migration:run      # Executa migrations
-yarn seed:superuser     # Cria superusuário
+yarn start:dev          # Start in development mode
+yarn start:prod         # Start in production mode
+yarn build              # Compile project
+yarn test:unit          # Unit tests
+yarn test:integration   # Integration tests
+yarn test:e2e           # End-to-end tests
+yarn test:cov           # Test coverage
+yarn migration:generate # Generate new migration
+yarn migration:run      # Run migrations
+yarn seed:superuser     # Create superuser
 ```
 
 #### Frontend
 
 ```bash
-yarn dev                # Inicia em desenvolvimento (Turbopack)
-yarn build              # Build de produção
-yarn start              # Inicia versão de produção
-yarn lint               # Verifica código
-yarn generate:types     # Gera tipos do OpenAPI
+yarn dev                # Start in development (Turbopack)
+yarn build              # Production build
+yarn start              # Start production version
+yarn lint               # Check code
+yarn generate:types     # Generate OpenAPI types
 ```
 
 #### Monorepo
 
 ```bash
-yarn start              # Inicia backend + frontend simultaneamente
+yarn start              # Start backend + frontend simultaneously
 ```
 
 ---
 
-## 🔒 Segurança
+## 🔒 Security
 
-Luxis implementa as melhores práticas de segurança:
+Luxis implements security best practices:
 
-- ✅ **Autenticação JWT** com refresh tokens
-- ✅ **RBAC (Role-Based Access Control)** com CASL
-- ✅ **Rate Limiting** para prevenir ataques
-- ✅ **Validação de dados** em todas as camadas
-- ✅ **Sanitização de inputs**
-- ✅ **HTTPS** obrigatório em produção
-- ✅ **Proteção contra SQL Injection**
-- ✅ **Proteção contra XSS**
-- ✅ **CORS** configurado adequadamente
-- ✅ **Helmet** para headers de segurança
-- ✅ **Logs de auditoria** completos
+- ✅ **JWT Authentication** with refresh tokens
+- ✅ **RBAC (Role-Based Access Control)** with CASL
+- ✅ **Rate Limiting** to prevent attacks
+- ✅ **Data validation** at all layers
+- ✅ **Input sanitization**
+- ✅ **HTTPS** required in production
+- ✅ **SQL Injection protection**
+- ✅ **XSS protection**
+- ✅ **CORS** properly configured
+- ✅ **Helmet** for security headers
+- ✅ **Complete audit logs**
 
 ---
 
-## 🧪 Testes
+## 🧪 Testing
 
-Luxis possui cobertura de testes abrangente:
+Luxis has comprehensive test coverage:
 
 ```bash
 # Backend
-yarn test:unit          # Testes unitários rápidos
-yarn test:integration   # Testes de integração com banco
-yarn test:e2e           # Testes end-to-end completos
-yarn test:cov           # Relatório de cobertura
+yarn test:unit          # Fast unit tests
+yarn test:integration   # Integration tests with database
+yarn test:e2e           # Complete end-to-end tests
+yarn test:cov           # Coverage report
 ```
 
-**Tipos de Testes:**
+**Test Types:**
 
-- **Unit**: Testam componentes isolados (use cases, services)
-- **Integration**: Testam integração com banco de dados
-- **E2E**: Testam fluxos completos da aplicação
+- **Unit**: Test isolated components (use cases, services)
+- **Integration**: Test integration with database
+- **E2E**: Test complete application flows
 
 ---
 
-## 🌍 Internacionalização
+## 🌍 Internationalization
 
-Luxis é multilíngue desde sua concepção:
+Luxis is multilingual from its conception:
 
 - 🇧🇷 **Português (pt)**
 - 🇺🇸 **English (en)**
 
-Adicionar novos idiomas é simples:
+Adding new languages is simple:
 
-1. Crie o arquivo de mensagens em `frontend/src/messages/{locale}.json`
-2. Configure o locale em `frontend/src/lib/i18n/routing.ts`
-3. Pronto! ✨
-
----
-
-## 🎨 Temas
-
-Suporte completo para **Dark Mode** e **Light Mode**:
-
-- Alternância instantânea
-- Preferência salva localmente
-- Respeita preferência do sistema
-- Componentes otimizados para ambos os temas
+1. Create message file in `frontend/src/messages/{locale}.json`
+2. Configure locale in `frontend/src/lib/i18n/routing.ts`
+3. Done! ✨
 
 ---
 
-## 📊 Monitoramento
+## 🎨 Themes
+
+Full support for **Dark Mode** and **Light Mode**:
+
+- Instant switching
+- Preference saved locally
+- Respects system preference
+- Components optimized for both themes
+
+---
+
+## 📊 Monitoring
 
 ### Logs
 
-Sistema de logs estruturados com **Pino**:
+Structured logging system with **Pino**:
 
-- Logs por nível (debug, info, warn, error)
-- Formato JSON para parsing
-- Pretty print em desenvolvimento
-- Rastreamento de requests
-- Logs de auditoria
+- Logs by level (debug, info, warn, error)
+- JSON format for parsing
+- Pretty print in development
+- Request tracking
+- Audit logs
 
 ### Performance
 
-- Cache inteligente de queries frequentes
-- Lazy loading de componentes
-- Otimização de imagens
-- Code splitting automático
-- Server-side rendering quando apropriado
+- Smart caching of frequent queries
+- Component lazy loading
+- Image optimization
+- Automatic code splitting
+- Server-side rendering when appropriate
 
 ---
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-Contribuições são muito bem-vindas! Para contribuir:
+Contributions are very welcome! To contribute:
 
-1. **Fork** o projeto
-2. Crie uma **branch** para sua feature (`git checkout -b feature/MinhaFeature`)
-3. **Commit** suas mudanças (`git commit -m 'feat: Adiciona MinhaFeature'`)
-4. **Push** para a branch (`git push origin feature/MinhaFeature`)
-5. Abra um **Pull Request**
+1. **Fork** the project
+2. Create a **branch** for your feature (`git checkout -b feature/MyFeature`)
+3. **Commit** your changes (`git commit -m 'feat: Add MyFeature'`)
+4. **Push** to the branch (`git push origin feature/MyFeature`)
+5. Open a **Pull Request**
 
-### Padrões de Código
+### Code Standards
 
-- Siga os princípios SOLID
+- Follow SOLID principles
 - Use TypeScript strict mode
-- Escreva testes para novas funcionalidades
-- Siga os padrões de commit (Conventional Commits)
-- Documente funções e componentes complexos
+- Write tests for new features
+- Follow commit patterns (Conventional Commits)
+- Document complex functions and components
 
 ---
 
@@ -463,9 +465,9 @@ Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
-## 🙏 Agradecimentos
+## 🙏 Acknowledgments
 
-Luxis foi construído utilizando tecnologias open-source incríveis. Agradecimentos especiais às comunidades de:
+Luxis was built using incredible open-source technologies. Special thanks to the communities of:
 
 - [NestJS](https://nestjs.com/)
 - [Next.js](https://nextjs.org/)
@@ -473,14 +475,14 @@ Luxis foi construído utilizando tecnologias open-source incríveis. Agradecimen
 - [TypeScript](https://www.typescriptlang.org/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [shadcn/ui](https://ui.shadcn.com/)
-- E todas as outras bibliotecas que tornam este projeto possível
+- And all other libraries that make this project possible
 
 ---
 
 <div align="center">
 
-**Construído com ❤️ por Gabriel Aguiar**
+**Built with ❤️ by Gabriel Aguiar**
 
-⭐ Se este projeto foi útil para você, considere dar uma estrela!
+⭐ If this project was useful to you, consider giving it a star!
 
 </div>
