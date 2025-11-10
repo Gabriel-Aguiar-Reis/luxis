@@ -53,7 +53,7 @@ export type UpdateOwnershipTransferStatusDto =
 export type GetInventoryById = paths['/inventory/{id}']['get']
 export type GetInventoryByIdReturn =
   paths['/inventory/{id}']['get']['responses']['200']['content']['application/json']
-
+export type GetInventoryByIdProduct = Product
 // Products
 
 export type Product = components['schemas']['Product']
