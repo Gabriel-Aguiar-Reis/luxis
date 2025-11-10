@@ -88,12 +88,6 @@
     "andText": "e",
     "privacyLink": "Política de Privacidade"
   },
-  "Cashier": {
-    "title": "Caixa",
-    "description": "Registre suas vendas de forma rápida e eficiente",
-    "authError": "Você precisa estar autenticado como revendedor para acessar esta área",
-    "sessionExpired": "Sessão expirada"
-  },
   "Admin-Models": {
     "title": "Modelos",
     "description": "Gerencie seus modelos de produtos"
@@ -205,8 +199,6 @@
     "inventory": "estoque",
     "reports": "relatorios",
     "settings": "configuracoes",
-    "cart": "carrinho",
-    "cashier": "caixa",
     "batches": "lotes",
     "orders": "pedidos",
     "products": "produtos",

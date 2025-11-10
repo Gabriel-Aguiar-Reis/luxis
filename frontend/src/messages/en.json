@@ -88,12 +88,6 @@
     "andText": "and",
     "privacyLink": "Privacy Policy"
   },
-  "Cashier": {
-    "title": "Cashier",
-    "description": "Register your sales quickly and efficiently",
-    "authError": "You need to be authenticated as a reseller to access this area",
-    "sessionExpired": "Session expired"
-  },
   "Admin-Models": {
     "title": "Models",
     "description": "Manage your models"
@@ -205,8 +199,6 @@
     "inventory": "inventory",
     "reports": "reports",
     "settings": "settings",
-    "cart": "cart",
-    "cashier": "cashier",
     "batches": "batches",
     "orders": "orders",
     "products": "products",

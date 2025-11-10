@@ -6,7 +6,6 @@ import { useAuthStore } from '@/stores/use-auth-store'
 const PROTECTED_PATHS = [
   '/my-space',
   '/home',
-  '/cashier',
   '/reseller',
   '/settings',
   '/shipments',
