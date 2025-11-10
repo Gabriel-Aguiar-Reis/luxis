@@ -1,6 +1,5 @@
 'use client'
 
-import { TransfersPageWithQuery } from '@/components/transfers/transfers-page-with-query'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +12,7 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/navigation'
+import { TransfersPage } from '@/components/transfers/transfers-page'
 
 export default function ResellerTransfersPage() {
   const t = useTranslations('Transfers')
@@ -45,7 +45,7 @@ export default function ResellerTransfersPage() {
           </Breadcrumb>
         </div>
       </header>
-      <TransfersPageWithQuery />
+      <TransfersPage />
     </>
   )
 }

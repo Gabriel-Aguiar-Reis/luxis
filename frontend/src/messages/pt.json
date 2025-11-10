@@ -131,7 +131,7 @@
     "title": "Vendas",
     "description": "Gerencie suas vendas"
   },
-  "Admin-Sale-Create": {
+  "Sale-Create": {
     "title": "Criar Venda",
     "sales": "Vendas",
     "description": "Preencha os dados para criar uma nova venda."

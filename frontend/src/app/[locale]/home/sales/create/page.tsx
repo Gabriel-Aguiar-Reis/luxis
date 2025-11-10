@@ -16,7 +16,7 @@ import { useTranslations } from 'next-intl'
 
 export default function AdminSaleCreatePage() {
   const router = useRouter()
-  const t = useTranslations('Admin-Sale-Create')
+  const t = useTranslations('Sale-Create')
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">

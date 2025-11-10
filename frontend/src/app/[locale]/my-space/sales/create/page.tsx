@@ -1,6 +1,6 @@
 'use client'
 
-import { ResellerReportsPageWithQuery } from '@/components/reseller-reports/reseller-reports-page-with-query'
+import { SaleCreateForm } from '@/components/sales/sale-create-form'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,12 +11,12 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
-export default function ResellerReportsPage() {
-  const t = useTranslations('Reports')
+export default function ResellerSaleCreatePage() {
   const router = useRouter()
+  const t = useTranslations('Sale-Create')
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -39,13 +39,23 @@ export default function ResellerReportsPage() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
+                <BreadcrumbLink
+                  onClick={() => {
+                    router.push('/my-space/sales')
+                  }}
+                >
+                  {t('sales')}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
                 <BreadcrumbPage>{t('title')}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </div>
       </header>
-      <ResellerReportsPageWithQuery />
+      <SaleCreateForm />
     </>
   )
 }

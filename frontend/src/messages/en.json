@@ -132,7 +132,7 @@
     "title": "Sales",
     "description": "Manage your sales"
   },
-  "Admin-Sale-Create": {
+  "Sale-Create": {
     "title": "Create Sale",
     "sales": "Sales",
     "description": "Fill in the details to create a new sale."

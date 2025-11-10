@@ -52,7 +52,6 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
   const phoneUtil = PhoneNumberUtil.getInstance()
 
   // Permissões baseadas no role
-  const canCreate = role === 'ADMIN'
   const canEdit = role === 'ADMIN'
   const canDelete = role === 'ADMIN'
 
@@ -76,18 +75,17 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Vendas</h2>
-        {canCreate && (
-          <Button
-            onClick={() =>
-              router.push(
-                `/${role === 'ADMIN' ? 'home' : 'my-space'}/sales/create`
-              )
-            }
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Nova Venda
-          </Button>
-        )}
+
+        <Button
+          onClick={() =>
+            router.push(
+              `/${role === 'ADMIN' ? 'home' : 'my-space'}/sales/create`
+            )
+          }
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Nova Venda
+        </Button>
       </div>
       <SalesTable
         sales={sales}

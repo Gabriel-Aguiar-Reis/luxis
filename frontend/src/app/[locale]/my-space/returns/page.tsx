@@ -1,6 +1,5 @@
 'use client'
 
-import { ReturnsPageWithQuery } from '@/components/returns/returns-page-with-query'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +12,7 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/navigation'
+import { ReturnsPage } from '@/components/returns/returns-page'
 
 export default function ResellerReturnsPage() {
   const t = useTranslations('Returns')
@@ -45,7 +45,7 @@ export default function ResellerReturnsPage() {
           </Breadcrumb>
         </div>
       </header>
-      <ReturnsPageWithQuery />
+      <ReturnsPage />
     </>
   )
 }
