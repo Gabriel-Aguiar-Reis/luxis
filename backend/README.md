@@ -10,6 +10,8 @@
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
+> **Language**: [English](#) | [Português (BR)](README.PT_BR.md)
+
 Inventory management system built with NestJS, following Clean Architecture and Domain-Driven Design (DDD) principles.
 
 ## ✨ Features
