@@ -17,13 +17,20 @@ export default function AdminLayout({
   const [isLoading, setIsLoading] = useState(true)
   const t = useTranslations('HomeLayout')
   const { verify, logout } = useAuthStore()
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const user = (await verify()).user
-        if (!user || user.role !== 'ADMIN' || user.status !== 'ACTIVE') {
+        const result = await verify()
+
+        if (
+          !result.user ||
+          result.user.role !== 'ADMIN' ||
+          result.user.status !== 'ACTIVE'
+        ) {
           throw new Error(t('authError'))
         }
+
         setIsLoading(false)
       } catch (error) {
         const errorMessage =
@@ -37,7 +44,7 @@ export default function AdminLayout({
     }
 
     checkAuth()
-  }, [router, t])
+  }, [verify, logout, router, t])
 
   if (isLoading) {
     return (

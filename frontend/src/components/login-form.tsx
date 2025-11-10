@@ -196,6 +196,10 @@ export function LoginForm({
           </Form>
         </CardContent>
       </Card>
+      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+        {t('restrictedAreaReseller')}{' '}
+        <a href="/admin-login">{t('restrictedAreaHrefReseller')}</a>.
+      </div>
     </div>
   )
 }

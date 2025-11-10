@@ -16,18 +16,24 @@ export default function ResellerLayout({
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const t = useTranslations('MySpaceLayout')
-  const { isAuthenticated, verify, user, logout } = useAuthStore()
+  const { verify, logout } = useAuthStore()
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await verify()
-        if (!isAuthenticated || !user) {
+        const result = await verify()
+
+        if (!result.user) {
           throw new Error(t('authError'))
         }
-        if (user.role !== 'RESELLER' || user.status !== 'ACTIVE') {
+
+        if (
+          result.user.role !== 'RESELLER' ||
+          result.user.status !== 'ACTIVE'
+        ) {
           throw new Error(t('authError'))
         }
+
         setIsLoading(false)
       } catch (error) {
         const errorMessage =
@@ -41,12 +47,12 @@ export default function ResellerLayout({
     }
 
     checkAuth()
-  }, [router, t])
+  }, [verify, logout, router, t])
 
   if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
       </div>
     )
   }

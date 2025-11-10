@@ -13,6 +13,9 @@
     "loading": "Logging in...",
     "restrictedArea": "This area is restricted for admins, if you want to access the reseller area, click here",
     "restrictedAreaHref": "Reseller Area",
+    "restrictedAreaReseller": "This area is restricted for resellers, if you want to access the admin area, click here",
+    "restrictedAreaHrefReseller": "Admin Area",
+
     "authErrorReseller": "You need to be authenticated as a reseller to access this area",
     "dontHaveAccount": "Don't have an account?",
     "signUp": "Sign Up",
