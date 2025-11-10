@@ -71,8 +71,8 @@ export function ProductFilters({
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-        <div className="w-48 space-y-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+        <div className="space-y-2">
           <Label htmlFor="serial-number-filter">Número de Série</Label>
           <Input
             id="serial-number-filter"
@@ -82,7 +82,7 @@ export function ProductFilters({
             onChange={(e) => updateFilter('serialNumber', e.target.value)}
           />
         </div>
-        <div className="w-48 space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="status-filter">Status</Label>
           <Select
             value={filters.status || ''}
@@ -90,7 +90,7 @@ export function ProductFilters({
               updateFilter('status', value || undefined)
             }
           >
-            <SelectTrigger className="w-48" id="status-filter">
+            <SelectTrigger id="status-filter">
               <SelectValue placeholder="Todos os status" />
             </SelectTrigger>
             <SelectContent>
@@ -101,7 +101,7 @@ export function ProductFilters({
           </Select>
         </div>
 
-        <div className="w-48 space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="category-filter">Categoria</Label>
           <Select
             value={filters.categoryId || ''}
@@ -109,7 +109,7 @@ export function ProductFilters({
               updateFilter('categoryId', value || undefined)
             }
           >
-            <SelectTrigger className="w-48" id="category-filter">
+            <SelectTrigger id="category-filter">
               <SelectValue placeholder="Todas as categorias" />
             </SelectTrigger>
             <SelectContent>
@@ -122,7 +122,7 @@ export function ProductFilters({
           </Select>
         </div>
 
-        <div className="w-48 space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="model-filter">Modelo</Label>
           <Select
             value={filters.modelId || ''}
@@ -130,7 +130,7 @@ export function ProductFilters({
               updateFilter('modelId', value || undefined)
             }
           >
-            <SelectTrigger className="w-48" id="model-filter">
+            <SelectTrigger id="model-filter">
               <SelectValue placeholder="Todos os modelos" />
             </SelectTrigger>
             <SelectContent>
@@ -143,7 +143,7 @@ export function ProductFilters({
           </Select>
         </div>
 
-        <div className="w-48 space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="min-price">Preço Mínimo (R$)</Label>
           <Input
             id="min-price"
@@ -159,7 +159,7 @@ export function ProductFilters({
           />
         </div>
 
-        <div className="w-48 space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="max-price">Preço Máximo (R$)</Label>
           <Input
             id="max-price"
