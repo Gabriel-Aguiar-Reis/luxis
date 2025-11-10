@@ -188,43 +188,52 @@ export function ModelDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>Editar Modelo de Produto</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-base sm:text-lg">
+              Editar Modelo de Produto
+            </DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
               Edite os detalhes do modelo selecionado.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-3 py-4 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome *</Label>
+              <Label htmlFor="name" className="text-xs sm:text-sm">
+                Nome *
+              </Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
+                className="text-xs sm:text-sm"
               />
             </div>
-            <div className="flex justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <div className="w-full space-y-2">
-                <Label htmlFor="suggestedPrice">Preço Sugerido (R$) *</Label>
+                <Label htmlFor="suggestedPrice" className="text-xs sm:text-sm">
+                  Preço Sugerido (R$) *
+                </Label>
                 <Input
                   id="suggestedPrice"
                   name="suggestedPrice"
                   type="number"
                   step="0.01"
                   min="0"
-                  className="w-full"
+                  className="w-full text-xs sm:text-sm"
                   value={formData.suggestedPrice}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="categoryId">Categoria</Label>
+              <div className="w-full space-y-2 sm:w-auto">
+                <Label htmlFor="categoryId" className="text-xs sm:text-sm">
+                  Categoria
+                </Label>
                 <Select
                   value={formData.categoryId}
                   onValueChange={(value) =>
@@ -236,7 +245,7 @@ export function ModelDialog({
                   defaultValue={formData.categoryId || ''}
                   disabled
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="text-xs sm:text-sm">
                     <SelectGroup>
                       <SelectLabel>
                         {(() => {
@@ -253,7 +262,11 @@ export function ModelDialog({
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
+                      <SelectItem
+                        key={category.id}
+                        value={category.id}
+                        className="text-xs sm:text-sm"
+                      >
                         {typeof category.name === 'string'
                           ? category.name
                           : (category.name?.value ?? '')}
@@ -263,19 +276,23 @@ export function ModelDialog({
                 </Select>
               </div>
             </div>
-            <div className="flex justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <div className="w-full space-y-2">
-                <Label htmlFor="description">Descrição</Label>
+                <Label htmlFor="description" className="text-xs sm:text-sm">
+                  Descrição
+                </Label>
                 <Input
                   id="description"
                   name="description"
-                  className="w-full"
+                  className="w-full text-xs sm:text-sm"
                   value={formData.description || ''}
                   onChange={handleChange}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
+              <div className="w-full space-y-2 sm:w-auto">
+                <Label htmlFor="status" className="text-xs sm:text-sm">
+                  Status
+                </Label>
                 <Select
                   value={formData.status}
                   onValueChange={(value) =>
@@ -285,7 +302,7 @@ export function ModelDialog({
                     }))
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="text-xs sm:text-sm">
                     <SelectGroup>
                       <SelectLabel>
                         {(() => {
@@ -300,23 +317,35 @@ export function ModelDialog({
                     </SelectGroup>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ACTIVE">Ativo</SelectItem>
-                    <SelectItem value="USED">Usado</SelectItem>
-                    <SelectItem value="ARCHIVED">Arquivado</SelectItem>
+                    <SelectItem value="ACTIVE" className="text-xs sm:text-sm">
+                      Ativo
+                    </SelectItem>
+                    <SelectItem value="USED" className="text-xs sm:text-sm">
+                      Usado
+                    </SelectItem>
+                    <SelectItem value="ARCHIVED" className="text-xs sm:text-sm">
+                      Arquivado
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            <div className="flex w-full items-center justify-between gap-4 space-y-2">
-              <div className="w-[70%] space-y-2">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="w-full space-y-2 sm:w-[70%]">
                 <Tabs defaultValue="url">
-                  <TabsList>
-                    <TabsTrigger value="url">URL</TabsTrigger>
-                    <TabsTrigger value="upload">Arquivo</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="url" className="text-xs sm:text-sm">
+                      URL
+                    </TabsTrigger>
+                    <TabsTrigger value="upload" className="text-xs sm:text-sm">
+                      Arquivo
+                    </TabsTrigger>
                   </TabsList>
                   <TabsContent value="url">
                     <div className="w-full space-y-2">
-                      <Label htmlFor="photoUrl">Imagem (URL)</Label>
+                      <Label htmlFor="photoUrl" className="text-xs sm:text-sm">
+                        Imagem (URL)
+                      </Label>
                       <div className="flex gap-2">
                         <Input
                           id="photoUrl"
@@ -325,36 +354,40 @@ export function ModelDialog({
                           placeholder="https://..."
                           value={formData.photoUrl || ''}
                           onChange={handleChange}
+                          className="text-xs sm:text-sm"
                         />
                       </div>
                     </div>
                   </TabsContent>
                   <TabsContent value="upload">
                     <div className="w-full space-y-2">
-                      <Label htmlFor="photo">Imagem (Arquivo)</Label>
+                      <Label htmlFor="photo" className="text-xs sm:text-sm">
+                        Imagem (Arquivo)
+                      </Label>
                       <Input
                         id="photo"
                         name="photo"
                         type="file"
                         accept="image/*"
                         onChange={handleChange}
+                        className="text-xs sm:text-sm"
                       />
                     </div>
                   </TabsContent>
                 </Tabs>
               </div>
-              <div className="h-30 w-30 mt-2 flex items-center justify-center">
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center sm:h-28 sm:w-28 md:h-30 md:w-30">
                 {formData.photoFile ? (
                   <img
                     src={URL.createObjectURL(formData.photoFile)}
                     alt="Preview da imagem"
-                    className="h-30 w-30 rounded border object-cover object-center"
+                    className="h-full w-full rounded border object-cover object-center"
                   />
                 ) : formData.photoUrl ? (
                   <img
                     src={formData.photoUrl}
                     alt="Preview da imagem"
-                    className="h-30 w-30 rounded border object-cover object-center"
+                    className="h-full w-full rounded border object-cover object-center"
                   />
                 ) : model.photoUrl ? (
                   <img
@@ -364,22 +397,34 @@ export function ModelDialog({
                         : model.photoUrl.value
                     }
                     alt="Preview da imagem"
-                    className="h-30 w-30 rounded border object-cover object-center"
+                    className="h-full w-full rounded border object-cover object-center"
                   />
                 ) : null}
               </div>
             </div>
 
             {photoError && (
-              <div className="mt-2 text-sm text-red-500">{photoError}</div>
+              <div className="mt-2 text-xs text-red-500 sm:text-sm">
+                {photoError}
+              </div>
             )}
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              className="w-full text-xs sm:w-auto sm:text-sm"
+            >
               Cancelar
             </Button>
-            <Button type="submit">Salvar Alterações</Button>
+            <Button
+              type="submit"
+              className="w-full text-xs sm:w-auto sm:text-sm"
+            >
+              Salvar Alterações
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

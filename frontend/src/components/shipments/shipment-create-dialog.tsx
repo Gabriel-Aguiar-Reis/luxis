@@ -121,36 +121,40 @@ export function ShipmentCreateDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Novo Romaneio</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-base sm:text-lg">
+              Novo Romaneio
+            </DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
               Preencha os dados para criar um novo romaneio.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-3 py-3 sm:gap-4 sm:py-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
               {/* Revendedor */}
               <div className="space-y-2">
-                <Label>Revendedor</Label>
+                <Label className="text-xs sm:text-sm">Revendedor</Label>
                 <Popover open={openFrom} onOpenChange={setOpenFrom}>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       role="combobox"
                       aria-expanded={openFrom}
-                      className="w-full justify-between"
+                      className="h-9 w-full justify-between text-xs sm:h-10 sm:text-sm"
                     >
-                      {resellerId
-                        ? resellers.find((r: any) => r.id === resellerId)?.name
-                            ?.value +
-                          ' ' +
-                          resellers.find((r: any) => r.id === resellerId)
-                            ?.surname?.value
-                        : 'Selecionar revendedor'}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <span className="truncate">
+                        {resellerId
+                          ? resellers.find((r: any) => r.id === resellerId)
+                              ?.name?.value +
+                            ' ' +
+                            resellers.find((r: any) => r.id === resellerId)
+                              ?.surname?.value
+                          : 'Selecionar revendedor'}
+                      </span>
+                      <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-50 sm:h-4 sm:w-4" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0">
@@ -159,9 +163,10 @@ export function ShipmentCreateDialog({
                         placeholder="Buscar revendedor..."
                         value={searchFromValue}
                         onValueChange={setSearchFromValue}
+                        className="text-xs sm:text-sm"
                       />
                       <CommandList>
-                        <CommandEmpty>
+                        <CommandEmpty className="text-xs sm:text-sm">
                           Nenhum revendedor encontrado.
                         </CommandEmpty>
                         <CommandGroup>
@@ -176,7 +181,7 @@ export function ShipmentCreateDialog({
                             })
                             .map((reseller) => (
                               <CommandItem
-                                className="flex justify-between"
+                                className="flex justify-between text-xs sm:text-sm"
                                 key={reseller.id}
                                 value={reseller.id}
                                 onSelect={(value) => {
@@ -189,9 +194,11 @@ export function ShipmentCreateDialog({
                                 {`${reseller.name?.value} ${reseller.surname?.value}` ||
                                   reseller.id}
                                 {resellerId === reseller.id ? (
-                                  <SquareCheck className={'h-4 w-4'} />
+                                  <SquareCheck
+                                    className={'h-3 w-3 sm:h-4 sm:w-4'}
+                                  />
                                 ) : (
-                                  <Square className={'h-4 w-4'} />
+                                  <Square className={'h-3 w-3 sm:h-4 sm:w-4'} />
                                 )}
                               </CommandItem>
                             ))}
@@ -202,22 +209,24 @@ export function ShipmentCreateDialog({
                 </Popover>
               </div>
               {/* Produtos */}
-              <div className="col-span-2 space-y-2">
-                <Label>Produtos</Label>
+              <div className="space-y-2 sm:col-span-2">
+                <Label className="text-xs sm:text-sm">Produtos</Label>
                 <Button
                   type="button"
                   variant="outline"
                   disabled={!resellerId}
                   onClick={() => setShowProductsDialog(true)}
-                  className="w-full justify-start font-normal"
+                  className="h-9 w-full justify-start text-xs font-normal sm:h-10 sm:text-sm"
                 >
-                  <ChevronsUpDown className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-                  {productIds && productIds.length > 0
-                    ? `${productIds.length} produto(s) selecionado(s)`
-                    : 'Selecionar produtos'}
+                  <ChevronsUpDown className="mr-2 h-3 w-3 shrink-0 opacity-50 sm:h-4 sm:w-4" />
+                  <span className="truncate">
+                    {productIds && productIds.length > 0
+                      ? `${productIds.length} produto(s) selecionado(s)`
+                      : 'Selecionar produtos'}
+                  </span>
                 </Button>
                 {productIds && productIds.length > 0 && (
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-muted-foreground text-[10px] sm:text-xs">
                     {productIds.length} produto(s) selecionado(s)
                   </p>
                 )}
@@ -225,11 +234,21 @@ export function ShipmentCreateDialog({
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col gap-2 sm:flex-row sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              className="w-full text-xs sm:w-auto sm:text-sm"
+            >
               Cancelar
             </Button>
-            <Button type="submit">Criar Romaneio</Button>
+            <Button
+              type="submit"
+              className="w-full text-xs sm:w-auto sm:text-sm"
+            >
+              Criar Romaneio
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -74,16 +74,18 @@ export function ShipmentEditStatusDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Editar status do romaneio</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">
+            Editar status do romaneio
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-3 py-3 sm:space-y-4 sm:py-4">
           <Select
             value={status}
             onValueChange={(v) => setStatus(v as ShipmentStatus)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-9 text-xs sm:h-10 sm:text-sm">
               <SelectValue placeholder="Selecione o status" />
             </SelectTrigger>
             <SelectContent>
@@ -92,7 +94,7 @@ export function ShipmentEditStatusDialog({
                   <SelectItem
                     key={opt.value}
                     value={opt.value}
-                    className={opt.className}
+                    className={`text-xs sm:text-sm ${opt.className}`}
                   >
                     {opt.label}
                   </SelectItem>
@@ -101,8 +103,12 @@ export function ShipmentEditStatusDialog({
             </SelectContent>
           </Select>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+        <DialogFooter className="flex-col gap-2 sm:flex-row sm:gap-0">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="w-full text-xs sm:w-auto sm:text-sm"
+          >
             Cancelar
           </Button>
           <Button
@@ -111,6 +117,7 @@ export function ShipmentEditStatusDialog({
               onClose()
             }}
             disabled={!status || status === shipment.status}
+            className="w-full text-xs sm:w-auto sm:text-sm"
           >
             Salvar
           </Button>

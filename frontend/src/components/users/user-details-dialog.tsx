@@ -90,34 +90,38 @@ export function UserDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[60vh] overflow-y-auto sm:max-w-[700px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Detalhes do Usuário</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-base sm:text-lg">
+            Detalhes do Usuário
+          </DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Informações detalhadas sobre {user.name?.value ?? 'N/A'}{' '}
             {user.surname?.value ?? ''}.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-4">
-            <h3 className="text-lg font-semibold">
+        <div className="flex flex-col gap-4 sm:gap-6">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <h3 className="text-base font-semibold sm:text-lg">
               {user.name?.value ?? 'N/A'} {user.surname?.value ?? ''}
             </h3>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {formatRole(user.role)}
               {formatStatus(user.status)}
             </div>
           </div>
 
-          <div className="grid gap-4">
-            <div className="flex items-center gap-2">
-              <Mail className="text-muted-foreground h-4 w-4" />
-              <span>{user.email?.value ?? 'N/A'}</span>
+          <div className="grid gap-3 sm:gap-4">
+            <div className="flex items-start gap-2 sm:items-center">
+              <Mail className="text-muted-foreground mt-0.5 h-3 w-3 shrink-0 sm:mt-0 sm:h-4 sm:w-4" />
+              <span className="text-xs break-all sm:text-sm">
+                {user.email?.value ?? 'N/A'}
+              </span>
             </div>
-            <div className="flex items-center gap-2">
-              <Phone className="text-muted-foreground h-4 w-4" />
-              <span>
+            <div className="flex items-start gap-2 sm:items-center">
+              <Phone className="text-muted-foreground mt-0.5 h-3 w-3 shrink-0 sm:mt-0 sm:h-4 sm:w-4" />
+              <span className="text-xs sm:text-sm">
                 {user.phone?.value
                   ? phoneUtil.formatInOriginalFormat(
                       phoneUtil.parseAndKeepRawInput(user.phone.value, 'BR')
@@ -125,9 +129,9 @@ export function UserDetailsDialog({
                   : 'N/A'}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <MapPinHouse className="text-muted-foreground h-4 w-4" />
-              <span>
+            <div className="flex items-start gap-2">
+              <MapPinHouse className="text-muted-foreground mt-0.5 h-3 w-3 shrink-0 sm:mt-0 sm:h-4 sm:w-4" />
+              <span className="text-xs sm:text-sm">
                 {user.residence?.address?.street ?? 'N/A'},{' '}
                 {user.residence?.address?.number ?? 'N/A'},{' '}
                 {user.residence?.address?.neighborhood ?? 'N/A'} -{' '}
@@ -138,8 +142,12 @@ export function UserDetailsDialog({
             </div>
           </div>
         </div>
-        <DialogFooter>
-          <Button type="button" onClick={onClose}>
+        <DialogFooter className="mt-2 sm:mt-0">
+          <Button
+            type="button"
+            onClick={onClose}
+            className="w-full text-xs sm:w-auto sm:text-sm"
+          >
             Fechar
           </Button>
         </DialogFooter>

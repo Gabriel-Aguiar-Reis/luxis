@@ -200,20 +200,20 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-lg sm:text-xl">
+          <CardTitle className="text-base sm:text-lg md:text-xl">
             Gerenciamento de Usuários
           </CardTitle>
           <Button
             variant={isFiltersVisible ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setIsFiltersVisible(!isFiltersVisible)}
-            className="w-full sm:w-auto"
+            className="w-full text-xs sm:w-auto sm:text-sm"
           >
-            <Filter className="mr-2 h-4 w-4" />
+            <Filter className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
             Filtros
           </Button>
         </div>
-        <CardDescription>
+        <CardDescription className="text-xs sm:text-sm">
           Visualize, edite e gerencie usuários do sistema
         </CardDescription>
       </CardHeader>
@@ -226,19 +226,31 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
             }}
           />
         )}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <>
             <div className="overflow-x-auto rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="min-w-[150px]">Nome</TableHead>
-                    <TableHead className="min-w-[180px]">Email</TableHead>
-                    <TableHead className="min-w-[120px]">Telefone</TableHead>
-                    <TableHead className="min-w-[100px]">Função</TableHead>
-                    <TableHead className="min-w-[100px]">Status</TableHead>
-                    <TableHead className="min-w-20">Produtos</TableHead>
-                    <TableHead className="min-w-[100px] text-right">
+                    <TableHead className="min-w-[150px] text-xs sm:text-sm">
+                      Nome
+                    </TableHead>
+                    <TableHead className="min-w-[180px] text-xs sm:text-sm">
+                      Email
+                    </TableHead>
+                    <TableHead className="min-w-[120px] text-xs sm:text-sm">
+                      Telefone
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-xs sm:text-sm">
+                      Função
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-xs sm:text-sm">
+                      Status
+                    </TableHead>
+                    <TableHead className="min-w-20 text-xs sm:text-sm">
+                      Produtos
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-right text-xs sm:text-sm">
                       Ações
                     </TableHead>
                   </TableRow>
@@ -248,12 +260,14 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                     <>
                       {currentUsers.map((user) => (
                         <TableRow key={user.id}>
-                          <TableCell className="font-medium">
+                          <TableCell className="text-xs font-medium sm:text-sm">
                             {user.name?.value ?? 'N/A'}{' '}
                             {user.surname?.value ?? ''}
                           </TableCell>
-                          <TableCell>{user.email?.value ?? 'N/A'}</TableCell>
-                          <TableCell>
+                          <TableCell className="text-xs sm:text-sm">
+                            {user.email?.value ?? 'N/A'}
+                          </TableCell>
+                          <TableCell className="text-xs sm:text-sm">
                             {user.phone?.value
                               ? phoneUtil.formatInOriginalFormat(
                                   phoneUtil.parseAndKeepRawInput(
@@ -267,46 +281,54 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                           <TableCell>{formatStatus(user.status)}</TableCell>
                           <TableCell>
                             <Button
-                              className="h-8 w-8"
+                              className="h-7 w-7 sm:h-8 sm:w-8"
                               variant="outline"
                               size="icon"
                               onClick={() => handleViewUserProducts(user)}
                             >
-                              <Expand className="h-4 w-4" />
+                              <Expand className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
                           </TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <MoreHorizontal className="h-4 w-4" />
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7 sm:h-8 sm:w-8"
+                                >
+                                  <MoreHorizontal className="h-3 w-3 sm:h-4 sm:w-4" />
                                   <span className="sr-only">Abrir menu</span>
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                                <DropdownMenuLabel className="text-xs sm:text-sm">
+                                  Ações
+                                </DropdownMenuLabel>
                                 <DropdownMenuItem
                                   onClick={() => handleViewUserDetails(user)}
+                                  className="text-xs sm:text-sm"
                                 >
-                                  <Eye className="mr-2 h-4 w-4" />
+                                  <Eye className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                   Ver detalhes
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => handleEditUser(user)}
+                                  className="text-xs sm:text-sm"
                                 >
-                                  <UserCog className="mr-2 h-4 w-4" />
+                                  <UserCog className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                   Editar função
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   onClick={() => handleToggleUserStatus(user)}
-                                  className={
+                                  className={`text-xs sm:text-sm ${
                                     user.status === 'ACTIVE'
                                       ? 'text-text-destructive'
                                       : 'text-text-success'
-                                  }
+                                  }`}
                                 >
-                                  <UserX className="mr-2 h-4 w-4" />
+                                  <UserX className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                   {user.status === 'ACTIVE'
                                     ? 'Desativar'
                                     : 'Ativar'}
@@ -329,7 +351,10 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                     </>
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center">
+                      <TableCell
+                        colSpan={7}
+                        className="h-24 text-center text-xs sm:text-sm"
+                      >
                         Nenhum usuário encontrado
                       </TableCell>
                     </TableRow>
@@ -341,7 +366,7 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
             {/* Paginação */}
             {totalPages > 1 && (
               <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
-                <div className="text-sm">
+                <div className="text-xs sm:text-sm">
                   Página {currentPage} de {totalPages}
                 </div>
                 <div className="flex items-center space-x-2">
@@ -352,8 +377,9 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                       setCurrentPage((prev) => Math.max(prev - 1, 1))
                     }
                     disabled={currentPage === 1}
+                    className="h-8 text-xs sm:h-9 sm:text-sm"
                   >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span className="sr-only">Página anterior</span>
                   </Button>
                   <Button
@@ -363,8 +389,9 @@ export function UsersList({ phoneUtil }: { phoneUtil: PhoneNumberUtil }) {
                       setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                     }
                     disabled={currentPage === totalPages}
+                    className="h-8 text-xs sm:h-9 sm:text-sm"
                   >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span className="sr-only">Próxima página</span>
                   </Button>
                 </div>

@@ -55,29 +55,42 @@ export function UserEditDialog({ user, isOpen, onClose }: UserDialogProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Editar Função do Usuário</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-base sm:text-lg">
+            Editar Função do Usuário
+          </DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Altere a função do usuário {user?.name?.value ?? 'N/A'}{' '}
             {user?.surname?.value ?? ''}.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-3 py-3 sm:gap-4 sm:py-4">
           <div className="space-y-2">
-            <Label htmlFor="role">Função</Label>
+            <Label htmlFor="role" className="text-xs sm:text-sm">
+              Função
+            </Label>
             <Select value={selectedRole} onValueChange={handleRoleChange}>
-              <SelectTrigger id="role">
+              <SelectTrigger
+                id="role"
+                className="h-9 text-xs sm:h-10 sm:text-sm"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ADMIN">Administrador</SelectItem>
-                <SelectItem value="RESELLER">Revendedor</SelectItem>
-                <SelectItem value="ASSISTANT">Assistente</SelectItem>
+                <SelectItem value="ADMIN" className="text-xs sm:text-sm">
+                  Administrador
+                </SelectItem>
+                <SelectItem value="RESELLER" className="text-xs sm:text-sm">
+                  Revendedor
+                </SelectItem>
+                <SelectItem value="ASSISTANT" className="text-xs sm:text-sm">
+                  Assistente
+                </SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-muted-foreground text-xs">
+            <p className="text-muted-foreground text-[10px] sm:text-xs">
               {selectedRole === 'ADMIN' &&
                 'Administradores têm acesso completo ao sistema.'}
               {selectedRole === 'RESELLER' &&
@@ -88,11 +101,20 @@ export function UserEditDialog({ user, isOpen, onClose }: UserDialogProps) {
           </div>
         </div>
 
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose}>
+        <DialogFooter className="flex-col gap-2 sm:flex-row sm:gap-0">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="w-full text-xs sm:w-auto sm:text-sm"
+          >
             Cancelar
           </Button>
-          <Button type="button" onClick={handleSave}>
+          <Button
+            type="button"
+            onClick={handleSave}
+            className="w-full text-xs sm:w-auto sm:text-sm"
+          >
             Salvar Alterações
           </Button>
         </DialogFooter>

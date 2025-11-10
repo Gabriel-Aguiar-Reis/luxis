@@ -57,58 +57,67 @@ export function ShipmentFilters({
   }
 
   return (
-    <div className="rounded-md border p-4">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium">Filtros</h3>
+    <div className="rounded-md border p-3 sm:p-4">
+      <div className="mb-3 flex items-center justify-between sm:mb-4">
+        <h3 className="text-xs font-medium sm:text-sm">Filtros</h3>
         <Button
           variant="ghost"
           size="sm"
           onClick={clearAllFilters}
           disabled={Object.keys(filters).length === 0}
+          className="h-8 text-xs sm:h-9 sm:text-sm"
         >
-          <X className="mr-2 h-3 w-3" />
-          Limpar filtros
+          <X className="mr-1 h-3 w-3 sm:mr-2" />
+          <span className="hidden sm:inline">Limpar filtros</span>
+          <span className="sm:hidden">Limpar</span>
         </Button>
       </div>
-      <div className="flex gap-4">
-        <div className="w-80 space-y-2">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        <div className="space-y-2">
           <label className="block text-xs font-medium">Revendedor</label>
           <Input
             placeholder="Nome do revendedor"
             value={filters.reseller || ''}
             onChange={(e) => updateFilter('reseller', e.target.value)}
+            className="h-9 text-xs sm:h-10 sm:text-sm"
           />
         </div>
-        <div className="w-fit space-y-2">
+        <div className="space-y-2">
           <label className="block text-xs font-medium">Status</label>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
           >
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="h-9 w-full text-xs sm:h-10 sm:text-sm">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
               {statusOptions.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value}
+                  className="text-xs sm:text-sm"
+                >
                   {opt.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        <div className="w-fit space-y-2">
+        <div className="space-y-2">
           <label className="block text-xs font-medium">Data da devolução</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-40 justify-between font-normal"
+                className="h-9 w-full justify-between text-xs font-normal sm:h-10 sm:text-sm"
               >
-                {filters.createdAt
-                  ? new Date(filters.createdAt).toLocaleDateString()
-                  : 'Selecionar data'}
-                <ChevronDownIcon />
+                <span className="truncate">
+                  {filters.createdAt
+                    ? new Date(filters.createdAt).toLocaleDateString()
+                    : 'Selecionar data'}
+                </span>
+                <ChevronDownIcon className="ml-2 h-3 w-3 shrink-0 sm:h-4 sm:w-4" />
               </Button>
             </PopoverTrigger>
             <PopoverContent

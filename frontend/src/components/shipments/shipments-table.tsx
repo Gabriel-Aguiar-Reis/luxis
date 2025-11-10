@@ -145,24 +145,24 @@ export function ShipmentsTable({
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 sm:gap-4">
         <Card>
           <CardHeader className="pb-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <CardTitle className="text-lg sm:text-xl">
+              <CardTitle className="text-base sm:text-lg md:text-xl">
                 Gerenciamento de Romaneios
               </CardTitle>
               <Button
                 variant={isFiltersVisible ? 'secondary' : 'outline'}
                 size="sm"
                 onClick={() => setIsFiltersVisible(!isFiltersVisible)}
-                className="w-full sm:w-auto"
+                className="w-full text-xs sm:w-auto sm:text-sm"
               >
-                <Filter className="mr-2 h-4 w-4" />
+                <Filter className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                 Filtros
               </Button>
             </div>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm">
               Visualize, crie, edite e exclua romaneios do catálogo
             </CardDescription>
           </CardHeader>
@@ -180,14 +180,20 @@ export function ShipmentsTable({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="min-w-[130px]">
+                    <TableHead className="min-w-[130px] text-xs sm:text-sm">
                       Data do romaneio
                     </TableHead>
-                    <TableHead className="min-w-[150px]">Revendedor</TableHead>
-                    <TableHead className="min-w-20">Produtos</TableHead>
-                    <TableHead className="min-w-[100px]">Status</TableHead>
+                    <TableHead className="min-w-[150px] text-xs sm:text-sm">
+                      Revendedor
+                    </TableHead>
+                    <TableHead className="min-w-20 text-xs sm:text-sm">
+                      Produtos
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-xs sm:text-sm">
+                      Status
+                    </TableHead>
                     {role === 'ADMIN' && (
-                      <TableHead className="min-w-[100px] text-right">
+                      <TableHead className="min-w-[100px] text-right text-xs sm:text-sm">
                         Ações
                       </TableHead>
                     )}
@@ -198,16 +204,21 @@ export function ShipmentsTable({
                     <>
                       {paginatedShipments.map((shipment) => (
                         <TableRow key={shipment.id}>
-                          <TableCell>
+                          <TableCell className="text-xs sm:text-sm">
                             {formatDate(shipment.createdAt)}
                           </TableCell>
-                          <TableCell>{shipment.resellerName}</TableCell>
+                          <TableCell className="text-xs sm:text-sm">
+                            {shipment.resellerName}
+                          </TableCell>
                           <TableCell>
                             <ShipmentProductsList
                               products={shipment.products}
                               trigger={
-                                <Button className="h-8 w-8" variant="outline">
-                                  <Expand className="h-4 w-4" />
+                                <Button
+                                  className="h-7 w-7 sm:h-8 sm:w-8"
+                                  variant="outline"
+                                >
+                                  <Expand className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </Button>
                               }
                             />
@@ -218,14 +229,18 @@ export function ShipmentsTable({
                             <TableCell className="text-right">
                               <DropdownMenu modal={false}>
                                 <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="sm">
-                                    <Ellipsis />
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-7 w-7 sm:h-8 sm:w-8"
+                                  >
+                                    <Ellipsis className="h-3 w-3 sm:h-4 sm:w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                  <DropdownMenuLabel>
+                                  <DropdownMenuLabel className="text-xs sm:text-sm">
                                     <div className="flex items-center">
-                                      <Pencil className="mr-2 h-4 w-4" />
+                                      <Pencil className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                       Editar
                                     </div>
                                   </DropdownMenuLabel>
@@ -234,16 +249,18 @@ export function ShipmentsTable({
                                     <DropdownMenuItem
                                       onClick={() => onEdit(shipment)}
                                       disabled={shipment.status !== 'PENDING'}
+                                      className="text-xs sm:text-sm"
                                     >
-                                      <FilePen className="mr-2 h-4 w-4" />
+                                      <FilePen className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                       Infos
                                     </DropdownMenuItem>
                                   )}
                                   {onEditStatus && (
                                     <DropdownMenuItem
                                       onClick={() => onEditStatus(shipment)}
+                                      className="text-xs sm:text-sm"
                                     >
-                                      <FilePen className="mr-2 h-4 w-4" />
+                                      <FilePen className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                       Status
                                     </DropdownMenuItem>
                                   )}
@@ -252,10 +269,10 @@ export function ShipmentsTable({
                                   )}
                                   {onDelete && (
                                     <DropdownMenuItem
-                                      className="text-text-destructive"
+                                      className="text-text-destructive text-xs sm:text-sm"
                                       onClick={() => onDelete(shipment)}
                                     >
-                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      <Trash2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                       Excluir
                                     </DropdownMenuItem>
                                   )}
@@ -280,7 +297,7 @@ export function ShipmentsTable({
                     <TableRow>
                       <TableCell
                         colSpan={role === 'ADMIN' ? 5 : 4}
-                        className="h-24 text-center"
+                        className="h-24 text-center text-xs sm:text-sm"
                       >
                         Nenhum romaneio encontrado
                       </TableCell>
@@ -290,8 +307,8 @@ export function ShipmentsTable({
               </Table>
             </div>
             {totalPages > 1 && (
-              <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
-                <div className="text-sm">
+              <div className="mt-3 flex flex-col items-center justify-between gap-3 sm:mt-4 sm:flex-row sm:justify-end">
+                <div className="text-xs sm:text-sm">
                   Página {currentPage} de {totalPages}
                 </div>
                 <div className="flex items-center space-x-2">
@@ -302,8 +319,9 @@ export function ShipmentsTable({
                       setCurrentPage((prev) => Math.max(prev - 1, 1))
                     }
                     disabled={currentPage === 1}
+                    className="h-8 text-xs sm:h-9 sm:text-sm"
                   >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span className="sr-only">Página anterior</span>
                   </Button>
                   <Button
@@ -313,8 +331,9 @@ export function ShipmentsTable({
                       setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                     }
                     disabled={currentPage === totalPages}
+                    className="h-8 text-xs sm:h-9 sm:text-sm"
                   >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span className="sr-only">Próxima página</span>
                   </Button>
                 </div>

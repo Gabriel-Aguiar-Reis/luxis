@@ -34,23 +34,31 @@ export function UserStatusDialog({
   }
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-w-[95vw] sm:max-w-lg">
         <AlertDialogHeader>
-          <AlertDialogTitle>
+          <AlertDialogTitle className="text-base sm:text-lg">
             Confirmar {user?.status === 'ACTIVE' ? 'desativação' : 'ativação'}{' '}
             de usuário
           </AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogDescription className="text-xs sm:text-sm">
             Tem certeza que deseja{' '}
             {user?.status === 'ACTIVE' ? 'desativar' : 'ativar'} o usuário{' '}
             {user?.name?.value ?? 'N/A'} {user?.surname?.value ?? ''}?
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <Button variant="outline" onClick={onClose}>
+        <AlertDialogFooter className="flex-col gap-2 sm:flex-row sm:gap-0">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="w-full text-xs sm:w-auto sm:text-sm"
+          >
             Cancelar
           </Button>
-          <Button variant="destructive" onClick={handleChange}>
+          <Button
+            variant="destructive"
+            onClick={handleChange}
+            className="w-full text-xs sm:w-auto sm:text-sm"
+          >
             Confirmar
           </Button>
         </AlertDialogFooter>

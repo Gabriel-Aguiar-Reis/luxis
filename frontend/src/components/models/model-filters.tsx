@@ -51,55 +51,72 @@ export function ModelFilters({
   }
 
   return (
-    <div className="rounded-md border p-4">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium">Filtros</h3>
+    <div className="rounded-md border p-3 sm:p-4">
+      <div className="mb-3 flex items-center justify-between sm:mb-4">
+        <h3 className="text-xs font-medium sm:text-sm">Filtros</h3>
         <Button
           variant="ghost"
           size="sm"
           onClick={clearAllFilters}
           disabled={Object.keys(filters).length === 0}
+          className="h-8 text-xs sm:h-9 sm:text-sm"
         >
-          <X className="mr-2 h-3 w-3" />
-          Limpar filtros
+          <X className="mr-1 h-3 w-3 sm:mr-2" />
+          <span className="hidden sm:inline">Limpar filtros</span>
+          <span className="sm:hidden">Limpar</span>
         </Button>
       </div>
 
-      <div className="flex gap-4">
-        <div className="w-48 space-y-2">
-          <Label htmlFor="model-id-filter">Id</Label>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <div className="space-y-2">
+          <Label htmlFor="model-id-filter" className="text-xs sm:text-sm">
+            Id
+          </Label>
           <Input
             id="model-id-filter"
             type="text"
             placeholder="Digite o Id do modelo"
             value={filters.name || ''}
             onChange={(e) => updateFilter('id', e.target.value)}
+            className="h-9 text-xs sm:h-10 sm:text-sm"
           />
         </div>
-        <div className="w-48 space-y-2">
-          <Label htmlFor="model-name-filter">Nome do Modelo</Label>
+        <div className="space-y-2">
+          <Label htmlFor="model-name-filter" className="text-xs sm:text-sm">
+            Nome do Modelo
+          </Label>
           <Input
             id="model-name-filter"
             type="text"
             placeholder="Digite o nome do modelo"
             value={filters.name || ''}
             onChange={(e) => updateFilter('name', e.target.value)}
+            className="h-9 text-xs sm:h-10 sm:text-sm"
           />
         </div>
-        <div className="w-48 space-y-2">
-          <Label htmlFor="category-filter">Categoria</Label>
+        <div className="space-y-2">
+          <Label htmlFor="category-filter" className="text-xs sm:text-sm">
+            Categoria
+          </Label>
           <Select
             value={filters.categoryName || ''}
             onValueChange={(value) =>
               updateFilter('categoryName', value || undefined)
             }
           >
-            <SelectTrigger className="w-48" id="category-filter">
+            <SelectTrigger
+              className="h-9 w-full text-xs sm:h-10 sm:text-sm"
+              id="category-filter"
+            >
               <SelectValue placeholder="Todas as categorias" />
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
+                <SelectItem
+                  key={category.id}
+                  value={category.id}
+                  className="text-xs sm:text-sm"
+                >
                   {category.name.value}
                 </SelectItem>
               ))}
@@ -107,8 +124,10 @@ export function ModelFilters({
           </Select>
         </div>
 
-        <div className="w-48 space-y-2">
-          <Label htmlFor="suggested-price">Preço Sugerido (R$)</Label>
+        <div className="space-y-2">
+          <Label htmlFor="suggested-price" className="text-xs sm:text-sm">
+            Preço Sugerido (R$)
+          </Label>
           <Input
             id="suggested-price"
             type="number"
@@ -120,6 +139,7 @@ export function ModelFilters({
               const value = e.target.value ? Number(e.target.value) : undefined
               updateFilter('suggestedPrice', value)
             }}
+            className="h-9 text-xs sm:h-10 sm:text-sm"
           />
         </div>
       </div>
