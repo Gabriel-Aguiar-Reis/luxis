@@ -44,6 +44,10 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
 
     const soldProductIds = sales.flatMap((sale) => sale.productIds)
 
+    if (soldProductIds.length === 0) {
+      return []
+    }
+
     const productCount = soldProductIds.reduce(
       (acc, productId) => {
         acc[productId] = (acc[productId] || 0) + 1
@@ -66,6 +70,10 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
       .where('product.id IN (:...productIds)', { productIds: topProductIds })
       .getMany()
 
+    if (products.length === 0) {
+      return []
+    }
+
     const modelIds = [...new Set(products.map((product) => product.modelId))]
     const productModels = await this.productModelRepo
       .createQueryBuilder('model')
@@ -80,20 +88,36 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
       {} as Record<string, ProductModelTypeOrmEntity>
     )
 
-    return products
-      .map((product) => {
-        const model = modelsById[product.modelId]
-        const quantity = productCount[product.id]
-        const salePrice = product.salePrice.toString()
-        return {
-          modelId: model.id.toString(),
-          modelName: model.name,
-          quantity,
-          salePrice,
-          totalValue: (Number(salePrice) * quantity).toString()
+    // Agrupar produtos por modelo
+    const modelGroups = products.reduce(
+      (acc, product) => {
+        const modelId = product.modelId
+        if (!acc[modelId]) {
+          const model = modelsById[modelId]
+          if (model) {
+            acc[modelId] = {
+              modelId: model.id.toString(),
+              modelName: model.name,
+              quantity: 0,
+              salePrice: product.salePrice.toString(),
+              totalValue: '0'
+            }
+          }
         }
-      })
-      .sort((a, b) => b.quantity - a.quantity)
+        if (acc[modelId]) {
+          const count = productCount[product.id] || 0
+          acc[modelId].quantity += count
+          acc[modelId].totalValue = (
+            Number(acc[modelId].totalValue) +
+            Number(product.salePrice) * count
+          ).toString()
+        }
+        return acc
+      },
+      {} as Record<string, SellingProductDto>
+    )
+
+    return Object.values(modelGroups).sort((a, b) => b.quantity - a.quantity)
   }
 
   async productsWithLongestTimeInInventory(

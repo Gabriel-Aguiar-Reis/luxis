@@ -13,4 +13,12 @@ export class MonthlySalesDto {
     type: String
   })
   totalAmount: string
+
+  @ApiProperty({
+    example: 2024,
+    description: 'Year of sales',
+    type: Number,
+    required: false
+  })
+  year?: number
 }

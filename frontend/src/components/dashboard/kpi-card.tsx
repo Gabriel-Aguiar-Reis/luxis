@@ -26,39 +26,39 @@ export function KpiCard({
   valueFormatter = (value) => value.toString()
 }: KpiCardProps) {
   return (
-    <Card className="h-44">
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between space-x-4">
-          <div className="flex flex-col space-y-1">
-            <span className="text-sm font-medium text-muted-foreground">
+    <Card className="h-36 sm:h-40 md:h-44">
+      <CardContent className="p-4 sm:p-5 md:p-6">
+        <div className="flex items-center justify-between gap-3 sm:gap-4">
+          <div className="flex min-w-0 flex-1 flex-col space-y-1">
+            <span className="text-muted-foreground text-xs font-medium sm:text-sm">
               {title}
             </span>
-            <span className="text-2xl font-bold">
+            <span className="truncate text-xl font-bold sm:text-2xl">
               {prefix}
               {valueFormatter(value)}
               {suffix}
             </span>
-            <span className="flex items-center text-xs text-muted-foreground">
+            <span className="text-muted-foreground flex items-center text-[10px] sm:text-xs">
               {trend === 'up' ? (
-                <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
+                <TrendingUp className="mr-1 h-2.5 w-2.5 shrink-0 text-green-500 sm:h-3 sm:w-3" />
               ) : trend === 'down' ? (
-                <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
+                <TrendingDown className="mr-1 h-2.5 w-2.5 shrink-0 text-red-500 sm:h-3 sm:w-3" />
               ) : null}
               <span
-                className={
+                className={`line-clamp-2 ${
                   trend === 'up'
                     ? 'text-green-500'
                     : trend === 'down'
-                    ? 'text-red-500'
-                    : ''
-                }
+                      ? 'text-red-500'
+                      : ''
+                }`}
               >
                 {description}
               </span>
             </span>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-            <Icon className="h-6 w-6 text-primary" />
+          <div className="bg-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg sm:h-11 sm:w-11 md:h-12 md:w-12">
+            <Icon className="text-primary h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
           </div>
         </div>
       </CardContent>

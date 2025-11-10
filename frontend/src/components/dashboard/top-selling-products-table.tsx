@@ -47,24 +47,36 @@ export function TopSellingProductsTable({
   }
 
   return (
-    <div className="rounded-md border">
+    <div className="overflow-x-auto rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Produto</TableHead>
-            <TableHead>Modelo</TableHead>
-            <TableHead className="text-right">Vendas</TableHead>
+            <TableHead className="min-w-[120px] text-xs sm:text-sm">
+              Modelo
+            </TableHead>
+            <TableHead className="text-right text-xs sm:text-sm">Qtd</TableHead>
+            <TableHead className="min-w-[100px] text-right text-xs sm:text-sm">
+              Valor Total
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((product: any, index: number) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">
-                {product.serialNumber || 'N/A'}
+              <TableCell className="text-xs font-medium sm:text-sm">
+                <span className="line-clamp-2">
+                  {product.modelName || 'N/A'}
+                </span>
               </TableCell>
-              <TableCell>{product.modelName || 'N/A'}</TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-right text-xs sm:text-sm">
                 {product.quantity || 0}
+              </TableCell>
+              <TableCell className="text-right text-xs whitespace-nowrap sm:text-sm">
+                R${' '}
+                {Number(product.totalValue || 0).toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}
               </TableCell>
             </TableRow>
           ))}

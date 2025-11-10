@@ -52,23 +52,35 @@ export function LongestInventoryProductsTable({
   }
 
   return (
-    <div className="rounded-md border">
+    <div className="overflow-x-auto rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Produto</TableHead>
-            <TableHead>Modelo</TableHead>
-            <TableHead className="text-right">Tempo em Estoque</TableHead>
+            <TableHead className="min-w-[100px] text-xs sm:text-sm">
+              Produto
+            </TableHead>
+            <TableHead className="min-w-[120px] text-xs sm:text-sm">
+              Modelo
+            </TableHead>
+            <TableHead className="min-w-[120px] text-right text-xs sm:text-sm">
+              Tempo em Estoque
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((product: any, index: number) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">
-                {product.productName || 'N/A'}
+              <TableCell className="text-xs font-medium sm:text-sm">
+                <span className="line-clamp-1">
+                  {product.serialNumber || 'N/A'}
+                </span>
               </TableCell>
-              <TableCell>{product.modelName || 'N/A'}</TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-xs sm:text-sm">
+                <span className="line-clamp-2">
+                  {product.modelName || 'N/A'}
+                </span>
+              </TableCell>
+              <TableCell className="text-right text-xs whitespace-nowrap sm:text-sm">
                 {product.dateAcquired
                   ? formatDistanceToNow(new Date(product.dateAcquired), {
                       addSuffix: true,

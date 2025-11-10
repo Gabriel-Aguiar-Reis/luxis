@@ -93,7 +93,7 @@ export function ResellerDashboard() {
   const totalSalesInPeriod =
     Array.isArray(monthlySalesKpi.data) && monthlySalesKpi.data.length > 0
       ? monthlySalesKpi.data.reduce(
-          (acc: number, item: any) => acc + (item.total || 0),
+          (acc: number, item: any) => acc + (item.countSales || 0),
           0
         )
       : 0
@@ -107,25 +107,32 @@ export function ResellerDashboard() {
       : 0
 
   return (
-    <div className="flex-1 space-y-4">
-      <div className="flex flex-col gap-4 px-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+    <div className="flex-1 space-y-4 pb-6 md:space-y-6">
+      <div className="flex flex-col gap-3 px-4 pt-4 sm:gap-4 sm:px-6 sm:pt-6 md:flex-row md:items-center md:justify-between">
+        <h2 className="text-xl font-bold tracking-tight sm:text-2xl md:text-3xl">
           Dashboard
         </h2>
         <Tabs
           defaultValue="month"
           value={timeframe}
           onValueChange={setTimeframe}
+          className="w-full md:w-auto"
         >
-          <TabsList className="grid w-full grid-cols-3 sm:w-auto">
-            <TabsTrigger value="week">Semana</TabsTrigger>
-            <TabsTrigger value="month">Mês</TabsTrigger>
-            <TabsTrigger value="year">Ano</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 md:w-auto">
+            <TabsTrigger value="week" className="text-xs sm:text-sm">
+              Semana
+            </TabsTrigger>
+            <TabsTrigger value="month" className="text-xs sm:text-sm">
+              Mês
+            </TabsTrigger>
+            <TabsTrigger value="year" className="text-xs sm:text-sm">
+              Ano
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
 
-      <div className="justify-center space-y-4 px-4">
+      <div className="w-full overflow-hidden px-2 sm:px-4 md:px-6">
         <KpiCarousel
           type="vendas"
           isLoading={isLoading}
@@ -164,17 +171,19 @@ export function ResellerDashboard() {
         />
       </div>
 
-      <div className="grid gap-4 px-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="md:col-span-2 lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Evolução de Vendas</CardTitle>
-            <CardDescription>
+      <div className="grid gap-4 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="overflow-hidden md:col-span-2 lg:col-span-4">
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="text-base sm:text-lg md:text-xl">
+              Evolução de Vendas
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               Vendas realizadas no período selecionado
             </CardDescription>
           </CardHeader>
-          <CardContent className="pl-2">
+          <CardContent className="px-2 pb-4 sm:px-6 sm:pb-6">
             {monthlySalesKpi.isLoading ? (
-              <Skeleton className="h-[350px] w-full" />
+              <Skeleton className="h-[250px] w-full sm:h-[300px] md:h-[350px]" />
             ) : (
               <ResellerSalesChart
                 data={monthlySalesKpi.data as any[]}
@@ -183,12 +192,16 @@ export function ResellerDashboard() {
             )}
           </CardContent>
         </Card>
-        <Card className="md:col-span-2 lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Produtos Mais Vendidos</CardTitle>
-            <CardDescription>Top produtos por vendas</CardDescription>
+        <Card className="overflow-hidden md:col-span-2 lg:col-span-3">
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="text-base sm:text-lg md:text-xl">
+              Produtos Mais Vendidos
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
+              Top produtos por vendas
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-2 sm:px-6">
             <TopSellingProductsTable
               start={dateRange.start.toISOString()}
               end={dateRange.end.toISOString()}
@@ -197,37 +210,41 @@ export function ResellerDashboard() {
         </Card>
       </div>
 
-      <div className="grid gap-4 px-4 pb-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="md:col-span-2 lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Produtos em Estoque</CardTitle>
-            <CardDescription>
+      <div className="grid gap-4 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="overflow-hidden md:col-span-2 lg:col-span-4">
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="text-base sm:text-lg md:text-xl">
+              Produtos em Estoque
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               Produtos há mais tempo no inventário
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-2 sm:px-6">
             {inventoryKpi.isLoading ? (
-              <Skeleton className="h-[300px] w-full" />
+              <Skeleton className="h-[250px] w-full sm:h-[300px]" />
             ) : (
               <LongestInventoryProductsTable />
             )}
           </CardContent>
         </Card>
-        <Card className="md:col-span-2 lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Insights e Recomendações</CardTitle>
-            <CardDescription>
+        <Card className="overflow-hidden md:col-span-2 lg:col-span-3">
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="text-base sm:text-lg md:text-xl">
+              Insights e Recomendações
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               Ações para melhorar seu desempenho
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 mt-0.5 rounded-full p-2">
-                  <TrendingUp className="text-primary h-4 w-4" />
+          <CardContent className="px-4 sm:px-6">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="bg-primary/10 mt-0.5 shrink-0 rounded-full p-1.5 sm:p-2">
+                  <TrendingUp className="text-primary h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium sm:text-base">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium sm:text-sm md:text-base">
                     Analise seus produtos
                   </p>
                   <p className="text-muted-foreground text-xs sm:text-sm">
@@ -236,12 +253,12 @@ export function ResellerDashboard() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 mt-0.5 rounded-full p-2">
-                  <ShoppingBag className="text-primary h-4 w-4" />
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="bg-primary/10 mt-0.5 shrink-0 rounded-full p-1.5 sm:p-2">
+                  <ShoppingBag className="text-primary h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium sm:text-base">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium sm:text-sm md:text-base">
                     Foque nos mais vendidos
                   </p>
                   <p className="text-muted-foreground text-xs sm:text-sm">
@@ -250,12 +267,12 @@ export function ResellerDashboard() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 mt-0.5 rounded-full p-2">
-                  <Package className="text-primary h-4 w-4" />
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="bg-primary/10 mt-0.5 shrink-0 rounded-full p-1.5 sm:p-2">
+                  <Package className="text-primary h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium sm:text-base">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium sm:text-sm md:text-base">
                     Gerencie seu inventário
                   </p>
                   <p className="text-muted-foreground text-xs sm:text-sm">
