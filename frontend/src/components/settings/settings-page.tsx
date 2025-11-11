@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'
 import { AppearanceForm } from '@/components/settings/appearance-form'
 import { ProfileForm } from '@/components/settings/profile-form'
 import { SecurityForm } from '@/components/settings/security-form'
+import { OnboardingSettings } from '@/components/onboarding/onboarding-settings'
 import { useTranslations } from 'next-intl'
 
 export function SettingsPage() {
@@ -35,6 +36,7 @@ export function SettingsPage() {
           <Card>
             <AppearanceForm />
           </Card>
+          <OnboardingSettings />
         </TabsContent>
       </Tabs>
     </div>

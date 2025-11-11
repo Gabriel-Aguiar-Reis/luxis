@@ -72,8 +72,8 @@ export function ProductDialog({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle>Editar Produto</DialogTitle>
