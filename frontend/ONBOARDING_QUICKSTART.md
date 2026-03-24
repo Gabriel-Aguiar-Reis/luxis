@@ -7,7 +7,7 @@ Um sistema completo de onboarding interativo com animações suaves para dar boa
 ## 📦 Pacotes instalados
 
 ```bash
-yarn add nextstepjs motion
+npm install nextstepjs motion
 npx shadcn@latest add progress
 ```
 

@@ -44,7 +44,7 @@ Inventory management system built with NestJS, following Clean Architecture and 
 
 - Node.js (LTS version recommended)
 - PostgreSQL
-- Yarn or NPM
+- NPM
 - Cloudinary account (for image uploads)
 - MailerSend account (for sending emails)
 
@@ -61,7 +61,7 @@ cd luxis
 
 ```bash
 cd backend
-yarn install
+npm install
 ```
 
 ### 3. Configure environment variables
@@ -75,13 +75,13 @@ Edit the `.env` file with your configuration values.
 ### 4. Run migrations
 
 ```bash
-yarn migration:run
+npm run migration:run
 ```
 
 ### 5. Create a superuser
 
 ```bash
-yarn seed:superuser
+npm run seed:superuser
 ```
 
 ## 🚀 Running the Project
@@ -89,14 +89,14 @@ yarn seed:superuser
 ### Development
 
 ```bash
-yarn start:dev
+npm run start:dev
 ```
 
 ### Production
 
 ```bash
-yarn build
-yarn start:prod
+npm run build
+npm run start:prod
 ```
 
 ## 🧪 Testing
@@ -104,38 +104,38 @@ yarn start:prod
 ### Unit Tests
 
 ```bash
-yarn test:unit
+npm run test:unit
 ```
 
 ### Integration Tests
 
 ```bash
-yarn test:integration
+npm run test:integration
 ```
 
 ### End-to-End (E2E) Tests
 
 ```bash
-yarn test:e2e
+npm run test:e2e
 ```
 
 ### Test Coverage
 
 ```bash
-yarn test:cov
+npm run test:cov
 ```
 
 ## 📦 Available Scripts
 
-- `yarn build`: Compile the project
-- `yarn start:dev`: Start the server in development mode
-- `yarn start:debug`: Start the server in debug mode
-- `yarn start:prod`: Start the server in production mode
-- `yarn test`: Run all tests
-- `yarn migration:generate`: Generate a new migration
-- `yarn migration:run`: Run pending migrations
-- `yarn migration:revert`: Revert the last migration
-- `yarn seed:superuser`: Create a superuser
+- `npm run build`: Compile the project
+- `npm run start:dev`: Start the server in development mode
+- `npm run start:debug`: Start the server in debug mode
+- `npm run start:prod`: Start the server in production mode
+- `npm run test`: Run all tests
+- `npm run migration:generate`: Generate a new migration
+- `npm run migration:run`: Run pending migrations
+- `npm run migration:revert`: Revert the last migration
+- `npm run seed:superuser`: Create a superuser
 
 ## 📚 API Documentation
 

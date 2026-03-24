@@ -2,6 +2,7 @@ dist
 node_modules
 build
 .vscode
+.env
 .env.local
 .env.development
 .env.production
@@ -12,3 +13,4 @@ next-env.d.ts
 .DS_Store
 .github
 .yarn
+package-lock.json

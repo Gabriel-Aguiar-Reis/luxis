@@ -24,9 +24,9 @@
     "prod:migration:generate": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:generate -d src/shared/infra/database/typeorm-datasource.ts",
     "prod:migration:run": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:run -d src/shared/infra/database/typeorm-datasource.ts",
     "prod:migration:revert": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:revert -d src/shared/infra/database/typeorm-datasource.ts",
-    "reset:test": "rm -f test.sqlite && yarn migration:run && yarn test:seed",
+    "reset:test": "rm -f test.sqlite && npm run migration:run && npm run test:seed",
     "seed": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/shared/infra/database/seeds/main.seed.ts",
-    "seed:superuser": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/shared/infra/database/seeds/superuser.seed.ts"
+    "seed:superuser": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/shared/infra/database/seeds/superuser.bootstrap.ts"
   },
   "dependencies": {
     "@casl/ability": "^6.7.3",

@@ -234,7 +234,6 @@ frontend/
 ### DevOps & Tools
 
 - **Controle de Versão**: Git
-- **Monorepo**: Yarn Workspaces
 - **CI/CD**: GitHub Actions
 - **Containerização**: Docker (pronto para deploy)
 
@@ -246,7 +245,6 @@ frontend/
 
 - **Node.js** 18+ (LTS recommended)
 - **PostgreSQL** 14+
-- **Yarn** 4+
 - Accounts on:
   - [Cloudinary](https://cloudinary.com/) (image upload)
   - [MailerSend](https://www.mailersend.com/) (email sending)
@@ -259,7 +257,7 @@ git clone https://github.com/gabriel-aguiar-reis/luxis.git
 cd luxis
 
 # 2. Install dependencies
-yarn install
+npm install
 
 # 3. Configure Backend
 cd backend
@@ -267,10 +265,10 @@ cp .env.example .env
 # Edit .env with your credentials
 
 # 4. Run migrations
-yarn migration:run
+npm run migration:run
 
 # 5. Create superuser
-yarn seed:superuser
+npm run seed:superuser
 
 # 6. Configure Frontend
 cd ../frontend
@@ -279,7 +277,7 @@ cp .env.example .env
 
 # 7. Go back to root and start everything
 cd ..
-yarn start
+npm run start
 ```
 
 Done! 🎉
@@ -311,32 +309,32 @@ Documentation includes:
 #### Backend
 
 ```bash
-yarn start:dev          # Start in development mode
-yarn start:prod         # Start in production mode
-yarn build              # Compile project
-yarn test:unit          # Unit tests
-yarn test:integration   # Integration tests
-yarn test:e2e           # End-to-end tests
-yarn test:cov           # Test coverage
-yarn migration:generate # Generate new migration
-yarn migration:run      # Run migrations
-yarn seed:superuser     # Create superuser
+npm run start:dev          # Start in development mode
+npm run start:prod         # Start in production mode
+npm run build              # Compile project
+npm run test:unit          # Unit tests
+npm run test:integration   # Integration tests
+npm run test:e2e           # End-to-end tests
+npm run test:cov           # Test coverage
+npm run migration:generate # Generate new migration
+npm run migration:run      # Run migrations
+npm run seed:superuser     # Create superuser
 ```
 
 #### Frontend
 
 ```bash
-yarn dev                # Start in development (Turbopack)
-yarn build              # Production build
-yarn start              # Start production version
-yarn lint               # Check code
-yarn generate:types     # Generate OpenAPI types
+npm run dev                # Start in development (Turbopack)
+npm run build              # Production build
+npm run start              # Start production version
+npm run lint               # Check code
+npm run generate:types     # Generate OpenAPI types
 ```
 
 #### Monorepo
 
 ```bash
-yarn start              # Start backend + frontend simultaneously
+npm run start              # Start backend + frontend simultaneously
 ```
 
 ---
@@ -365,10 +363,10 @@ Luxis has comprehensive test coverage:
 
 ```bash
 # Backend
-yarn test:unit          # Fast unit tests
-yarn test:integration   # Integration tests with database
-yarn test:e2e           # Complete end-to-end tests
-yarn test:cov           # Coverage report
+npm run test:unit          # Fast unit tests
+npm run test:integration   # Integration tests with database
+npm run test:e2e           # Complete end-to-end tests
+npm run test:cov           # Coverage report
 ```
 
 **Test Types:**
