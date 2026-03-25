@@ -343,7 +343,7 @@ npm run start              # Start backend + frontend simultaneously
 
 Luxis implements security best practices:
 
-- ✅ **JWT Authentication** with refresh tokens
+- ✅ **JWT Authentication** with httpOnly session cookie
 - ✅ **RBAC (Role-Based Access Control)** with CASL
 - ✅ **Rate Limiting** to prevent attacks
 - ✅ **Data validation** at all layers
@@ -354,6 +354,13 @@ Luxis implements security best practices:
 - ✅ **CORS** properly configured
 - ✅ **Helmet** for security headers
 - ✅ **Complete audit logs**
+
+### Authentication Flow
+
+- `POST /auth/login` validates credentials, returns `204 No Content`, and sets the signed JWT in an httpOnly cookie.
+- `POST /auth/verify` validates the current session using the auth cookie. Bearer tokens are still accepted for backend compatibility.
+- `POST /auth/logout` returns `204 No Content` and clears the auth cookie.
+- Protected frontend routes are gated by middleware and server-side session sync instead of a persisted access token in browser storage.
 
 ---
 
