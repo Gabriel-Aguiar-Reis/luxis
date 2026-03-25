@@ -15,6 +15,7 @@
     "restrictedAreaHref": "Reseller Area",
     "restrictedAreaReseller": "This area is restricted for resellers, if you want to access the admin area, click here",
     "restrictedAreaHrefReseller": "Admin Area",
+    "resellerOnlyBadge": "Exclusive access for resellers",
 
     "authErrorReseller": "You need to be authenticated as a reseller to access this area",
     "dontHaveAccount": "Don't have an account?",
@@ -216,10 +217,728 @@
   },
   "Common": {
     "AdminArea": "Admin Area",
+    "ResellerArea": "Reseller",
     "LogoutSuccess": "Logout successful",
+    "SessionExpired": "Session expired",
     "Settings": "Settings",
     "Logout": "Logout",
     "Dashboard": "Dashboard"
+  },
+  "SaleConfirmation": {
+    "breadcrumb": "Confirmation",
+    "title": "Sale created successfully!",
+    "description": "The sale was registered in the system. Review the information below.",
+    "createNewSale": "Create new sale",
+    "previewReceipt": "Receipt preview",
+    "issueSaleSummary": "Issue sale summary",
+    "back": "Back",
+    "downloadPdf": "Download receipt (PDF)",
+    "generatingPdf": "Generating PDF...",
+    "downloadSuccess": "Receipt downloaded successfully!",
+    "downloadError": "Error generating the receipt",
+    "customer": "Customer",
+    "saleDate": "Sale date",
+    "customerNotProvided": "Customer not provided",
+    "paymentMethod": "Payment method",
+    "totalProducts": "Total products",
+    "item": "item",
+    "items": "items",
+    "products": "Products",
+    "serialNumber": "S/N",
+    "notAvailable": "N/A",
+    "productFallback": "Product",
+    "saleTotal": "Sale total",
+    "confirmSale": "Confirm sale",
+    "confirming": "Confirming...",
+    "confirmedTitle": "Sale confirmed successfully!",
+    "confirmedPaidDescription": "Cash payment confirmed.",
+    "confirmedPendingDescription": "Waiting for installment payments.",
+    "statuses": {
+      "INSTALLMENTS_OVERDUE": "Overdue installments",
+      "CANCELLED": "Cancelled",
+      "INSTALLMENTS_PAID": "Paid sale",
+      "PENDING": "Pending",
+      "INSTALLMENTS_PENDING": "Pending payment",
+      "CONFIRMED": "Confirmed"
+    },
+    "paymentMethods": {
+      "CASH": "Cash",
+      "PIX": "Pix",
+      "DEBIT": "Debit",
+      "CREDIT": "Credit",
+      "EXCHANGE": "Exchange"
+    }
+  },
+  "SaleProductsDialog": {
+    "title": "Sale products",
+    "product": "Product",
+    "serialNumber": "Serial number",
+    "price": "Price"
+  },
+  "AddCustomerDialog": {
+    "title": "New customer",
+    "description": "Enter the customer's basic information.",
+    "name": "Name",
+    "namePlaceholder": "Customer name",
+    "phone": "Phone",
+    "phonePlaceholder": "(00) 00000-0000",
+    "cancel": "Cancel",
+    "create": "Create customer"
+  },
+  "AddProductDialog": {
+    "title": "Select products",
+    "description": "Choose the products that will be included in the sale. Grouped by model to make selection easier.",
+    "searchPlaceholder": "Search by model or serial...",
+    "noProductsAvailable": "No products available.",
+    "noProductsFound": "No products found.",
+    "productCount": "{count} product(s)",
+    "noSerial": "No serial",
+    "selectAll": "Select all",
+    "clearGroup": "Clear group",
+    "selectedProducts": "{count} product(s) selected",
+    "total": "Total",
+    "finishSelection": "Finish selection"
+  },
+  "SaleEditDialog": {
+    "title": "Edit sale",
+    "description": "Edit the products of the selected sale.",
+    "selectedProducts": "{count} product(s) selected",
+    "selectProducts": "Select products",
+    "selectedProductsTitle": "Selected products",
+    "modelFallback": "Model",
+    "groupCount": "{modelName} - {count} unit(s)",
+    "noSerial": "No serial",
+    "estimatedTotal": "Estimated total",
+    "cancel": "Cancel",
+    "saveChanges": "Save changes",
+    "productPickerTitle": "Select products",
+    "productPickerDescription": "Choose the products to add to the sale.",
+    "searchProduct": "Search product...",
+    "noProductsFound": "No products found.",
+    "serialPrefix": "SN",
+    "notAvailable": "N/A",
+    "close": "Close"
+  },
+  "SaleCreateForm": {
+    "title": "Create sale",
+    "description": "Fill in the details below to register a new sale.",
+    "saleDate": "Sale date",
+    "selectDate": "Select date",
+    "customer": "Customer",
+    "selectCustomer": "Select customer",
+    "searchCustomer": "Search customer...",
+    "noCustomersFound": "No customers found.",
+    "createNewCustomer": "Create new customer",
+    "newCustomer": "New",
+    "products": "Products",
+    "selectedCount": "{count} selected",
+    "selectProducts": "Select products",
+    "selectedProductsTitle": "Selected products",
+    "modelFallback": "Model",
+    "groupCount": "{modelName} - {count} unit(s)",
+    "noSerial": "No serial",
+    "estimatedTotal": "Estimated total",
+    "paymentMethod": "Payment method",
+    "cashPayment": "Cash payment",
+    "numberInstallments": "Number of installments",
+    "installmentsPlaceholder": "Ex: 3",
+    "installmentsInterval": "Interval (days)",
+    "intervalPlaceholder": "Ex: 30",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "submit": "Create sale",
+    "validation": {
+      "selectAtLeastOneProduct": "Select at least 1 product",
+      "installmentsRequired": "Enter the number of installments",
+      "intervalRequired": "Enter the interval between installments",
+      "integerNumber": "Whole number",
+      "minimumOne": "Minimum 1",
+      "minimumZero": "Minimum 0",
+      "selectCustomer": "Select a customer",
+      "installmentsGreaterThanZero": "Enter the number of installments (>0)",
+      "validInterval": "Enter a valid interval (>=0)"
+    }
+  },
+  "ProductsFilters": {
+    "title": "Filters",
+    "clearFilters": "Clear filters",
+    "serialNumber": "Serial number",
+    "serialNumberPlaceholder": "Enter the serial number",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "category": "Category",
+    "allCategories": "All categories",
+    "model": "Model",
+    "allModels": "All models",
+    "minPrice": "Minimum price (R$)",
+    "maxPrice": "Maximum price (R$)",
+    "pricePlaceholder": "R$ 0.00",
+    "statuses": {
+      "IN_STOCK": "In stock",
+      "SOLD": "Sold",
+      "ASSIGNED": "Assigned"
+    }
+  },
+  "ProductsTable": {
+    "managementTitle": "Product management",
+    "managementDescription": "View and edit catalog products",
+    "filters": "Filters",
+    "serialNumber": "Serial no.",
+    "photo": "Photo",
+    "model": "Model",
+    "unitCost": "Unit cost",
+    "salePrice": "Sale price",
+    "status": "Status",
+    "actions": "Actions",
+    "noPhoto": "No photo",
+    "edit": "Edit",
+    "noProductsFound": "No products found",
+    "page": "Page {current} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "statuses": {
+      "IN_STOCK": "In stock",
+      "SOLD": "Sold",
+      "ASSIGNED": "Assigned"
+    }
+  },
+  "ProductsPage": {
+    "emptyTitle": "No products found!",
+    "emptyDescription": "There are no products registered in the system."
+  },
+  "ModelsFilters": {
+    "title": "Filters",
+    "clearFilters": "Clear filters",
+    "clear": "Clear",
+    "id": "Id",
+    "idPlaceholder": "Enter the model Id",
+    "modelName": "Model name",
+    "modelNamePlaceholder": "Enter the model name",
+    "category": "Category",
+    "allCategories": "All categories",
+    "suggestedPrice": "Suggested price (R$)",
+    "pricePlaceholder": "R$ 0.00"
+  },
+  "ModelsTable": {
+    "managementTitle": "Product model management",
+    "managementDescription": "View, edit, and delete catalog models",
+    "filters": "Filters",
+    "photo": "Photo",
+    "name": "Name",
+    "categoryName": "Category name",
+    "suggestedPrice": "Suggested price",
+    "status": "Status",
+    "actions": "Actions",
+    "noPhoto": "No photo",
+    "edit": "Edit",
+    "delete": "Delete",
+    "noModelsFound": "No models found",
+    "page": "Page {current} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "statuses": {
+      "USED": "Used",
+      "ACTIVE": "Active",
+      "ARCHIVED": "Archived"
+    }
+  },
+  "ModelsPage": {
+    "emptyTitle": "No models found!",
+    "emptyDescription": "There are no models registered in the system."
+  },
+  "ModelsDeleteDialog": {
+    "title": "Delete product model",
+    "description": "Are you sure you want to delete this product model?",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "ProductDialog": {
+    "title": "Edit product",
+    "description": "Edit the selected product details.",
+    "serialNumber": "Serial number",
+    "serialNumberPlaceholder": "SN-0001",
+    "status": "Status",
+    "model": "Model",
+    "selectModel": "Select a model",
+    "batch": "Batch",
+    "batchPlaceholder": "Batch ID",
+    "unitCost": "Unit cost (R$) *",
+    "salePrice": "Sale price (R$) *",
+    "pricePlaceholder": "0.00",
+    "cancel": "Cancel",
+    "saveChanges": "Save changes",
+    "statuses": {
+      "IN_STOCK": "In stock",
+      "ASSIGNED": "Assigned",
+      "SOLD": "Sold"
+    }
+  },
+  "ModelDialog": {
+    "title": "Edit product model",
+    "description": "Edit the selected model details.",
+    "name": "Name *",
+    "suggestedPrice": "Suggested price (R$) *",
+    "category": "Category",
+    "descriptionField": "Description",
+    "status": "Status",
+    "selectStatus": "Select the status",
+    "fileTab": "File",
+    "imageUrl": "Image (URL)",
+    "imageUrlPlaceholder": "https://...",
+    "imageFile": "Image (file)",
+    "imagePreviewAlt": "Image preview",
+    "compressImageError": "Error compressing image",
+    "uploadInProgress": "Image upload in progress. Please wait.",
+    "selectSingleImageSource": "Choose only one option: upload a file or provide the image URL.",
+    "uploadImageError": "Error uploading image",
+    "cancel": "Cancel",
+    "saveChanges": "Save changes",
+    "statuses": {
+      "ACTIVE": "Active",
+      "USED": "Used",
+      "ARCHIVED": "Archived"
+    }
+  },
+  "NewModelDialog": {
+    "title": "New model",
+    "modelName": "Model name *",
+    "category": "Category *",
+    "selectCategory": "Select category",
+    "searchCategory": "Search category...",
+    "noCategoriesFound": "No categories found.",
+    "createNewCategory": "Create new category",
+    "suggestedPrice": "Suggested price *",
+    "suggestedPricePlaceholder": "123.45",
+    "optionalImage": "Image (optional)",
+    "imagePreviewAlt": "preview",
+    "uploadImageError": "Error uploading image",
+    "requiredFieldsError": "Fill in all required fields",
+    "cancel": "Cancel",
+    "add": "Add"
+  },
+  "ShipmentCreateDialog": {
+    "title": "New shipment",
+    "description": "Fill in the data to create a new shipment.",
+    "reseller": "Reseller",
+    "selectReseller": "Select reseller",
+    "searchReseller": "Search reseller...",
+    "noResellersFound": "No resellers found.",
+    "products": "Products",
+    "selectProducts": "Select products",
+    "selectedProductsCount": "{count} selected product(s)",
+    "cancel": "Cancel",
+    "createShipment": "Create shipment"
+  },
+  "ShipmentEditStatusDialog": {
+    "title": "Edit shipment status",
+    "selectStatus": "Select the status",
+    "cancel": "Cancel",
+    "save": "Save",
+    "statuses": {
+      "CANCELLED": "Cancelled",
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "DELIVERED": "Delivered"
+    }
+  },
+  "ShipmentDialog": {
+    "title": "Edit shipment",
+    "description": "Edit the selected shipment details.",
+    "reseller": "Reseller",
+    "selectReseller": "Select reseller",
+    "searchReseller": "Search reseller...",
+    "noResellersFound": "No resellers found.",
+    "products": "Products",
+    "selectProducts": "Select products",
+    "selectedProductsCount": "{count} selected product(s)",
+    "searchProduct": "Search product...",
+    "noProductsFound": "No products found.",
+    "cancel": "Cancel",
+    "saveChanges": "Save changes"
+  },
+  "AddShipmentProductDialog": {
+    "title": "Select products for shipment",
+    "description": "Choose the products from {resellerName}'s inventory that will be included in the shipment.",
+    "searchPlaceholder": "Search model or serial...",
+    "noAvailableProducts": "No products available in inventory.",
+    "noProductsFound": "No products found.",
+    "unknownModel": "Unknown model",
+    "noSerial": "No serial",
+    "selectAll": "Select all",
+    "clearGroup": "Clear group",
+    "selectedProductsCount": "{count} selected product(s)",
+    "finishSelection": "Finish selection"
+  },
+  "ReturnCreateDialog": {
+    "title": "New return",
+    "description": "Fill in the data to create a new return.",
+    "reseller": "Reseller",
+    "selectReseller": "Select reseller",
+    "searchReseller": "Search reseller...",
+    "noResellersFound": "No resellers found.",
+    "products": "Products",
+    "selectProducts": "Select products",
+    "selectedProductsCount": "{count} selected product(s)",
+    "searchProduct": "Search product...",
+    "noProductsFound": "No products found.",
+    "selectedProductsTitle": "Selected:",
+    "cancel": "Cancel",
+    "createReturn": "Create return"
+  },
+  "ReturnEditStatusDialog": {
+    "title": "Edit return status",
+    "selectStatus": "Select the status",
+    "cancel": "Cancel",
+    "save": "Save",
+    "statuses": {
+      "CANCELLED": "Cancelled",
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "RETURNED": "Returned"
+    }
+  },
+  "ReturnDialog": {
+    "title": "Edit return",
+    "description": "Edit the selected return details.",
+    "reseller": "Reseller",
+    "selectReseller": "Select reseller",
+    "searchReseller": "Search reseller...",
+    "noResellersFound": "No resellers found.",
+    "products": "Products",
+    "selectProducts": "Select products",
+    "selectedProductsCount": "{count} selected product(s)",
+    "searchProduct": "Search product...",
+    "noProductsFound": "No products found.",
+    "cancel": "Cancel",
+    "saveChanges": "Save changes"
+  },
+  "ShipmentsFilters": {
+    "title": "Filters",
+    "clearFilters": "Clear filters",
+    "clear": "Clear",
+    "reseller": "Reseller",
+    "resellerPlaceholder": "Reseller name",
+    "status": "Status",
+    "shipmentDate": "Shipment date",
+    "selectDate": "Select date",
+    "statuses": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "DELIVERED": "Delivered",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "ShipmentsTable": {
+    "managementTitle": "Shipment management",
+    "managementDescription": "View, create, edit, and delete catalog shipments",
+    "filters": "Filters",
+    "shipmentDate": "Shipment date",
+    "reseller": "Reseller",
+    "products": "Products",
+    "status": "Status",
+    "actions": "Actions",
+    "edit": "Edit",
+    "info": "Info",
+    "statusAction": "Status",
+    "delete": "Delete",
+    "noShipmentsFound": "No shipments found",
+    "page": "Page {current} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "invalidDate": "Invalid date",
+    "statuses": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "DELIVERED": "Delivered",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "ShipmentsPage": {
+    "title": "Shipments",
+    "newShipment": "New shipment",
+    "emptyTitle": "No shipments found!",
+    "emptyDescription": "There are no shipments registered in the system."
+  },
+  "ShipmentsDeleteDialog": {
+    "title": "Delete shipment",
+    "warning": "The shipment will be permanently deleted.",
+    "question": "Are you sure you want to delete the shipment for reseller <strong>{resellerName}</strong> from <strong>{createdAt}</strong>?",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "invalidDate": "Invalid date"
+  },
+  "ReturnsFilters": {
+    "title": "Filters",
+    "clearFilters": "Clear filters",
+    "reseller": "Reseller",
+    "resellerPlaceholder": "Reseller name",
+    "status": "Status",
+    "returnDate": "Return date",
+    "selectDate": "Select date",
+    "statuses": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "RETURNED": "Returned",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "ReturnsTable": {
+    "managementTitle": "Returns management",
+    "managementDescription": "View, create, edit, and delete catalog returns",
+    "filters": "Filters",
+    "returnDate": "Return date",
+    "reseller": "Reseller",
+    "products": "Products",
+    "status": "Status",
+    "actions": "Actions",
+    "edit": "Edit",
+    "info": "Info",
+    "statusAction": "Status",
+    "delete": "Delete",
+    "noReturnsFound": "No returns found",
+    "page": "Page {current} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "invalidDate": "Invalid date",
+    "statuses": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "RETURNED": "Returned",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "ReturnsPage": {
+    "title": "Returns",
+    "newReturn": "New return",
+    "emptyTitle": "No returns found!",
+    "emptyDescription": "There are no returns registered in the system."
+  },
+  "ReturnsDeleteDialog": {
+    "title": "Delete return",
+    "warning": "The return will be permanently deleted.",
+    "question": "Are you sure you want to delete the return for reseller <strong>{resellerName}</strong> from <strong>{createdAt}</strong>?",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "invalidDate": "Invalid date"
+  },
+  "SalesPage": {
+    "title": "Sales",
+    "newSale": "New sale",
+    "emptyTitle": "No sales found!",
+    "emptyDescription": "There are no sales registered in the system."
+  },
+  "SalesTable": {
+    "managementTitle": "Sales management",
+    "managementDescription": "View, create, edit, and delete sales",
+    "filters": "Filters",
+    "saleDate": "Sale date",
+    "reseller": "Reseller",
+    "customer": "Customer",
+    "products": "Products",
+    "paymentMethod": "Payment method",
+    "status": "Status",
+    "installments": "Paid/total installments",
+    "totalAmount": "Total amount",
+    "actions": "Actions",
+    "cashSale": "Cash",
+    "edit": "Edit",
+    "info": "Info",
+    "statusAction": "Status",
+    "confirm": "Confirm",
+    "confirmInstallment": "Confirm installment",
+    "generating": "Generating...",
+    "downloadReceipt": "Download receipt",
+    "delete": "Delete",
+    "noSalesFound": "No sales found",
+    "page": "Page {current} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "invalidDate": "Invalid date"
+  },
+  "SalesFilters": {
+    "title": "Filters",
+    "clearFilters": "Clear filters",
+    "reseller": "Reseller",
+    "resellerPlaceholder": "Reseller name",
+    "status": "Status",
+    "saleDate": "Sale date",
+    "selectDate": "Select date",
+    "paymentMethod": "Payment method",
+    "minAmount": "Minimum amount (R$)",
+    "maxAmount": "Maximum amount (R$)",
+    "amountPlaceholder": "R$ 0.00"
+  },
+  "SaleDialogs": {
+    "invalidDate": "Invalid date",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirmTitle": "Confirm sale",
+    "confirmWarning": "When confirming the sale, the products will be marked as sold and can no longer be edited or removed from the sale.",
+    "confirmQuestion": "Are you sure you want to confirm the sale for reseller <strong>{resellerName}</strong> from <strong>{saleDate}</strong> in the amount of <strong>{totalAmount}</strong>?",
+    "deleteTitle": "Delete sale",
+    "deleteWarning": "The sale will be permanently deleted.",
+    "deleteQuestion": "Are you sure you want to delete the sale for reseller <strong>{resellerName}</strong> from <strong>{saleDate}</strong>?",
+    "delete": "Delete",
+    "editStatusTitle": "Edit sale status",
+    "selectStatus": "Select the status",
+    "markInstallmentTitle": "Confirm installment payment",
+    "installmentsPaidSummary": "Installments paid: <strong>{paid}</strong> of <strong>{total}</strong>",
+    "remainingSummary": "Remaining: <strong>{remaining}</strong>",
+    "howManyInstallments": "How many installments do you want to pay?",
+    "installmentProjection": "This will pay {count} installment(s), totaling {totalPaid} of {total} paid",
+    "confirmPayment": "Confirm payment"
+  },
+  "HookFeedback": {
+    "batches": {
+      "createSuccess": "Batch created successfully",
+      "createError": "Error creating batch",
+      "deleteSuccess": "Batch deleted successfully",
+      "deleteError": "Error deleting batch"
+    },
+    "categories": {
+      "createSuccess": "Category created successfully"
+    },
+    "customers": {
+      "createSuccess": "Customer created successfully!",
+      "createError": "Error creating customer. Please try again.",
+      "updateSuccess": "Customer updated successfully!",
+      "updateError": "Error updating customer. Please try again."
+    },
+    "products": {
+      "updateSuccess": "Product updated successfully",
+      "updateError": "Error updating product"
+    },
+    "sales": {
+      "unexpectedError": "unexpected error",
+      "confirmSuccess": "Sale confirmed successfully!",
+      "confirmError": "Failed to confirm sale: {message}",
+      "createSuccess": "Sale created successfully!",
+      "createError": "Failed to create sale: {message}",
+      "deleteSuccess": "Sale deleted successfully!",
+      "deleteError": "Failed to delete sale: {message}",
+      "updateSuccess": "Sale updated successfully!",
+      "updateError": "Failed to update sale: {message}",
+      "markInstallmentPaidSuccess": "Installment marked as paid successfully!",
+      "markInstallmentPaidError": "Failed to mark installment as paid: {message}",
+      "updateStatusSuccess": "Sale status updated successfully!",
+      "updateStatusError": "Failed to update sale status: {message}"
+    },
+    "users": {
+      "createSuccess": "User {email} created successfully",
+      "createError": "Error creating user",
+      "deleteSuccess": "User deleted successfully",
+      "deleteError": "Error deleting user",
+      "updateRoleSuccess": "User role for {name} {surname} updated to {role}",
+      "updateRoleError": "Error updating user role",
+      "updateStatusSuccess": "User status for {id} updated to {status}",
+      "updateStatusError": "Error updating user status",
+      "roles": {
+        "ADMIN": "Administrator",
+        "RESELLER": "Reseller",
+        "ASSISTANT": "Assistant",
+        "UNASSIGNED": "Unassigned"
+      }
+    },
+    "passwordReset": {
+      "approveSuccess": "Request approved successfully",
+      "approveError": "Failed to approve request",
+      "rejectSuccess": "Request rejected",
+      "rejectError": "Failed to reject request",
+      "copyLinkSuccess": "Link copied to clipboard",
+      "copyLinkError": "Failed to copy link"
+    },
+    "productModels": {
+      "updateSuccess": "Model updated successfully",
+      "updateError": "Error updating model",
+      "deleteSuccess": "Model deleted successfully",
+      "deleteError": "Error deleting model"
+    },
+    "returns": {
+      "unexpectedError": "unexpected error",
+      "createSuccess": "Return created successfully!",
+      "createError": "Failed to create return: {message}",
+      "deleteSuccess": "Return deleted successfully!",
+      "deleteError": "Failed to delete return: {message}",
+      "updateSuccess": "Return updated successfully!",
+      "updateError": "Failed to update return: {message}",
+      "updateStatusSuccess": "Return status updated successfully!",
+      "updateStatusError": "Failed to update return status: {message}"
+    },
+    "settings": {
+      "userIdUnavailable": "User ID is not available",
+      "appearanceUpdated": "Appearance settings updated successfully"
+    },
+    "shipments": {
+      "unexpectedError": "unexpected error",
+      "createSuccess": "Shipment created successfully!",
+      "createError": "Error creating shipment: {message}",
+      "deleteSuccess": "Shipment deleted successfully!",
+      "deleteError": "Error deleting shipment: {message}",
+      "updateSuccess": "Shipment updated successfully!",
+      "updateError": "Error updating shipment: {message}",
+      "updateStatusSuccess": "Shipment status updated successfully!",
+      "updateStatusError": "Error updating shipment status: {message}"
+    },
+    "suppliers": {
+      "unexpectedError": "unexpected error",
+      "createSuccess": "Supplier created successfully!",
+      "createError": "Error creating supplier: {message}",
+      "deleteSuccess": "Supplier deleted successfully!",
+      "deleteError": "Error deleting supplier: {message}",
+      "updateSuccess": "Supplier updated successfully!",
+      "updateError": "Error updating supplier: {message}"
+    },
+    "transfers": {
+      "unexpectedError": "unexpected error",
+      "createSuccess": "Transfer created successfully!",
+      "createError": "Failed to create transfer: {message}",
+      "deleteSuccess": "Transfer deleted successfully!",
+      "deleteError": "Failed to delete transfer: {message}",
+      "updateSuccess": "Transfer updated successfully!",
+      "updateError": "Failed to update transfer: {message}",
+      "updateStatusSuccess": "Transfer status updated successfully!",
+      "updateStatusError": "Failed to update transfer status: {message}"
+    },
+    "cloudinary": {
+      "uploadError": "Error uploading image"
+    }
+  },
+  "ReceiptPreview": {
+    "sales": "Sales",
+    "confirmation": "Confirmation",
+    "previewTitle": "Receipt Preview",
+    "saleIdLabel": "Sale ID",
+    "notFoundTitle": "Sale not found",
+    "notFoundDescription": "It was not possible to load the sale data.",
+    "hintLabel": "Tip",
+    "liveHint": "This is a real-time preview. You can edit the sale-receipt-pdf.tsx component and the changes will appear here automatically.",
+    "pdf": {
+      "title": "SALE RECEIPT",
+      "saleDate": "Sale date",
+      "installments": "Installments",
+      "interval": "Interval",
+      "days": "days",
+      "generatedAt": "Document generated on",
+      "at": "at",
+      "renderError": "Error generating PDF",
+      "filePrefix": "receipt"
+    }
+  },
+  "ErrorPages": {
+    "locale": {
+      "title": "Failed to load the page",
+      "description": "Try again. If the problem persists, review the current session or the API connection.",
+      "referencePrefix": "Ref",
+      "unknownReference": "Unknown error",
+      "retry": "Reload page"
+    },
+    "global": {
+      "title": "Something went wrong",
+      "description": "The application encountered an unexpected error. Try reloading the page.",
+      "referencePrefix": "Ref",
+      "unknownReference": "No error identifier",
+      "retry": "Try again"
+    }
   },
   "Onboarding": {
     "welcome": {

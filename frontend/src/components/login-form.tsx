@@ -29,7 +29,7 @@ export function LoginForm({
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const { login, verify } = useAuthStore()
+  const { login, logout } = useAuthStore()
 
   const loginSchema = z.object({
     email: z.string().email(t('emailInvalid')),
@@ -46,11 +46,11 @@ export function LoginForm({
   const onSubmit = async (values: { email: string; password: string }) => {
     setIsLoading(true)
     try {
-      await login(values)
-      const { user } = await verify()
+      const user = await login(values)
 
       // Verifica se é revendedor
       if (user.role !== 'RESELLER') {
+        logout()
         toast.error('Acesso negado. Este login é exclusivo para revendedores.')
         setIsLoading(false)
         return
@@ -58,6 +58,7 @@ export function LoginForm({
 
       // Verifica se a conta está ativa
       if (user.status !== 'ACTIVE') {
+        logout()
         toast.error(t('inactiveAccount'))
         setIsLoading(false)
         return
@@ -94,7 +95,7 @@ export function LoginForm({
                   </p>
                   <div className="mt-3">
                     <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20">
-                      Acesso exclusivo para revendedores
+                      {t('resellerOnlyBadge')}
                     </span>
                   </div>
                 </div>
@@ -189,7 +190,7 @@ export function LoginForm({
             <div className="bg-muted relative hidden md:block">
               <img
                 src="/luxis-light.png"
-                alt="Image"
+                alt={t('title')}
                 className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.9]"
               />
             </div>

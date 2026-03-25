@@ -1,14 +1,17 @@
-import { ResellerDashboard } from "@/components/dashboard/reseller-dashboard"
+import { getTranslations } from 'next-intl/server'
+import { ResellerDashboard } from '@/components/dashboard/reseller-dashboard'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+  BreadcrumbPage
+} from '@/components/ui/breadcrumb'
+import { Separator } from '@/components/ui/separator'
+import { SidebarTrigger } from '@/components/ui/sidebar'
 
-export default function ResellerDashboardPage() {
+export default async function ResellerDashboardPage() {
+  const t = await getTranslations('Common')
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -21,7 +24,7 @@ export default function ResellerDashboardPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                <BreadcrumbPage>{t('Dashboard')}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

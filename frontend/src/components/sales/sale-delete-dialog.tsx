@@ -8,8 +8,9 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog'
 import { format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
 import { GetOneSaleResponse } from '@/hooks/use-sales'
+import { useLocale, useTranslations } from 'next-intl'
 
 export function SaleDeleteDialog({
   isOpen,
@@ -22,6 +23,9 @@ export function SaleDeleteDialog({
   onDelete: (id: string) => void
   sale: GetOneSaleResponse | null
 }) {
+  const locale = useLocale()
+  const t = useTranslations('SaleDialogs')
+
   const handleDelete = () => {
     if (sale) {
       onDelete(sale.id)
@@ -33,9 +37,11 @@ export function SaleDeleteDialog({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
+      return format(parseISO(dateString), 'P', {
+        locale: locale === 'en' ? enUS : ptBR
+      })
     } catch (error) {
-      return 'Data inválida'
+      return t('invalidDate')
     }
   }
 
@@ -43,22 +49,24 @@ export function SaleDeleteDialog({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Excluir Venda</AlertDialogTitle>
+          <AlertDialogTitle>{t('deleteTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            A venda será excluída permanentemente.
+            {t('deleteWarning')}
             <br />
             <br />
-            Tem certeza que deseja excluir a venda do revendedor{' '}
-            <strong>{sale.resellerName}</strong> de{' '}
-            <strong>{formatDate(sale.saleDate)}</strong>?
+            {t.rich('deleteQuestion', {
+              resellerName: sale.resellerName,
+              saleDate: formatDate(sale.saleDate),
+              strong: (chunks) => <strong>{chunks}</strong>
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button variant="secondary" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button variant="destructive" onClick={handleDelete}>
-            Excluir
+            {t('delete')}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

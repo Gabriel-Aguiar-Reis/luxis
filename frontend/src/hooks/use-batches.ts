@@ -1,7 +1,9 @@
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
 import { GetAllBatches, GetOneBatch, PostBatch } from '@/lib/api-types'
+import { queryKeys } from '@/lib/query-keys'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 export type GetOneBatchResponse =
@@ -17,7 +19,7 @@ type CreateBatchResponse =
 
 export function useGetBatches() {
   return useQuery({
-    queryKey: ['batches'],
+    queryKey: queryKeys.batches.all(),
     queryFn: async () => {
       return await apiFetch<GetAllBatchesResponse>(
         apiPaths.batches.base,
@@ -30,6 +32,8 @@ export function useGetBatches() {
 }
 
 export function useCreateBatch(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.batches')
+
   return useMutation({
     mutationFn: async (data: CreateBatchDto) => {
       return await apiFetch<CreateBatchResponse>(
@@ -42,26 +46,28 @@ export function useCreateBatch(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success(`Lote criado com sucesso`)
-      queryClient.invalidateQueries({ queryKey: ['batches'] })
+      toast.success(t('createSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.batches.all() })
     },
     onError: (e) => {
-      toast.error(e.message || 'Erro ao criar lote')
+      toast.error(e.message || t('createError'))
     }
   })
 }
 
 export function useDeleteBatch(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.batches')
+
   return useMutation({
     mutationFn: async (id: string) => {
       return await apiFetch<void>(apiPaths.batches.byId(id), {}, true, 'DELETE')
     },
     onSuccess: () => {
-      toast.success(`Lote deletado com sucesso`)
-      queryClient.invalidateQueries({ queryKey: ['batches'] })
+      toast.success(t('deleteSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.batches.all() })
     },
     onError: (e) => {
-      toast.error(e.message || 'Erro ao deletar lote')
+      toast.error(e.message || t('deleteError'))
     }
   })
 }

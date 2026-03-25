@@ -1,50 +1,13 @@
-'use client'
-
 import { ProductsPage } from '@/components/products/products-page'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
-import { useTranslations } from 'next-intl'
-import { useRouter } from '@/lib/i18n/navigation'
+import { PageBreadcrumbHeader } from '@/components/layout/page-breadcrumb-header'
+import { getTranslations } from 'next-intl/server'
 
-export default function AdminProductsPage() {
-  const t = useTranslations('Admin-Products')
-  const router = useRouter()
+export default async function AdminProductsPage() {
+  const t = await getTranslations('Admin-Products')
+
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink
-                  onClick={() => {
-                    router.push('/home')
-                  }}
-                >
-                  Dashboard
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{t('title')}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
+      <PageBreadcrumbHeader homeHref="/home" title={t('title')} />
       <ProductsPage />
     </>
   )

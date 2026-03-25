@@ -10,6 +10,8 @@ import {
   UpdateReturnStatusDto
 } from '@/lib/api-types'
 import { apiPaths } from '@/lib/api-paths'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 import { components } from '@/types/openapi'
 
@@ -37,7 +39,7 @@ export type UpdateReturnStatusResponse =
 
 export function useGetReturns() {
   return useQuery({
-    queryKey: ['returns'],
+    queryKey: queryKeys.returns.all(),
     queryFn: async () => {
       return await apiFetch<GetAllReturnsResponse>(
         apiPaths.returns.base,
@@ -50,6 +52,8 @@ export function useGetReturns() {
 }
 
 export function useCreateReturn(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.returns')
+
   return useMutation({
     mutationFn: async (newReturn: CreateReturnDto) => {
       return await apiFetch<CreateReturnResponse>(
@@ -62,16 +66,20 @@ export function useCreateReturn(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Devolução criada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['returns'] })
+      toast.success(t('createSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao criar devolução: ${error.message}`)
+      toast.error(
+        t('createError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useDeleteReturn(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.returns')
+
   return useMutation({
     mutationFn: async (returnId: string) => {
       return await apiFetch<DeleteReturnResponse>(
@@ -82,16 +90,20 @@ export function useDeleteReturn(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Devolução excluída com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['returns'] })
+      toast.success(t('deleteSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao excluir devolução: ${error.message}`)
+      toast.error(
+        t('deleteError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useUpdateReturn(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.returns')
+
   return useMutation({
     mutationFn: async ({ id, dto }: { id: string; dto: UpdateReturnDto }) => {
       return await apiFetch<UpdateReturnResponse>(
@@ -104,16 +116,20 @@ export function useUpdateReturn(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Devolução atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['returns'] })
+      toast.success(t('updateSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao atualizar devolução: ${error.message}`)
+      toast.error(
+        t('updateError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useUpdateReturnStatus(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.returns')
+
   return useMutation({
     mutationFn: async ({
       id,
@@ -132,11 +148,15 @@ export function useUpdateReturnStatus(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Devolução atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['returns'] })
+      toast.success(t('updateStatusSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao atualizar devolução: ${error.message}`)
+      toast.error(
+        t('updateStatusError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }

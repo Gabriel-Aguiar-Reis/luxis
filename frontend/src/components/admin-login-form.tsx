@@ -30,7 +30,7 @@ export function AdminLoginForm({
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
-  const { login, verify } = useAuthStore()
+  const { login, logout } = useAuthStore()
 
   const adminLoginSchema = z.object({
     email: z.string().email(t('emailInvalid')),
@@ -48,14 +48,15 @@ export function AdminLoginForm({
   const onSubmit = async (values: { email: string; password: string }) => {
     setIsLoading(true)
     try {
-      await login(values)
-      const user = (await verify()).user
+      const user = await login(values)
       if (user.role !== 'ADMIN') {
+        logout()
         toast.error(t('authError'))
         setIsLoading(false)
         return
       }
       if (user.status !== 'ACTIVE') {
+        logout()
         toast.error(t('inactiveAccount'))
         setIsLoading(false)
         return
@@ -148,7 +149,7 @@ export function AdminLoginForm({
                           />
                           <button
                             type="button"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
+                            className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
                             aria-label={t('showPassword')}
                             disabled={isLoading}
                             onClick={() => setShowPassword((v) => !v)}
@@ -180,7 +181,7 @@ export function AdminLoginForm({
           </Form>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground *:[a]:hover:text-primary *:[a]:underline *:[a]:underline-offset-4 text-balance text-center text-xs">
+      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
         {t('restrictedArea')} <a href="/login">{t('restrictedAreaHref')}</a>.
       </div>
     </div>

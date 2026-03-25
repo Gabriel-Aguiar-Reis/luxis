@@ -24,6 +24,7 @@ import {
   UpdateSaleDto,
   useGetAvailableProductsToSell
 } from '@/hooks/use-sales'
+import { useLocale, useTranslations } from 'next-intl'
 
 type SaleDialogProps = {
   isOpen: boolean
@@ -33,6 +34,8 @@ type SaleDialogProps = {
 }
 
 export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
+  const locale = useLocale()
+  const t = useTranslations('SaleEditDialog')
   const { handleSubmit, reset, setValue, watch } = useForm<UpdateSaleDto>({
     defaultValues: {
       productIds: sale?.products.map((p) => p.id) || []
@@ -42,6 +45,13 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
   const { data: res } = useGetAvailableProductsToSell()
   const [showProductsDialog, setShowProductsDialog] = useState(false)
   const [searchProduct, setSearchProduct] = useState('')
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL'
+    }
+  )
 
   React.useEffect(() => {
     if (sale) {
@@ -112,10 +122,8 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[700px]">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Editar Venda</DialogTitle>
-              <DialogDescription>
-                Edite os produtos da venda selecionada.
-              </DialogDescription>
+              <DialogTitle>{t('title')}</DialogTitle>
+              <DialogDescription>{t('description')}</DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
@@ -128,8 +136,8 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
                   onClick={() => setShowProductsDialog(true)}
                 >
                   {productIds.length > 0
-                    ? `${productIds.length} produto(s) selecionado(s)`
-                    : 'Selecionar produtos'}
+                    ? t('selectedProducts', { count: productIds.length })
+                    : t('selectProducts')}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </div>
@@ -138,7 +146,7 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
               {selectedProducts.length > 0 && (
                 <div className="mt-2 rounded border">
                   <div className="bg-muted px-3 py-2 text-sm font-medium">
-                    Produtos Selecionados
+                    {t('selectedProductsTitle')}
                   </div>
                   <div className="max-h-96 overflow-auto py-2">
                     {(() => {
@@ -152,7 +160,7 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
                             .flatMap((c) => c.models)
                             .find((m) =>
                               m.products.some((prod) => prod.id === p.id)
-                            )?.modelName.value || 'Modelo'
+                            )?.modelName.value || t('modelFallback')
                         if (!acc[modelName]) acc[modelName] = []
                         acc[modelName].push(p)
                         return acc
@@ -162,7 +170,10 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
                           <div key={modelName} className="px-3 py-2">
                             <div className="mb-2 flex items-center justify-between text-xs font-semibold">
                               <span>
-                                {modelName} - {items.length} un
+                                {t('groupCount', {
+                                  modelName,
+                                  count: items.length
+                                })}
                               </span>
                             </div>
                             <ul className="space-y-1 text-xs">
@@ -178,16 +189,13 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
                                     className="hover:bg-muted flex items-center gap-4 rounded px-2 py-1"
                                   >
                                     <span className="font-mono tracking-tight">
-                                      {p.serialNumber?.value || 'Sem serial'}
+                                      {p.serialNumber?.value || t('noSerial')}
                                     </span>
                                     <span className="text-muted-foreground mx-2 flex flex-1 items-center">
                                       <span className="border-border w-full border-t border-dashed" />
                                     </span>
                                     <span className="text-right font-medium">
-                                      {new Intl.NumberFormat('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL'
-                                      }).format(priceNum)}
+                                      {currencyFormatter.format(priceNum)}
                                     </span>
                                   </li>
                                 )
@@ -200,13 +208,10 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
                   </div>
                   <div className="flex items-center justify-between border-t px-3 py-2 text-xs">
                     <span className="text-muted-foreground">
-                      Total estimado
+                      {t('estimatedTotal')}
                     </span>
                     <span className="font-medium">
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                      }).format(totalAmount)}
+                      {currencyFormatter.format(totalAmount)}
                     </span>
                   </div>
                 </div>
@@ -215,32 +220,31 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={handleClose}>
-                Cancelar
+                {t('cancel')}
               </Button>
-              <Button type="submit">Salvar Alterações</Button>
+              <Button type="submit">{t('saveChanges')}</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Dialog de seleção de produtos */}
       <Dialog open={showProductsDialog} onOpenChange={setShowProductsDialog}>
         <DialogContent className="max-h-[85vh] sm:max-w-[700px]">
           <DialogHeader>
-            <DialogTitle>Selecionar Produtos</DialogTitle>
+            <DialogTitle>{t('productPickerTitle')}</DialogTitle>
             <DialogDescription>
-              Escolha os produtos para adicionar à venda.
+              {t('productPickerDescription')}
             </DialogDescription>
           </DialogHeader>
 
           <Command shouldFilter={false} className="overflow-hidden">
             <CommandInput
-              placeholder="Buscar produto..."
+              placeholder={t('searchProduct')}
               value={searchProduct}
               onValueChange={setSearchProduct}
             />
             <CommandList className="max-h-[50vh] overflow-auto">
-              <CommandEmpty>Nenhum produto encontrado.</CommandEmpty>
+              <CommandEmpty>{t('noProductsFound')}</CommandEmpty>
               {categories
                 .filter((cat) => {
                   if (!searchProduct) return true
@@ -300,15 +304,14 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
                                   {model.modelName.value}
                                 </span>
                                 <span className="text-muted-foreground text-xs">
-                                  SN: {product.serialNumber?.value || 'N/A'}
+                                  {t('serialPrefix')}:{' '}
+                                  {product.serialNumber?.value ||
+                                    t('notAvailable')}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium">
-                                  {new Intl.NumberFormat('pt-BR', {
-                                    style: 'currency',
-                                    currency: 'BRL'
-                                  }).format(
+                                  {currencyFormatter.format(
                                     typeof (product.salePrice as any).value ===
                                       'string'
                                       ? parseFloat(
@@ -337,7 +340,7 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
               variant="outline"
               onClick={() => setShowProductsDialog(false)}
             >
-              Fechar
+              {t('close')}
             </Button>
           </DialogFooter>
         </DialogContent>

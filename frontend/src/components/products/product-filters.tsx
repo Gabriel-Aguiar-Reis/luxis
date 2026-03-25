@@ -13,6 +13,7 @@ import {
 import { Label } from '@/components/ui/label'
 import { X } from 'lucide-react'
 import { Product, Category, ProductModel } from '@/lib/api-types'
+import { useTranslations } from 'next-intl'
 
 type ProductStatus = Product['status']
 
@@ -38,6 +39,7 @@ export function ProductFilters({
   categories,
   productModels
 }: ProductFiltersProps) {
+  const t = useTranslations('ProductsFilters')
   const [filters, setFilters] = useState<ProductFiltersType>(initialFilters)
 
   const updateFilter = (key: keyof ProductFiltersType, value: any) => {
@@ -59,7 +61,7 @@ export function ProductFilters({
   return (
     <div className="rounded-md border p-4">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium">Filtros</h3>
+        <h3 className="text-sm font-medium">{t('title')}</h3>
         <Button
           variant="ghost"
           size="sm"
@@ -67,23 +69,23 @@ export function ProductFilters({
           disabled={Object.keys(filters).length === 0}
         >
           <X className="mr-2 h-3 w-3" />
-          Limpar filtros
+          {t('clearFilters')}
         </Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
         <div className="space-y-2">
-          <Label htmlFor="serial-number-filter">Número de Série</Label>
+          <Label htmlFor="serial-number-filter">{t('serialNumber')}</Label>
           <Input
             id="serial-number-filter"
             type="text"
-            placeholder="Digite o número de série"
+            placeholder={t('serialNumberPlaceholder')}
             value={filters.serialNumber || ''}
             onChange={(e) => updateFilter('serialNumber', e.target.value)}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="status-filter">Status</Label>
+          <Label htmlFor="status-filter">{t('status')}</Label>
           <Select
             value={filters.status || ''}
             onValueChange={(value) =>
@@ -91,18 +93,18 @@ export function ProductFilters({
             }
           >
             <SelectTrigger id="status-filter">
-              <SelectValue placeholder="Todos os status" />
+              <SelectValue placeholder={t('allStatuses')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="IN_STOCK">Em Estoque</SelectItem>
-              <SelectItem value="SOLD">Vendido</SelectItem>
-              <SelectItem value="ASSIGNED">Atribuído</SelectItem>
+              <SelectItem value="IN_STOCK">{t('statuses.IN_STOCK')}</SelectItem>
+              <SelectItem value="SOLD">{t('statuses.SOLD')}</SelectItem>
+              <SelectItem value="ASSIGNED">{t('statuses.ASSIGNED')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="category-filter">Categoria</Label>
+          <Label htmlFor="category-filter">{t('category')}</Label>
           <Select
             value={filters.categoryId || ''}
             onValueChange={(value) =>
@@ -110,7 +112,7 @@ export function ProductFilters({
             }
           >
             <SelectTrigger id="category-filter">
-              <SelectValue placeholder="Todas as categorias" />
+              <SelectValue placeholder={t('allCategories')} />
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
@@ -123,7 +125,7 @@ export function ProductFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="model-filter">Modelo</Label>
+          <Label htmlFor="model-filter">{t('model')}</Label>
           <Select
             value={filters.modelId || ''}
             onValueChange={(value) =>
@@ -131,7 +133,7 @@ export function ProductFilters({
             }
           >
             <SelectTrigger id="model-filter">
-              <SelectValue placeholder="Todos os modelos" />
+              <SelectValue placeholder={t('allModels')} />
             </SelectTrigger>
             <SelectContent>
               {productModels.map((model) => (
@@ -144,11 +146,11 @@ export function ProductFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="min-price">Preço Mínimo (R$)</Label>
+          <Label htmlFor="min-price">{t('minPrice')}</Label>
           <Input
             id="min-price"
             type="number"
-            placeholder="R$ 0,00"
+            placeholder={t('pricePlaceholder')}
             step="0.01"
             min="0"
             value={filters.minPrice || ''}
@@ -160,11 +162,11 @@ export function ProductFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="max-price">Preço Máximo (R$)</Label>
+          <Label htmlFor="max-price">{t('maxPrice')}</Label>
           <Input
             id="max-price"
             type="number"
-            placeholder="R$ 0,00"
+            placeholder={t('pricePlaceholder')}
             step="0.01"
             min="0"
             value={filters.maxPrice || ''}

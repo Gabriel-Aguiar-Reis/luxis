@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select'
 import { SelectValue } from '@radix-ui/react-select'
 import { GetOneSaleResponse, UpdateSaleStatusDto } from '@/hooks/use-sales'
+import { useTranslations } from 'next-intl'
 
 interface SaleEditStatusDialogProps {
   isOpen: boolean
@@ -25,50 +26,52 @@ interface SaleEditStatusDialogProps {
   sale: GetOneSaleResponse | null
 }
 
-const statusOptions: {
-  value: SaleStatus
-  label: string
-  className: string
-}[] = [
-  {
-    value: 'CANCELLED',
-    label: 'Cancelado',
-    className: 'text-[var(--badge-text-6)]'
-  },
-  {
-    value: 'PENDING',
-    label: 'Pendente',
-    className: 'text-[var(--badge-text-5)]'
-  },
-  {
-    value: 'CONFIRMED',
-    label: 'Confirmado',
-    className: 'text-[var(--badge-text-2)]'
-  },
-  {
-    value: 'INSTALLMENTS_OVERDUE',
-    label: 'Parcelas atrasadas',
-    className: 'text-[var(--badge-text-3)]'
-  },
-  {
-    value: 'INSTALLMENTS_PENDING',
-    label: 'Parcelas pendentes',
-    className: 'text-[var(--badge-text-4)]'
-  },
-  {
-    value: 'INSTALLMENTS_PAID',
-    label: 'Parcelas pagas',
-    className: 'text-[var(--badge-text-1)]'
-  }
-]
-
 export function SaleEditStatusDialog({
   isOpen,
   onClose,
   onSave,
   sale
 }: SaleEditStatusDialogProps) {
+  const t = useTranslations('SaleDialogs')
+  const tConfirmation = useTranslations('SaleConfirmation')
   const [status, setStatus] = useState<SaleStatus | ''>(sale?.status || '')
+
+  const statusOptions: {
+    value: SaleStatus
+    label: string
+    className: string
+  }[] = [
+    {
+      value: 'CANCELLED',
+      label: tConfirmation('statuses.CANCELLED'),
+      className: 'text-[var(--badge-text-6)]'
+    },
+    {
+      value: 'PENDING',
+      label: tConfirmation('statuses.PENDING'),
+      className: 'text-[var(--badge-text-5)]'
+    },
+    {
+      value: 'CONFIRMED',
+      label: tConfirmation('statuses.CONFIRMED'),
+      className: 'text-[var(--badge-text-2)]'
+    },
+    {
+      value: 'INSTALLMENTS_OVERDUE',
+      label: tConfirmation('statuses.INSTALLMENTS_OVERDUE'),
+      className: 'text-[var(--badge-text-3)]'
+    },
+    {
+      value: 'INSTALLMENTS_PENDING',
+      label: tConfirmation('statuses.INSTALLMENTS_PENDING'),
+      className: 'text-[var(--badge-text-4)]'
+    },
+    {
+      value: 'INSTALLMENTS_PAID',
+      label: tConfirmation('statuses.INSTALLMENTS_PAID'),
+      className: 'text-[var(--badge-text-1)]'
+    }
+  ]
 
   React.useEffect(() => {
     setStatus(sale?.status || '')
@@ -80,7 +83,7 @@ export function SaleEditStatusDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar status da transferência</DialogTitle>
+          <DialogTitle>{t('editStatusTitle')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <Select
@@ -88,7 +91,7 @@ export function SaleEditStatusDialog({
             onValueChange={(v) => setStatus(v as SaleStatus)}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione o status" />
+              <SelectValue placeholder={t('selectStatus')} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -107,7 +110,7 @@ export function SaleEditStatusDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button
             onClick={() => {
@@ -116,7 +119,7 @@ export function SaleEditStatusDialog({
             }}
             disabled={!status || status === sale.status}
           >
-            Salvar
+            {t('save')}
           </Button>
         </DialogFooter>
       </DialogContent>

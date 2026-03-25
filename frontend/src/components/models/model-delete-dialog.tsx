@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 
 import { Button } from '@/components/ui/button'
+import { useTranslations } from 'next-intl'
 
 interface ModelDeleteDialogProps {
   isOpen: boolean
@@ -23,6 +24,7 @@ export function ModelDeleteDialog({
   onClose,
   modelId
 }: ModelDeleteDialogProps) {
+  const t = useTranslations('ModelsDeleteDialog')
   const { mutate: deleteModel } = useDeleteProductModel()
 
   const handleDelete = () => {
@@ -34,17 +36,15 @@ export function ModelDeleteDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Excluir Modelo de Produto</DialogTitle>
-          <DialogDescription>
-            Tem certeza de que deseja excluir este modelo de produto?
-          </DialogDescription>
+          <DialogTitle>{t('title')}</DialogTitle>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button variant="destructive" onClick={handleDelete}>
-            Excluir
+            {t('delete')}
           </Button>
         </DialogFooter>
       </DialogContent>

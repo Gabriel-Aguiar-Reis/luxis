@@ -6,7 +6,9 @@ import {
   PostSupplier,
   UpdateSupplier
 } from '@/lib/api-types'
+import { queryKeys } from '@/lib/query-keys'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 type GetAllSuppliersResponse =
@@ -29,7 +31,7 @@ export type DeleteSupplierResponse =
 
 export function useGetSuppliers() {
   return useQuery({
-    queryKey: ['suppliers'],
+    queryKey: queryKeys.suppliers.all(),
     queryFn: async () => {
       return await apiFetch<GetAllSuppliersResponse>(
         apiPaths.suppliers.base,
@@ -42,6 +44,8 @@ export function useGetSuppliers() {
 }
 
 export function useUpdateSupplier(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.suppliers')
+
   return useMutation({
     mutationFn: async ({ dto, id }: { dto: UpdateSupplierDto; id: string }) => {
       return await apiFetch<UpdateSupplierResponse>(
@@ -54,16 +58,22 @@ export function useUpdateSupplier(queryClient: QueryClient) {
       )
     },
     onSuccess: async () => {
-      toast.success('Fornecedor atualizado com sucesso!')
-      await queryClient.invalidateQueries({ queryKey: ['suppliers'] })
+      toast.success(t('updateSuccess'))
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.suppliers.all()
+      })
     },
     onError: (error) => {
-      toast.error(`Erro ao atualizar fornecedor: ${error.message}`)
+      toast.error(
+        t('updateError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useDeleteSupplier(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.suppliers')
+
   return useMutation({
     mutationFn: async (id: string) => {
       return await apiFetch<DeleteSupplierResponse>(
@@ -74,16 +84,22 @@ export function useDeleteSupplier(queryClient: QueryClient) {
       )
     },
     onSuccess: async () => {
-      toast.success('Fornecedor excluído com sucesso!')
-      await queryClient.invalidateQueries({ queryKey: ['suppliers'] })
+      toast.success(t('deleteSuccess'))
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.suppliers.all()
+      })
     },
     onError: (error) => {
-      toast.error(`Erro ao excluir fornecedor: ${error.message}`)
+      toast.error(
+        t('deleteError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useCreateSupplier(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.suppliers')
+
   return useMutation({
     mutationFn: async (dto: UpdateSupplierDto) => {
       return await apiFetch<CreateSupplierResponse>(
@@ -96,11 +112,15 @@ export function useCreateSupplier(queryClient: QueryClient) {
       )
     },
     onSuccess: async () => {
-      toast.success('Fornecedor criado com sucesso!')
-      await queryClient.invalidateQueries({ queryKey: ['suppliers'] })
+      toast.success(t('createSuccess'))
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.suppliers.all()
+      })
     },
     onError: (error) => {
-      toast.error(`Erro ao criar fornecedor: ${error.message}`)
+      toast.error(
+        t('createError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }

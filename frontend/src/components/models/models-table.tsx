@@ -24,6 +24,7 @@ import {
   Trash2
 } from 'lucide-react'
 import { useState } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 
 type ModelsFiltersType = {
   id?: string
@@ -49,6 +50,8 @@ export function ModelsTable({
   handleEditModel,
   handleDeleteProductModel
 }: ModelsTableProps) {
+  const locale = useLocale()
+  const t = useTranslations('ModelsTable')
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [filters, setFilters] = useState<ModelsFiltersType>({})
   const [currentPage, setCurrentPage] = useState(1)
@@ -97,6 +100,10 @@ export function ModelsTable({
     currentPage * modelsPerPage
   )
   const emptyRows = modelsPerPage - paginatedModels.length
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    { style: 'currency', currency: 'BRL' }
+  )
 
   const formatStatus = (status: ProductModelStatus) => {
     const statusMap: Record<
@@ -104,15 +111,15 @@ export function ModelsTable({
       { label: string; className: string }
     > = {
       USED: {
-        label: 'Usado',
+        label: t('statuses.USED'),
         className: 'bg-[var(--badge-4)] text-[var(--badge-text-4)]'
       },
       ACTIVE: {
-        label: 'Ativo',
+        label: t('statuses.ACTIVE'),
         className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
       },
       ARCHIVED: {
-        label: 'Arquivado',
+        label: t('statuses.ARCHIVED'),
         className: 'bg-[var(--badge-6)] text-[var(--badge-text-6)]'
       }
     }
@@ -134,19 +141,17 @@ export function ModelsTable({
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle>Gerenciamento de Modelos de Produtos</CardTitle>
+            <CardTitle>{t('managementTitle')}</CardTitle>
             <Button
               variant={isFiltersVisible ? 'secondary' : 'outline'}
               size="sm"
               onClick={() => setIsFiltersVisible(!isFiltersVisible)}
             >
               <Filter className="mr-2 h-4 w-4" />
-              Filtros
+              {t('filters')}
             </Button>
           </div>
-          <CardDescription>
-            Visualize, edite e exclua modelos do catálogo
-          </CardDescription>
+          <CardDescription>{t('managementDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -171,12 +176,14 @@ export function ModelsTable({
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Foto</TableHead>
-                        <TableHead>Nome</TableHead>
-                        <TableHead>Nome da Categoria</TableHead>
-                        <TableHead>Preço Sugerido</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
+                        <TableHead>{t('photo')}</TableHead>
+                        <TableHead>{t('name')}</TableHead>
+                        <TableHead>{t('categoryName')}</TableHead>
+                        <TableHead>{t('suggestedPrice')}</TableHead>
+                        <TableHead>{t('status')}</TableHead>
+                        <TableHead className="text-right">
+                          {t('actions')}
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -194,7 +201,7 @@ export function ModelsTable({
                                     />
                                   ) : (
                                     <span className="text-muted-foreground text-xs">
-                                      Sem foto
+                                      {t('noPhoto')}
                                     </span>
                                   )}
                                 </TableCell>
@@ -208,8 +215,9 @@ export function ModelsTable({
                                   }
                                 </TableCell>
                                 <TableCell>
-                                  R${' '}
-                                  {model.suggestedPrice.value.replace('.', ',')}
+                                  {currencyFormatter.format(
+                                    Number(model.suggestedPrice.value)
+                                  )}
                                 </TableCell>
                                 <TableCell>
                                   {formatStatus(model.status)}
@@ -222,7 +230,9 @@ export function ModelsTable({
                                       onClick={() => handleEditModel(model)}
                                     >
                                       <FileEdit className="h-4 w-4" />
-                                      <span className="sr-only">Editar</span>
+                                      <span className="sr-only">
+                                        {t('edit')}
+                                      </span>
                                     </Button>
                                     <Button
                                       variant="ghost"
@@ -236,7 +246,9 @@ export function ModelsTable({
                                       }
                                     >
                                       <Trash2 className="h-4 w-4" />
-                                      <span className="sr-only">Excluir</span>
+                                      <span className="sr-only">
+                                        {t('delete')}
+                                      </span>
                                     </Button>
                                   </div>
                                 </TableCell>
@@ -254,7 +266,7 @@ export function ModelsTable({
                       ) : (
                         <TableRow>
                           <TableCell colSpan={7} className="h-24 text-center">
-                            Nenhum modelo encontrado
+                            {t('noModelsFound')}
                           </TableCell>
                         </TableRow>
                       )}
@@ -273,10 +285,10 @@ export function ModelsTable({
                       disabled={currentPage === 1}
                     >
                       <ChevronLeft className="h-4 w-4" />
-                      <span className="sr-only">Página anterior</span>
+                      <span className="sr-only">{t('previousPage')}</span>
                     </Button>
                     <div className="text-sm">
-                      Página {currentPage} de {totalPages}
+                      {t('page', { current: currentPage, total: totalPages })}
                     </div>
                     <Button
                       variant="outline"
@@ -287,7 +299,7 @@ export function ModelsTable({
                       disabled={currentPage === totalPages}
                     >
                       <ChevronRight className="h-4 w-4" />
-                      <span className="sr-only">Próxima página</span>
+                      <span className="sr-only">{t('nextPage')}</span>
                     </Button>
                   </div>
                 )}

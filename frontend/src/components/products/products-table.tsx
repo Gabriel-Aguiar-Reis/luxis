@@ -24,6 +24,7 @@ import {
   ChevronRight
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/use-auth-store'
+import { useLocale, useTranslations } from 'next-intl'
 
 type ProductFiltersType = {
   serialNumber?: string
@@ -53,6 +54,8 @@ export function ProductsTable({
   productsPerPage = 10,
   handleEditProduct
 }: ProductsTableProps) {
+  const locale = useLocale()
+  const t = useTranslations('ProductsTable')
   const { user } = useAuthStore()
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [filters, setFilters] = useState<ProductFiltersType>({})
@@ -106,21 +109,25 @@ export function ProductsTable({
     currentPage * productsPerPage
   )
   const emptyRows = productsPerPage - paginatedProducts.length
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    { style: 'currency', currency: 'BRL' }
+  )
   const formatStatus = (status: ProductStatus) => {
     const statusMap: Record<
       ProductStatus,
       { label: string; className: string }
     > = {
       IN_STOCK: {
-        label: 'Em Estoque',
+        label: t('statuses.IN_STOCK'),
         className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
       },
       ASSIGNED: {
-        label: 'Atribuído',
+        label: t('statuses.ASSIGNED'),
         className: 'bg-[var(--badge-3)] text-[var(--badge-text-3)]'
       },
       SOLD: {
-        label: 'Vendido',
+        label: t('statuses.SOLD'),
         className: 'bg-[var(--badge-4)] text-[var(--badge-text-4)]'
       }
     }
@@ -143,7 +150,7 @@ export function ProductsTable({
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-lg sm:text-xl">
-              Gerenciamento de Produtos
+              {t('managementTitle')}
             </CardTitle>
             <Button
               variant={isFiltersVisible ? 'secondary' : 'outline'}
@@ -152,12 +159,10 @@ export function ProductsTable({
               className="w-full sm:w-auto"
             >
               <Filter className="mr-2 h-4 w-4" />
-              Filtros
+              {t('filters')}
             </Button>
           </div>
-          <CardDescription>
-            Visualize e edite produtos do catálogo
-          </CardDescription>
+          <CardDescription>{t('managementDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -184,19 +189,23 @@ export function ProductsTable({
                     <TableHeader>
                       <TableRow>
                         <TableHead className="min-w-[100px]">
-                          Nº Série
+                          {t('serialNumber')}
                         </TableHead>
-                        <TableHead className="min-w-20">Foto</TableHead>
-                        <TableHead className="min-w-[120px]">Modelo</TableHead>
+                        <TableHead className="min-w-20">{t('photo')}</TableHead>
+                        <TableHead className="min-w-[120px]">
+                          {t('model')}
+                        </TableHead>
                         <TableHead className="min-w-[100px]">
-                          Custo Unitário
+                          {t('unitCost')}
                         </TableHead>
                         <TableHead className="min-w-[100px]">
-                          Preço de Venda
+                          {t('salePrice')}
                         </TableHead>
-                        <TableHead className="min-w-[100px]">Status</TableHead>
+                        <TableHead className="min-w-[100px]">
+                          {t('status')}
+                        </TableHead>
                         <TableHead className="min-w-[100px] text-right">
-                          Ações
+                          {t('actions')}
                         </TableHead>
                       </TableRow>
                     </TableHeader>
@@ -221,7 +230,7 @@ export function ProductsTable({
                                     />
                                   ) : (
                                     <span className="text-muted-foreground text-xs">
-                                      Sem foto
+                                      {t('noPhoto')}
                                     </span>
                                   )}
                                 </TableCell>
@@ -229,10 +238,14 @@ export function ProductsTable({
                                   {model ? model.name.value : '-'}
                                 </TableCell>
                                 <TableCell>
-                                  R$ {product.unitCost.value.replace('.', ',')}
+                                  {currencyFormatter.format(
+                                    Number(product.unitCost.value)
+                                  )}
                                 </TableCell>
                                 <TableCell>
-                                  R$ {product.salePrice.value.replace('.', ',')}
+                                  {currencyFormatter.format(
+                                    Number(product.salePrice.value)
+                                  )}
                                 </TableCell>
                                 <TableCell>
                                   {formatStatus(product.status)}
@@ -248,7 +261,9 @@ export function ProductsTable({
                                         }
                                       >
                                         <FileEdit className="h-4 w-4" />
-                                        <span className="sr-only">Editar</span>
+                                        <span className="sr-only">
+                                          {t('edit')}
+                                        </span>
                                       </Button>
                                     )}
                                     {/* <Button
@@ -277,7 +292,7 @@ export function ProductsTable({
                       ) : (
                         <TableRow>
                           <TableCell colSpan={7} className="h-24 text-center">
-                            Nenhum produto encontrado
+                            {t('noProductsFound')}
                           </TableCell>
                         </TableRow>
                       )}
@@ -288,7 +303,7 @@ export function ProductsTable({
                 {totalPages > 1 && (
                   <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
                     <div className="text-sm">
-                      Página {currentPage} de {totalPages}
+                      {t('page', { current: currentPage, total: totalPages })}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Button
@@ -300,7 +315,7 @@ export function ProductsTable({
                         disabled={currentPage === 1}
                       >
                         <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Página anterior</span>
+                        <span className="sr-only">{t('previousPage')}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -313,7 +328,7 @@ export function ProductsTable({
                         disabled={currentPage === totalPages}
                       >
                         <ChevronRight className="h-4 w-4" />
-                        <span className="sr-only">Próxima página</span>
+                        <span className="sr-only">{t('nextPage')}</span>
                       </Button>
                     </div>
                   </div>

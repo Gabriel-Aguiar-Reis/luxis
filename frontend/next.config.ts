@@ -4,7 +4,7 @@ import createNextIntlPlugin from 'next-intl/plugin'
 const nextConfig: NextConfig = {
   skipMiddlewareUrlNormalize: false,
   skipTrailingSlashRedirect: true,
-  reactStrictMode: false
+  reactStrictMode: true
 }
 
 const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts')

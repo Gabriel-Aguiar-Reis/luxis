@@ -8,8 +8,9 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog'
 import { format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
 import { GetOneShipmentResponse } from '@/hooks/use-shipments'
+import { useLocale, useTranslations } from 'next-intl'
 
 export function ShipmentDeleteDialog({
   isOpen,
@@ -22,6 +23,8 @@ export function ShipmentDeleteDialog({
   onDelete: (id: string) => void
   shipment: GetOneShipmentResponse | null
 }) {
+  const locale = useLocale()
+  const t = useTranslations('ShipmentsDeleteDialog')
   const handleDelete = () => {
     if (shipment) {
       onDelete(shipment.id)
@@ -33,9 +36,11 @@ export function ShipmentDeleteDialog({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
+      return format(parseISO(dateString), 'P', {
+        locale: locale === 'en' ? enUS : ptBR
+      })
     } catch (error) {
-      return 'Data inválida'
+      return t('invalidDate')
     }
   }
 
@@ -43,22 +48,24 @@ export function ShipmentDeleteDialog({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Excluir Romaneio</AlertDialogTitle>
+          <AlertDialogTitle>{t('title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            O romaneio será excluído permanentemente.
+            {t('warning')}
             <br />
             <br />
-            Tem certeza que deseja excluir o romaneio do revendedor{' '}
-            <strong>{shipment.resellerName}</strong> de{' '}
-            <strong>{formatDate(shipment.createdAt)}</strong>?
+            {t.rich('question', {
+              resellerName: shipment.resellerName,
+              createdAt: formatDate(shipment.createdAt),
+              strong: (chunks) => <strong>{chunks}</strong>
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button variant="secondary" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button variant="destructive" onClick={handleDelete}>
-            Excluir
+            {t('delete')}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

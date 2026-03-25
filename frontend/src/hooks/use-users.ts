@@ -15,6 +15,8 @@ import {
   useQuery,
   QueryClient
 } from '@tanstack/react-query'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 export type CreateUserDto =
@@ -37,14 +39,9 @@ export type UpdateUserRoleDto = {
   status?: UserStatus
 }
 
-const userRoles = {
-  ADMIN: 'Administrador',
-  RESELLER: 'Revendedor',
-  ASSISTANT: 'Assistente',
-  UNASSIGNED: 'Não Atribuído'
-}
-
 export function useDeleteUser(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.users')
+
   return useMutation({
     mutationFn: async (userId: string) => {
       await apiFetch(
@@ -56,16 +53,18 @@ export function useDeleteUser(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success(`Usuário excluído com sucesso`)
-      queryClient.invalidateQueries({ queryKey: ['users'] })
+      toast.success(t('deleteSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
     },
     onError: () => {
-      toast.error('Erro ao excluir usuário')
+      toast.error(t('deleteError'))
     }
   })
 }
 
 export function useCreateUser(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.users')
+
   return useMutation({
     mutationFn: async (user: CreateUserDto) => {
       return await apiFetch<CreateUserResponse>(
@@ -78,16 +77,24 @@ export function useCreateUser(queryClient: QueryClient) {
       )
     },
     onSuccess: (data) => {
-      toast.success(`Usuário ${data.email.value} criado com sucesso`)
-      queryClient.invalidateQueries({ queryKey: ['users'] })
+      toast.success(t('createSuccess', { email: data.email.value }))
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
     },
     onError: () => {
-      toast.error('Erro ao criar usuário')
+      toast.error(t('createError'))
     }
   })
 }
 
 export function useUpdateUserRole(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.users')
+  const userRoles = {
+    ADMIN: t('roles.ADMIN'),
+    RESELLER: t('roles.RESELLER'),
+    ASSISTANT: t('roles.ASSISTANT'),
+    UNASSIGNED: t('roles.UNASSIGNED')
+  }
+
   return useMutation({
     mutationFn: async ({ userId, role, status }: UpdateUserRoleDto) => {
       return await apiFetch<UpdateUserRoleResponse>(
@@ -101,18 +108,24 @@ export function useUpdateUserRole(queryClient: QueryClient) {
     },
     onSuccess: (data) => {
       toast.success(
-        `Papel do usuário ${data.name.value} ${data.surname.value} atualizado para ${userRoles[data.role]}`
+        t('updateRoleSuccess', {
+          name: data.name.value,
+          surname: data.surname.value,
+          role: userRoles[data.role]
+        })
       )
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-      queryClient.invalidateQueries({ queryKey: ['pending-users'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
     },
     onError: () => {
-      toast.error('Erro ao atualizar o papel do usuário')
+      toast.error(t('updateRoleError'))
     }
   })
 }
 
 export function useUpdateUserStatus(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.users')
+
   return useMutation({
     mutationFn: async ({
       userId,
@@ -132,20 +145,20 @@ export function useUpdateUserStatus(queryClient: QueryClient) {
     },
     onSuccess: (data) => {
       toast.success(
-        `Status do usuário ${data.id} atualizado para ${data.status}`
+        t('updateStatusSuccess', { id: data.id, status: data.status })
       )
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-      queryClient.invalidateQueries({ queryKey: ['pending-users'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
     },
     onError: () => {
-      toast.error('Erro ao atualizar o status do usuário')
+      toast.error(t('updateStatusError'))
     }
   })
 }
 
 export function useGetUsers() {
   return useQuery({
-    queryKey: ['users'],
+    queryKey: queryKeys.users.all(),
     queryFn: async () => {
       return await apiFetch<GetUsersResponse>(apiPaths.users.base, {}, true)
     },
@@ -155,7 +168,7 @@ export function useGetUsers() {
 
 export function useGetPendingUsers() {
   return useQuery({
-    queryKey: ['pending-users'],
+    queryKey: queryKeys.users.pending(),
     queryFn: async () => {
       return await apiFetch<GetUsersResponse>(apiPaths.users.pending, {}, true)
     },
@@ -165,7 +178,7 @@ export function useGetPendingUsers() {
 
 export function useGetUserProducts(userId: string) {
   return useQuery({
-    queryKey: ['user-products', userId],
+    queryKey: queryKeys.users.products(userId),
     queryFn: async () => {
       return await apiFetch<GetUserProductsResponse>(
         apiPaths.users.products(userId),

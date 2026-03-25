@@ -2,6 +2,8 @@ import { apiFetch } from '@/lib/api-client'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { apiPaths } from '@/lib/api-paths'
 import { GetAllProducts, UpdateProduct } from '@/lib/api-types'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 type GetAllProductsResponse =
@@ -13,7 +15,7 @@ export type UpdateProductResponse =
 
 export function useGetProducts() {
   return useQuery({
-    queryKey: ['products'],
+    queryKey: queryKeys.products.all(),
     queryFn: async () => {
       return await apiFetch<GetAllProductsResponse>(
         apiPaths.products.base,
@@ -27,7 +29,7 @@ export function useGetProducts() {
 
 export function useGetAvailableProducts() {
   return useQuery({
-    queryKey: ['products', 'available'],
+    queryKey: queryKeys.products.available(),
     queryFn: async () => {
       return await apiFetch<GetAllProductsResponse>(
         apiPaths.products.available,
@@ -40,6 +42,8 @@ export function useGetAvailableProducts() {
 }
 
 export function useChangeProduct(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.products')
+
   return useMutation({
     mutationFn: async ({ id, dto }: { id: string; dto: UpdateProductDto }) => {
       await apiFetch<UpdateProductResponse>(
@@ -52,11 +56,11 @@ export function useChangeProduct(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success(`Produto atualizado com sucesso`)
-      queryClient.invalidateQueries({ queryKey: ['products'] })
+      toast.success(t('updateSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.products.all() })
     },
     onError: () => {
-      toast.error('Erro ao atualizar produto')
+      toast.error(t('updateError'))
     }
   })
 }

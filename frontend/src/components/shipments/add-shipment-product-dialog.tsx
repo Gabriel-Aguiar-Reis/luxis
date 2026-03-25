@@ -18,6 +18,7 @@ import { SquareCheck, Square } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useMemo } from 'react'
 import { GetInventoryByIdReturn } from '@/lib/api-types'
+import { useTranslations } from 'next-intl'
 
 type AddShipmentProductDialogProps = {
   open: boolean
@@ -38,6 +39,7 @@ export function AddShipmentProductDialog({
   searchValue,
   onSearchChange
 }: AddShipmentProductDialogProps) {
+  const t = useTranslations('AddShipmentProductDialog')
   // Agrupar produtos por modelo
   const groupedByModel = useMemo(() => {
     if (!inventory || !inventory.products || !inventory.productModels) {
@@ -53,7 +55,7 @@ export function AddShipmentProductDialog({
       if (!modelMap.has(modelId)) {
         modelMap.set(modelId, {
           modelId,
-          modelName: modelData?.name?.value || 'Modelo desconhecido',
+          modelName: modelData?.name?.value || t('unknownModel'),
           photoUrl: modelData?.photoUrl?.value,
           products: []
         })
@@ -74,15 +76,14 @@ export function AddShipmentProductDialog({
       <DialogContent className="w-[95vw] max-w-[1000px] p-0">
         <div className="flex h-[70vh] flex-col">
           <DialogHeader className="px-6 pt-6">
-            <DialogTitle>Selecionar Produtos para Envio</DialogTitle>
+            <DialogTitle>{t('title')}</DialogTitle>
             <DialogDescription>
-              Escolha os produtos do inventário de {inventory.resellerName} que
-              serão incluídos no romaneio.
+              {t('description', { resellerName: inventory.resellerName })}
             </DialogDescription>
           </DialogHeader>
           <div className="px-6 pb-4">
             <Input
-              placeholder="Buscar modelo ou serial..."
+              placeholder={t('searchPlaceholder')}
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
               className="mb-4 h-9 text-sm"
@@ -91,7 +92,7 @@ export function AddShipmentProductDialog({
           <div className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted max-h-none flex-1 overflow-y-auto px-6 pb-4">
             {groupedByModel.length === 0 && (
               <p className="text-muted-foreground py-4 text-center text-sm">
-                Nenhum produto disponível no inventário.
+                {t('noAvailableProducts')}
               </p>
             )}
             {(() => {
@@ -130,7 +131,7 @@ export function AddShipmentProductDialog({
               if (filteredModels.length === 0) {
                 return (
                   <p className="text-muted-foreground py-4 text-center text-sm">
-                    Nenhum produto encontrado.
+                    {t('noProductsFound')}
                   </p>
                 )
               }
@@ -190,7 +191,7 @@ export function AddShipmentProductDialog({
                                 >
                                   <span className="flex flex-1 items-center justify-between pr-2">
                                     <span className="truncate">
-                                      {p.serialNumber?.value || 'Sem serial'}
+                                      {p.serialNumber?.value || t('noSerial')}
                                     </span>
                                     <span className="text-muted-foreground mx-2 flex flex-1 items-center">
                                       <span className="border-border w-full border-t border-dashed" />
@@ -221,7 +222,7 @@ export function AddShipmentProductDialog({
                               toAdd.forEach((id: string) => onToggleProduct(id))
                             }}
                           >
-                            Selecionar todos
+                            {t('selectAll')}
                           </Button>
                           <Button
                             type="button"
@@ -238,7 +239,7 @@ export function AddShipmentProductDialog({
                               )
                             }}
                           >
-                            Limpar grupo
+                            {t('clearGroup')}
                           </Button>
                         </div>
                       </AccordionContent>
@@ -252,11 +253,13 @@ export function AddShipmentProductDialog({
             <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-col gap-1">
                 <span className="text-muted-foreground text-xs">
-                  {selectedProductIds.length} produto(s) selecionado(s)
+                  {t('selectedProductsCount', {
+                    count: selectedProductIds.length
+                  })}
                 </span>
               </div>
               <Button type="button" onClick={() => onOpenChange(false)}>
-                Concluir seleção
+                {t('finishSelection')}
               </Button>
             </div>
           </DialogFooter>

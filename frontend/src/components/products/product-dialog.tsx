@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import { Product, ProductModel } from '@/lib/api-types'
 import { UpdateProductDto } from '@/hooks/use-products'
+import { useTranslations } from 'next-intl'
 
 type ProductDialogProps = {
   product: Product | null
@@ -37,6 +38,7 @@ export function ProductDialog({
   onClose,
   onSave
 }: ProductDialogProps) {
+  const t = useTranslations('ProductDialog')
   const [formData, setFormData] = useState<Partial<UpdateProductDto>>({
     unitCost: product?.unitCost.value || '',
     salePrice: product?.salePrice.value || ''
@@ -76,44 +78,46 @@ export function ProductDialog({
       <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>Editar Produto</DialogTitle>
-            <DialogDescription>
-              Edite os detalhes do produto selecionado.
-            </DialogDescription>
+            <DialogTitle>{t('title')}</DialogTitle>
+            <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="serialNumber">Nº de Série</Label>
+                <Label htmlFor="serialNumber">{t('serialNumber')}</Label>
                 <Input
                   id="serialNumber"
                   name="serialNumber"
                   value={product.serialNumber.value || ''}
-                  placeholder="SN-0001"
+                  placeholder={t('serialNumberPlaceholder')}
                   disabled
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">{t('status')}</Label>
                 <Select value={formData.status || 'IN_STOCK'} disabled>
                   <SelectTrigger id="status">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="IN_STOCK">Em Estoque</SelectItem>
-                    <SelectItem value="ASSIGNED">Atribuído</SelectItem>
-                    <SelectItem value="SOLD">Vendido</SelectItem>
+                    <SelectItem value="IN_STOCK">
+                      {t('statuses.IN_STOCK')}
+                    </SelectItem>
+                    <SelectItem value="ASSIGNED">
+                      {t('statuses.ASSIGNED')}
+                    </SelectItem>
+                    <SelectItem value="SOLD">{t('statuses.SOLD')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="modelId">Modelo</Label>
+                <Label htmlFor="modelId">{t('model')}</Label>
                 <Select value={product.modelId || ''} disabled>
                   <SelectTrigger id="modelId">
-                    <SelectValue placeholder="Selecione um modelo" />
+                    <SelectValue placeholder={t('selectModel')} />
                   </SelectTrigger>
                   <SelectContent>
                     {models.map((model) => (
@@ -125,19 +129,19 @@ export function ProductDialog({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="batchId">Lote</Label>
+                <Label htmlFor="batchId">{t('batch')}</Label>
                 <Input
                   id="batchId"
                   name="batchId"
                   value={product.batchId || ''}
-                  placeholder="ID do lote"
+                  placeholder={t('batchPlaceholder')}
                   disabled
                 />
               </div>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="unitCost">Custo Unitário (R$) *</Label>
+                <Label htmlFor="unitCost">{t('unitCost')}</Label>
                 <Input
                   id="unitCost"
                   name="unitCost"
@@ -146,12 +150,12 @@ export function ProductDialog({
                   min="0"
                   value={formData.unitCost || ''}
                   onChange={handleChange}
-                  placeholder="0.00"
+                  placeholder={t('pricePlaceholder')}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="salePrice">Preço de Venda (R$) *</Label>
+                <Label htmlFor="salePrice">{t('salePrice')}</Label>
                 <Input
                   id="salePrice"
                   name="salePrice"
@@ -160,7 +164,7 @@ export function ProductDialog({
                   min="0"
                   value={formData.salePrice || ''}
                   onChange={handleChange}
-                  placeholder="0.00"
+                  placeholder={t('pricePlaceholder')}
                   required
                 />
               </div>
@@ -169,9 +173,9 @@ export function ProductDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t('cancel')}
             </Button>
-            <Button type="submit">Salvar Alterações</Button>
+            <Button type="submit">{t('saveChanges')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

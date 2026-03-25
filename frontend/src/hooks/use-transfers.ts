@@ -9,6 +9,8 @@ import {
   UpdateOwnershipTransferStatusDto
 } from '@/lib/api-types'
 import { apiPaths } from '@/lib/api-paths'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 import { components } from '@/types/openapi'
 
@@ -37,7 +39,7 @@ export type UpdateTransferStatusResponse =
 
 export function useGetTransfers() {
   return useQuery({
-    queryKey: ['transfers'],
+    queryKey: queryKeys.transfers.all(),
     queryFn: async () => {
       return await apiFetch<GetAllTransfersResponse>(
         apiPaths.ownershipTransfers.base,
@@ -50,6 +52,8 @@ export function useGetTransfers() {
 }
 
 export function useCreateTransfer(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.transfers')
+
   return useMutation({
     mutationFn: async (newTransfer: CreateTransferDto) => {
       return await apiFetch<CreateTransferResponse>(
@@ -62,16 +66,20 @@ export function useCreateTransfer(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Transferência criada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
+      toast.success(t('createSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao criar transferência: ${error.message}`)
+      toast.error(
+        t('createError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useDeleteTransfer(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.transfers')
+
   return useMutation({
     mutationFn: async (transferId: string) => {
       return await apiFetch<DeleteTransferResponse>(
@@ -82,16 +90,20 @@ export function useDeleteTransfer(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Transferência excluída com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
+      toast.success(t('deleteSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao excluir transferência: ${error.message}`)
+      toast.error(
+        t('deleteError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useUpdateTransfer(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.transfers')
+
   return useMutation({
     mutationFn: async ({ id, dto }: { id: string; dto: UpdateTransferDto }) => {
       return await apiFetch<UpdateTransferResponse>(
@@ -104,16 +116,20 @@ export function useUpdateTransfer(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Transferência atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
+      toast.success(t('updateSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao atualizar transferência: ${error.message}`)
+      toast.error(
+        t('updateError', { message: error.message || t('unexpectedError') })
+      )
     }
   })
 }
 
 export function useUpdateTransferStatus(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.transfers')
+
   return useMutation({
     mutationFn: async ({
       id,
@@ -132,11 +148,15 @@ export function useUpdateTransferStatus(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Transferência atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
+      toast.success(t('updateStatusSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao atualizar transferência: ${error.message}`)
+      toast.error(
+        t('updateStatusError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }

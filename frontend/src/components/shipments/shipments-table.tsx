@@ -26,7 +26,7 @@ import {
 import { useState } from 'react'
 import { Filter } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -45,6 +45,7 @@ import {
   ShipmentFilters,
   ShipmentFiltersType
 } from '@/components/shipments/shipments-filters'
+import { useLocale, useTranslations } from 'next-intl'
 
 type ShipmentsTableProps = {
   shipments: GetAllShipmentsResponse
@@ -63,6 +64,8 @@ export function ShipmentsTable({
   shipmentsPerPage = 10,
   role = 'ADMIN'
 }: ShipmentsTableProps) {
+  const locale = useLocale()
+  const t = useTranslations('ShipmentsTable')
   const [filters, setFilters] = useState<ShipmentFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -101,9 +104,11 @@ export function ShipmentsTable({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
+      return format(parseISO(dateString), 'P', {
+        locale: locale === 'en' ? enUS : ptBR
+      })
     } catch (error) {
-      return 'Data inválida'
+      return t('invalidDate')
     }
   }
 
@@ -113,19 +118,19 @@ export function ShipmentsTable({
       { label: string; className: string }
     > = {
       APPROVED: {
-        label: 'Aprovado',
+        label: t('statuses.APPROVED'),
         className: 'bg-[var(--badge-3)] text-[var(--badge-text-3)]'
       },
       CANCELLED: {
-        label: 'Cancelado',
+        label: t('statuses.CANCELLED'),
         className: 'bg-[var(--badge-6)] text-[var(--badge-text-6)]'
       },
       DELIVERED: {
-        label: 'Entregue',
+        label: t('statuses.DELIVERED'),
         className: 'bg-[var(--badge-4)] text-[var(--badge-text-4)]'
       },
       PENDING: {
-        label: 'Pendente',
+        label: t('statuses.PENDING'),
         className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
       }
     }
@@ -150,7 +155,7 @@ export function ShipmentsTable({
           <CardHeader className="pb-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle className="text-base sm:text-lg md:text-xl">
-                Gerenciamento de Romaneios
+                {t('managementTitle')}
               </CardTitle>
               <Button
                 variant={isFiltersVisible ? 'secondary' : 'outline'}
@@ -159,11 +164,11 @@ export function ShipmentsTable({
                 className="w-full text-xs sm:w-auto sm:text-sm"
               >
                 <Filter className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                Filtros
+                {t('filters')}
               </Button>
             </div>
             <CardDescription className="text-xs sm:text-sm">
-              Visualize, crie, edite e exclua romaneios do catálogo
+              {t('managementDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -181,20 +186,20 @@ export function ShipmentsTable({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="min-w-[130px] text-xs sm:text-sm">
-                      Data do romaneio
+                      {t('shipmentDate')}
                     </TableHead>
                     <TableHead className="min-w-[150px] text-xs sm:text-sm">
-                      Revendedor
+                      {t('reseller')}
                     </TableHead>
                     <TableHead className="min-w-20 text-xs sm:text-sm">
-                      Produtos
+                      {t('products')}
                     </TableHead>
                     <TableHead className="min-w-[100px] text-xs sm:text-sm">
-                      Status
+                      {t('status')}
                     </TableHead>
                     {role === 'ADMIN' && (
                       <TableHead className="min-w-[100px] text-right text-xs sm:text-sm">
-                        Ações
+                        {t('actions')}
                       </TableHead>
                     )}
                   </TableRow>
@@ -241,7 +246,7 @@ export function ShipmentsTable({
                                   <DropdownMenuLabel className="text-xs sm:text-sm">
                                     <div className="flex items-center">
                                       <Pencil className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                                      Editar
+                                      {t('edit')}
                                     </div>
                                   </DropdownMenuLabel>
                                   <DropdownMenuSeparator />
@@ -252,7 +257,7 @@ export function ShipmentsTable({
                                       className="text-xs sm:text-sm"
                                     >
                                       <FilePen className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                                      Infos
+                                      {t('info')}
                                     </DropdownMenuItem>
                                   )}
                                   {onEditStatus && (
@@ -261,7 +266,7 @@ export function ShipmentsTable({
                                       className="text-xs sm:text-sm"
                                     >
                                       <FilePen className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                                      Status
+                                      {t('statusAction')}
                                     </DropdownMenuItem>
                                   )}
                                   {(onEdit || onEditStatus) && onDelete && (
@@ -273,7 +278,7 @@ export function ShipmentsTable({
                                       onClick={() => onDelete(shipment)}
                                     >
                                       <Trash2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                                      Excluir
+                                      {t('delete')}
                                     </DropdownMenuItem>
                                   )}
                                 </DropdownMenuContent>
@@ -299,7 +304,7 @@ export function ShipmentsTable({
                         colSpan={role === 'ADMIN' ? 5 : 4}
                         className="h-24 text-center text-xs sm:text-sm"
                       >
-                        Nenhum romaneio encontrado
+                        {t('noShipmentsFound')}
                       </TableCell>
                     </TableRow>
                   )}
@@ -309,7 +314,7 @@ export function ShipmentsTable({
             {totalPages > 1 && (
               <div className="mt-3 flex flex-col items-center justify-between gap-3 sm:mt-4 sm:flex-row sm:justify-end">
                 <div className="text-xs sm:text-sm">
-                  Página {currentPage} de {totalPages}
+                  {t('page', { current: currentPage, total: totalPages })}
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button
@@ -322,7 +327,7 @@ export function ShipmentsTable({
                     className="h-8 text-xs sm:h-9 sm:text-sm"
                   >
                     <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="sr-only">Página anterior</span>
+                    <span className="sr-only">{t('previousPage')}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -334,7 +339,7 @@ export function ShipmentsTable({
                     className="h-8 text-xs sm:h-9 sm:text-sm"
                   >
                     <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="sr-only">Próxima página</span>
+                    <span className="sr-only">{t('nextPage')}</span>
                   </Button>
                 </div>
               </div>

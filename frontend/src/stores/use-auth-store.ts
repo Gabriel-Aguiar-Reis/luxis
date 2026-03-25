@@ -1,8 +1,8 @@
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
 import {
-  ChangePassword,
   Login,
+  ChangePassword,
   ResetPassword,
   UpdateUser,
   Verify
@@ -13,11 +13,9 @@ import { persist } from 'zustand/middleware'
 type userPayload =
   Verify['responses']['200']['content']['application/json']['user']
 
+type loginDto = Login['requestBody']['content']['application/json']
 type verifyDtoReturn = Verify['responses']['200']['content']['application/json']
 type updateUserDto = UpdateUser['requestBody']['content']['application/json']
-
-type LoginDto = Login['requestBody']['content']['application/json']
-type LoginReturn = Login['responses']['200']['content']['application/json']
 type ResetPasswordDto =
   ResetPassword['requestBody']['content']['application/json']
 type ChangePasswordDto =
@@ -25,12 +23,11 @@ type ChangePasswordDto =
 
 type AuthState = {
   user: userPayload | null
-  accessToken: string | null
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null
   hydrated: boolean
-  login: (dto: LoginDto) => Promise<void>
+  login: (dto: loginDto) => Promise<userPayload>
   logout: () => void
   updateUser: (user: updateUserDto) => void
   verify: () => Promise<verifyDtoReturn>
@@ -42,16 +39,15 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
-      accessToken: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
       hydrated: false,
 
-      login: async (dto: LoginDto) => {
+      login: async (dto: loginDto) => {
         set({ isLoading: true, error: null })
         try {
-          const data = await apiFetch<LoginReturn>(
+          await apiFetch<void>(
             apiPaths.auth.login,
             {
               body: JSON.stringify(dto)
@@ -59,28 +55,46 @@ export const useAuthStore = create<AuthState>()(
             false,
             'POST'
           )
+
+          const session = await apiFetch<verifyDtoReturn>(
+            apiPaths.auth.verify,
+            {},
+            false,
+            'POST'
+          )
+
+          if (!session.user) {
+            throw new Error('Falha na hidratação da sessão')
+          }
+
           set({
-            accessToken: data.accessToken,
+            user: session.user,
             isAuthenticated: true,
             isLoading: false
           })
+
+          return session.user
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Erro desconhecido',
             isLoading: false,
             isAuthenticated: false,
-            user: null,
-            accessToken: null
+            user: null
           })
-          // Re-lança o erro para que o componente possa tratá-lo
+
           throw error
         }
       },
 
       logout: () => {
+        void apiFetch<void>(apiPaths.auth.logout, {}, false, 'POST').catch(
+          () => {
+            return undefined
+          }
+        )
+
         set({
           user: null,
-          accessToken: null,
           isAuthenticated: false
         })
       },
@@ -98,16 +112,6 @@ export const useAuthStore = create<AuthState>()(
       },
 
       verify: async () => {
-        const accessToken = get().accessToken
-        if (!accessToken) {
-          get().logout()
-          set({
-            isLoading: false,
-            error: 'Token de acesso ausente',
-            isAuthenticated: false
-          })
-          return Promise.reject(new Error('Token de acesso ausente'))
-        }
         set({ isLoading: true, error: null })
         try {
           const res = await apiFetch<verifyDtoReturn>(
@@ -128,23 +132,12 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             error: err instanceof Error ? err.message : 'Erro desconhecido',
             isAuthenticated: false,
-            user: null,
-            accessToken: null
+            user: null
           })
           return Promise.reject(err)
         }
       },
       resetPassword: async (dto: ResetPasswordDto) => {
-        const accessToken = get().accessToken
-        if (!accessToken) {
-          get().logout()
-          set({
-            isLoading: false,
-            error: 'Token de acesso ausente',
-            isAuthenticated: false
-          })
-          return Promise.reject(new Error('Token de acesso ausente'))
-        }
         set({ isLoading: true, error: null })
         try {
           await apiFetch<void>(
@@ -165,16 +158,6 @@ export const useAuthStore = create<AuthState>()(
         }
       },
       changePassword: async (dto: ChangePasswordDto) => {
-        const accessToken = get().accessToken
-        if (!accessToken) {
-          get().logout()
-          set({
-            isLoading: false,
-            error: 'Token de acesso ausente',
-            isAuthenticated: false
-          })
-          return Promise.reject(new Error('Token de acesso ausente'))
-        }
         set({ isLoading: true, error: null })
         try {
           await apiFetch<void>(
@@ -207,17 +190,15 @@ export const useAuthStore = create<AuthState>()(
               name: state.user.name
             }
           : null,
-        isAuthenticated: state.isAuthenticated,
-        accessToken: state.accessToken
+        isAuthenticated: state.isAuthenticated
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
-          if (state.accessToken && state.user) {
+          if (state.user) {
             state.isAuthenticated = true
             state.hydrated = true
           } else {
             state.isAuthenticated = false
-            state.accessToken = null
             state.user = null
             state.hydrated = true
           }

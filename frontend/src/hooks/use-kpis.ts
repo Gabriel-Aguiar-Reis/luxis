@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
+import { queryKeys } from '@/lib/query-keys'
 import {
   // Produtos
   GetTotalInStockProducts,
@@ -42,7 +43,7 @@ export function useTotalInStockProducts() {
   return useQuery<
     GetTotalInStockProducts['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-in-stock-products'],
+    queryKey: queryKeys.kpis.admin.totalInStockProducts(),
     queryFn: () =>
       apiFetch<
         GetTotalInStockProducts['responses']['200']['content']['application/json']
@@ -54,7 +55,7 @@ export function useProductsInStock() {
   return useQuery<
     GetProductsInStock['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-products-in-stock'],
+    queryKey: queryKeys.kpis.admin.productsInStock(),
     queryFn: () =>
       apiFetch<
         GetProductsInStock['responses']['200']['content']['application/json']
@@ -66,7 +67,7 @@ export function useProductsWithResellers() {
   return useQuery<
     GetProductsWithResellers['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-products-with-resellers'],
+    queryKey: queryKeys.kpis.admin.productsWithResellers(),
     queryFn: () =>
       apiFetch<
         GetProductsWithResellers['responses']['200']['content']['application/json']
@@ -78,7 +79,7 @@ export function useTotalProductsWithResellers() {
   return useQuery<
     GetTotalProductsWithResellers['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-products-with-resellers'],
+    queryKey: queryKeys.kpis.admin.totalProductsWithResellers(),
     queryFn: () =>
       apiFetch<
         GetTotalProductsWithResellers['responses']['200']['content']['application/json']
@@ -90,7 +91,7 @@ export function useProductsInStockForMoreThanXDays(days: number) {
   return useQuery<
     GetProductsInStockForMoreThanXDays['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-products-in-stock-for-more-than', days],
+    queryKey: queryKeys.kpis.admin.productsInStockForMoreThan(days),
     queryFn: () =>
       apiFetch<
         GetProductsInStockForMoreThanXDays['responses']['200']['content']['application/json']
@@ -103,7 +104,7 @@ export function useTotalProductsInStockForMoreThanXDays(days: number) {
   return useQuery<
     GetTotalProductsInStockForMoreThanXDays['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-products-in-stock-for-more-than', days],
+    queryKey: queryKeys.kpis.admin.totalProductsInStockForMoreThan(days),
     queryFn: () =>
       apiFetch<
         GetTotalProductsInStockForMoreThanXDays['responses']['200']['content']['application/json']
@@ -117,7 +118,7 @@ export function useSalesByResellerId(id: string) {
   return useQuery<
     GetSalesByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-sales-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.salesByReseller(id),
     queryFn: () =>
       apiFetch<
         GetSalesByResellerId['responses']['200']['content']['application/json']
@@ -130,7 +131,7 @@ export function useTotalSalesByResellerId(id: string) {
   return useQuery<
     GetTotalSalesByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-sales-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.totalSalesByReseller(id),
     queryFn: () =>
       apiFetch<
         GetTotalSalesByResellerId['responses']['200']['content']['application/json']
@@ -145,7 +146,7 @@ export function useSalesInPeriod(
   return useQuery<
     GetSalesInPeriod['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-sales-in-period', query],
+    queryKey: queryKeys.kpis.admin.salesInPeriod(query),
     queryFn: () =>
       apiFetch<
         GetSalesInPeriod['responses']['200']['content']['application/json']
@@ -160,7 +161,7 @@ export function useTotalSalesInPeriod(
   return useQuery<
     GetTotalSalesInPeriod['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-sales-in-period', query],
+    queryKey: queryKeys.kpis.admin.totalSalesInPeriod(query),
     queryFn: () =>
       apiFetch<
         GetTotalSalesInPeriod['responses']['200']['content']['application/json']
@@ -179,7 +180,7 @@ export function useSalesAggregatedByDay(query: { start: string; end: string }) {
       totalAmount: string
     }>
   }>({
-    queryKey: ['kpi-sales-aggregated-by-day', query],
+    queryKey: queryKeys.kpis.admin.salesAggregatedByDay(query),
     queryFn: () =>
       apiFetch<{
         start: Date
@@ -200,7 +201,7 @@ export function useSalesByReseller(
   return useQuery<
     GetSalesByReseller['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-sales-by-reseller-list', query],
+    queryKey: queryKeys.kpis.admin.salesByResellerList(query),
     queryFn: () =>
       apiFetch<
         GetSalesByReseller['responses']['200']['content']['application/json']
@@ -214,7 +215,7 @@ export function useTotalSalesByReseller(
   return useQuery<
     GetTotalSalesByReseller['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-sales-by-reseller-list', query],
+    queryKey: queryKeys.kpis.admin.totalSalesByResellerList(query),
     queryFn: () =>
       apiFetch<
         GetTotalSalesByReseller['responses']['200']['content']['application/json']
@@ -226,7 +227,7 @@ export function useTotalBillingByBatchId(id: string) {
   return useQuery<
     GetTotalBillingByBatchId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-billing-by-batch', id],
+    queryKey: queryKeys.kpis.admin.totalBillingByBatch(id),
     queryFn: () =>
       apiFetch<
         GetTotalBillingByBatchId['responses']['200']['content']['application/json']
@@ -239,7 +240,7 @@ export function useTotalBillingByResellerId(resellerId: string) {
   return useQuery<
     GetTotalBillingByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-billing-by-reseller', resellerId],
+    queryKey: queryKeys.kpis.admin.totalBillingByReseller(resellerId),
     queryFn: () =>
       apiFetch<
         GetTotalBillingByResellerId['responses']['200']['content']['application/json']
@@ -254,7 +255,7 @@ export function useTotalBillingByPeriod(
   return useQuery<
     GetTotalBillingByPeriod['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-billing-by-period', query],
+    queryKey: queryKeys.kpis.admin.totalBillingByPeriod(query),
     queryFn: () =>
       apiFetch<
         GetTotalBillingByPeriod['responses']['200']['content']['application/json']
@@ -268,7 +269,7 @@ export function useOwnershipTransfersByResellerId(id: string) {
   return useQuery<
     GetOwnershipTransfersByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-ownership-transfers-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.ownershipTransfersByReseller(id),
     queryFn: () =>
       apiFetch<
         GetOwnershipTransfersByResellerId['responses']['200']['content']['application/json']
@@ -281,7 +282,7 @@ export function useTotalOwnershipTransfersByResellerId(id: string) {
   return useQuery<
     GetTotalOwnershipTransfersByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-ownership-transfers-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.totalOwnershipTransfersByReseller(id),
     queryFn: () =>
       apiFetch<
         GetTotalOwnershipTransfersByResellerId['responses']['200']['content']['application/json']
@@ -296,7 +297,7 @@ export function useOwnershipTransfersInPeriod(
   return useQuery<
     GetOwnershipTransfersInPeriod['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-ownership-transfers-in-period', query],
+    queryKey: queryKeys.kpis.admin.ownershipTransfersInPeriod(query),
     queryFn: () =>
       apiFetch<
         GetOwnershipTransfersInPeriod['responses']['200']['content']['application/json']
@@ -315,7 +316,7 @@ export function useTotalOwnershipTransfersInPeriod(
   return useQuery<
     GetTotalOwnershipTransfersInPeriod['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-ownership-transfers-in-period', query],
+    queryKey: queryKeys.kpis.admin.totalOwnershipTransfersInPeriod(query),
     queryFn: () =>
       apiFetch<
         GetTotalOwnershipTransfersInPeriod['responses']['200']['content']['application/json']
@@ -332,7 +333,7 @@ export function useOwnershipTransfersReceivedByResellerId(id: string) {
   return useQuery<
     GetOwnershipTransfersReceivedByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-ownership-transfers-received-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.ownershipTransfersReceivedByReseller(id),
     queryFn: () =>
       apiFetch<
         GetOwnershipTransfersReceivedByResellerId['responses']['200']['content']['application/json']
@@ -345,7 +346,8 @@ export function useTotalOwnershipTransfersReceivedByResellerId(id: string) {
   return useQuery<
     GetTotalOwnershipTransfersReceivedByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-ownership-transfers-received-by-reseller', id],
+    queryKey:
+      queryKeys.kpis.admin.totalOwnershipTransfersReceivedByReseller(id),
     queryFn: () =>
       apiFetch<
         GetTotalOwnershipTransfersReceivedByResellerId['responses']['200']['content']['application/json']
@@ -362,7 +364,7 @@ export function useOwnershipTransfersGivenByResellerId(id: string) {
   return useQuery<
     GetOwnershipTransfersGivenByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-ownership-transfers-given-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.ownershipTransfersGivenByReseller(id),
     queryFn: () =>
       apiFetch<
         GetOwnershipTransfersGivenByResellerId['responses']['200']['content']['application/json']
@@ -375,7 +377,7 @@ export function useTotalOwnershipTransfersGivenByResellerId(id: string) {
   return useQuery<
     GetTotalOwnershipTransfersGivenByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-ownership-transfers-given-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.totalOwnershipTransfersGivenByReseller(id),
     queryFn: () =>
       apiFetch<
         GetTotalOwnershipTransfersGivenByResellerId['responses']['200']['content']['application/json']
@@ -393,7 +395,7 @@ export function useReturnsByResellerId(id: string) {
   return useQuery<
     GetReturnsByResellerIdKpi['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-returns-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.returnsByReseller(id),
     queryFn: () =>
       apiFetch<
         GetReturnsByResellerIdKpi['responses']['200']['content']['application/json']
@@ -406,7 +408,7 @@ export function useTotalReturnsByResellerId(id: string) {
   return useQuery<
     GetTotalReturnsByResellerId['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-returns-by-reseller', id],
+    queryKey: queryKeys.kpis.admin.totalReturnsByReseller(id),
     queryFn: () =>
       apiFetch<
         GetTotalReturnsByResellerId['responses']['200']['content']['application/json']
@@ -421,7 +423,7 @@ export function useReturnsByReseller(
   return useQuery<
     GetReturnsByReseller['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-returns-by-reseller-list', query],
+    queryKey: queryKeys.kpis.admin.returnsByResellerList(query),
     queryFn: () =>
       apiFetch<
         GetReturnsByReseller['responses']['200']['content']['application/json']
@@ -436,7 +438,7 @@ export function useTotalReturnsByReseller(
   return useQuery<
     GetTotalReturnsByReseller['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-returns-by-reseller-list', query],
+    queryKey: queryKeys.kpis.admin.totalReturnsByResellerList(query),
     queryFn: () =>
       apiFetch<
         GetTotalReturnsByReseller['responses']['200']['content']['application/json']
@@ -451,7 +453,7 @@ export function useReturnsInPeriod(
   return useQuery<
     GetReturnsInPeriod['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-returns-in-period', query],
+    queryKey: queryKeys.kpis.admin.returnsInPeriod(query),
     queryFn: () =>
       apiFetch<
         GetReturnsInPeriod['responses']['200']['content']['application/json']
@@ -466,7 +468,7 @@ export function useTotalReturnsInPeriod(
   return useQuery<
     GetTotalReturnsInPeriod['responses']['200']['content']['application/json']
   >({
-    queryKey: ['kpi-total-returns-in-period', query],
+    queryKey: queryKeys.kpis.admin.totalReturnsInPeriod(query),
     queryFn: () =>
       apiFetch<
         GetTotalReturnsInPeriod['responses']['200']['content']['application/json']
@@ -478,7 +480,7 @@ export function useTotalReturnsInPeriod(
 // --- Reseller KPIs ---
 export function useMonthlySales(params?: { start?: string; end?: string }) {
   return useQuery({
-    queryKey: ['kpi-my-space-monthly-sales', params],
+    queryKey: queryKeys.kpis.mySpace.monthlySales(params),
     queryFn: async () => {
       const result = await apiFetch(
         apiPaths.kpiMySpace.monthlySales,
@@ -497,7 +499,7 @@ export function useMonthlySales(params?: { start?: string; end?: string }) {
 
 export function useAverageTicket(params?: { start?: string; end?: string }) {
   return useQuery<number>({
-    queryKey: ['kpi-my-space-average-ticket', params],
+    queryKey: queryKeys.kpis.mySpace.averageTicket(params),
     queryFn: async () => {
       const result = await apiFetch<number>(
         apiPaths.kpiMySpace.averageTicket,
@@ -516,7 +518,7 @@ export function useAverageTicket(params?: { start?: string; end?: string }) {
 
 export function useCurrentInventory(params?: { start?: string; end?: string }) {
   return useQuery({
-    queryKey: ['kpi-my-space-current-inventory', params],
+    queryKey: queryKeys.kpis.mySpace.currentInventory(params),
     queryFn: async () => {
       const result = await apiFetch(
         apiPaths.kpiMySpace.currentInventory,
@@ -538,7 +540,7 @@ export function useTopSellingProducts(params?: {
   end?: string
 }) {
   return useQuery({
-    queryKey: ['kpi-my-space-top-selling-products', params],
+    queryKey: queryKeys.kpis.mySpace.topSellingProducts(params),
     queryFn: async () => {
       const result = await apiFetch(
         apiPaths.kpiMySpace.topSellingProducts,
@@ -560,7 +562,7 @@ export function useLongestTimeInInventory(params?: {
   end?: string
 }) {
   return useQuery({
-    queryKey: ['kpi-my-space-longest-time-in-inventory', params],
+    queryKey: queryKeys.kpis.mySpace.longestTimeInInventory(params),
     queryFn: async () => {
       const result = await apiFetch(
         apiPaths.kpiMySpace.longestTimeInInventory,
@@ -579,7 +581,7 @@ export function useLongestTimeInInventory(params?: {
 
 export function useReturnCount(params?: { start?: string; end?: string }) {
   return useQuery<number>({
-    queryKey: ['kpi-my-space-return-count', params],
+    queryKey: queryKeys.kpis.mySpace.returnCount(params),
     queryFn: async () => {
       const result = await apiFetch<number>(
         apiPaths.kpiMySpace.returnCount,

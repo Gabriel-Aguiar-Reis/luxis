@@ -16,7 +16,8 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
+import { useLocale, useTranslations } from 'next-intl'
 
 export type ReturnFiltersType = {
   status?: ReturnStatus
@@ -29,18 +30,20 @@ type ReturnFiltersProps = {
   initialFilters?: ReturnFiltersType
 }
 
-const statusOptions = [
-  { value: 'PENDING', label: 'Pendente' },
-  { value: 'APPROVED', label: 'Aprovado' },
-  { value: 'RETURNED', label: 'Devolvido' },
-  { value: 'CANCELLED', label: 'Cancelado' }
-]
-
 export function ReturnsFilters({
   onFilterChange,
   initialFilters = {}
 }: ReturnFiltersProps) {
+  const locale = useLocale()
+  const t = useTranslations('ReturnsFilters')
   const [filters, setFilters] = useState<ReturnFiltersType>(initialFilters)
+
+  const statusOptions = [
+    { value: 'PENDING', label: t('statuses.PENDING') },
+    { value: 'APPROVED', label: t('statuses.APPROVED') },
+    { value: 'RETURNED', label: t('statuses.RETURNED') },
+    { value: 'CANCELLED', label: t('statuses.CANCELLED') }
+  ]
 
   const updateFilter = (key: keyof ReturnFiltersType, value: any) => {
     const newFilters = { ...filters, [key]: value }
@@ -59,7 +62,7 @@ export function ReturnsFilters({
   return (
     <div className="mb-4 rounded-md border p-4">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-sm font-medium">Filtros</h3>
+        <h3 className="text-sm font-medium">{t('title')}</h3>
         <Button
           variant="ghost"
           size="sm"
@@ -68,26 +71,26 @@ export function ReturnsFilters({
           className="w-full sm:w-auto"
         >
           <X className="mr-2 h-3 w-3" />
-          Limpar filtros
+          {t('clearFilters')}
         </Button>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">Revendedor</label>
+          <label className="block text-xs font-medium">{t('reseller')}</label>
           <Input
-            placeholder="Nome do revendedor"
+            placeholder={t('resellerPlaceholder')}
             value={filters.reseller || ''}
             onChange={(e) => updateFilter('reseller', e.target.value)}
           />
         </div>
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">Status</label>
+          <label className="block text-xs font-medium">{t('status')}</label>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t('status')} />
             </SelectTrigger>
             <SelectContent>
               {statusOptions.map((opt) => (
@@ -99,7 +102,7 @@ export function ReturnsFilters({
           </Select>
         </div>
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">Data da devolução</label>
+          <label className="block text-xs font-medium">{t('returnDate')}</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -107,8 +110,8 @@ export function ReturnsFilters({
                 className="w-full justify-between font-normal"
               >
                 {filters.createdAt
-                  ? new Date(filters.createdAt).toLocaleDateString()
-                  : 'Selecionar data'}
+                  ? new Date(filters.createdAt).toLocaleDateString(locale)
+                  : t('selectDate')}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
@@ -118,7 +121,7 @@ export function ReturnsFilters({
             >
               <Calendar
                 mode="single"
-                locale={ptBR}
+                locale={locale === 'en' ? enUS : ptBR}
                 selected={
                   filters.createdAt ? new Date(filters.createdAt) : undefined
                 }

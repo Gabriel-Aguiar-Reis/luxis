@@ -10,6 +10,8 @@ import {
   UpdateSaleStatus
 } from '@/lib/api-types'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 export type GetAllSalesResponse =
@@ -43,7 +45,7 @@ export enum PaymentMethod {
 
 export function useGetAvailableProductsToSell() {
   return useQuery({
-    queryKey: ['available-products-to-sell'],
+    queryKey: queryKeys.sales.availableProducts(),
     queryFn: async () => {
       return await apiFetch<GetAvailableProductsToSellDto>(
         apiPaths.sales.availableProducts,
@@ -56,25 +58,31 @@ export function useGetAvailableProductsToSell() {
 }
 
 export function useConfirmSale(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.sales')
+
   return useMutation({
     mutationFn: async (id: string) => {
       return await apiFetch(apiPaths.sales.confirm(id), {}, true, 'PATCH')
     },
     onSuccess: async () => {
-      toast.success('Venda confirmada com sucesso!')
+      toast.success(t('confirmSuccess'))
       await queryClient.invalidateQueries({
-        queryKey: ['sales']
+        queryKey: queryKeys.sales.all()
       })
     },
     onError: (error) => {
-      toast.error(`Falha ao confirmar venda: ${error.message}`)
+      toast.error(
+        t('confirmError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }
 
 export function useGetSales() {
   return useQuery({
-    queryKey: ['sales'],
+    queryKey: queryKeys.sales.all(),
     queryFn: async () => {
       return await apiFetch<GetAllSalesResponse>(apiPaths.sales.base, {}, true)
     },
@@ -84,7 +92,7 @@ export function useGetSales() {
 
 export function useGetSale(id: string) {
   return useQuery({
-    queryKey: ['sale', id],
+    queryKey: queryKeys.sales.detail(id),
     queryFn: async () => {
       return await apiFetch<GetOneSaleResponse>(
         apiPaths.sales.byId(id),
@@ -99,6 +107,8 @@ export function useGetSale(id: string) {
 }
 
 export function useCreateSale(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.sales')
+
   return useMutation({
     mutationFn: async (dto: CreateSaleDto) => {
       return await apiFetch<CreateSaleResponse>(
@@ -111,31 +121,43 @@ export function useCreateSale(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Venda criada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
+      toast.success(t('createSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao criar venda: ${error.message}`)
+      toast.error(
+        t('createError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }
 
 export function useDeleteSale(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.sales')
+
   return useMutation({
     mutationFn: async (id: string) => {
       return await apiFetch(apiPaths.sales.byId(id), {}, true, 'DELETE')
     },
     onSuccess: () => {
-      toast.success('Venda deletada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
+      toast.success(t('deleteSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao deletar venda: ${error.message}`)
+      toast.error(
+        t('deleteError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }
 
 export function useUpdateSale(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.sales')
+
   return useMutation({
     mutationFn: async ({ id, dto }: { id: string; dto: UpdateSaleDto }) => {
       return await apiFetch(
@@ -148,16 +170,22 @@ export function useUpdateSale(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Venda atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
+      toast.success(t('updateSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao atualizar venda: ${error.message}`)
+      toast.error(
+        t('updateError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }
 
 export function useUpdateMarkInstallmentPaid(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.sales')
+
   return useMutation({
     mutationFn: async ({
       id,
@@ -176,16 +204,22 @@ export function useUpdateMarkInstallmentPaid(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Parcela marcada como paga com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
+      toast.success(t('markInstallmentPaidSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao marcar parcela como paga: ${error.message}`)
+      toast.error(
+        t('markInstallmentPaidError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }
 
 export function useUpdateSaleStatus(queryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.sales')
+
   return useMutation({
     mutationFn: async ({
       id,
@@ -202,11 +236,15 @@ export function useUpdateSaleStatus(queryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success('Status da venda atualizado com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
+      toast.success(t('updateStatusSuccess'))
+      queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
     },
     onError: (error) => {
-      toast.error(`Falha ao atualizar status da venda: ${error.message}`)
+      toast.error(
+        t('updateStatusError', {
+          message: error.message || t('unexpectedError')
+        })
+      )
     }
   })
 }

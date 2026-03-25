@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useTranslations } from 'next-intl'
 
 type AddCustomerDialogProps = {
   showNewCustomerDialog: boolean
@@ -23,6 +24,8 @@ export function AddCustomerDialog({
   newCustomerForm,
   handleCreateCustomer
 }: AddCustomerDialogProps) {
+  const t = useTranslations('AddCustomerDialog')
+
   return (
     <Dialog
       open={showNewCustomerDialog}
@@ -41,25 +44,23 @@ export function AddCustomerDialog({
           }}
         >
           <DialogHeader>
-            <DialogTitle>Novo Cliente</DialogTitle>
-            <DialogDescription>
-              Informe os dados básicos do cliente.
-            </DialogDescription>
+            <DialogTitle>{t('title')}</DialogTitle>
+            <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="customer-name">Nome</Label>
+              <Label htmlFor="customer-name">{t('name')}</Label>
               <Input
                 id="customer-name"
-                placeholder="Nome do cliente"
+                placeholder={t('namePlaceholder')}
                 {...newCustomerForm.register('name')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="customer-phone">Telefone</Label>
+              <Label htmlFor="customer-phone">{t('phone')}</Label>
               <Input
                 id="customer-phone"
-                placeholder="(00) 00000-0000"
+                placeholder={t('phonePlaceholder')}
                 {...newCustomerForm.register('phone')}
               />
             </div>
@@ -73,9 +74,9 @@ export function AddCustomerDialog({
                 newCustomerForm.reset()
               }}
             >
-              Cancelar
+              {t('cancel')}
             </Button>
-            <Button type="submit">Criar Cliente</Button>
+            <Button type="submit">{t('create')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

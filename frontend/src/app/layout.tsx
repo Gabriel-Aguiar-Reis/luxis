@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { getLocale } from 'next-intl/server'
 import '@/styles/globals.css'
 import { Providers } from '@/components/providers'
 
@@ -21,14 +22,14 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({
-  children,
-  params
+  children
 }: {
   children: React.ReactNode
-  params: { locale: string }
 }) {
+  const locale = await getLocale()
+
   return (
-    <html lang={params.locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

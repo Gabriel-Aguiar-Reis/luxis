@@ -20,6 +20,7 @@ import {
   ShipmentStatus,
   UpdateShipmentStatusDto
 } from '@/hooks/use-shipments'
+import { useTranslations } from 'next-intl'
 
 interface ShipmentEditStatusDialogProps {
   isOpen: boolean
@@ -28,42 +29,42 @@ interface ShipmentEditStatusDialogProps {
   shipment: GetOneShipmentResponse | null
 }
 
-const statusOptions: {
-  value: ShipmentStatus
-  label: string
-  className: string
-}[] = [
-  {
-    value: 'CANCELLED',
-    label: 'Cancelado',
-    className: 'text-[var(--badge-text-6)]'
-  },
-  {
-    value: 'PENDING',
-    label: 'Pendente',
-    className: 'text-[var(--badge-text-5)]'
-  },
-  {
-    value: 'APPROVED',
-    label: 'Aprovado',
-    className: 'text-[var(--badge-text-3)]'
-  },
-  {
-    value: 'DELIVERED',
-    label: 'Entregue',
-    className: 'text-[var(--badge-text-4)]'
-  }
-]
-
 export function ShipmentEditStatusDialog({
   isOpen,
   onClose,
   onSave,
   shipment
 }: ShipmentEditStatusDialogProps) {
+  const t = useTranslations('ShipmentEditStatusDialog')
   const [status, setStatus] = useState<ShipmentStatus | ''>(
     shipment?.status || ''
   )
+  const statusOptions: {
+    value: ShipmentStatus
+    label: string
+    className: string
+  }[] = [
+    {
+      value: 'CANCELLED',
+      label: t('statuses.CANCELLED'),
+      className: 'text-[var(--badge-text-6)]'
+    },
+    {
+      value: 'PENDING',
+      label: t('statuses.PENDING'),
+      className: 'text-[var(--badge-text-5)]'
+    },
+    {
+      value: 'APPROVED',
+      label: t('statuses.APPROVED'),
+      className: 'text-[var(--badge-text-3)]'
+    },
+    {
+      value: 'DELIVERED',
+      label: t('statuses.DELIVERED'),
+      className: 'text-[var(--badge-text-4)]'
+    }
+  ]
 
   // Atualiza status ao abrir dialog para o valor atual
   React.useEffect(() => {
@@ -77,7 +78,7 @@ export function ShipmentEditStatusDialog({
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg">
-            Editar status do romaneio
+            {t('title')}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-3 sm:space-y-4 sm:py-4">
@@ -86,7 +87,7 @@ export function ShipmentEditStatusDialog({
             onValueChange={(v) => setStatus(v as ShipmentStatus)}
           >
             <SelectTrigger className="h-9 text-xs sm:h-10 sm:text-sm">
-              <SelectValue placeholder="Selecione o status" />
+              <SelectValue placeholder={t('selectStatus')} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -109,7 +110,7 @@ export function ShipmentEditStatusDialog({
             onClick={onClose}
             className="w-full text-xs sm:w-auto sm:text-sm"
           >
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button
             onClick={() => {
@@ -119,7 +120,7 @@ export function ShipmentEditStatusDialog({
             disabled={!status || status === shipment.status}
             className="w-full text-xs sm:w-auto sm:text-sm"
           >
-            Salvar
+            {t('save')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -17,12 +17,14 @@ import { ShipmentDialog } from '@/components/shipments/shipments-dialog'
 import { ShipmentEditStatusDialog } from '@/components/shipments/shipment-edit-status-dialog'
 import { ShipmentDeleteDialog } from '@/components/shipments/shipment-delete-dialog'
 import { ShipmentCreateDialog } from '@/components/shipments/shipment-create-dialog'
+import { useTranslations } from 'next-intl'
 
 type ShipmentsPageProps = {
   role?: 'ADMIN' | 'RESELLER'
 }
 
 export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
+  const t = useTranslations('ShipmentsPage')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -50,11 +52,9 @@ export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
         <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
           <Ban className="text-primary h-6 w-6" />
         </div>
-        <h3 className="mt-4 text-lg font-semibold">
-          Nenhum romaneio encontrado!
-        </h3>
+        <h3 className="mt-4 text-lg font-semibold">{t('emptyTitle')}</h3>
         <p className="text-muted-foreground mt-2 text-sm">
-          Não há romaneios registrados no sistema.
+          {t('emptyDescription')}
         </p>
       </div>
     )
@@ -63,11 +63,11 @@ export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Romaneios</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
         {canCreate && (
           <Button onClick={() => setIsCreateDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Novo Romaneio
+            {t('newShipment')}
           </Button>
         )}
       </div>

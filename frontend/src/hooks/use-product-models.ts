@@ -1,7 +1,14 @@
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query'
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
 import { GetAllProductModels, UpdateProductModel } from '@/lib/api-types'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 type GetAllProductModelsResponse =
@@ -14,7 +21,7 @@ type UpdateModelResponse =
 
 export function useGetModels() {
   return useQuery({
-    queryKey: ['product-models'],
+    queryKey: queryKeys.productModels.all(),
     queryFn: async () => {
       return await apiFetch<GetAllProductModelsResponse>(
         apiPaths.productModels.base,
@@ -27,6 +34,8 @@ export function useGetModels() {
 }
 
 export function useChangeProductModel(QueryClient: QueryClient) {
+  const t = useTranslations('HookFeedback.productModels')
+
   return useMutation({
     mutationFn: async ({ id, dto }: { id: string; dto: UpdateModelDto }) => {
       return await apiFetch<UpdateModelResponse>(
@@ -39,16 +48,19 @@ export function useChangeProductModel(QueryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success(`Modelo atualizado com sucesso`)
-      QueryClient.invalidateQueries({ queryKey: ['product-models'] })
+      toast.success(t('updateSuccess'))
+      QueryClient.invalidateQueries({ queryKey: queryKeys.productModels.all() })
     },
     onError: () => {
-      toast.error('Erro ao atualizar modelo')
+      toast.error(t('updateError'))
     }
   })
 }
 
-export function useDeleteProductModel(QueryClient: QueryClient) {
+export function useDeleteProductModel(QueryClient?: QueryClient) {
+  const t = useTranslations('HookFeedback.productModels')
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: async (id: string) => {
       return await apiFetch<void>(
@@ -59,11 +71,14 @@ export function useDeleteProductModel(QueryClient: QueryClient) {
       )
     },
     onSuccess: () => {
-      toast.success(`Modelo excluído com sucesso`)
-      QueryClient.invalidateQueries({ queryKey: ['product-models'] })
+      toast.success(t('deleteSuccess'))
+      const activeQueryClient = QueryClient ?? queryClient
+      activeQueryClient.invalidateQueries({
+        queryKey: queryKeys.productModels.all()
+      })
     },
     onError: () => {
-      toast.error('Erro ao excluir modelo')
+      toast.error(t('deleteError'))
     }
   })
 }

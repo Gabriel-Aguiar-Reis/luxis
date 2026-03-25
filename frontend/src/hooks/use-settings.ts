@@ -7,6 +7,8 @@ import {
 import { UpdateUser, User } from '@/lib/api-types'
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 type updateUserReturn =
@@ -31,34 +33,22 @@ const userMapper = (user: User) => {
   return data
 }
 
-const userId = useAuthStore.getState().user?.id
-if (!userId) {
-  throw new Error('User ID is not available')
-}
-
-const fetchProfile = async () => {
-  return apiFetch<User>(`${apiPaths.users.byId(userId)}`, {}, true)
-}
-
-const updateProfile = async (data: updateUserDto) => {
-  return apiFetch<updateUserReturn>(
-    apiPaths.users.byId(userId),
-    {
-      body: JSON.stringify(data)
-    },
-    true,
-    'PATCH'
-  )
-}
-
 export function useProfile() {
+  const t = useTranslations('HookFeedback.settings')
+  const userId = useAuthStore((state) => state.user?.id)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const updateUser = useAuthStore((state) => state.updateUser)
 
   return useQuery({
-    queryKey: ['profile'],
-    queryFn: fetchProfile,
-    enabled: isAuthenticated,
+    queryKey: queryKeys.profile.current(),
+    queryFn: async () => {
+      if (!userId) {
+        throw new Error(t('userIdUnavailable'))
+      }
+
+      return apiFetch<User>(apiPaths.users.byId(userId), {}, true)
+    },
+    enabled: isAuthenticated && Boolean(userId),
     select: (data) => {
       const user = userMapper(data)
       updateUser(user)
@@ -68,10 +58,25 @@ export function useProfile() {
 }
 
 export function useUpdateProfile() {
+  const t = useTranslations('HookFeedback.settings')
+  const userId = useAuthStore((state) => state.user?.id)
   const updateUser = useAuthStore((state) => state.updateUser)
 
   return useMutation({
-    mutationFn: updateProfile,
+    mutationFn: async (data: updateUserDto) => {
+      if (!userId) {
+        throw new Error(t('userIdUnavailable'))
+      }
+
+      return apiFetch<updateUserReturn>(
+        apiPaths.users.byId(userId),
+        {
+          body: JSON.stringify(data)
+        },
+        true,
+        'PATCH'
+      )
+    },
     onSuccess: (data) => {
       const user = userMapper(data)
       updateUser(user)
@@ -80,6 +85,7 @@ export function useUpdateProfile() {
 }
 
 export function useUpdateAppearance() {
+  const t = useTranslations('HookFeedback.settings')
   const updateAppearanceSettings = useSettingsStore(
     (state) => state.updateAppearance
   )
@@ -89,8 +95,8 @@ export function useUpdateAppearance() {
       await updateAppearanceSettings(data)
       return data
     },
-    onSuccess: (data) => {
-      toast.success('Configurações de aparência atualizadas com sucesso')
+    onSuccess: () => {
+      toast.success(t('appearanceUpdated'))
     }
   })
 }

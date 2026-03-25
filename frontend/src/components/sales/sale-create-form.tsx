@@ -55,46 +55,7 @@ import { AddProductDialog } from '@/components/sales/add-product-dialog'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { useAuthStore } from '@/stores/use-auth-store'
-
-const saleSchema = z
-  .object({
-    productIds: z
-      .array(z.string().uuid())
-      .min(1, 'Selecione ao menos 1 produto'),
-    saleDate: z.string(),
-    paymentMethod: z.enum(['CASH', 'PIX', 'DEBIT', 'CREDIT', 'EXCHANGE']),
-    numberInstallments: z
-      .number({ invalid_type_error: 'Informe o número de parcelas' })
-      .int('Número inteiro')
-      .min(1, 'Mínimo 1'),
-    installmentsInterval: z
-      .number({ invalid_type_error: 'Informe o intervalo entre parcelas' })
-      .int('Número inteiro')
-      .min(0, 'Mínimo 0'),
-    customerId: z.string().uuid({ message: 'Selecione um cliente' })
-  })
-  .superRefine((data, ctx) => {
-    if (
-      (data.paymentMethod === 'CASH' || data.paymentMethod === 'PIX') &&
-      data.numberInstallments < 1
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['numberInstallments'],
-        message: 'Informe o número de parcelas (>0)'
-      })
-    }
-    if (
-      (data.paymentMethod === 'CASH' || data.paymentMethod === 'PIX') &&
-      data.installmentsInterval < 0
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['installmentsInterval'],
-        message: 'Informe um intervalo válido (>=0)'
-      })
-    }
-  })
+import { useLocale, useTranslations } from 'next-intl'
 
 export type SaleFormValues = {
   productIds: string[]
@@ -106,6 +67,49 @@ export type SaleFormValues = {
 }
 
 export function SaleCreateForm() {
+  const locale = useLocale()
+  const t = useTranslations('SaleCreateForm')
+  const tConfirmation = useTranslations('SaleConfirmation')
+  const saleSchema = z
+    .object({
+      productIds: z
+        .array(z.string().uuid())
+        .min(1, t('validation.selectAtLeastOneProduct')),
+      saleDate: z.string(),
+      paymentMethod: z.enum(['CASH', 'PIX', 'DEBIT', 'CREDIT', 'EXCHANGE']),
+      numberInstallments: z
+        .number({ invalid_type_error: t('validation.installmentsRequired') })
+        .int(t('validation.integerNumber'))
+        .min(1, t('validation.minimumOne')),
+      installmentsInterval: z
+        .number({ invalid_type_error: t('validation.intervalRequired') })
+        .int(t('validation.integerNumber'))
+        .min(0, t('validation.minimumZero')),
+      customerId: z.string().uuid({ message: t('validation.selectCustomer') })
+    })
+    .superRefine((data, ctx) => {
+      if (
+        (data.paymentMethod === 'CASH' || data.paymentMethod === 'PIX') &&
+        data.numberInstallments < 1
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['numberInstallments'],
+          message: t('validation.installmentsGreaterThanZero')
+        })
+      }
+      if (
+        (data.paymentMethod === 'CASH' || data.paymentMethod === 'PIX') &&
+        data.installmentsInterval < 0
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['installmentsInterval'],
+          message: t('validation.validInterval')
+        })
+      }
+    })
+
   const queryClient = useQueryClient()
   const { data: res } = useGetAvailableProductsToSell()
   const { data: customers } = useGetCustomers()
@@ -135,6 +139,13 @@ export function SaleCreateForm() {
   const [showProductsDialog, setShowProductsDialog] = useState(false)
   const [searchProduct, setSearchProduct] = useState('')
   const [showCalendar, setShowCalendar] = useState(false)
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL'
+    }
+  )
 
   function onSubmit(data: SaleFormValues) {
     const payload = { ...data }
@@ -233,20 +244,17 @@ export function SaleCreateForm() {
           <Card className="flex max-h-[85vh] w-full max-w-2xl flex-col">
             <CardHeader className="shrink-0">
               <CardTitle className="mb-2 text-xl sm:text-2xl">
-                Criar Venda
+                {t('title')}
               </CardTitle>
-              <CardDescription>
-                Preencha os dados abaixo para registrar uma nova venda.
-              </CardDescription>
+              <CardDescription>{t('description')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 overflow-auto">
-              {/* Data da venda */}
               <FormField
                 control={form.control}
                 name="saleDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data da venda</FormLabel>
+                    <FormLabel>{t('saleDate')}</FormLabel>
                     <FormControl>
                       <Popover
                         open={showCalendar}
@@ -259,15 +267,15 @@ export function SaleCreateForm() {
                             type="button"
                           >
                             {field.value
-                              ? format(new Date(field.value), 'dd/MM/yyyy')
-                              : 'Selecionar data'}
+                              ? format(new Date(field.value), 'P')
+                              : t('selectDate')}
                             <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            locale={ptBR}
+                            locale={locale === 'en' ? undefined : ptBR}
                             selected={new Date(field.value)}
                             onSelect={(date) => {
                               field.onChange(date ? date.toISOString() : '')
@@ -284,13 +292,12 @@ export function SaleCreateForm() {
 
               <Separator />
 
-              {/* Cliente */}
               <FormField
                 control={form.control}
                 name="customerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Cliente</FormLabel>
+                    <FormLabel>{t('customer')}</FormLabel>
                     <FormControl>
                       <div className="flex gap-2">
                         <Popover
@@ -306,20 +313,20 @@ export function SaleCreateForm() {
                               type="button"
                             >
                               {getCustomerName(selectedCustomer) ||
-                                'Selecionar cliente'}
+                                t('selectCustomer')}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-full p-0">
                             <Command shouldFilter={false}>
                               <CommandInput
-                                placeholder="Buscar cliente..."
+                                placeholder={t('searchCustomer')}
                                 value={searchCustomer}
                                 onValueChange={setSearchCustomer}
                               />
                               <CommandList>
                                 <CommandEmpty>
-                                  Nenhum cliente encontrado.
+                                  {t('noCustomersFound')}
                                 </CommandEmpty>
                                 <CommandGroup>
                                   {(customers || [])
@@ -357,7 +364,7 @@ export function SaleCreateForm() {
                                     }}
                                   >
                                     <Plus className="mr-2 h-4 w-4" />
-                                    Criar novo cliente
+                                    {t('createNewCustomer')}
                                   </CommandItem>
                                 </CommandGroup>
                               </CommandList>
@@ -369,7 +376,7 @@ export function SaleCreateForm() {
                           variant="secondary"
                           onClick={() => setShowNewCustomerDialog(true)}
                         >
-                          Novo
+                          {t('newCustomer')}
                         </Button>
                       </div>
                     </FormControl>
@@ -380,13 +387,12 @@ export function SaleCreateForm() {
 
               <Separator />
 
-              {/* Produtos (Dialog em vez de Popover) */}
               <FormField
                 control={form.control}
                 name="productIds"
                 render={() => (
                   <FormItem>
-                    <FormLabel>Produtos</FormLabel>
+                    <FormLabel>{t('products')}</FormLabel>
                     <FormControl>
                       <Button
                         variant="outline"
@@ -395,8 +401,10 @@ export function SaleCreateForm() {
                         onClick={() => setShowProductsDialog(true)}
                       >
                         {form.watch('productIds').length > 0
-                          ? `${form.watch('productIds').length} selecionado(s)`
-                          : 'Selecionar produtos'}
+                          ? t('selectedCount', {
+                              count: form.watch('productIds').length
+                            })
+                          : t('selectProducts')}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -404,7 +412,7 @@ export function SaleCreateForm() {
                     {selectedProducts.length > 0 && (
                       <div className="mt-4 rounded border">
                         <div className="bg-muted px-3 py-2 text-sm font-medium">
-                          Produtos Selecionados
+                          {t('selectedProductsTitle')}
                         </div>
                         <div className="max-h-56 overflow-auto py-2">
                           {(() => {
@@ -418,7 +426,7 @@ export function SaleCreateForm() {
                                   .flatMap((c) => c.models)
                                   .find((m) =>
                                     m.products.some((prod) => prod.id === p.id)
-                                  )?.modelName.value || 'Modelo'
+                                  )?.modelName.value || t('modelFallback')
                               if (!acc[modelName]) acc[modelName] = []
                               acc[modelName].push(p)
                               return acc
@@ -428,7 +436,10 @@ export function SaleCreateForm() {
                                 <div key={modelName} className="px-3 py-2">
                                   <div className="mb-2 flex items-center justify-between text-xs font-semibold">
                                     <span>
-                                      {modelName} - {items.length} un
+                                      {t('groupCount', {
+                                        modelName,
+                                        count: items.length
+                                      })}
                                     </span>
                                   </div>
                                   <ul className="space-y-1 text-xs">
@@ -446,16 +457,13 @@ export function SaleCreateForm() {
                                         >
                                           <span className="font-mono tracking-tight">
                                             {p.serialNumber?.value ||
-                                              'Sem serial'}
+                                              t('noSerial')}
                                           </span>
                                           <span className="text-muted-foreground mx-2 flex flex-1 items-center">
                                             <span className="border-border w-full border-t border-dashed" />
                                           </span>
                                           <span className="text-right font-medium">
-                                            {new Intl.NumberFormat('pt-BR', {
-                                              style: 'currency',
-                                              currency: 'BRL'
-                                            }).format(priceNum)}
+                                            {currencyFormatter.format(priceNum)}
                                           </span>
                                         </li>
                                       )
@@ -468,13 +476,10 @@ export function SaleCreateForm() {
                         </div>
                         <div className="flex items-center justify-between border-t px-3 py-2 text-xs">
                           <span className="text-muted-foreground">
-                            Total estimado
+                            {t('estimatedTotal')}
                           </span>
                           <span className="font-medium">
-                            {new Intl.NumberFormat('pt-BR', {
-                              style: 'currency',
-                              currency: 'BRL'
-                            }).format(totalAmount)}
+                            {currencyFormatter.format(totalAmount)}
                           </span>
                         </div>
                       </div>
@@ -485,13 +490,12 @@ export function SaleCreateForm() {
 
               <Separator />
 
-              {/* Pagamento */}
               <FormField
                 control={form.control}
                 name="paymentMethod"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Método de Pagamento</FormLabel>
+                    <FormLabel>{t('paymentMethod')}</FormLabel>
                     <FormControl>
                       <div className="flex flex-wrap gap-2">
                         {['CASH', 'PIX', 'DEBIT', 'CREDIT', 'EXCHANGE'].map(
@@ -508,11 +512,16 @@ export function SaleCreateForm() {
                                 field.value === pm && 'font-semibold'
                               )}
                             >
-                              {pm === 'CASH' && 'Dinheiro'}
-                              {pm === 'PIX' && 'PIX'}
-                              {pm === 'DEBIT' && 'Débito'}
-                              {pm === 'CREDIT' && 'Crédito'}
-                              {pm === 'EXCHANGE' && 'Troca'}
+                              {pm === 'CASH' &&
+                                tConfirmation('paymentMethods.CASH')}
+                              {pm === 'PIX' &&
+                                tConfirmation('paymentMethods.PIX')}
+                              {pm === 'DEBIT' &&
+                                tConfirmation('paymentMethods.DEBIT')}
+                              {pm === 'CREDIT' &&
+                                tConfirmation('paymentMethods.CREDIT')}
+                              {pm === 'EXCHANGE' &&
+                                tConfirmation('paymentMethods.EXCHANGE')}
                             </Button>
                           )
                         )}
@@ -529,7 +538,7 @@ export function SaleCreateForm() {
                     checked={isCashPayment}
                     onCheckedChange={() => setIsCashPayment(!isCashPayment)}
                   />
-                  <Label>Pagamento à vista</Label>
+                  <Label>{t('cashPayment')}</Label>
                 </div>
               )}
               {((paymentMethod === 'CASH' && !isCashPayment) ||
@@ -542,13 +551,13 @@ export function SaleCreateForm() {
                       name="numberInstallments"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Número de parcelas</FormLabel>
+                          <FormLabel>{t('numberInstallments')}</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
                               min={1}
                               step={1}
-                              placeholder="Ex: 3"
+                              placeholder={t('installmentsPlaceholder')}
                               value={field.value?.toString() ?? ''}
                               onChange={(e) =>
                                 field.onChange(Number(e.target.value))
@@ -565,13 +574,13 @@ export function SaleCreateForm() {
                       disabled={isCashPayment}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Intervalo (dias)</FormLabel>
+                          <FormLabel>{t('installmentsInterval')}</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
                               min={0}
                               step={1}
-                              placeholder="Ex: 30"
+                              placeholder={t('intervalPlaceholder')}
                               value={field.value?.toString() ?? ''}
                               onChange={(e) =>
                                 field.onChange(Number(e.target.value))
@@ -594,14 +603,14 @@ export function SaleCreateForm() {
                 disabled={isSubmitting}
                 className="w-full sm:w-auto"
               >
-                Cancelar
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
                 disabled={isSubmitting}
                 className="w-full sm:w-auto"
               >
-                {isSubmitting ? 'Salvando...' : 'Criar venda'}
+                {isSubmitting ? t('saving') : t('submit')}
               </Button>
             </CardFooter>
           </Card>

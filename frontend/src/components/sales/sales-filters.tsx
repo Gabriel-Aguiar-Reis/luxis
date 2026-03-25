@@ -8,7 +8,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { PaymentMethod, ReturnStatus, SaleStatus } from '@/lib/api-types'
+import { PaymentMethod, SaleStatus } from '@/lib/api-types'
 import { X, ChevronDownIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -16,8 +16,9 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
 import { Label } from '@/components/ui/label'
+import { useLocale, useTranslations } from 'next-intl'
 
 export type SalesFiltersType = {
   resellerName?: string
@@ -33,38 +34,67 @@ type SalesFiltersProps = {
   initialFilters?: SalesFiltersType
 }
 
-const statusOptions: Record<SaleStatus, { value: SaleStatus; label: string }> =
-  {
-    PENDING: { value: 'PENDING', label: 'Pendente' },
-    CANCELLED: { value: 'CANCELLED', label: 'Cancelado' },
-    CONFIRMED: { value: 'CONFIRMED', label: 'Confirmado' },
-    INSTALLMENTS_OVERDUE: {
-      value: 'INSTALLMENTS_OVERDUE',
-      label: 'Parcelas atrasadas'
-    },
-    INSTALLMENTS_PAID: { value: 'INSTALLMENTS_PAID', label: 'Parcelas pagas' },
-    INSTALLMENTS_PENDING: {
-      value: 'INSTALLMENTS_PENDING',
-      label: 'Parcelas pendentes'
-    }
-  }
-
-const paymentMethodOptions: Record<
-  PaymentMethod,
-  { value: PaymentMethod; label: string }
-> = {
-  CREDIT: { value: 'CREDIT', label: 'Cartão de Crédito' },
-  DEBIT: { value: 'DEBIT', label: 'Cartão de Débito' },
-  PIX: { value: 'PIX', label: 'PIX' },
-  CASH: { value: 'CASH', label: 'Dinheiro' },
-  EXCHANGE: { value: 'EXCHANGE', label: 'Troca' }
-}
-
 export function SalesFilters({
   onFilterChange,
   initialFilters = {}
 }: SalesFiltersProps) {
+  const locale = useLocale()
+  const t = useTranslations('SalesFilters')
+  const tConfirmation = useTranslations('SaleConfirmation')
   const [filters, setFilters] = useState<SalesFiltersType>(initialFilters)
+
+  const statusOptions: Record<
+    SaleStatus,
+    { value: SaleStatus; label: string }
+  > = {
+    PENDING: {
+      value: 'PENDING',
+      label: tConfirmation('statuses.PENDING')
+    },
+    CANCELLED: {
+      value: 'CANCELLED',
+      label: tConfirmation('statuses.CANCELLED')
+    },
+    CONFIRMED: {
+      value: 'CONFIRMED',
+      label: tConfirmation('statuses.CONFIRMED')
+    },
+    INSTALLMENTS_OVERDUE: {
+      value: 'INSTALLMENTS_OVERDUE',
+      label: tConfirmation('statuses.INSTALLMENTS_OVERDUE')
+    },
+    INSTALLMENTS_PAID: {
+      value: 'INSTALLMENTS_PAID',
+      label: tConfirmation('statuses.INSTALLMENTS_PAID')
+    },
+    INSTALLMENTS_PENDING: {
+      value: 'INSTALLMENTS_PENDING',
+      label: tConfirmation('statuses.INSTALLMENTS_PENDING')
+    }
+  }
+
+  const paymentMethodOptions: Record<
+    PaymentMethod,
+    { value: PaymentMethod; label: string }
+  > = {
+    CREDIT: {
+      value: 'CREDIT',
+      label: tConfirmation('paymentMethods.CREDIT')
+    },
+    DEBIT: {
+      value: 'DEBIT',
+      label: tConfirmation('paymentMethods.DEBIT')
+    },
+    PIX: { value: 'PIX', label: tConfirmation('paymentMethods.PIX') },
+    CASH: {
+      value: 'CASH',
+      label: tConfirmation('paymentMethods.CASH')
+    },
+    EXCHANGE: {
+      value: 'EXCHANGE',
+      label: tConfirmation('paymentMethods.EXCHANGE')
+    }
+  }
 
   const updateFilter = (key: keyof SalesFiltersType, value: any) => {
     const newFilters = { ...filters, [key]: value }
@@ -80,10 +110,12 @@ export function SalesFilters({
     onFilterChange({})
   }
 
+  const calendarLocale = locale === 'en' ? enUS : ptBR
+
   return (
     <div className="mb-4 rounded-md border p-4">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-sm font-medium">Filtros</h3>
+        <h3 className="text-sm font-medium">{t('title')}</h3>
         <Button
           variant="ghost"
           size="sm"
@@ -92,26 +124,26 @@ export function SalesFilters({
           className="w-full sm:w-auto"
         >
           <X className="mr-2 h-3 w-3" />
-          Limpar filtros
+          {t('clearFilters')}
         </Button>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-wrap">
         <div className="w-full space-y-2 xl:w-80" id="reseller-name-field">
-          <Label>Revendedor</Label>
+          <Label>{t('reseller')}</Label>
           <Input
-            placeholder="Nome do revendedor"
+            placeholder={t('resellerPlaceholder')}
             value={filters.resellerName || ''}
             onChange={(e) => updateFilter('resellerName', e.target.value)}
           />
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="status-field">
-          <Label>Status</Label>
+          <Label>{t('status')}</Label>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
           >
             <SelectTrigger className="w-full xl:w-40">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t('status')} />
             </SelectTrigger>
             <SelectContent>
               {Object.values(statusOptions).map((opt) => (
@@ -123,7 +155,7 @@ export function SalesFilters({
           </Select>
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="sale-date-field">
-          <Label>Data da venda</Label>
+          <Label>{t('saleDate')}</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -131,8 +163,8 @@ export function SalesFilters({
                 className="w-full justify-between font-normal xl:w-40"
               >
                 {filters.saleDate
-                  ? new Date(filters.saleDate).toLocaleDateString()
-                  : 'Selecionar data'}
+                  ? new Date(filters.saleDate).toLocaleDateString(locale)
+                  : t('selectDate')}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
@@ -142,7 +174,7 @@ export function SalesFilters({
             >
               <Calendar
                 mode="single"
-                locale={ptBR}
+                locale={calendarLocale}
                 selected={
                   filters.saleDate ? new Date(filters.saleDate) : undefined
                 }
@@ -158,13 +190,13 @@ export function SalesFilters({
           </Popover>
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="payment-method-field">
-          <Label>Método de Pagamento</Label>
+          <Label>{t('paymentMethod')}</Label>
           <Select
             value={filters.paymentMethod || ''}
             onValueChange={(v) => updateFilter('paymentMethod', v || undefined)}
           >
             <SelectTrigger className="w-full xl:w-40">
-              <SelectValue placeholder="Método de Pagamento" />
+              <SelectValue placeholder={t('paymentMethod')} />
             </SelectTrigger>
             <SelectContent>
               {Object.values(paymentMethodOptions).map((opt) => (
@@ -176,10 +208,10 @@ export function SalesFilters({
           </Select>
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="total-amount-min-field">
-          <Label>Valor Mínimo (R$)</Label>
+          <Label>{t('minAmount')}</Label>
           <Input
             type="number"
-            placeholder="R$ 0,00"
+            placeholder={t('amountPlaceholder')}
             step={0.01}
             min={0}
             className="w-full"
@@ -191,10 +223,10 @@ export function SalesFilters({
           />
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="total-amount-max-field">
-          <Label>Valor Máximo (R$)</Label>
+          <Label>{t('maxAmount')}</Label>
           <Input
             type="number"
-            placeholder="R$ 0,00"
+            placeholder={t('amountPlaceholder')}
             step={0.01}
             min={0}
             className="w-full"

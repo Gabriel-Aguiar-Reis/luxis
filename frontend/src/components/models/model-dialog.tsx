@@ -26,6 +26,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { useCloudinaryUpload } from '@/hooks/use-cloudinary-upload'
+import { useTranslations } from 'next-intl'
 
 type ModelDialogProps = {
   model?: ProductModel
@@ -35,12 +36,6 @@ type ModelDialogProps = {
   onSave: (id: string, dto: UpdateModelDto) => void | Promise<void>
 }
 
-const statusOptions = [
-  { value: 'ACTIVE', label: 'Ativo' },
-  { value: 'USED', label: 'Usado' },
-  { value: 'ARCHIVED', label: 'Arquivado' }
-]
-
 export function ModelDialog({
   model,
   categories,
@@ -48,6 +43,7 @@ export function ModelDialog({
   onClose,
   onSave
 }: ModelDialogProps) {
+  const t = useTranslations('ModelDialog')
   const [formData, setFormData] = useState<{
     name: string
     categoryId: string
@@ -70,6 +66,11 @@ export function ModelDialog({
   })
   const { upload, loading: uploadingImage } = useCloudinaryUpload()
   const [photoError, setPhotoError] = useState<string | null>(null)
+  const statusOptions = [
+    { value: 'ACTIVE', label: t('statuses.ACTIVE') },
+    { value: 'USED', label: t('statuses.USED') },
+    { value: 'ARCHIVED', label: t('statuses.ARCHIVED') }
+  ]
 
   useEffect(() => {
     if (isOpen && model) {
@@ -113,7 +114,8 @@ export function ModelDialog({
           })
         } catch (err) {
           setPhotoError(
-            'Erro ao comprimir imagem: ' +
+            t('compressImageError') +
+              ': ' +
               (err instanceof Error ? err.message : String(err))
           )
         }
@@ -143,7 +145,7 @@ export function ModelDialog({
       photoFile: undefined
     })
     if (uploadingImage) {
-      setPhotoError('Upload de imagem em andamento. Aguarde.')
+      setPhotoError(t('uploadInProgress'))
       return
     }
     setPhotoError(null)
@@ -153,9 +155,7 @@ export function ModelDialog({
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (formData.photoFile && formData.photoUrl) {
-      setPhotoError(
-        'Escolha apenas uma opção: enviar arquivo ou informar URL da imagem.'
-      )
+      setPhotoError(t('selectSingleImageSource'))
       return
     }
     setPhotoError(null)
@@ -165,7 +165,7 @@ export function ModelDialog({
       try {
         photoUrl = await upload(formData.photoFile)
       } catch (err: any) {
-        setPhotoError('Erro ao fazer upload da imagem: ' + (err.message || ''))
+        setPhotoError(`${t('uploadImageError')}: ${err.message || ''}`)
         return
       }
     }
@@ -192,17 +192,17 @@ export function ModelDialog({
         <form onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle className="text-base sm:text-lg">
-              Editar Modelo de Produto
+              {t('title')}
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">
-              Edite os detalhes do modelo selecionado.
+              {t('description')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-3 py-4 sm:gap-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-xs sm:text-sm">
-                Nome *
+                {t('name')}
               </Label>
               <Input
                 id="name"
@@ -216,7 +216,7 @@ export function ModelDialog({
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <div className="w-full space-y-2">
                 <Label htmlFor="suggestedPrice" className="text-xs sm:text-sm">
-                  Preço Sugerido (R$) *
+                  {t('suggestedPrice')}
                 </Label>
                 <Input
                   id="suggestedPrice"
@@ -232,7 +232,7 @@ export function ModelDialog({
               </div>
               <div className="w-full space-y-2 sm:w-auto">
                 <Label htmlFor="categoryId" className="text-xs sm:text-sm">
-                  Categoria
+                  {t('category')}
                 </Label>
                 <Select
                   value={formData.categoryId}
@@ -279,7 +279,7 @@ export function ModelDialog({
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <div className="w-full space-y-2">
                 <Label htmlFor="description" className="text-xs sm:text-sm">
-                  Descrição
+                  {t('descriptionField')}
                 </Label>
                 <Input
                   id="description"
@@ -291,7 +291,7 @@ export function ModelDialog({
               </div>
               <div className="w-full space-y-2 sm:w-auto">
                 <Label htmlFor="status" className="text-xs sm:text-sm">
-                  Status
+                  {t('status')}
                 </Label>
                 <Select
                   value={formData.status}
@@ -309,22 +309,20 @@ export function ModelDialog({
                           const selected = statusOptions.find(
                             (s) => s.value === formData.status
                           )
-                          return selected
-                            ? selected.label
-                            : 'Selecione o status'
+                          return selected ? selected.label : t('selectStatus')
                         })()}
                       </SelectLabel>
                     </SelectGroup>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="ACTIVE" className="text-xs sm:text-sm">
-                      Ativo
+                      {t('statuses.ACTIVE')}
                     </SelectItem>
                     <SelectItem value="USED" className="text-xs sm:text-sm">
-                      Usado
+                      {t('statuses.USED')}
                     </SelectItem>
                     <SelectItem value="ARCHIVED" className="text-xs sm:text-sm">
-                      Arquivado
+                      {t('statuses.ARCHIVED')}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -338,20 +336,20 @@ export function ModelDialog({
                       URL
                     </TabsTrigger>
                     <TabsTrigger value="upload" className="text-xs sm:text-sm">
-                      Arquivo
+                      {t('fileTab')}
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="url">
                     <div className="w-full space-y-2">
                       <Label htmlFor="photoUrl" className="text-xs sm:text-sm">
-                        Imagem (URL)
+                        {t('imageUrl')}
                       </Label>
                       <div className="flex gap-2">
                         <Input
                           id="photoUrl"
                           name="photoUrl"
                           type="text"
-                          placeholder="https://..."
+                          placeholder={t('imageUrlPlaceholder')}
                           value={formData.photoUrl || ''}
                           onChange={handleChange}
                           className="text-xs sm:text-sm"
@@ -362,7 +360,7 @@ export function ModelDialog({
                   <TabsContent value="upload">
                     <div className="w-full space-y-2">
                       <Label htmlFor="photo" className="text-xs sm:text-sm">
-                        Imagem (Arquivo)
+                        {t('imageFile')}
                       </Label>
                       <Input
                         id="photo"
@@ -380,13 +378,13 @@ export function ModelDialog({
                 {formData.photoFile ? (
                   <img
                     src={URL.createObjectURL(formData.photoFile)}
-                    alt="Preview da imagem"
+                    alt={t('imagePreviewAlt')}
                     className="h-full w-full rounded border object-cover object-center"
                   />
                 ) : formData.photoUrl ? (
                   <img
                     src={formData.photoUrl}
-                    alt="Preview da imagem"
+                    alt={t('imagePreviewAlt')}
                     className="h-full w-full rounded border object-cover object-center"
                   />
                 ) : model.photoUrl ? (
@@ -396,7 +394,7 @@ export function ModelDialog({
                         ? model.photoUrl
                         : model.photoUrl.value
                     }
-                    alt="Preview da imagem"
+                    alt={t('imagePreviewAlt')}
                     className="h-full w-full rounded border object-cover object-center"
                   />
                 ) : null}
@@ -417,13 +415,13 @@ export function ModelDialog({
               onClick={handleClose}
               className="w-full text-xs sm:w-auto sm:text-sm"
             >
-              Cancelar
+              {t('cancel')}
             </Button>
             <Button
               type="submit"
               className="w-full text-xs sm:w-auto sm:text-sm"
             >
-              Salvar Alterações
+              {t('saveChanges')}
             </Button>
           </DialogFooter>
         </form>
