@@ -1,89 +1,86 @@
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
 import {
-  GetAllUsers,
-  GetUserProducts,
-  PostUser,
-  UpdateUserRole,
-  UpdateUserStatus,
-  UserRole,
+  useGetAllUsers as useGetAllUsersRaw,
+  useGetAllPendingUsers as useGetAllPendingUsersRaw,
+  useGetUserProducts as useGetUserProductsRaw,
+  useCreateUser as useCreateUserRaw,
+  useDeleteUser as useDeleteUserRaw,
+  useUpdateUserRole as useUpdateUserRoleRaw,
+  useUpdateUserStatus as useUpdateUserStatusRaw
+} from '@/api/users/users'
+import type {
+  User,
+  UserProductDto,
+  CreateUserDto as OrvalCreateUserDto,
+  UpdateUserRoleDto as OrvalUpdateUserRoleDto,
+  UpdateUserStatusDto as OrvalUpdateUserStatusDto,
+  Role,
   UserStatus
-} from '@/lib/api-types'
-import {
-  useQueryClient,
-  useMutation,
-  useQuery,
-  QueryClient
-} from '@tanstack/react-query'
+} from '@/api/model'
+import { QueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/query-keys'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-export type CreateUserDto =
-  PostUser['requestBody']['content']['application/json']
-export type CreateUserResponse =
-  PostUser['responses']['201']['content']['application/json']
-export type GetUsersResponse =
-  GetAllUsers['responses']['200']['content']['application/json']
-export type UpdateUserRoleResponse =
-  UpdateUserRole['responses']['200']['content']['application/json']
-export type UpdateUserStatusResponse =
-  UpdateUserStatus['responses']['200']['content']['application/json']
-
-export type GetUserProductsResponse =
-  GetUserProducts['responses']['200']['content']['application/json']
+export type CreateUserDto = OrvalCreateUserDto
+export type CreateUserResponse = User
+export type GetUsersResponse = User[]
+export type UpdateUserRoleResponse = User
+export type UpdateUserStatusResponse = User
+export type GetUserProductsResponse = UserProductDto[]
 
 export type UpdateUserRoleDto = {
   userId: string
-  role: UserRole
+  role: Role
   status?: UserStatus
 }
 
 export function useDeleteUser(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.users')
 
-  return useMutation({
-    mutationFn: async (userId: string) => {
-      await apiFetch(
-        apiPaths.users.byId(userId),
-        {
-          method: 'DELETE'
-        },
-        true
-      )
-    },
-    onSuccess: () => {
-      toast.success(t('deleteSuccess'))
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
-    },
-    onError: () => {
-      toast.error(t('deleteError'))
+  const mutation = useDeleteUserRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('deleteSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+      },
+      onError: () => {
+        toast.error(t('deleteError'))
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (userId: string) => mutation.mutate({ id: userId }),
+    mutateAsync: (userId: string) => mutation.mutateAsync({ id: userId })
+  }
 }
 
 export function useCreateUser(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.users')
 
-  return useMutation({
-    mutationFn: async (user: CreateUserDto) => {
-      return await apiFetch<CreateUserResponse>(
-        apiPaths.users.signup,
-        {
-          body: JSON.stringify(user)
-        },
-        false,
-        'POST'
-      )
-    },
-    onSuccess: (data) => {
-      toast.success(t('createSuccess', { email: data.email.value }))
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
-    },
-    onError: () => {
-      toast.error(t('createError'))
+  const mutation = useCreateUserRaw({
+    mutation: {
+      onSuccess: (response) => {
+        toast.success(
+          t('createSuccess', { email: (response as any)?.data?.email?.value })
+        )
+        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+      },
+      onError: () => {
+        toast.error(t('createError'))
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (
+      data: CreateUserDto,
+      options?: { onSuccess?: () => void; onError?: () => void }
+    ) => mutation.mutate({ data }, options as any),
+    mutateAsync: (data: CreateUserDto) => mutation.mutateAsync({ data })
+  }
 }
 
 export function useUpdateUserRole(queryClient: QueryClient) {
@@ -95,98 +92,87 @@ export function useUpdateUserRole(queryClient: QueryClient) {
     UNASSIGNED: t('roles.UNASSIGNED')
   }
 
-  return useMutation({
-    mutationFn: async ({ userId, role, status }: UpdateUserRoleDto) => {
-      return await apiFetch<UpdateUserRoleResponse>(
-        apiPaths.users.role(userId),
-        {
-          body: JSON.stringify({ role, status })
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: (data) => {
-      toast.success(
-        t('updateRoleSuccess', {
-          name: data.name.value,
-          surname: data.surname.value,
-          role: userRoles[data.role]
-        })
-      )
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
-    },
-    onError: () => {
-      toast.error(t('updateRoleError'))
+  const mutation = useUpdateUserRoleRaw({
+    mutation: {
+      onSuccess: (response) => {
+        const data = (response as any)?.data
+        toast.success(
+          t('updateRoleSuccess', {
+            name: data?.name?.value,
+            surname: data?.surname?.value,
+            role: userRoles[data?.role as keyof typeof userRoles]
+          })
+        )
+        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
+      },
+      onError: () => {
+        toast.error(t('updateRoleError'))
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ userId, role, status }: UpdateUserRoleDto) =>
+      mutation.mutate({ id: userId, data: { role, status } }),
+    mutateAsync: ({ userId, role, status }: UpdateUserRoleDto) =>
+      mutation.mutateAsync({ id: userId, data: { role, status } })
+  }
 }
 
 export function useUpdateUserStatus(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.users')
 
-  return useMutation({
-    mutationFn: async ({
-      userId,
-      status
-    }: {
-      userId: string
-      status: UserStatus
-    }) => {
-      return await apiFetch<UpdateUserStatusResponse>(
-        apiPaths.users.status(userId),
-        {
-          body: JSON.stringify({ status })
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: (data) => {
-      toast.success(
-        t('updateStatusSuccess', { id: data.id, status: data.status })
-      )
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
-    },
-    onError: () => {
-      toast.error(t('updateStatusError'))
+  const mutation = useUpdateUserStatusRaw({
+    mutation: {
+      onSuccess: (response) => {
+        const data = (response as any)?.data
+        toast.success(
+          t('updateStatusSuccess', { id: data?.id, status: data?.status })
+        )
+        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
+      },
+      onError: () => {
+        toast.error(t('updateStatusError'))
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ userId, status }: { userId: string; status: UserStatus }) =>
+      mutation.mutate({ id: userId, data: { status } }),
+    mutateAsync: ({ userId, status }: { userId: string; status: UserStatus }) =>
+      mutation.mutateAsync({ id: userId, data: { status } })
+  }
 }
 
 export function useGetUsers() {
-  return useQuery({
-    queryKey: queryKeys.users.all(),
-    queryFn: async () => {
-      return await apiFetch<GetUsersResponse>(apiPaths.users.base, {}, true)
-    },
-    staleTime: 2 * 60 * 1000
+  const result = useGetAllUsersRaw({
+    query: { queryKey: queryKeys.users.all(), staleTime: 2 * 60 * 1000 }
   })
+  return { ...result, data: (result.data as any)?.data as User[] | undefined }
 }
 
 export function useGetPendingUsers() {
-  return useQuery({
-    queryKey: queryKeys.users.pending(),
-    queryFn: async () => {
-      return await apiFetch<GetUsersResponse>(apiPaths.users.pending, {}, true)
-    },
-    staleTime: 2 * 60 * 1000
+  const result = useGetAllPendingUsersRaw({
+    query: { queryKey: queryKeys.users.pending(), staleTime: 2 * 60 * 1000 }
   })
+  return { ...result, data: (result.data as any)?.data as User[] | undefined }
 }
 
 export function useGetUserProducts(userId: string) {
-  return useQuery({
-    queryKey: queryKeys.users.products(userId),
-    queryFn: async () => {
-      return await apiFetch<GetUserProductsResponse>(
-        apiPaths.users.products(userId),
-        {},
-        true
-      )
-    },
-    enabled: !!userId,
-    staleTime: 60 * 1000
+  const result = useGetUserProductsRaw(userId, {
+    query: {
+      queryKey: queryKeys.users.products(userId),
+      enabled: !!userId,
+      staleTime: 60 * 1000
+    }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as UserProductDto[] | undefined
+  }
 }

@@ -79,7 +79,7 @@ import { DataSource } from 'typeorm'
     {
       provide: 'DataSource',
       useFactory: (connection: DataSource) => connection,
-      inject: ['DataSource']
+      inject: [DataSource]
     },
     { provide: 'SaleRepository', useClass: SaleTypeOrmRepository },
     { provide: 'SalePriceCalculator', useClass: SalePriceCalculatorService },

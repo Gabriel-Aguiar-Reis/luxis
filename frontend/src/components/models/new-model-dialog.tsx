@@ -73,10 +73,11 @@ export function NewModelDialog({
   const { mutateAsync: createCategory } = useCreateCategory(queryClient)
 
   async function handleCreateCategory(data: CreateCategoryDto) {
-    const newCategory = await createCategory(data)
+    const response = await createCategory(data)
+    const newCategory = (response as any)?.data as Category
     return {
       ...newCategory,
-      status: (newCategory as Category).status || 'ACTIVE'
+      status: newCategory?.status || 'ACTIVE'
     } as Category
   }
 

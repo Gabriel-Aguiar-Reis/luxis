@@ -1,164 +1,145 @@
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
 import {
-  GetAllShipments,
-  GetOneShipment,
-  PostShipment,
-  Shipment,
-  UpdateShipment,
-  UpdateShipmentStatus
-} from '@/lib/api-types'
+  useGetAllShipments as useGetAllShipmentsRaw,
+  useUpdateShipment as useUpdateShipmentRaw,
+  useDeleteShipment as useDeleteShipmentRaw,
+  useCreateShipment as useCreateShipmentRaw,
+  useUpdateShipmentStatus as useUpdateShipmentStatusRaw
+} from '@/api/shipments/shipments'
+import type {
+  GetShipmentDto,
+  UpdateShipmentDto as OrvalUpdateShipmentDto,
+  UpdateStatusShipmentDto as OrvalUpdateShipmentStatusDto,
+  CreateShipmentDto as OrvalCreateShipmentDto
+} from '@/api/model'
 import { queryKeys } from '@/lib/query-keys'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-export type GetAllShipmentsResponse =
-  GetAllShipments['responses']['200']['content']['application/json']
+export type GetAllShipmentsResponse = GetShipmentDto[]
+export type GetOneShipmentResponse = GetShipmentDto
+export type UpdateShipmentDto = OrvalUpdateShipmentDto
+export type UpdateShipmentStatusDto = OrvalUpdateShipmentStatusDto
+export type CreateShipmentDto = OrvalCreateShipmentDto
+export type ShipmentStatus = GetShipmentDto['status']
 
-export type GetOneShipmentResponse =
-  GetOneShipment['responses']['200']['content']['application/json']
-
-export type UpdateShipmentResponse =
-  UpdateShipment['responses']['200']['content']['application/json']
-
-export type UpdateShipmentDto =
-  UpdateShipment['requestBody']['content']['application/json']
-
-export type UpdateShipmentStatusDto =
-  UpdateShipmentStatus['requestBody']['content']['application/json']
-
-export type ShipmentStatus = Shipment['status']
+export type UpdateShipmentResponse = GetShipmentDto
+export type CreateShipmentResponse = GetShipmentDto
 
 export function useGetShipments() {
-  return useQuery<GetAllShipmentsResponse>({
-    queryKey: queryKeys.shipments.all(),
-    queryFn: async () => {
-      return await apiFetch(apiPaths.shipments.base, {}, true)
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAllShipmentsRaw({
+    query: { queryKey: queryKeys.shipments.all(), staleTime: 5 * 60 * 1000 }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as GetShipmentDto[] | undefined
+  }
 }
-
-export type CreateShipmentDto =
-  PostShipment['requestBody']['content']['application/json']
-
-export type CreateShipmentResponse =
-  PostShipment['responses']['201']['content']['application/json']
 
 export function useUpdateShipment(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.shipments')
 
-  return useMutation({
-    mutationFn: async ({ dto, id }: { dto: UpdateShipmentDto; id: string }) => {
-      return await apiFetch<UpdateShipmentResponse>(
-        apiPaths.shipments.byId(id),
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: async () => {
-      toast.success(t('updateSuccess'))
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.shipments.all()
-      })
-    },
-    onError: (error) => {
-      toast.error(
-        t('updateError', { message: error.message || t('unexpectedError') })
-      )
+  const mutation = useUpdateShipmentRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('updateSuccess'))
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.shipments.all()
+        })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('updateError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ dto, id }: { dto: UpdateShipmentDto; id: string }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ dto, id }: { dto: UpdateShipmentDto; id: string }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }
 
 export function useDeleteShipment(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.shipments')
 
-  return useMutation({
-    mutationFn: async (id: string) => {
-      return await apiFetch(apiPaths.shipments.byId(id), {}, true, 'DELETE')
-    },
-    onSuccess: async () => {
-      toast.success(t('deleteSuccess'))
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.shipments.all()
-      })
-    },
-    onError: (error) => {
-      toast.error(
-        t('deleteError', { message: error.message || t('unexpectedError') })
-      )
+  const mutation = useDeleteShipmentRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('deleteSuccess'))
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.shipments.all()
+        })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('deleteError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (id: string) => mutation.mutate({ id }),
+    mutateAsync: (id: string) => mutation.mutateAsync({ id })
+  }
 }
 
 export function useCreateShipment(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.shipments')
 
-  return useMutation({
-    mutationFn: async (dto: CreateShipmentDto) => {
-      return await apiFetch<CreateShipmentResponse>(
-        apiPaths.shipments.base,
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'POST'
-      )
-    },
-    onSuccess: async () => {
-      toast.success(t('createSuccess'))
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.shipments.all()
-      })
-    },
-    onError: (error) => {
-      toast.error(
-        t('createError', { message: error.message || t('unexpectedError') })
-      )
+  const mutation = useCreateShipmentRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('createSuccess'))
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.shipments.all()
+        })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('createError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (data: CreateShipmentDto) => mutation.mutate({ data }),
+    mutateAsync: (data: CreateShipmentDto) => mutation.mutateAsync({ data })
+  }
 }
 
 export function useUpdateShipmentStatus(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.shipments')
 
-  return useMutation({
-    mutationFn: async ({
-      id,
-      dto
-    }: {
-      id: string
-      dto: UpdateShipmentStatusDto
-    }) => {
-      console.log(
-        'apiPaths.shipments.status(id): ',
-        apiPaths.shipments.status(id)
-      )
-      return await apiFetch<UpdateShipmentResponse>(
-        `${apiPaths.shipments.status(id)}`,
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: async () => {
-      toast.success(t('updateStatusSuccess'))
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.shipments.all()
-      })
-    },
-    onError: (error) => {
-      toast.error(
-        t('updateStatusError', {
-          message: error.message || t('unexpectedError')
+  const mutation = useUpdateShipmentStatusRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('updateStatusSuccess'))
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.shipments.all()
         })
-      )
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('updateStatusError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: UpdateShipmentStatusDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: UpdateShipmentStatusDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }

@@ -42,6 +42,20 @@ export const databaseConfig = (
         dropSchema: true
       }
 
+    case 'spec':
+      return {
+        type: 'postgres',
+        host: '127.0.0.1',
+        port: 5433,
+        username: 'postgres',
+        password: 'postgres',
+        database: 'luxis',
+        entities,
+        synchronize: false,
+        retryAttempts: 0,
+        extra: { connectionTimeoutMillis: 200 }
+      }
+
     default:
       throw new BadRequestException(`Unknown NODE_ENV: ${env}`)
   }

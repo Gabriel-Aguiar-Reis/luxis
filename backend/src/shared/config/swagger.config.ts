@@ -11,5 +11,8 @@ export const swaggerOptions = {
   extraModels: [],
   deepScanRoutes: true,
   ignoreGlobalPrefix: true,
-  operationIdFactory: (controllerKey: string, methodKey: string) => methodKey
+  operationIdFactory: (controllerKey: string, methodKey: string) => {
+    const prefix = controllerKey.replace(/Controller$/, '')
+    return `${prefix}_${methodKey}`
+  }
 }

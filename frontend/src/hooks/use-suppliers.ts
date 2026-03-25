@@ -1,126 +1,111 @@
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
 import {
-  DeleteSupplier,
-  GetAllSuppliers,
-  PostSupplier,
-  UpdateSupplier
-} from '@/lib/api-types'
+  useGetAllSuppliers as useGetAllSuppliersRaw,
+  useUpdateSupplier as useUpdateSupplierRaw,
+  useDeleteSupplier as useDeleteSupplierRaw,
+  useCreateSupplier as useCreateSupplierRaw
+} from '@/api/suppliers/suppliers'
+import type {
+  Supplier,
+  UpdateSupplierDto as OrvalUpdateSupplierDto,
+  CreateSupplierDto as OrvalCreateSupplierDto
+} from '@/api/model'
 import { queryKeys } from '@/lib/query-keys'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-type GetAllSuppliersResponse =
-  GetAllSuppliers['responses']['200']['content']['application/json']
-
-export type UpdateSupplierDto =
-  UpdateSupplier['requestBody']['content']['application/json']
-
-export type CreateSupplierDto =
-  PostSupplier['requestBody']['content']['application/json']
-
-export type UpdateSupplierResponse =
-  UpdateSupplier['responses']['200']['content']['application/json']
-
-export type CreateSupplierResponse =
-  PostSupplier['responses']['201']['content']['application/json']
-
-export type DeleteSupplierResponse =
-  DeleteSupplier['responses']['204']['content']
+export type UpdateSupplierDto = OrvalUpdateSupplierDto
+export type CreateSupplierDto = OrvalCreateSupplierDto
+export type UpdateSupplierResponse = Supplier
+export type CreateSupplierResponse = Supplier
+export type DeleteSupplierResponse = void
 
 export function useGetSuppliers() {
-  return useQuery({
-    queryKey: queryKeys.suppliers.all(),
-    queryFn: async () => {
-      return await apiFetch<GetAllSuppliersResponse>(
-        apiPaths.suppliers.base,
-        {},
-        true
-      )
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAllSuppliersRaw({
+    query: { queryKey: queryKeys.suppliers.all(), staleTime: 5 * 60 * 1000 }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as Supplier[] | undefined
+  }
 }
 
 export function useUpdateSupplier(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.suppliers')
 
-  return useMutation({
-    mutationFn: async ({ dto, id }: { dto: UpdateSupplierDto; id: string }) => {
-      return await apiFetch<UpdateSupplierResponse>(
-        apiPaths.suppliers.byId(id),
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: async () => {
-      toast.success(t('updateSuccess'))
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.suppliers.all()
-      })
-    },
-    onError: (error) => {
-      toast.error(
-        t('updateError', { message: error.message || t('unexpectedError') })
-      )
+  const mutation = useUpdateSupplierRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('updateSuccess'))
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.suppliers.all()
+        })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('updateError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ dto, id }: { dto: UpdateSupplierDto; id: string }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ dto, id }: { dto: UpdateSupplierDto; id: string }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }
 
 export function useDeleteSupplier(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.suppliers')
 
-  return useMutation({
-    mutationFn: async (id: string) => {
-      return await apiFetch<DeleteSupplierResponse>(
-        apiPaths.suppliers.byId(id),
-        {},
-        true,
-        'DELETE'
-      )
-    },
-    onSuccess: async () => {
-      toast.success(t('deleteSuccess'))
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.suppliers.all()
-      })
-    },
-    onError: (error) => {
-      toast.error(
-        t('deleteError', { message: error.message || t('unexpectedError') })
-      )
+  const mutation = useDeleteSupplierRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('deleteSuccess'))
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.suppliers.all()
+        })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('deleteError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (id: string) => mutation.mutate({ id }),
+    mutateAsync: (id: string) => mutation.mutateAsync({ id })
+  }
 }
 
 export function useCreateSupplier(queryClient: QueryClient) {
   const t = useTranslations('HookFeedback.suppliers')
 
-  return useMutation({
-    mutationFn: async (dto: UpdateSupplierDto) => {
-      return await apiFetch<CreateSupplierResponse>(
-        apiPaths.suppliers.base,
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'POST'
-      )
-    },
-    onSuccess: async () => {
-      toast.success(t('createSuccess'))
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.suppliers.all()
-      })
-    },
-    onError: (error) => {
-      toast.error(
-        t('createError', { message: error.message || t('unexpectedError') })
-      )
+  const mutation = useCreateSupplierRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('createSuccess'))
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.suppliers.all()
+        })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('createError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (data: CreateSupplierDto) => mutation.mutate({ data }),
+    mutateAsync: (data: CreateSupplierDto) => mutation.mutateAsync({ data })
+  }
 }

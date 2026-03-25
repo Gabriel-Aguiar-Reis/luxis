@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
-type NodeEnv = 'development' | 'test' | 'production'
+type NodeEnv = 'development' | 'test' | 'production' | 'spec'
 type LogLevel = 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
 
 @Injectable()
