@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { BadRequestException } from '@nestjs/common'
+import * as sqlite3 from 'sqlite3'
 
 export const databaseConfig = (
   appConfigService: AppConfigService
@@ -34,9 +35,11 @@ export const databaseConfig = (
     case 'test':
       return {
         type: 'sqlite',
-        database: 'test.sqlite',
+        driver: sqlite3,
+        database: ':memory:',
         entities,
-        synchronize: true
+        synchronize: true,
+        dropSchema: true
       }
 
     default:

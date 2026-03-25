@@ -40,6 +40,7 @@ import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/pr
 import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.typeorm.entity'
 import { GetAvailableProductsToSellUseCase } from '@/modules/sale/application/use-cases/get-available-products-to-sell.use-case'
 import { ConfirmSaleUseCase } from '@/modules/sale/application/use-cases/confirm-sale.use-case'
+import { DataSource } from 'typeorm'
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -75,6 +76,11 @@ import { ConfirmSaleUseCase } from '@/modules/sale/application/use-cases/confirm
     UpdateSaleStrategyFactory,
     UpdateSaleResellerStrategy,
     UpdateSaleAdminStrategy,
+    {
+      provide: 'DataSource',
+      useFactory: (connection: DataSource) => connection,
+      inject: ['DataSource']
+    },
     { provide: 'SaleRepository', useClass: SaleTypeOrmRepository },
     { provide: 'SalePriceCalculator', useClass: SalePriceCalculatorService },
     {

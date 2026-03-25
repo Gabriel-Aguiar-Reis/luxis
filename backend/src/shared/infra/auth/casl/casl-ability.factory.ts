@@ -1,48 +1,10 @@
-import { OwnershipTransfer } from '@/modules/ownership-transfer/domain/entities/ownership-transfer.entity'
-import { Category } from '@/modules/category/domain/entities/category.entity'
 import { Injectable, Inject } from '@nestjs/common'
-import {
-  AbilityBuilder,
-  PureAbility,
-  InferSubjects,
-  ExtractSubjectType,
-  fieldPatternMatcher
-} from '@casl/ability'
-import { Role } from '@/modules/user/domain/enums/user-role.enum'
-import { Sale } from '@/modules/sale/domain/entities/sale.entity'
-import { UUID } from 'crypto'
+import { AbilityBuilder, PureAbility, ExtractSubjectType } from '@casl/ability'
 import { CaslRuleBuilder } from '@/shared/infra/auth/casl/interfaces/casl-rules.builder'
-import { Actions } from '@/shared/infra/auth/enums/actions.enum'
-import { User } from '@/modules/user/domain/entities/user.entity'
-import { Batch } from '@/modules/batch/domain/entities/batch.entity'
-import { Product } from '@/modules/product/domain/entities/product.entity'
-import { ProductModel } from '@/modules/product-model/domain/entities/product-model.entity'
-import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
-import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
-import { Return } from '@/modules/return/domain/entities/return.entity'
-import { Customer } from '@/modules/customer/domain/entities/customer.entity'
-import { Inventory } from '@/modules/inventory/domain/entities/inventory.entity'
-import { PasswordResetRequest } from '@/modules/auth/domain/entities/password-reset-request.entity'
+import { AppAbility, Subjects } from '@/shared/infra/auth/casl/casl-types'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 
-type Subjects =
-  | InferSubjects<typeof Batch>
-  | InferSubjects<typeof Category>
-  | InferSubjects<typeof Customer>
-  | InferSubjects<typeof Inventory>
-  | InferSubjects<typeof OwnershipTransfer>
-  | InferSubjects<typeof PasswordResetRequest>
-  | InferSubjects<typeof Product>
-  | InferSubjects<typeof ProductModel>
-  | InferSubjects<typeof Return>
-  | InferSubjects<typeof Sale>
-  | InferSubjects<typeof Shipment>
-  | InferSubjects<typeof Supplier>
-  | InferSubjects<typeof User>
-  | 'admin-kpi'
-  | 'reseller-kpi'
-  | 'all'
-
-export type AppAbility = PureAbility<[Actions, Subjects]>
+export { AppAbility } from '@/shared/infra/auth/casl/casl-types'
 
 @Injectable()
 export class CaslAbilityFactory {
@@ -51,17 +13,18 @@ export class CaslAbilityFactory {
     private readonly ruleBuilders: CaslRuleBuilder[]
   ) {}
 
-  createForUser(user: { id: UUID; role: Role }): AppAbility {
+  createForUser(user: UserPayload): AppAbility {
     const builder = new AbilityBuilder<AppAbility>(PureAbility)
 
     for (const builderFn of this.ruleBuilders) {
       builderFn.buildFor(user, builder)
     }
 
-    const conditionsMatcher = (matchConditions: Record<string, any>) => {
-      return (object: Record<string, any>) => {
-        return Object.keys(matchConditions).every((key) => {
-          return object[key] === matchConditions[key]
+    const conditionsMatcher = (matchConditions: unknown) => {
+      const conditions = matchConditions as Record<string, unknown>
+      return (object: Record<string, unknown>) => {
+        return Object.keys(conditions).every((key) => {
+          return object[key] === conditions[key]
         })
       }
     }

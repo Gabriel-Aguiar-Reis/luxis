@@ -8,7 +8,7 @@ export class ResetPasswordDto {
   })
   @IsString()
   @IsNotEmpty()
-  token: string
+  token!: string
 
   @ApiProperty({
     description:
@@ -25,5 +25,5 @@ export class ResetPasswordDto {
         'Password must contain at least 10 characters, one uppercase, one lowercase, one number and one special character'
     }
   )
-  newPassword: string
+  newPassword!: string
 }

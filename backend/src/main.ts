@@ -13,13 +13,14 @@ async function bootstrap() {
   })
 
   const config = app.get(AppConfigService)
+  const corsOrigins = config.getCorsOrigins()
   app.useGlobalFilters(new GlobalExceptionFilter(config))
 
   app.useLogger(app.get(PinoLogger))
   const port = config.getPort() ?? 3000
 
   app.enableCors({
-    origin: '*',
+    origin: corsOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -44,6 +45,10 @@ async function bootstrap() {
   Logger.log(`App running on http://localhost:${port}`, 'Bootstrap')
   Logger.log(
     `Swagger docs available at http://localhost:${port}/api/docs`,
+    'Bootstrap'
+  )
+  Logger.log(
+    `Healthcheck available at http://localhost:${port}/health`,
     'Bootstrap'
   )
 }

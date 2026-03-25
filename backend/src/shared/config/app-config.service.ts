@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 type NodeEnv = 'development' | 'test' | 'production'
+type LogLevel = 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
 
 @Injectable()
 export class AppConfigService {
@@ -41,8 +42,65 @@ export class AppConfigService {
     return this.config.get<string>('JWT_EXPIRATION_TIME')
   }
 
+  getAuthCookieName(): string {
+    return this.config.get<string>('AUTH_COOKIE_NAME', 'luxis_auth_token')
+  }
+
   getLogRules(): string | undefined {
     return this.config.get<string>('LOG_RULES')
+  }
+
+  getLogLevel(): LogLevel {
+    const level = this.config.get<LogLevel>('LOG_LEVEL')
+
+    if (level) {
+      return level
+    }
+
+    if (this.isProduction()) {
+      return 'warn'
+    }
+
+    if (this.isTest()) {
+      return 'error'
+    }
+
+    return 'debug'
+  }
+
+  getCorsOrigins(): string[] {
+    const rawOrigins = this.config.get<string>('CORS_ORIGINS')
+
+    if (!rawOrigins || rawOrigins.trim() === '') {
+      if (this.isProduction()) {
+        throw new BadRequestException(
+          'CORS_ORIGINS must be defined in production environment variables'
+        )
+      }
+
+      return ['http://localhost:3001', 'http://127.0.0.1:3001']
+    }
+
+    return rawOrigins
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean)
+  }
+
+  getThrottleTtl(): number {
+    return this.config.get<number>('THROTTLE_TTL', 10000)
+  }
+
+  getThrottleLimit(): number {
+    return this.config.get<number>('THROTTLE_LIMIT', 10)
+  }
+
+  getCacheTtl(): number {
+    return this.config.get<number>('CACHE_TTL', 60000)
+  }
+
+  getCacheMax(): number {
+    return this.config.get<number>('CACHE_MAX', 100)
   }
 
   getCloudinaryCloudName(): string | undefined {

@@ -5,28 +5,28 @@ import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo
 
 export class PasswordResetRequestResponseDto {
   @ApiProperty()
-  id: string
+  id!: string
 
   @ApiProperty()
-  userId: string
+  userId!: string
 
   @ApiProperty()
-  username: string
+  username!: string
 
   @ApiProperty({ type: Email })
-  email: Email
+  email!: Email
 
   @ApiProperty({ type: PhoneNumber })
-  phone: PhoneNumber
+  phone!: PhoneNumber
 
   @ApiProperty()
-  token: string
+  token!: string
 
   @ApiProperty({ enum: PasswordResetRequestStatus })
-  status: PasswordResetRequestStatus
+  status!: PasswordResetRequestStatus
 
   @ApiProperty()
-  createdAt: Date
+  createdAt!: Date
 
   @ApiProperty({ required: false })
   approvedAt?: Date

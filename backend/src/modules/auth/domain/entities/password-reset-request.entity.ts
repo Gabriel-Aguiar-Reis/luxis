@@ -13,7 +13,7 @@ export class PasswordResetRequest {
     example: '550e8400-e29b-41d4-a716-446655440000'
   })
   @IsUUID()
-  id: UUID
+  id!: UUID
 
   @ApiProperty({
     description:
@@ -22,7 +22,7 @@ export class PasswordResetRequest {
     example: '550e8400-e29b-41d4-a716-446655440000'
   })
   @IsUUID()
-  userId: UUID
+  userId!: UUID
 
   @ApiProperty({
     description: 'Username of the user requesting the password reset',
@@ -30,7 +30,7 @@ export class PasswordResetRequest {
     example: 'john_doe'
   })
   @IsNotEmpty()
-  username: string
+  username!: string
 
   @ApiProperty({
     description: 'Email address of the user requesting the password reset',
@@ -38,7 +38,7 @@ export class PasswordResetRequest {
     example: 'john_doe@example.com'
   })
   @IsNotEmpty()
-  email: Email
+  email!: Email
 
   @ApiProperty({
     description: 'Phone number of the user requesting the password reset',
@@ -46,7 +46,7 @@ export class PasswordResetRequest {
     example: '+1234567890'
   })
   @IsNotEmpty()
-  phone: PhoneNumber
+  phone!: PhoneNumber
 
   @ApiProperty({
     description: 'Unique token for the password reset request',
@@ -54,7 +54,7 @@ export class PasswordResetRequest {
     example: 'reset-token-123456'
   })
   @IsNotEmpty()
-  token: string
+  token!: string
 
   @ApiProperty({
     description: 'Current status of the password reset request',
@@ -63,7 +63,7 @@ export class PasswordResetRequest {
   })
   @IsNotEmpty()
   @IsEnum(PasswordResetRequestStatus)
-  status: PasswordResetRequestStatus
+  status!: PasswordResetRequestStatus
 
   @ApiProperty({
     description: 'Timestamp when the password reset request was created',
@@ -72,7 +72,7 @@ export class PasswordResetRequest {
   })
   @IsNotEmpty()
   @Type(() => Date)
-  createdAt: Date
+  createdAt!: Date
 
   @ApiProperty({
     description: 'Timestamp when the password reset request was approved',

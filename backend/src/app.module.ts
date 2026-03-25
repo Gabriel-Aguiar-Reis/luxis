@@ -1,5 +1,6 @@
-import { AdminKpiCaslRule } from './shared/infra/auth/casl/rules/admin-kpi.rules'
-import { ResellerKpiCaslRule } from './shared/infra/auth/casl/rules/reseller-kpi.rules'
+import { AdminKpiCaslRule } from '@/shared/infra/auth/casl/rules/admin-kpi.rules'
+import { ResellerKpiCaslRule } from '@/shared/infra/auth/casl/rules/reseller-kpi.rules'
+import { AppController } from '@/app.controller'
 import { ConfigModule } from '@/shared/config/config.module'
 import { databaseConfig } from '@/shared/config/database.config'
 import { CaslAbilityFactory } from '@/shared/infra/auth/casl/casl-ability.factory'
@@ -47,32 +48,46 @@ import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/pas
 @Module({
   imports: [
     ConfigModule,
-    ThrottlerModule.forRoot({
-      throttlers: [
-        {
-          ttl: 10000,
-          limit: 10
-        }
-      ]
-    }),
-    CacheModule.register({
-      isGlobal: true,
-      ttl: 60000,
-      max: 100
-    }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            singleLine: true,
-            colorize: true,
-            levelFirst: true,
-            translateTime: 'SYS:standard'
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [AppConfigService],
+      useFactory: (config: AppConfigService) => ({
+        throttlers: [
+          {
+            ttl: config.getThrottleTtl(),
+            limit: config.getThrottleLimit()
           }
-        },
-        level: 'debug'
-      }
+        ]
+      })
+    }),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [AppConfigService],
+      isGlobal: true,
+      useFactory: (config: AppConfigService) => ({
+        ttl: config.getCacheTtl(),
+        max: config.getCacheMax()
+      })
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [AppConfigService],
+      useFactory: (config: AppConfigService) => ({
+        pinoHttp: {
+          transport: config.isProduction()
+            ? undefined
+            : {
+                target: 'pino-pretty',
+                options: {
+                  singleLine: true,
+                  colorize: true,
+                  levelFirst: true,
+                  translateTime: 'SYS:standard'
+                }
+              },
+          level: config.getLogLevel()
+        }
+      })
     }),
     LoggingModule,
     TypeOrmModule.forRootAsync({
@@ -98,7 +113,7 @@ import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/pas
     forwardRef(() => AdminKpiModule),
     forwardRef(() => ResellerKpiModule)
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     JwtStrategy,
     CaslAbilityFactory,

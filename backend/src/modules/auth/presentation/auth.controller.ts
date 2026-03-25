@@ -21,7 +21,8 @@ import {
   ApiResponse,
   ApiTags,
   ApiQuery,
-  ApiBearerAuth
+  ApiBearerAuth,
+  ApiHeader
 } from '@nestjs/swagger'
 import { RequestPasswordResetDto } from '@/modules/auth/application/dtos/request-password-reset-dto'
 import { ResetPasswordDto } from '@/modules/auth/application/dtos/reset-password.dto'
@@ -32,7 +33,6 @@ import { join } from 'path'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
-import { AccessTokenDto } from '@/modules/auth/application/dtos/access-token.dto'
 import { UUID } from 'crypto'
 import { ChangePasswordDto } from '@/modules/auth/application/dtos/change-password.dto'
 import { RequestPasswordResetUseCase } from '@/modules/auth/application/use-cases/request-password-reset.use-case'
@@ -46,6 +46,9 @@ import { PoliciesGuard } from '@/shared/infra/auth/guards/policies.guard'
 import { CheckPolicies } from '@/shared/infra/auth/decorators/check-policies.decorator'
 import { ReadPasswordResetRequestPolicy } from '@/shared/infra/auth/policies/password-reset-request/read-password-reset-request.policy'
 import { UpdatePasswordResetRequestPolicy } from '@/shared/infra/auth/policies/password-reset-request/update-password-reset-request.policy'
+import { AppConfigService } from '@/shared/config/app-config.service'
+import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
+import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -63,6 +66,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly logger: CustomLogger,
+    private readonly config: AppConfigService,
     private readonly requestPasswordResetUseCase: RequestPasswordResetUseCase,
     private readonly listPasswordResetRequestsUseCase: ListPasswordResetRequestsUseCase,
     private readonly approvePasswordResetRequestUseCase: ApprovePasswordResetRequestUseCase,
@@ -72,20 +76,39 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Login', operationId: 'login' })
   @ApiBody({ type: LoginDto })
-  @ApiResponse({
-    status: 200,
-    description: 'Login successful',
-    type: AccessTokenDto
-  })
+  @ApiResponse({ status: 204, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @HttpCode(200)
+  @HttpCode(204)
   @Post('login')
-  async login(@Body() dto: LoginDto) {
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<void> {
     this.logger.log(
       `Login request received for user ${dto.email}`,
       'AuthController'
     )
-    return await this.authService.login(dto)
+    const result = await this.authService.login(dto)
+
+    res.cookie(this.config.getAuthCookieName(), result.accessToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: this.config.isProduction(),
+      path: '/'
+    })
+  }
+
+  @ApiOperation({ summary: 'Logout', operationId: 'logout' })
+  @ApiResponse({ status: 204, description: 'Logout successful' })
+  @HttpCode(204)
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) res: Response): Promise<void> {
+    res.clearCookie(this.config.getAuthCookieName(), {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: this.config.isProduction(),
+      path: '/'
+    })
   }
 
   @ApiOperation({ summary: 'Forgot password', operationId: 'forgot-password' })
@@ -179,10 +202,15 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized - Invalid current password'
   })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @Post('change-password')
-  async changePassword(@Body() dto: ChangePasswordDto) {
-    await this.authService.changePassword(dto)
+  async changePassword(
+    @Body() dto: ChangePasswordDto,
+    @CurrentUser() user: UserPayload
+  ) {
+    await this.authService.changePassword(user.id, dto.newPassword)
   }
 
   @ApiOperation({
@@ -216,24 +244,66 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Verify JWT token', operationId: 'verify-token' })
+  @ApiHeader({
+    name: 'authorization',
+    required: false,
+    description: 'Optional Bearer token for non-cookie clients'
+  })
+  @ApiHeader({
+    name: 'cookie',
+    required: false,
+    description: 'Optional auth cookie for browser sessions'
+  })
   @ApiResponse({ status: 200, description: 'Token is valid', type: VerifyDto })
   @ApiResponse({ status: 401, description: 'Unauthorized - Invalid token' })
   @HttpCode(200)
   @Post('verify')
-  async verify(@Headers('authorization') authHeader: string) {
+  async verify(
+    @Headers('authorization') authHeader?: string,
+    @Headers('cookie') cookieHeader?: string
+  ) {
     try {
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      const token = this.extractAccessToken(authHeader, cookieHeader)
+
+      if (!token) {
         throw new UnauthorizedException('Invalid token format')
       }
 
-      const token = authHeader.split(' ')[1]
       return await this.authService.verifyToken(token)
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error'
+
       this.logger.error(
-        `Token verification failed: ${error.message}`,
+        `Token verification failed: ${errorMessage}`,
         'AuthController'
       )
       throw new UnauthorizedException('Invalid token')
     }
+  }
+
+  private extractAccessToken(
+    authHeader?: string,
+    cookieHeader?: string
+  ): string | null {
+    if (authHeader?.startsWith('Bearer ')) {
+      return authHeader.split(' ')[1]
+    }
+
+    if (!cookieHeader) {
+      return null
+    }
+
+    const cookieName = this.config.getAuthCookieName()
+    const cookies = cookieHeader.split(';').map((cookie) => cookie.trim())
+    const tokenCookie = cookies.find((cookie) =>
+      cookie.startsWith(`${cookieName}=`)
+    )
+
+    if (!tokenCookie) {
+      return null
+    }
+
+    return decodeURIComponent(tokenCookie.split('=').slice(1).join('='))
   }
 }

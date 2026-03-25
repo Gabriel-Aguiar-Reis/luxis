@@ -8,7 +8,7 @@ export class VerifyDto {
     type: Boolean,
     required: true
   })
-  public valid: boolean
+  public valid!: boolean
 
   @ApiProperty({
     description: 'The user payload containing user details',
@@ -22,5 +22,5 @@ export class VerifyDto {
       name: 'John Doe'
     }
   })
-  public user: UserPayloadDto
+  public user!: UserPayloadDto
 }

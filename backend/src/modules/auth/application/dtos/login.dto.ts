@@ -16,7 +16,7 @@ export class LoginDto {
   })
   @IsEmail()
   @IsNotEmpty()
-  email: string
+  email!: string
 
   @ApiProperty({
     description:
@@ -35,5 +35,5 @@ export class LoginDto {
     }
   )
   @IsNotEmpty()
-  password: string
+  password!: string
 }

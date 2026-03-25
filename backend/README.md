@@ -27,6 +27,13 @@ Inventory management system built with NestJS, following Clean Architecture and 
 - 🔒 Rate limiting and security
 - 📈 Logging and monitoring
 
+## 🔐 Authentication Contract
+
+- `POST /auth/login`: validates credentials, returns `204 No Content`, and sets the signed JWT in an httpOnly cookie.
+- `POST /auth/verify`: validates the active session from the auth cookie. Bearer tokens remain accepted for compatibility with non-browser clients.
+- `POST /auth/logout`: returns `204 No Content` and clears the auth cookie.
+- `POST /auth/change-password`: requires an authenticated session and derives the user from the server-side JWT payload instead of trusting a client-provided `userId`.
+
 ## 🚀 Technologies
 
 - [NestJS](https://nestjs.com/)
@@ -190,7 +197,7 @@ This project follows Clean Architecture and DDD principles, with the following s
 
 ## 🔒 Security
 
-- JWT authentication
+- JWT authentication with httpOnly session cookie
 - CASL-based authorization
 - Rate Limiting
 - Input validation with class-validator

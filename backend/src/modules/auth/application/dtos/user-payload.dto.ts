@@ -13,7 +13,7 @@ export class UserPayloadDto implements UserPayload {
     required: true
   })
   @IsUUID()
-  id: UUID
+  id!: UUID
 
   @ApiProperty({
     description: 'The email address of the user',
@@ -22,7 +22,7 @@ export class UserPayloadDto implements UserPayload {
     required: true
   })
   @IsEmail()
-  email: string
+  email!: string
 
   @ApiProperty({
     description: 'The role of the user',
@@ -35,7 +35,7 @@ export class UserPayloadDto implements UserPayload {
     required: true
   })
   @IsEnum(Role)
-  role: Role
+  role!: Role
 
   @ApiProperty({
     description: 'The status of the user',
@@ -48,7 +48,7 @@ export class UserPayloadDto implements UserPayload {
     required: true
   })
   @IsEnum(UserStatus)
-  status: UserStatus
+  status!: UserStatus
 
   @ApiProperty({
     description: 'The name of the user',
@@ -57,5 +57,5 @@ export class UserPayloadDto implements UserPayload {
     required: true
   })
   @IsString()
-  name: string
+  name!: string
 }
