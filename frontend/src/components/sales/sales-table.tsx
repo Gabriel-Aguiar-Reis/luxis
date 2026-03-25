@@ -33,9 +33,9 @@ import {
   Filter,
   Loader2
 } from 'lucide-react'
-import { HTMLProps, JSX, useState, createElement } from 'react'
+import { HTMLProps, JSX, useState } from 'react'
 import { format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -56,8 +56,8 @@ import {
   SalesFiltersType
 } from '@/components/sales/sales-filters'
 import { toast } from 'sonner'
-import * as ReactPDF from '@react-pdf/renderer'
-import { SaleReceiptPDF } from '@/components/sales/sale-receipt-pdf/sale-receipt-pdf'
+import { generateSaleReceiptPdf } from '@/components/sales/generate-sale-receipt-pdf'
+import { useLocale, useTranslations } from 'next-intl'
 
 type SalesTableProps = {
   sales: GetAllSalesResponse
@@ -80,6 +80,10 @@ export function SalesTable({
   phoneUtil,
   salesPerPage = 10
 }: SalesTableProps) {
+  const locale = useLocale()
+  const t = useTranslations('SalesTable')
+  const tConfirmation = useTranslations('SaleConfirmation')
+  const tReceipt = useTranslations('ReceiptPreview')
   const [filters, setFilters] = useState<SalesFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -88,6 +92,14 @@ export function SalesTable({
   )
   const [downloadingSaleId, setDownloadingSaleId] = useState<string | null>(
     null
+  )
+  const dateLocale = locale === 'en' ? enUS : ptBR
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL'
+    }
   )
 
   const handleDownloadReceipt = async (sale: GetOneSaleResponse) => {
@@ -100,11 +112,31 @@ export function SalesTable({
       const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '')
       const fileName = `comprovante-${dateStr}-${timeStr}-luxis.pdf`
 
-      // Gerar o PDF diretamente do componente
-      const element = createElement(SaleReceiptPDF, { sale, phoneUtil })
-      // @ts-ignore - O tipo está correto, é um Document do react-pdf
-      const asPdf = ReactPDF.pdf(element)
-      const blob = await asPdf.toBlob()
+      const blob = await generateSaleReceiptPdf(sale, phoneUtil, locale, {
+        title: tReceipt('pdf.title'),
+        saleDate: t('saleDate'),
+        customer: tConfirmation('customer'),
+        paymentMethod: tConfirmation('paymentMethod'),
+        totalProducts: tConfirmation('totalProducts'),
+        item: tConfirmation('item'),
+        items: tConfirmation('items'),
+        installments: tReceipt('pdf.installments'),
+        interval: tReceipt('pdf.interval'),
+        days: tReceipt('pdf.days'),
+        products: t('products'),
+        serialNumber: tConfirmation('serialNumber'),
+        totalSale: tConfirmation('saleTotal'),
+        generatedAt: tReceipt('pdf.generatedAt'),
+        at: tReceipt('pdf.at'),
+        renderError: tReceipt('pdf.renderError'),
+        paymentMethods: {
+          CASH: tConfirmation('paymentMethods.CASH'),
+          PIX: tConfirmation('paymentMethods.PIX'),
+          DEBIT: tConfirmation('paymentMethods.DEBIT'),
+          CREDIT: tConfirmation('paymentMethods.CREDIT'),
+          EXCHANGE: tConfirmation('paymentMethods.EXCHANGE')
+        }
+      })
 
       // Criar link de download
       const url = URL.createObjectURL(blob)
@@ -116,10 +148,10 @@ export function SalesTable({
       document.body.removeChild(link)
       URL.revokeObjectURL(url)
 
-      toast.success('Comprovante baixado com sucesso!')
+      toast.success(tConfirmation('downloadSuccess'))
     } catch (error) {
       console.error('Erro ao gerar PDF:', error)
-      toast.error('Erro ao gerar o comprovante')
+      toast.error(tConfirmation('downloadError'))
     } finally {
       setDownloadingSaleId(null)
     }
@@ -171,19 +203,19 @@ export function SalesTable({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
+      return format(parseISO(dateString), 'P', { locale: dateLocale })
     } catch (error) {
-      return 'Data inválida'
+      return t('invalidDate')
     }
   }
 
   const formatPaymentMethod = (method: keyof typeof PaymentMethod) => {
     const methodMap: Record<PaymentMethod, string> = {
-      DEBIT: 'Débito',
-      CREDIT: 'Crédito',
-      CASH: 'Dinheiro',
-      PIX: 'Pix',
-      EXCHANGE: 'Troca'
+      DEBIT: tConfirmation('paymentMethods.DEBIT'),
+      CREDIT: tConfirmation('paymentMethods.CREDIT'),
+      CASH: tConfirmation('paymentMethods.CASH'),
+      PIX: tConfirmation('paymentMethods.PIX'),
+      EXCHANGE: tConfirmation('paymentMethods.EXCHANGE')
     }
 
     const baseIconClasses = 'h-4 w-4'
@@ -212,27 +244,27 @@ export function SalesTable({
       { label: string; className: HTMLProps<HTMLElement>['className'] }
     > = {
       INSTALLMENTS_OVERDUE: {
-        label: 'Parcelas em atraso',
+        label: tConfirmation('statuses.INSTALLMENTS_OVERDUE'),
         className: 'bg-badge-3 text-badge-text-3'
       },
       CANCELLED: {
-        label: 'Cancelado',
+        label: tConfirmation('statuses.CANCELLED'),
         className: 'bg-badge-6 text-badge-text-6'
       },
       INSTALLMENTS_PAID: {
-        label: 'Venda Paga',
+        label: tConfirmation('statuses.INSTALLMENTS_PAID'),
         className: 'bg-badge-4 text-badge-text-4'
       },
       PENDING: {
-        label: 'Pendente',
+        label: tConfirmation('statuses.PENDING'),
         className: 'bg-badge-5 text-badge-text-5'
       },
       INSTALLMENTS_PENDING: {
-        label: 'Pgto. Pendente',
+        label: tConfirmation('statuses.INSTALLMENTS_PENDING'),
         className: 'bg-badge-5 text-badge-text-5'
       },
       CONFIRMED: {
-        label: 'Confirmado',
+        label: tConfirmation('statuses.CONFIRMED'),
         className: 'bg-badge-2 text-badge-text-2'
       }
     }
@@ -257,7 +289,7 @@ export function SalesTable({
           <CardHeader className="pb-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle className="text-lg sm:text-xl">
-                Gerenciamento de Vendas
+                {t('managementTitle')}
               </CardTitle>
               <Button
                 variant={isFiltersVisible ? 'secondary' : 'outline'}
@@ -266,12 +298,10 @@ export function SalesTable({
                 className="w-full sm:w-auto"
               >
                 <Filter className="mr-2 h-4 w-4" />
-                Filtros
+                {t('filters')}
               </Button>
             </div>
-            <CardDescription>
-              Visualize, crie, edite e exclua vendas
-            </CardDescription>
+            <CardDescription>{t('managementDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             {isFiltersVisible && (
@@ -288,21 +318,29 @@ export function SalesTable({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="min-w-[100px]">
-                      Data da Venda
+                      {t('saleDate')}
                     </TableHead>
-                    <TableHead className="min-w-[120px]">Revendedor</TableHead>
-                    <TableHead className="min-w-[150px]">Cliente</TableHead>
-                    <TableHead className="min-w-20">Produtos</TableHead>
+                    <TableHead className="min-w-[120px]">
+                      {t('reseller')}
+                    </TableHead>
+                    <TableHead className="min-w-[150px]">
+                      {t('customer')}
+                    </TableHead>
+                    <TableHead className="min-w-20">{t('products')}</TableHead>
                     <TableHead className="min-w-[100px]">
-                      Método Pgto.
+                      {t('paymentMethod')}
                     </TableHead>
-                    <TableHead className="min-w-[120px]">Status</TableHead>
+                    <TableHead className="min-w-[120px]">
+                      {t('status')}
+                    </TableHead>
                     <TableHead className="min-w-[140px]">
-                      Parcelas Pagas/Total
+                      {t('installments')}
                     </TableHead>
-                    <TableHead className="min-w-[100px]">Valor Total</TableHead>
+                    <TableHead className="min-w-[100px]">
+                      {t('totalAmount')}
+                    </TableHead>
                     <TableHead className="min-w-[100px] text-right">
-                      Ações
+                      {t('actions')}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -341,11 +379,13 @@ export function SalesTable({
                           <TableCell>
                             {sale.installmentsInterval.value === 0 &&
                             sale.numberInstallments.value === 1
-                              ? 'À vista'
+                              ? t('cashSale')
                               : `${sale.installmentsPaid.value} / ${sale.numberInstallments.value}`}
                           </TableCell>
                           <TableCell>
-                            R$ {sale.totalAmount.value.replace('.', ',')}
+                            {currencyFormatter.format(
+                              Number(sale.totalAmount.value)
+                            )}
                           </TableCell>
 
                           <TableCell className="text-right">
@@ -364,7 +404,7 @@ export function SalesTable({
                                     <DropdownMenuLabel>
                                       <div className="flex items-center">
                                         <Pencil className="mr-2 h-4 w-4" />
-                                        Editar
+                                        {t('edit')}
                                       </div>
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
@@ -376,7 +416,7 @@ export function SalesTable({
                                     disabled={sale.status !== 'PENDING'}
                                   >
                                     <FilePen className="mr-2 h-4 w-4" />
-                                    Infos
+                                    {t('info')}
                                   </DropdownMenuItem>
                                 )}
                                 {onEditStatus && (
@@ -387,7 +427,7 @@ export function SalesTable({
                                     }
                                   >
                                     <FilePen className="mr-2 h-4 w-4" />
-                                    Status
+                                    {t('statusAction')}
                                   </DropdownMenuItem>
                                 )}
                                 {onConfirm && (
@@ -396,7 +436,7 @@ export function SalesTable({
                                     disabled={sale.status !== 'PENDING'}
                                   >
                                     <CheckLine className="mr-2 h-4 w-4" />
-                                    Confirmar
+                                    {t('confirm')}
                                   </DropdownMenuItem>
                                 )}
                                 {onMarkInstallmentPaid && (
@@ -408,7 +448,7 @@ export function SalesTable({
                                     }
                                   >
                                     <Coins className="mr-2 h-4 w-4" />
-                                    Confirmar parcela
+                                    {t('confirmInstallment')}
                                   </DropdownMenuItem>
                                 )}
                                 <DropdownMenuSeparator />
@@ -419,12 +459,12 @@ export function SalesTable({
                                   {downloadingSaleId === sale.id ? (
                                     <>
                                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      Gerando...
+                                      {t('generating')}
                                     </>
                                   ) : (
                                     <>
                                       <Download className="mr-2 h-4 w-4" />
-                                      Baixar comprovante
+                                      {t('downloadReceipt')}
                                     </>
                                   )}
                                 </DropdownMenuItem>
@@ -437,7 +477,7 @@ export function SalesTable({
                                       disabled={sale.status !== 'PENDING'}
                                     >
                                       <Trash2 className="mr-2 h-4 w-4" />
-                                      Excluir
+                                      {t('delete')}
                                     </DropdownMenuItem>
                                   </>
                                 )}
@@ -457,7 +497,7 @@ export function SalesTable({
                   ) : (
                     <TableRow>
                       <TableCell colSpan={9} className="h-24 text-center">
-                        Nenhuma venda encontrada
+                        {t('noSalesFound')}
                       </TableCell>
                     </TableRow>
                   )}
@@ -467,7 +507,7 @@ export function SalesTable({
             {totalPages > 1 && (
               <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
                 <div className="text-sm">
-                  Página {currentPage} de {totalPages}
+                  {t('page', { current: currentPage, total: totalPages })}
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button
@@ -479,7 +519,7 @@ export function SalesTable({
                     disabled={currentPage === 1}
                   >
                     <ChevronLeft className="h-4 w-4" />
-                    <span className="sr-only">Página anterior</span>
+                    <span className="sr-only">{t('previousPage')}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -490,7 +530,7 @@ export function SalesTable({
                     disabled={currentPage === totalPages}
                   >
                     <ChevronRight className="h-4 w-4" />
-                    <span className="sr-only">Próxima página</span>
+                    <span className="sr-only">{t('nextPage')}</span>
                   </Button>
                 </div>
               </div>

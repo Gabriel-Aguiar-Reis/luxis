@@ -1,11 +1,7 @@
 'use client'
 
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  useGetSale,
-  useConfirmSale,
-  GetOneSaleResponse
-} from '@/hooks/use-sales'
+import { useConfirmSale, GetOneSaleResponse } from '@/hooks/use-sales'
 import {
   Card,
   CardContent,
@@ -25,24 +21,35 @@ import {
   CreditCard
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
 import { SaleStatus } from '@/lib/api-types'
 import { HTMLProps } from 'react'
 import { PhoneNumberUtil } from 'google-libphonenumber'
+import { useLocale, useTranslations } from 'next-intl'
 
 interface SaleConfirmationCardProps {
   sale: GetOneSaleResponse | undefined
   phoneUtil: PhoneNumberUtil
-  isRefetching?: boolean
 }
 
 export function SaleConfirmationCard({
   sale,
   phoneUtil
 }: SaleConfirmationCardProps) {
+  const locale = useLocale()
+  const t = useTranslations('SaleConfirmation')
   const queryClient = useQueryClient()
   const { mutate: confirmSale, isPending: isConfirming } =
     useConfirmSale(queryClient)
+
+  const currentDateLocale = locale === 'en' ? enUS : ptBR
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL'
+    }
+  )
 
   if (!sale) {
     return (
@@ -60,7 +67,7 @@ export function SaleConfirmationCard({
 
   // Extrai dados da venda
   const saleDate = sale.saleDate || new Date().toISOString()
-  const customerName = sale.customerName?.value || 'Cliente não informado'
+  const customerName = sale.customerName?.value || t('customerNotProvided')
   const customerPhone = sale.customerPhone?.value || ''
   const paymentMethod = sale.paymentMethod || 'CASH'
   const status = sale.status || 'PENDING'
@@ -68,11 +75,11 @@ export function SaleConfirmationCard({
   const products = sale.products || []
 
   const paymentMethodLabels: Record<string, string> = {
-    CASH: 'Dinheiro',
+    CASH: t('paymentMethods.CASH'),
     PIX: 'PIX',
-    DEBIT: 'Débito',
-    CREDIT: 'Crédito',
-    EXCHANGE: 'Troca'
+    DEBIT: t('paymentMethods.DEBIT'),
+    CREDIT: t('paymentMethods.CREDIT'),
+    EXCHANGE: t('paymentMethods.EXCHANGE')
   }
 
   const statusMap: Record<
@@ -80,27 +87,27 @@ export function SaleConfirmationCard({
     { label: string; className: HTMLProps<HTMLElement>['className'] }
   > = {
     INSTALLMENTS_OVERDUE: {
-      label: 'Parcelas em atraso',
+      label: t('statuses.INSTALLMENTS_OVERDUE'),
       className: 'bg-badge-3 text-badge-text-3'
     },
     CANCELLED: {
-      label: 'Cancelado',
+      label: t('statuses.CANCELLED'),
       className: 'bg-badge-6 text-badge-text-6'
     },
     INSTALLMENTS_PAID: {
-      label: 'Venda Paga',
+      label: t('statuses.INSTALLMENTS_PAID'),
       className: 'bg-badge-4 text-badge-text-4'
     },
     PENDING: {
-      label: 'Pendente',
+      label: t('statuses.PENDING'),
       className: 'bg-badge-5 text-badge-text-5'
     },
     INSTALLMENTS_PENDING: {
-      label: 'Pgto. Pendente',
+      label: t('statuses.INSTALLMENTS_PENDING'),
       className: 'bg-badge-5 text-badge-text-5'
     },
     CONFIRMED: {
-      label: 'Confirmado',
+      label: t('statuses.CONFIRMED'),
       className: 'bg-badge-2 text-badge-text-2'
     }
   }
@@ -110,11 +117,9 @@ export function SaleConfirmationCard({
       <CardHeader className="space-y-1">
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-2xl font-bold">
-              Venda Criada com Sucesso!
-            </CardTitle>
+            <CardTitle className="text-2xl font-bold">{t('title')}</CardTitle>
             <CardDescription className="mt-2">
-              A venda foi registrada no sistema. Revise as informações abaixo.
+              {t('description')}
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
@@ -130,10 +135,10 @@ export function SaleConfirmationCard({
           <div className="flex items-start gap-3">
             <Calendar className="text-muted-foreground mt-0.5 h-5 w-5" />
             <div className="space-y-1">
-              <p className="text-sm font-medium">Data da Venda</p>
+              <p className="text-sm font-medium">{t('saleDate')}</p>
               <p className="text-muted-foreground text-sm">
-                {format(new Date(saleDate), "dd 'de' MMMM 'de' yyyy", {
-                  locale: ptBR
+                {format(new Date(saleDate), 'PPP', {
+                  locale: currentDateLocale
                 })}
               </p>
             </div>
@@ -142,7 +147,7 @@ export function SaleConfirmationCard({
           <div className="flex items-start gap-3">
             <User className="text-muted-foreground mt-0.5 h-5 w-5" />
             <div className="space-y-1">
-              <p className="text-sm font-medium">Cliente</p>
+              <p className="text-sm font-medium">{t('customer')}</p>
               <p className="text-muted-foreground text-sm">{customerName}</p>
               {customerPhone && (
                 <p className="text-muted-foreground text-xs">
@@ -157,7 +162,7 @@ export function SaleConfirmationCard({
           <div className="flex items-start gap-3">
             <CreditCard className="text-muted-foreground mt-0.5 h-5 w-5" />
             <div className="space-y-1">
-              <p className="text-sm font-medium">Método de Pagamento</p>
+              <p className="text-sm font-medium">{t('paymentMethod')}</p>
               <p className="text-muted-foreground text-sm">
                 {paymentMethodLabels[paymentMethod]}
               </p>
@@ -167,9 +172,10 @@ export function SaleConfirmationCard({
           <div className="flex items-start gap-3">
             <ShoppingCart className="text-muted-foreground mt-0.5 h-5 w-5" />
             <div className="space-y-1">
-              <p className="text-sm font-medium">Total de Produtos</p>
+              <p className="text-sm font-medium">{t('totalProducts')}</p>
               <p className="text-muted-foreground text-sm">
-                {products.length} {products.length === 1 ? 'item' : 'itens'}
+                {products.length}{' '}
+                {products.length === 1 ? t('item') : t('items')}
               </p>
             </div>
           </div>
@@ -180,14 +186,18 @@ export function SaleConfirmationCard({
         {/* Lista de produtos */}
         {products.length > 0 && (
           <div className="space-y-3">
-            <h3 className="font-semibold">Produtos</h3>
+            <h3 className="font-semibold">{t('products')}</h3>
             <div className="rounded-md border">
               <div className="max-h-60 overflow-auto">
                 {products.map((product: any, index: number) => {
                   const serialNumber =
-                    product.serialNumber?.value || product.serialNumber || 'N/A'
+                    product.serialNumber?.value ||
+                    product.serialNumber ||
+                    t('notAvailable')
                   const modelName =
-                    product.modelName?.value || product.modelName || 'Produto'
+                    product.modelName?.value ||
+                    product.modelName ||
+                    t('productFallback')
                   const price =
                     product.salePrice?.value || product.salePrice || 0
 
@@ -199,14 +209,11 @@ export function SaleConfirmationCard({
                       <div className="space-y-1">
                         <p className="text-sm font-medium">{modelName}</p>
                         <p className="text-muted-foreground text-xs">
-                          S/N: {serialNumber}
+                          {t('serialNumber')}: {serialNumber}
                         </p>
                       </div>
                       <p className="text-sm font-semibold">
-                        {new Intl.NumberFormat('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL'
-                        }).format(Number(price))}
+                        {currencyFormatter.format(Number(price))}
                       </p>
                     </div>
                   )
@@ -220,12 +227,9 @@ export function SaleConfirmationCard({
 
         {/* Total */}
         <div className="bg-muted flex items-center justify-between rounded-lg p-4">
-          <span className="text-lg font-semibold">Total da Venda</span>
+          <span className="text-lg font-semibold">{t('saleTotal')}</span>
           <span className="text-2xl font-bold">
-            {new Intl.NumberFormat('pt-BR', {
-              style: 'currency',
-              currency: 'BRL'
-            }).format(Number(totalAmount))}
+            {currencyFormatter.format(Number(totalAmount))}
           </span>
         </div>
 
@@ -241,12 +245,12 @@ export function SaleConfirmationCard({
               {isConfirming ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Confirmando...
+                  {t('confirming')}
                 </>
               ) : (
                 <>
                   <CheckCircle2 className="mr-2 h-5 w-5" />
-                  Confirmar Venda
+                  {t('confirmSale')}
                 </>
               )}
             </Button>
@@ -261,12 +265,12 @@ export function SaleConfirmationCard({
               <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
               <div>
                 <p className="text-sm font-semibold text-green-900 dark:text-green-100">
-                  Venda confirmada com sucesso!
+                  {t('confirmedTitle')}
                 </p>
                 <p className="text-xs text-green-700 dark:text-green-300">
                   {status === 'INSTALLMENTS_PAID'
-                    ? 'Pagamento à vista confirmado.'
-                    : 'Aguardando pagamento das parcelas.'}
+                    ? t('confirmedPaidDescription')
+                    : t('confirmedPendingDescription')}
                 </p>
               </div>
             </div>

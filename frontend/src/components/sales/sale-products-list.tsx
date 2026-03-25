@@ -16,6 +16,7 @@ import {
 import { GetSaleProductDto } from '@/lib/api-types'
 
 import { ReactNode } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 
 export function SaleProductsList({
   products,
@@ -28,17 +29,27 @@ export function SaleProductsList({
   onOpenChange?: (open: boolean) => void
   trigger?: ReactNode
 }) {
+  const locale = useLocale()
+  const t = useTranslations('SaleProductsDialog')
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL'
+    }
+  )
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent>
-        <DialogTitle>Produtos da Venda</DialogTitle>
+        <DialogTitle>{t('title')}</DialogTitle>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Produto</TableHead>
-              <TableHead>N. Série</TableHead>
-              <TableHead>Preço</TableHead>
+              <TableHead>{t('product')}</TableHead>
+              <TableHead>{t('serialNumber')}</TableHead>
+              <TableHead>{t('price')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -53,7 +64,7 @@ export function SaleProductsList({
                   </div>
                 </TableCell>
                 <TableCell>
-                  R$ {product.salePrice.value.replace('.', ',')}
+                  {currencyFormatter.format(Number(product.salePrice.value))}
                 </TableCell>
               </TableRow>
             ))}

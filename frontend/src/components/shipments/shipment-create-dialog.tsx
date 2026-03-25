@@ -30,6 +30,7 @@ import { ChevronsUpDown, Square, SquareCheck } from 'lucide-react'
 import { useState } from 'react'
 import { CreateShipmentDto } from '@/hooks/use-shipments'
 import { AddShipmentProductDialog } from '@/components/shipments/add-shipment-product-dialog'
+import { useTranslations } from 'next-intl'
 
 export function ShipmentCreateDialog({
   isOpen,
@@ -40,6 +41,7 @@ export function ShipmentCreateDialog({
   onClose: () => void
   onCreate: (dto: CreateShipmentDto) => void
 }) {
+  const t = useTranslations('ShipmentCreateDialog')
   const { handleSubmit, reset, setValue, watch } = useForm<CreateShipmentDto>({
     defaultValues: {
       resellerId: '',
@@ -125,10 +127,10 @@ export function ShipmentCreateDialog({
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle className="text-base sm:text-lg">
-              Novo Romaneio
+              {t('title')}
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">
-              Preencha os dados para criar um novo romaneio.
+              {t('description')}
             </DialogDescription>
           </DialogHeader>
 
@@ -136,7 +138,7 @@ export function ShipmentCreateDialog({
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
               {/* Revendedor */}
               <div className="space-y-2">
-                <Label className="text-xs sm:text-sm">Revendedor</Label>
+                <Label className="text-xs sm:text-sm">{t('reseller')}</Label>
                 <Popover open={openFrom} onOpenChange={setOpenFrom}>
                   <PopoverTrigger asChild>
                     <Button
@@ -152,7 +154,7 @@ export function ShipmentCreateDialog({
                             ' ' +
                             resellers.find((r: any) => r.id === resellerId)
                               ?.surname?.value
-                          : 'Selecionar revendedor'}
+                          : t('selectReseller')}
                       </span>
                       <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-50 sm:h-4 sm:w-4" />
                     </Button>
@@ -160,14 +162,14 @@ export function ShipmentCreateDialog({
                   <PopoverContent className="w-full p-0">
                     <Command shouldFilter={false}>
                       <CommandInput
-                        placeholder="Buscar revendedor..."
+                        placeholder={t('searchReseller')}
                         value={searchFromValue}
                         onValueChange={setSearchFromValue}
                         className="text-xs sm:text-sm"
                       />
                       <CommandList>
                         <CommandEmpty className="text-xs sm:text-sm">
-                          Nenhum revendedor encontrado.
+                          {t('noResellersFound')}
                         </CommandEmpty>
                         <CommandGroup>
                           {resellers
@@ -210,7 +212,7 @@ export function ShipmentCreateDialog({
               </div>
               {/* Produtos */}
               <div className="space-y-2 sm:col-span-2">
-                <Label className="text-xs sm:text-sm">Produtos</Label>
+                <Label className="text-xs sm:text-sm">{t('products')}</Label>
                 <Button
                   type="button"
                   variant="outline"
@@ -221,13 +223,13 @@ export function ShipmentCreateDialog({
                   <ChevronsUpDown className="mr-2 h-3 w-3 shrink-0 opacity-50 sm:h-4 sm:w-4" />
                   <span className="truncate">
                     {productIds && productIds.length > 0
-                      ? `${productIds.length} produto(s) selecionado(s)`
-                      : 'Selecionar produtos'}
+                      ? t('selectedProductsCount', { count: productIds.length })
+                      : t('selectProducts')}
                   </span>
                 </Button>
                 {productIds && productIds.length > 0 && (
                   <p className="text-muted-foreground text-[10px] sm:text-xs">
-                    {productIds.length} produto(s) selecionado(s)
+                    {t('selectedProductsCount', { count: productIds.length })}
                   </p>
                 )}
               </div>
@@ -241,13 +243,13 @@ export function ShipmentCreateDialog({
               onClick={handleClose}
               className="w-full text-xs sm:w-auto sm:text-sm"
             >
-              Cancelar
+              {t('cancel')}
             </Button>
             <Button
               type="submit"
               className="w-full text-xs sm:w-auto sm:text-sm"
             >
-              Criar Romaneio
+              {t('createShipment')}
             </Button>
           </DialogFooter>
         </form>

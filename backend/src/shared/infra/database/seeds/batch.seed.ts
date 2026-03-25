@@ -1,20 +1,31 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Inject } from '@nestjs/common'
 import { CreateBatchUseCase } from '@/modules/batch/application/use-cases/create-batch.use-case'
 import { CreateCategoryUseCase } from '@/modules/category/application/use-cases/create-category.use-case'
 import { CreateBatchDto } from '@/modules/batch/application/dtos/create-batch.dto'
 import { CreateCategoryDto } from '@/modules/category/application/dtos/create-category.dto'
 import { UUID } from 'crypto'
 import * as fs from 'fs'
+import 'multer'
 import { UpdateProductModelUseCase } from '@/modules/product-model/application/use-cases/update-product-model.use-case'
-import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
-import { Currency } from '@/shared/common/value-object/currency.vo'
+import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
+import { BatchRepository } from '@/modules/batch/domain/repositories/batch.repository'
+import { CloudinaryService } from '@/shared/infra/cloudinary/cloudinary.service'
+import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
 
 @Injectable()
 export class BatchSeed {
   constructor(
     private readonly createBatchUseCase: CreateBatchUseCase,
     private readonly createCategoryUseCase: CreateCategoryUseCase,
-    private readonly updateProductModelUseCase: UpdateProductModelUseCase
+    private readonly updateProductModelUseCase: UpdateProductModelUseCase,
+    @Inject('CategoryRepository')
+    private readonly categoryRepository: CategoryRepository,
+    @Inject('BatchRepository')
+    private readonly batchRepository: BatchRepository,
+    @Inject('CloudinaryService')
+    private readonly cloudinaryService: CloudinaryService,
+    @Inject('ProductModelRepository')
+    private readonly productModelRepository: ProductModelRepository
   ) {}
 
   async run(supplierIds: UUID[]): Promise<UUID[]> {
@@ -24,13 +35,21 @@ export class BatchSeed {
       { name: 'Colares', description: 'Colares de semijoia' },
       { name: 'Pulseiras', description: 'Pulseiras de semijoia' }
     ]
+    const existingCategories = await this.categoryRepository.findAll()
     const categoryIds: UUID[] = []
     for (const category of categories) {
-      const created = await this.createCategoryUseCase.execute(category)
-      categoryIds.push(created.id)
+      const found = existingCategories.find(
+        (c) => c.name.getValue() === category.name
+      )
+      if (found) {
+        categoryIds.push(found.id)
+      } else {
+        const created = await this.createCategoryUseCase.execute(category)
+        categoryIds.push(created.id)
+      }
     }
 
-    const batches: CreateBatchDto[] = [
+    const batchDefs: CreateBatchDto[] = [
       {
         arrivalDate: new Date('2024-05-01'),
         supplierId: supplierIds[0],
@@ -80,45 +99,52 @@ export class BatchSeed {
         ]
       }
     ]
+
+    const existingBatches = await this.batchRepository.findAll()
     const ids: UUID[] = []
-    for (const batch of batches) {
-      const created = await this.createBatchUseCase.execute(batch)
-      ids.push(created.id)
+    for (const batch of batchDefs) {
+      const batchDate = new Date(batch.arrivalDate).toISOString().split('T')[0]
+      const found = existingBatches.find(
+        (b) =>
+          b.supplierId === batch.supplierId &&
+          b.arrivalDate.toISOString().split('T')[0] === batchDate
+      )
+      if (found) {
+        ids.push(found.id)
+      } else {
+        const created = await this.createBatchUseCase.execute(batch)
+        ids.push(created.id)
+      }
     }
 
-    let photoUrl: string | undefined
     try {
-      const cloudinaryService = (global as any).app?.get?.('CloudinaryService')
-      if (cloudinaryService) {
+      const assetPath = 'src/shared/common/assets/modelo.jpg'
+      if (fs.existsSync(assetPath)) {
         const file: Express.Multer.File = {
           fieldname: 'photo',
           originalname: 'modelo.jpg',
           encoding: '7bit',
           mimetype: 'image/jpeg',
-          buffer: fs.readFileSync('src/shared/common/assets/modelo.jpg'),
-          size: fs.statSync('src/shared/common/assets/modelo.jpg').size,
+          buffer: fs.readFileSync(assetPath),
+          size: fs.statSync(assetPath).size,
           destination: '',
           filename: 'modelo.jpg',
-          path: 'src/shared/common/assets/modelo.jpg',
+          path: assetPath,
           stream: undefined as any
         }
-        photoUrl = await cloudinaryService.uploadImage(file, 'product-models')
-      }
-    } catch (e) {
-      console.error('Erro ao fazer upload da foto única do modelo:', e)
-    }
-    if (photoUrl) {
-      const productModelRepo =
-        (global as any).app?.get?.('ProductModelRepository') || undefined
-      if (productModelRepo) {
-        const models = await productModelRepo.findAll()
+        const photoUrl = await this.cloudinaryService.uploadImage(
+          file,
+          'product-models'
+        )
+        const models = await this.productModelRepository.findAll()
         for (const model of models) {
-          await this.updateProductModelUseCase.execute(model.id, {
-            photoUrl
-          })
+          await this.updateProductModelUseCase.execute(model.id, { photoUrl })
         }
       }
+    } catch (e) {
+      console.error('Erro ao fazer upload da foto dos modelos:', e)
     }
+
     return ids
   }
 }

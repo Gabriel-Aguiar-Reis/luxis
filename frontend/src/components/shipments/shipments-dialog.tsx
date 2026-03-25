@@ -32,6 +32,7 @@ import {
   GetOneShipmentResponse,
   UpdateShipmentDto
 } from '@/hooks/use-shipments'
+import { useTranslations } from 'next-intl'
 
 type ShipmentDialogProps = {
   isOpen: boolean
@@ -46,6 +47,7 @@ export function ShipmentDialog({
   onSave,
   shipment
 }: ShipmentDialogProps) {
+  const t = useTranslations('ShipmentDialog')
   const { handleSubmit, reset, setValue, watch } = useForm<UpdateShipmentDto>({
     defaultValues: {
       productIds: shipment?.products.map((p) => p.id) || [],
@@ -141,17 +143,15 @@ export function ShipmentDialog({
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Editar Romaneio</DialogTitle>
-            <DialogDescription>
-              Edite os detalhes do romaneio selecionado.
-            </DialogDescription>
+            <DialogTitle>{t('title')}</DialogTitle>
+            <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
               {/* Revendedor */}
               <div className="col-span-2 space-y-2">
-                <Label>Revendedor</Label>
+                <Label>{t('reseller')}</Label>
                 <Popover open={openReseller} onOpenChange={setOpenReseller}>
                   <PopoverTrigger asChild>
                     <Button
@@ -163,21 +163,19 @@ export function ShipmentDialog({
                       {resellerId
                         ? resellers.find((r) => r.id === resellerId)?.name
                             ?.value || resellerId
-                        : 'Selecionar revendedor'}
+                        : t('selectReseller')}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0">
                     <Command shouldFilter={false}>
                       <CommandInput
-                        placeholder="Buscar revendedor..."
+                        placeholder={t('searchReseller')}
                         value={searchResellerValue}
                         onValueChange={setSearchResellerValue}
                       />
                       <CommandList>
-                        <CommandEmpty>
-                          Nenhum revendedor encontrado.
-                        </CommandEmpty>
+                        <CommandEmpty>{t('noResellersFound')}</CommandEmpty>
                         <CommandGroup>
                           {resellers
                             .filter((reseller) => {
@@ -217,7 +215,7 @@ export function ShipmentDialog({
               </div>
               {/* Produtos */}
               <div className="col-span-2 space-y-2">
-                <Label>Produtos</Label>
+                <Label>{t('products')}</Label>
                 <Popover open={openProducts} onOpenChange={setOpenProducts}>
                   <PopoverTrigger asChild>
                     <Button
@@ -228,20 +226,22 @@ export function ShipmentDialog({
                       disabled={!resellerId || productsWithModel.length === 0}
                     >
                       {productIds && productIds.length > 0
-                        ? `${productIds.length} produto(s) selecionado(s)`
-                        : 'Selecionar produtos'}
+                        ? t('selectedProductsCount', {
+                            count: productIds.length
+                          })
+                        : t('selectProducts')}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0">
                     <Command shouldFilter={false}>
                       <CommandInput
-                        placeholder="Buscar produto..."
+                        placeholder={t('searchProduct')}
                         value={searchProductValue}
                         onValueChange={setSearchProductValue}
                       />
                       <CommandList>
-                        <CommandEmpty>Nenhum produto encontrado.</CommandEmpty>
+                        <CommandEmpty>{t('noProductsFound')}</CommandEmpty>
                         <CommandGroup>
                           {productsWithModel
                             .filter((product) => {
@@ -294,9 +294,9 @@ export function ShipmentDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t('cancel')}
             </Button>
-            <Button type="submit">Salvar Alterações</Button>
+            <Button type="submit">{t('saveChanges')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

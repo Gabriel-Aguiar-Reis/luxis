@@ -16,7 +16,6 @@ import { Password } from '@/modules/user/domain/value-objects/password.vo'
 import { EmailService } from '@/modules/auth/application/services/email.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
 import { UUID } from 'crypto'
-import { ChangePasswordDto } from '@/modules/auth/application/dtos/change-password.dto'
 
 @Injectable()
 export class AuthService {
@@ -29,17 +28,17 @@ export class AuthService {
     private readonly emailService: EmailService
   ) {}
 
-  async changePassword(dto: ChangePasswordDto): Promise<void> {
-    const user = await this.userRepository.findById(dto.userId)
+  async changePassword(userId: UUID, newPassword: string): Promise<void> {
+    const user = await this.userRepository.findById(userId)
     if (!user) {
       this.logger.error(
-        `User not found for change password: ${dto.userId}`,
+        `User not found for change password: ${userId}`,
         'AuthService'
       )
       throw new NotFoundException('User not found')
     }
 
-    const password = new Password(dto.newPassword)
+    const password = new Password(newPassword)
     const passwordHash = PasswordHash.generate(password)
     user.passwordHash = passwordHash
     await this.userRepository.update(user)
@@ -84,9 +83,10 @@ export class AuthService {
 
     const payload = {
       sub: user.id,
-      email: user.email,
+      email: user.email.getValue(),
       role: user.role,
-      status: user.status
+      status: user.status,
+      name: `${user.name.getValue()} ${user.surname.getValue()}`
     }
 
     return {
@@ -148,8 +148,11 @@ export class AuthService {
         'AuthService'
       )
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error'
+
       this.logger.error(
-        `Error resetting password: ${error.message}`,
+        `Error resetting password: ${errorMessage}`,
         'AuthService'
       )
       throw new BadRequestException('Invalid or expired token')
@@ -179,8 +182,11 @@ export class AuthService {
         }
       }
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error'
+
       this.logger.error(
-        `Token verification failed: ${error.message}`,
+        `Token verification failed: ${errorMessage}`,
         'AuthService'
       )
       throw new UnauthorizedException('Invalid or expired token')

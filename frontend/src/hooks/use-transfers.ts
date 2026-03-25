@@ -1,142 +1,135 @@
-import { useQuery, useMutation, QueryClient } from '@tanstack/react-query'
-import { apiFetch } from '@/lib/api-client'
 import {
-  DeleteOwnershipTransfer,
-  GetAllOwnershipTransfers,
-  PostOwnershipTransfer,
-  UpdateOwnershipTransfer,
-  UpdateOwnershipTransferStatus,
-  UpdateOwnershipTransferStatusDto
-} from '@/lib/api-types'
-import { apiPaths } from '@/lib/api-paths'
+  useGetAllOwnershipTransfers as useGetAllOwnershipTransfersRaw,
+  useCreateOwnershipTransfer as useCreateOwnershipTransferRaw,
+  useDeleteOwnershipTransfer as useDeleteOwnershipTransferRaw,
+  useUpdateOwnershipTransfer as useUpdateOwnershipTransferRaw,
+  useUpdateOwnershipTransferStatus as useUpdateOwnershipTransferStatusRaw
+} from '@/api/ownership-transfers/ownership-transfers'
+import type {
+  OwnershipTransferWithSerialDto,
+  CreateOwnershipTransferDto as OrvalCreateTransferDto,
+  UpdateOwnershipTransferDto as OrvalUpdateTransferDto,
+  UpdateOwnershipTransferStatusDto as OrvalUpdateTransferStatusDto
+} from '@/api/model'
+import { queryKeys } from '@/lib/query-keys'
+import { QueryClient } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
-import { components } from '@/types/openapi'
 
-type GetAllTransfersResponse =
-  GetAllOwnershipTransfers['responses']['200']['content']['application/json']
-
-export type CreateTransferDto =
-  components['schemas']['CreateOwnershipTransferDto']
-
-type CreateTransferResponse =
-  PostOwnershipTransfer['responses']['201']['content']['application/json']
-
-type DeleteTransferResponse =
-  DeleteOwnershipTransfer['responses']['204']['content']
-
-export type UpdateTransferDto =
-  UpdateOwnershipTransfer['requestBody']['content']['application/json']
-
-type UpdateTransferResponse =
-  UpdateOwnershipTransfer['responses']['200']['content']['application/json']
-
-export type UpdateTransferStatusDto = UpdateOwnershipTransferStatusDto
-
-export type UpdateTransferStatusResponse =
-  UpdateOwnershipTransferStatus['responses']['200']['content']
+export type CreateTransferDto = OrvalCreateTransferDto
+export type UpdateTransferDto = OrvalUpdateTransferDto
+export type UpdateTransferStatusDto = OrvalUpdateTransferStatusDto
+export type UpdateOwnershipTransferStatusDto = OrvalUpdateTransferStatusDto
 
 export function useGetTransfers() {
-  return useQuery({
-    queryKey: ['transfers'],
-    queryFn: async () => {
-      return await apiFetch<GetAllTransfersResponse>(
-        apiPaths.ownershipTransfers.base,
-        {},
-        true
-      )
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAllOwnershipTransfersRaw({
+    query: { queryKey: queryKeys.transfers.all(), staleTime: 5 * 60 * 1000 }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as
+      | OwnershipTransferWithSerialDto[]
+      | undefined
+  }
 }
 
 export function useCreateTransfer(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async (newTransfer: CreateTransferDto) => {
-      return await apiFetch<CreateTransferResponse>(
-        apiPaths.ownershipTransfers.base,
-        {
-          body: JSON.stringify(newTransfer)
-        },
-        true,
-        'POST'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Transferência criada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao criar transferência: ${error.message}`)
+  const t = useTranslations('HookFeedback.transfers')
+
+  const mutation = useCreateOwnershipTransferRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('createSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('createError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (data: CreateTransferDto) => mutation.mutate({ data }),
+    mutateAsync: (data: CreateTransferDto) => mutation.mutateAsync({ data })
+  }
 }
 
 export function useDeleteTransfer(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async (transferId: string) => {
-      return await apiFetch<DeleteTransferResponse>(
-        `${apiPaths.ownershipTransfers.base}/${transferId}`,
-        {},
-        true,
-        'DELETE'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Transferência excluída com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao excluir transferência: ${error.message}`)
+  const t = useTranslations('HookFeedback.transfers')
+
+  const mutation = useDeleteOwnershipTransferRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('deleteSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('deleteError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (transferId: string) => mutation.mutate({ id: transferId }),
+    mutateAsync: (transferId: string) =>
+      mutation.mutateAsync({ id: transferId })
+  }
 }
 
 export function useUpdateTransfer(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async ({ id, dto }: { id: string; dto: UpdateTransferDto }) => {
-      return await apiFetch<UpdateTransferResponse>(
-        `${apiPaths.ownershipTransfers.byId(id)}`,
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Transferência atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao atualizar transferência: ${error.message}`)
+  const t = useTranslations('HookFeedback.transfers')
+
+  const mutation = useUpdateOwnershipTransferRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('updateSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('updateError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: UpdateTransferDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: UpdateTransferDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }
 
 export function useUpdateTransferStatus(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async ({
-      id,
-      dto
-    }: {
-      id: string
-      dto: UpdateOwnershipTransferStatusDto
-    }) => {
-      return await apiFetch<UpdateTransferStatusResponse>(
-        `${apiPaths.ownershipTransfers.status(id)}`,
-        {
-          body: JSON.stringify({ status: dto })
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Transferência atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['transfers'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao atualizar transferência: ${error.message}`)
+  const t = useTranslations('HookFeedback.transfers')
+
+  const mutation = useUpdateOwnershipTransferStatusRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('updateStatusSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.transfers.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('updateStatusError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: UpdateTransferStatusDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: UpdateTransferStatusDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }

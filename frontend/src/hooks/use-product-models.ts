@@ -1,69 +1,73 @@
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
-import { GetAllProductModels, UpdateProductModel } from '@/lib/api-types'
+import {
+  useGetAllProductModels as useGetAllProductModelsRaw,
+  useUpdateProductModel as useUpdateProductModelRaw,
+  useDeleteProductModel as useDeleteProductModelRaw
+} from '@/api/product-models/product-models'
+import type {
+  ProductModel,
+  UpdateProductModelDto as OrvalUpdateModelDto
+} from '@/api/model'
+import { queryKeys } from '@/lib/query-keys'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-type GetAllProductModelsResponse =
-  GetAllProductModels['responses']['200']['content']['application/json']
-
-export type UpdateModelDto =
-  UpdateProductModel['requestBody']['content']['application/json']
-type UpdateModelResponse =
-  UpdateProductModel['responses']['200']['content']['application/json']
+export type UpdateModelDto = OrvalUpdateModelDto
 
 export function useGetModels() {
-  return useQuery({
-    queryKey: ['product-models'],
-    queryFn: async () => {
-      return await apiFetch<GetAllProductModelsResponse>(
-        apiPaths.productModels.base,
-        {},
-        true
-      )
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAllProductModelsRaw({
+    query: { queryKey: queryKeys.productModels.all(), staleTime: 5 * 60 * 1000 }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as ProductModel[] | undefined
+  }
 }
 
-export function useChangeProductModel(QueryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async ({ id, dto }: { id: string; dto: UpdateModelDto }) => {
-      return await apiFetch<UpdateModelResponse>(
-        apiPaths.productModels.byId(id),
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: () => {
-      toast.success(`Modelo atualizado com sucesso`)
-      QueryClient.invalidateQueries({ queryKey: ['product-models'] })
-    },
-    onError: () => {
-      toast.error('Erro ao atualizar modelo')
+export function useChangeProductModel(qClient: QueryClient) {
+  const t = useTranslations('HookFeedback.productModels')
+
+  const mutation = useUpdateProductModelRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('updateSuccess'))
+        qClient.invalidateQueries({ queryKey: queryKeys.productModels.all() })
+      },
+      onError: () => {
+        toast.error(t('updateError'))
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: UpdateModelDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: UpdateModelDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }
 
-export function useDeleteProductModel(QueryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async (id: string) => {
-      return await apiFetch<void>(
-        apiPaths.productModels.byId(id),
-        {},
-        true,
-        'DELETE'
-      )
-    },
-    onSuccess: () => {
-      toast.success(`Modelo excluído com sucesso`)
-      QueryClient.invalidateQueries({ queryKey: ['product-models'] })
-    },
-    onError: () => {
-      toast.error('Erro ao excluir modelo')
+export function useDeleteProductModel(qClient?: QueryClient) {
+  const t = useTranslations('HookFeedback.productModels')
+  const queryClient = useQueryClient()
+
+  const mutation = useDeleteProductModelRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('deleteSuccess'))
+        const active = qClient ?? queryClient
+        active.invalidateQueries({ queryKey: queryKeys.productModels.all() })
+      },
+      onError: () => {
+        toast.error(t('deleteError'))
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (id: string) => mutation.mutate({ id }),
+    mutateAsync: (id: string) => mutation.mutateAsync({ id })
+  }
 }

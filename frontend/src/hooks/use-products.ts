@@ -1,62 +1,63 @@
-import { apiFetch } from '@/lib/api-client'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import { apiPaths } from '@/lib/api-paths'
-import { GetAllProducts, UpdateProduct } from '@/lib/api-types'
+import {
+  useGetAllProducts as useGetAllProductsRaw,
+  useGetAvailableProducts as useGetAvailableProductsRaw,
+  useUpdateProduct as useUpdateProductRaw
+} from '@/api/products/products'
+import type {
+  Product,
+  UpdateProductDto as OrvalUpdateProductDto
+} from '@/api/model'
+import { queryKeys } from '@/lib/query-keys'
+import { QueryClient } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-type GetAllProductsResponse =
-  GetAllProducts['responses']['200']['content']['application/json']
-export type UpdateProductDto =
-  UpdateProduct['requestBody']['content']['application/json']
-export type UpdateProductResponse =
-  UpdateProduct['responses']['200']['content']['application/json']
+export type UpdateProductDto = OrvalUpdateProductDto
+export type UpdateProductResponse = Product
 
 export function useGetProducts() {
-  return useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      return await apiFetch<GetAllProductsResponse>(
-        apiPaths.products.base,
-        {},
-        true
-      )
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAllProductsRaw({
+    query: { queryKey: queryKeys.products.all(), staleTime: 5 * 60 * 1000 }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as Product[] | undefined
+  }
 }
 
 export function useGetAvailableProducts() {
-  return useQuery({
-    queryKey: ['products', 'available'],
-    queryFn: async () => {
-      return await apiFetch<GetAllProductsResponse>(
-        apiPaths.products.available,
-        {},
-        true
-      )
-    },
-    staleTime: 1 * 60 * 1000 // Cache menor para produtos disponíveis
+  const result = useGetAvailableProductsRaw({
+    query: {
+      queryKey: queryKeys.products.available(),
+      staleTime: 1 * 60 * 1000
+    }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as Product[] | undefined
+  }
 }
 
 export function useChangeProduct(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async ({ id, dto }: { id: string; dto: UpdateProductDto }) => {
-      await apiFetch<UpdateProductResponse>(
-        apiPaths.products.byId(id),
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: () => {
-      toast.success(`Produto atualizado com sucesso`)
-      queryClient.invalidateQueries({ queryKey: ['products'] })
-    },
-    onError: () => {
-      toast.error('Erro ao atualizar produto')
+  const t = useTranslations('HookFeedback.products')
+
+  const mutation = useUpdateProductRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('updateSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.products.all() })
+      },
+      onError: () => {
+        toast.error(t('updateError'))
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: UpdateProductDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: UpdateProductDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }

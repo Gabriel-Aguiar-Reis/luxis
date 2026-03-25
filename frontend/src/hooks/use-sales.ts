@@ -1,37 +1,33 @@
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
 import {
-  GetAllSales,
+  useGetAllSales as useGetAllSalesRaw,
+  useGetAvailableProductsToSell as useGetAvailableProductsToSellRaw,
+  useGetOneSale as useGetOneSaleRaw,
+  useCreateSale as useCreateSaleRaw,
+  useDeleteSale as useDeleteSaleRaw,
+  useUpdateSale as useUpdateSaleRaw,
+  useMarkInstallmentPaid as useMarkInstallmentPaidRaw,
+  useUpdateSaleStatus as useUpdateSaleStatusRaw,
+  useConfirmSale as useConfirmSaleRaw
+} from '@/api/sales/sales'
+import type {
+  GetSaleDto,
   GetAvailableProductsToSellDto,
-  GetOneSale,
-  MarkInstallmentPaid,
-  PostSale,
-  UpdateSale,
-  UpdateSaleStatus
-} from '@/lib/api-types'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+  CreateSaleDto as OrvalCreateSaleDto,
+  UpdateSaleDto as OrvalUpdateSaleDto,
+  UpdateSaleStatusDto as OrvalUpdateSaleStatusDto,
+  MarkInstallmentPaidDto as OrvalMarkInstallmentPaidDto
+} from '@/api/model'
+import { QueryClient } from '@tanstack/react-query'
+import { queryKeys } from '@/lib/query-keys'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-export type GetAllSalesResponse =
-  GetAllSales['responses']['200']['content']['application/json']
-
-export type GetOneSaleResponse =
-  GetOneSale['responses']['200']['content']['application/json']
-
-export type CreateSaleDto =
-  PostSale['requestBody']['content']['application/json']
-
-export type CreateSaleResponse =
-  PostSale['responses']['201']['content']['application/json']
-
-export type UpdateSaleDto =
-  UpdateSale['requestBody']['content']['application/json']
-
-export type UpdateSaleStatusDto =
-  UpdateSaleStatus['requestBody']['content']['application/json']
-
-export type MarkInstallmentPaidDto =
-  MarkInstallmentPaid['requestBody']['content']['application/json']
+export type GetAllSalesResponse = GetSaleDto[]
+export type GetOneSaleResponse = GetSaleDto
+export type CreateSaleDto = OrvalCreateSaleDto
+export type UpdateSaleDto = OrvalUpdateSaleDto
+export type UpdateSaleStatusDto = OrvalUpdateSaleStatusDto
+export type MarkInstallmentPaidDto = OrvalMarkInstallmentPaidDto
 
 export enum PaymentMethod {
   DEBIT = 'DEBIT',
@@ -42,171 +38,201 @@ export enum PaymentMethod {
 }
 
 export function useGetAvailableProductsToSell() {
-  return useQuery({
-    queryKey: ['available-products-to-sell'],
-    queryFn: async () => {
-      return await apiFetch<GetAvailableProductsToSellDto>(
-        apiPaths.sales.availableProducts,
-        {},
-        true
-      )
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAvailableProductsToSellRaw({
+    query: {
+      queryKey: queryKeys.sales.availableProducts(),
+      staleTime: 5 * 60 * 1000
+    }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as
+      | GetAvailableProductsToSellDto
+      | undefined
+  }
 }
 
 export function useConfirmSale(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async (id: string) => {
-      return await apiFetch(apiPaths.sales.confirm(id), {}, true, 'PATCH')
-    },
-    onSuccess: async () => {
-      toast.success('Venda confirmada com sucesso!')
-      await queryClient.invalidateQueries({
-        queryKey: ['sales']
-      })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao confirmar venda: ${error.message}`)
+  const t = useTranslations('HookFeedback.sales')
+
+  const mutation = useConfirmSaleRaw({
+    mutation: {
+      onSuccess: async () => {
+        toast.success(t('confirmSuccess'))
+        await queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('confirmError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (id: string) => mutation.mutate({ id }),
+    mutateAsync: (id: string) => mutation.mutateAsync({ id })
+  }
 }
 
 export function useGetSales() {
-  return useQuery({
-    queryKey: ['sales'],
-    queryFn: async () => {
-      return await apiFetch<GetAllSalesResponse>(apiPaths.sales.base, {}, true)
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAllSalesRaw({
+    query: { queryKey: queryKeys.sales.all(), staleTime: 5 * 60 * 1000 }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as GetSaleDto[] | undefined
+  }
 }
 
 export function useGetSale(id: string) {
-  return useQuery({
-    queryKey: ['sale', id],
-    queryFn: async () => {
-      return await apiFetch<GetOneSaleResponse>(
-        apiPaths.sales.byId(id),
-        {},
-        true
-      )
-    },
-    enabled: !!id,
-    staleTime: 0, // Permite refetch imediato após invalidação
-    refetchOnWindowFocus: true // Refetch quando a janela recebe foco
+  const result = useGetOneSaleRaw(id, {
+    query: {
+      queryKey: queryKeys.sales.detail(id),
+      enabled: !!id,
+      staleTime: 0,
+      refetchOnWindowFocus: true
+    }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as GetSaleDto | undefined
+  }
 }
 
 export function useCreateSale(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async (dto: CreateSaleDto) => {
-      return await apiFetch<CreateSaleResponse>(
-        apiPaths.sales.base,
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'POST'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Venda criada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao criar venda: ${error.message}`)
+  const t = useTranslations('HookFeedback.sales')
+
+  const mutation = useCreateSaleRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('createSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('createError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (
+      data: CreateSaleDto,
+      options?: { onSuccess?: (data: any) => void }
+    ) =>
+      mutation.mutate({ data }, {
+        onSuccess: options?.onSuccess
+          ? (response: any) => options.onSuccess?.((response as any)?.data)
+          : undefined
+      } as any),
+    mutateAsync: (data: CreateSaleDto) => mutation.mutateAsync({ data })
+  }
 }
 
 export function useDeleteSale(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async (id: string) => {
-      return await apiFetch(apiPaths.sales.byId(id), {}, true, 'DELETE')
-    },
-    onSuccess: () => {
-      toast.success('Venda deletada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao deletar venda: ${error.message}`)
+  const t = useTranslations('HookFeedback.sales')
+
+  const mutation = useDeleteSaleRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('deleteSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('deleteError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (id: string) => mutation.mutate({ id }),
+    mutateAsync: (id: string) => mutation.mutateAsync({ id })
+  }
 }
 
 export function useUpdateSale(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async ({ id, dto }: { id: string; dto: UpdateSaleDto }) => {
-      return await apiFetch(
-        apiPaths.sales.byId(id),
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Venda atualizada com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao atualizar venda: ${error.message}`)
+  const t = useTranslations('HookFeedback.sales')
+
+  const mutation = useUpdateSaleRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('updateSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('updateError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: UpdateSaleDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: UpdateSaleDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }
 
 export function useUpdateMarkInstallmentPaid(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async ({
-      id,
-      dto
-    }: {
-      id: string
-      dto: MarkInstallmentPaidDto
-    }) => {
-      return await apiFetch(
-        apiPaths.sales.markInstallmentPaid(id),
-        {
-          body: JSON.stringify(dto)
-        },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Parcela marcada como paga com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao marcar parcela como paga: ${error.message}`)
+  const t = useTranslations('HookFeedback.sales')
+
+  const mutation = useMarkInstallmentPaidRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('markInstallmentPaidSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('markInstallmentPaidError', {
+            message: e.message || t('unexpectedError')
+          })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: MarkInstallmentPaidDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: MarkInstallmentPaidDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }
 
 export function useUpdateSaleStatus(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async ({
-      id,
-      dto
-    }: {
-      id: string
-      dto: UpdateSaleStatusDto
-    }) => {
-      return await apiFetch(
-        apiPaths.sales.status(id),
-        { body: JSON.stringify(dto) },
-        true,
-        'PATCH'
-      )
-    },
-    onSuccess: () => {
-      toast.success('Status da venda atualizado com sucesso!')
-      queryClient.invalidateQueries({ queryKey: ['sales'] })
-    },
-    onError: (error) => {
-      toast.error(`Falha ao atualizar status da venda: ${error.message}`)
+  const t = useTranslations('HookFeedback.sales')
+
+  const mutation = useUpdateSaleStatusRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('updateStatusSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+      },
+      onError: (e: Error) => {
+        toast.error(
+          t('updateStatusError', { message: e.message || t('unexpectedError') })
+        )
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: ({ id, dto }: { id: string; dto: UpdateSaleStatusDto }) =>
+      mutation.mutate({ id, data: dto }),
+    mutateAsync: ({ id, dto }: { id: string; dto: UpdateSaleStatusDto }) =>
+      mutation.mutateAsync({ id, data: dto })
+  }
 }

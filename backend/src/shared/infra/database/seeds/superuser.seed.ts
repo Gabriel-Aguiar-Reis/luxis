@@ -34,6 +34,7 @@ export class SuperuserSeed {
       throw new ForbiddenException('Superuser configuration is missing')
     }
 
+    const superuserEmail = new Email(this.appConfigService.getSuperuserEmail()!)
     const password = new Password(this.appConfigService.getSuperuserPassword()!)
     const passwordHash = PasswordHash.generate(password)
     const defaultAddress = new Address(
@@ -46,12 +47,32 @@ export class SuperuserSeed {
       Country.BRAZIL,
       'Sistema'
     )
+    const existingUser = await this.userRepository.findByEmail(superuserEmail)
+
+    if (existingUser) {
+      existingUser.name = new Name(this.appConfigService.getSuperuserName()!)
+      existingUser.surname = new Name(
+        this.appConfigService.getSuperuserSurName()!
+      )
+      existingUser.email = superuserEmail
+      existingUser.phone = new PhoneNumber(
+        this.appConfigService.getSuperuserPhone()!
+      )
+      existingUser.passwordHash = passwordHash
+      existingUser.role = Role.ADMIN
+      existingUser.status = UserStatus.ACTIVE
+      existingUser.residence = new Residence(defaultAddress)
+
+      const updatedUser = await this.userRepository.update(existingUser)
+
+      return { id: updatedUser.id, email: updatedUser.email.getValue() }
+    }
 
     const user = await this.userRepository.create({
       id: crypto.randomUUID(),
       name: new Name(this.appConfigService.getSuperuserName()!),
       surname: new Name(this.appConfigService.getSuperuserSurName()!),
-      email: new Email(this.appConfigService.getSuperuserEmail()!),
+      email: superuserEmail,
       phone: new PhoneNumber(this.appConfigService.getSuperuserPhone()!),
       passwordHash,
       role: Role.ADMIN,

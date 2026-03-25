@@ -77,7 +77,6 @@ export function SecurityForm() {
       return
     }
     changePassword({
-      userId: user.id,
       newPassword: values.newPassword
     })
       .then(() => {

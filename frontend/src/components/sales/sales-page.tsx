@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Ban, Plus } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import {
   GetOneSaleResponse,
@@ -27,6 +28,7 @@ type SalesPageProps = {
 }
 
 export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
+  const t = useTranslations('SalesPage')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isEditStatusDialogOpen, setIsEditStatusDialogOpen] = useState(false)
@@ -61,11 +63,9 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
         <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
           <Ban className="text-primary h-6 w-6" />
         </div>
-        <h3 className="mt-4 text-lg font-semibold">
-          Nenhuma venda encontrada!
-        </h3>
+        <h3 className="mt-4 text-lg font-semibold">{t('emptyTitle')}</h3>
         <p className="text-muted-foreground mt-2 text-sm">
-          Não há vendas registradas no sistema.
+          {t('emptyDescription')}
         </p>
       </div>
     )
@@ -74,7 +74,7 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Vendas</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
 
         <Button
           onClick={() =>
@@ -84,7 +84,7 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
           }
         >
           <Plus className="mr-2 h-4 w-4" />
-          Nova Venda
+          {t('newSale')}
         </Button>
       </div>
       <SalesTable

@@ -26,65 +26,73 @@ import {
 import { Button } from './ui/button'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/use-auth-store'
+import { useTranslations } from 'next-intl'
 
 export function ResellerSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const pathname = usePathname()
+  const t = useTranslations('Common')
+  const tInventory = useTranslations('Inventory')
+  const tCustomers = useTranslations('Customers')
+  const tSales = useTranslations('Sales')
+  const tReturns = useTranslations('Returns')
+  const tTransfers = useTranslations('Transfers')
+  const tShipments = useTranslations('Shipments')
   const { logout } = useAuthStore()
 
   const handleLogout = () => {
     logout()
-    toast.success('Logout realizado com sucesso')
+    toast.success(t('LogoutSuccess'))
     router.push('/login')
   }
 
   const navItems = [
     {
-      title: 'Dashboard',
+      title: t('Dashboard'),
       routeKey: 'my-space',
       url: '/my-space',
       icon: BarChart3,
       isActive: pathname === '/my-space' || pathname.endsWith('/my-space')
     },
     {
-      title: 'Meu Estoque',
+      title: tInventory('title'),
       routeKey: 'inventory',
       url: '/my-space/inventory',
       icon: Package,
       isActive: pathname.includes('/inventory')
     },
     {
-      title: 'Clientes',
+      title: tCustomers('title'),
       routeKey: 'customers',
       url: '/my-space/customers',
       icon: Users,
       isActive: pathname.includes('/customers')
     },
     {
-      title: 'Vendas',
+      title: tSales('title'),
       routeKey: 'sales',
       url: '/my-space/sales',
       icon: ShoppingBag,
       isActive: pathname.includes('/sales')
     },
     {
-      title: 'Devoluções',
+      title: tReturns('title'),
       routeKey: 'returns',
       url: '/my-space/returns',
       icon: RotateCcw,
       isActive: pathname.includes('/returns')
     },
     {
-      title: 'Trocas',
+      title: tTransfers('title'),
       routeKey: 'transfers',
       url: '/my-space/transfers',
       icon: Repeat,
       isActive: pathname.includes('/transfers')
     },
     {
-      title: 'Romaneios',
+      title: tShipments('title'),
       routeKey: 'shipments',
       url: '/my-space/shipments',
       icon: Truck,
@@ -104,7 +112,9 @@ export function ResellerSidebar({
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="font-semibold">Luxis</span>
-                  <span className="text-muted-foreground">Revenda</span>
+                  <span className="text-muted-foreground">
+                    {t('ResellerArea')}
+                  </span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -131,7 +141,7 @@ export function ResellerSidebar({
             <SidebarMenuButton asChild>
               <Link href={'/my-space/settings'}>
                 <Settings className="size-4" />
-                <span>Configurações</span>
+                <span>{t('Settings')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -142,7 +152,7 @@ export function ResellerSidebar({
               onClick={handleLogout}
             >
               <LogOut className="mr-2 size-4" />
-              <span>Sair</span>
+              <span>{t('Logout')}</span>
             </Button>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -20,6 +20,7 @@ import { UseFormReturn } from 'react-hook-form'
 import { SaleFormValues } from '@/components/sales/sale-create-form'
 import { GetAvailableCategoriesDto } from '@/lib/api-types'
 import { useEffect } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 
 type AddProductDialogProps = {
   showProductsDialog: boolean
@@ -42,25 +43,33 @@ export function AddProductDialog({
   toggleProduct,
   totalAmount
 }: AddProductDialogProps) {
+  const locale = useLocale()
+  const t = useTranslations('AddProductDialog')
+
   useEffect(() => {
     if (!showProductsDialog) {
       setSearchProduct('')
     }
   }, [showProductsDialog, setSearchProduct])
+
+  const currencyFormatter = new Intl.NumberFormat(
+    locale === 'en' ? 'en-US' : 'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL'
+    }
+  )
   return (
     <Dialog open={showProductsDialog} onOpenChange={setShowProductsDialog}>
       <DialogContent className="w-[95vw] max-w-[1000px] p-0">
         <div className="flex h-[70vh] flex-col">
           <DialogHeader className="px-6 pt-6">
-            <DialogTitle>Selecionar Produtos</DialogTitle>
-            <DialogDescription>
-              Escolha os produtos que serão incluídos na venda. Agrupados por
-              modelo para facilitar a seleção.
-            </DialogDescription>
+            <DialogTitle>{t('title')}</DialogTitle>
+            <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
           <div className="px-6 pb-4">
             <Input
-              placeholder="Buscar modelo ou serial..."
+              placeholder={t('searchPlaceholder')}
               value={searchProduct}
               onChange={(e) => setSearchProduct(e.target.value)}
               className="mb-4 h-9 text-sm"
@@ -69,7 +78,7 @@ export function AddProductDialog({
           <div className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted max-h-none flex-1 overflow-y-auto px-6 pb-4">
             {categories.length === 0 && (
               <p className="text-muted-foreground py-4 text-center text-sm">
-                Nenhum produto disponível.
+                {t('noProductsAvailable')}
               </p>
             )}
             {(() => {
@@ -126,7 +135,7 @@ export function AddProductDialog({
               if (filteredCategories.length === 0) {
                 return (
                   <p className="text-muted-foreground py-4 text-center text-sm">
-                    Nenhum produto encontrado.
+                    {t('noProductsFound')}
                   </p>
                 )
               }
@@ -151,7 +160,7 @@ export function AddProductDialog({
                                     acc + m._displayProducts.length,
                                   0
                                 ) ?? 0
-                              return `${filteredCount} produto${filteredCount === 1 ? '' : 's'}`
+                              return t('productCount', { count: filteredCount })
                             })()}
                           </span>
                         </div>
@@ -220,16 +229,15 @@ export function AddProductDialog({
                                           <span className="flex flex-1 items-center justify-between pr-2">
                                             <span className="truncate">
                                               {p.serialNumber?.value ||
-                                                'Sem serial'}
+                                                t('noSerial')}
                                             </span>
                                             <span className="text-muted-foreground mx-2 flex flex-1 items-center">
                                               <span className="border-border w-full border-t border-dashed" />
                                             </span>
                                             <span className="font-medium">
-                                              {new Intl.NumberFormat('pt-BR', {
-                                                style: 'currency',
-                                                currency: 'BRL'
-                                              }).format(priceNum)}
+                                              {currencyFormatter.format(
+                                                priceNum
+                                              )}
                                             </span>
                                           </span>
                                           {selected ? (
@@ -262,7 +270,7 @@ export function AddProductDialog({
                                       )
                                     }}
                                   >
-                                    Selecionar todos
+                                    {t('selectAll')}
                                   </Button>
                                   <Button
                                     type="button"
@@ -282,7 +290,7 @@ export function AddProductDialog({
                                       })
                                     }}
                                   >
-                                    Limpar grupo
+                                    {t('clearGroup')}
                                   </Button>
                                 </div>
                               </AccordionContent>
@@ -300,21 +308,19 @@ export function AddProductDialog({
             <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-col gap-1">
                 <span className="text-muted-foreground text-xs">
-                  {form.watch('productIds').length} produto(s) selecionado(s)
+                  {t('selectedProducts', {
+                    count: form.watch('productIds').length
+                  })}
                 </span>
                 <span className="text-xs font-medium">
-                  Total:{' '}
-                  {new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                  }).format(totalAmount)}
+                  {t('total')}: {currencyFormatter.format(totalAmount)}
                 </span>
               </div>
               <Button
                 type="button"
                 onClick={() => setShowProductsDialog(false)}
               >
-                Concluir seleção
+                {t('finishSelection')}
               </Button>
             </div>
           </DialogFooter>

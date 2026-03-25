@@ -30,8 +30,8 @@ import {
   ReturnsFilters
 } from '@/components/returns/returns-filters'
 import { Filter } from 'lucide-react'
-import { format, parseISO, set } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { format, parseISO } from 'date-fns'
+import { enUS, ptBR } from 'date-fns/locale'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -47,6 +47,7 @@ import {
 import { useGetProducts } from '@/hooks/use-products'
 import { Badge } from '@/components/ui/badge'
 import { ReturnProductsList } from '@/components/returns/return-products-list'
+import { useLocale, useTranslations } from 'next-intl'
 
 type ReturnsTableProps = {
   returns: GetAllReturnsResponse
@@ -63,6 +64,8 @@ export function ReturnsTable({
   onDelete,
   returnsPerPage = 10
 }: ReturnsTableProps) {
+  const locale = useLocale()
+  const t = useTranslations('ReturnsTable')
   const [filters, setFilters] = useState<ReturnFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -103,9 +106,11 @@ export function ReturnsTable({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
+      return format(parseISO(dateString), 'P', {
+        locale: locale === 'en' ? enUS : ptBR
+      })
     } catch (error) {
-      return 'Data inválida'
+      return t('invalidDate')
     }
   }
 
@@ -115,19 +120,19 @@ export function ReturnsTable({
       { label: string; className: string }
     > = {
       APPROVED: {
-        label: 'Aprovado',
+        label: t('statuses.APPROVED'),
         className: 'bg-[var(--badge-3)] text-[var(--badge-text-3)]'
       },
       CANCELLED: {
-        label: 'Cancelado',
+        label: t('statuses.CANCELLED'),
         className: 'bg-[var(--badge-6)] text-[var(--badge-text-6)]'
       },
       RETURNED: {
-        label: 'Devolvido',
+        label: t('statuses.RETURNED'),
         className: 'bg-[var(--badge-4)] text-[var(--badge-text-4)]'
       },
       PENDING: {
-        label: 'Pendente',
+        label: t('statuses.PENDING'),
         className: 'bg-[var(--badge-5)] text-[var(--badge-text-5)]'
       }
     }
@@ -152,7 +157,7 @@ export function ReturnsTable({
           <CardHeader className="pb-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle className="text-lg sm:text-xl">
-                Gerenciamento de Devoluções
+                {t('managementTitle')}
               </CardTitle>
               <Button
                 variant={isFiltersVisible ? 'secondary' : 'outline'}
@@ -161,12 +166,10 @@ export function ReturnsTable({
                 className="w-full sm:w-auto"
               >
                 <Filter className="mr-2 h-4 w-4" />
-                Filtros
+                {t('filters')}
               </Button>
             </div>
-            <CardDescription>
-              Visualize, crie, edite e exclua devoluções do catálogo
-            </CardDescription>
+            <CardDescription>{t('managementDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             {isFiltersVisible && (
@@ -183,13 +186,17 @@ export function ReturnsTable({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="min-w-[130px]">
-                      Data da devolução
+                      {t('returnDate')}
                     </TableHead>
-                    <TableHead className="min-w-[150px]">Revendedor</TableHead>
-                    <TableHead className="min-w-20">Produtos</TableHead>
-                    <TableHead className="min-w-[100px]">Status</TableHead>
+                    <TableHead className="min-w-[150px]">
+                      {t('reseller')}
+                    </TableHead>
+                    <TableHead className="min-w-20">{t('products')}</TableHead>
+                    <TableHead className="min-w-[100px]">
+                      {t('status')}
+                    </TableHead>
                     <TableHead className="min-w-[100px] text-right">
-                      Ações
+                      {t('actions')}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -223,7 +230,7 @@ export function ReturnsTable({
                                 <DropdownMenuLabel>
                                   <div className="flex items-center">
                                     <Pencil className="mr-2 h-4 w-4" />
-                                    Editar
+                                    {t('edit')}
                                   </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
@@ -232,13 +239,13 @@ export function ReturnsTable({
                                   disabled={ret.status !== 'PENDING'}
                                 >
                                   <FilePen className="mr-2 h-4 w-4" />
-                                  Infos
+                                  {t('info')}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => onEditStatus(ret)}
                                 >
                                   <FilePen className="mr-2 h-4 w-4" />
-                                  Status
+                                  {t('statusAction')}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -246,7 +253,7 @@ export function ReturnsTable({
                                   onClick={() => onDelete(ret)}
                                 >
                                   <Trash2 className="mr-2 h-4 w-4" />
-                                  Excluir
+                                  {t('delete')}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -264,7 +271,7 @@ export function ReturnsTable({
                   ) : (
                     <TableRow>
                       <TableCell colSpan={6} className="h-24 text-center">
-                        Nenhuma devolução encontrada
+                        {t('noReturnsFound')}
                       </TableCell>
                     </TableRow>
                   )}
@@ -274,7 +281,7 @@ export function ReturnsTable({
             {totalPages > 1 && (
               <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
                 <div className="text-sm">
-                  Página {currentPage} de {totalPages}
+                  {t('page', { current: currentPage, total: totalPages })}
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button
@@ -286,7 +293,7 @@ export function ReturnsTable({
                     disabled={currentPage === 1}
                   >
                     <ChevronLeft className="h-4 w-4" />
-                    <span className="sr-only">Página anterior</span>
+                    <span className="sr-only">{t('previousPage')}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -297,7 +304,7 @@ export function ReturnsTable({
                     disabled={currentPage === totalPages}
                   >
                     <ChevronRight className="h-4 w-4" />
-                    <span className="sr-only">Próxima página</span>
+                    <span className="sr-only">{t('nextPage')}</span>
                   </Button>
                 </div>
               </div>

@@ -40,15 +40,22 @@ export function ProductsInStockForMoreThanXDaysTable() {
         acc[key] = {
           modelName: product.modelName,
           salePrice: product.salePrice,
-          serialNumbers: []
+          products: []
         }
       }
-      acc[key].serialNumbers.push(product.serialNumber)
+      acc[key].products.push({
+        id: product.id,
+        serialNumber: product.serialNumber
+      })
       return acc
     },
     {} as Record<
       string,
-      { modelName: string; salePrice: string; serialNumbers: string[] }
+      {
+        modelName: string
+        salePrice: string
+        products: Array<{ id: string; serialNumber: string }>
+      }
     >
   )
 
@@ -61,26 +68,26 @@ export function ProductsInStockForMoreThanXDaysTable() {
             className="mr-4 flex items-start"
           >
             <div className="ml-4 flex-1 space-y-1">
-              <p className="text-md font-bold leading-none">
+              <p className="text-md leading-none font-bold">
                 {group.modelName}
               </p>
-              <div className="text-muted-foreground max-w-1/2 ml-4 flex flex-wrap text-xs">
-                {group.serialNumbers.map((sn) => (
-                  <span key={sn}>{sn}</span>
+              <div className="text-muted-foreground ml-4 flex max-w-1/2 flex-wrap text-xs">
+                {group.products.map((product) => (
+                  <span key={product.id}>{product.serialNumber}</span>
                 ))}
               </div>
             </div>
             <div className="ml-auto min-w-[90px] text-right">
               <p className="text-sm font-medium">
                 R${' '}
-                {(Number(group.salePrice) * group.serialNumbers.length)
+                {(Number(group.salePrice) * group.products.length)
                   .toFixed(2)
                   .replace('.', ',')}
               </p>
               <p>
-                {group.serialNumbers.length > 1 && (
+                {group.products.length > 1 && (
                   <span className="text-muted-foreground ml-2 text-xs">
-                    {group.serialNumbers.length} x R${' '}
+                    {group.products.length} x R${' '}
                     {Number(group.salePrice).toFixed(2).replace('.', ',')}
                   </span>
                 )}

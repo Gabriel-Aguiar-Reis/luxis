@@ -42,6 +42,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { useTranslations } from 'next-intl'
 
 export function ReturnCreateDialog({
   isOpen,
@@ -52,6 +53,7 @@ export function ReturnCreateDialog({
   onClose: () => void
   onCreate: (dto: CreateReturnDto) => void
 }) {
+  const t = useTranslations('ReturnCreateDialog')
   const { handleSubmit, reset, setValue, watch } = useForm<CreateReturnDto>({
     defaultValues: {
       resellerId: '',
@@ -130,17 +132,15 @@ export function ReturnCreateDialog({
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Nova Devolução</DialogTitle>
-            <DialogDescription>
-              Preencha os dados para criar uma nova devolução.
-            </DialogDescription>
+            <DialogTitle>{t('title')}</DialogTitle>
+            <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Revendedor */}
               <div className="space-y-2">
-                <Label>Revendedor</Label>
+                <Label>{t('reseller')}</Label>
                 <Popover open={openFrom} onOpenChange={setOpenFrom}>
                   <PopoverTrigger asChild>
                     <Button
@@ -151,21 +151,19 @@ export function ReturnCreateDialog({
                     >
                       {resellerId
                         ? selectedInventory?.resellerName
-                        : 'Selecionar revendedor'}
+                        : t('selectReseller')}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0">
                     <Command shouldFilter={false}>
                       <CommandInput
-                        placeholder="Buscar revendedor..."
+                        placeholder={t('searchReseller')}
                         value={searchFromValue}
                         onValueChange={setSearchFromValue}
                       />
                       <CommandList>
-                        <CommandEmpty>
-                          Nenhum revendedor encontrado.
-                        </CommandEmpty>
+                        <CommandEmpty>{t('noResellersFound')}</CommandEmpty>
                         <CommandGroup>
                           {resellers
                             .filter((reseller) => {
@@ -205,7 +203,7 @@ export function ReturnCreateDialog({
               </div>
               {/* Produtos */}
               <div className="space-y-2 sm:col-span-2">
-                <Label>Produtos</Label>
+                <Label>{t('products')}</Label>
                 <Popover open={openProduct} onOpenChange={setOpenProduct}>
                   <PopoverTrigger asChild>
                     <Button
@@ -220,20 +218,20 @@ export function ReturnCreateDialog({
                       }
                     >
                       {items && items.length > 0
-                        ? `${items.length} produto(s) selecionado(s)`
-                        : 'Selecionar produtos'}
+                        ? t('selectedProductsCount', { count: items.length })
+                        : t('selectProducts')}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0">
                     <Command shouldFilter={false}>
                       <CommandInput
-                        placeholder="Buscar produto..."
+                        placeholder={t('searchProduct')}
                         value={searchProductValue}
                         onValueChange={setSearchProductValue}
                       />
                       <CommandList>
-                        <CommandEmpty>Nenhum produto encontrado.</CommandEmpty>
+                        <CommandEmpty>{t('noProductsFound')}</CommandEmpty>
                         <CommandGroup>
                           {productsWithModel
                             .filter((product) => {
@@ -287,7 +285,7 @@ export function ReturnCreateDialog({
                         <TableHeader>
                           <TableRow>
                             <TableHead className="min-w-[200px]">
-                              Selecionados:
+                              {t('selectedProductsTitle')}
                             </TableHead>
                           </TableRow>
                         </TableHeader>
@@ -313,10 +311,10 @@ export function ReturnCreateDialog({
               onClick={handleClose}
               className="w-full sm:w-auto"
             >
-              Cancelar
+              {t('cancel')}
             </Button>
             <Button type="submit" className="w-full sm:w-auto">
-              Criar Devolução
+              {t('createReturn')}
             </Button>
           </DialogFooter>
         </form>

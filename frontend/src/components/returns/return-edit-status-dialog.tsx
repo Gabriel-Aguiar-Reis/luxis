@@ -7,7 +7,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Return, ReturnStatus, UpdateReturnStatusDto } from '@/lib/api-types'
+import { ReturnStatus, UpdateReturnStatusDto } from '@/lib/api-types'
 import {
   Select,
   SelectContent,
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select'
 import { SelectValue } from '@radix-ui/react-select'
 import { GetOneReturnResponse } from '@/hooks/use-returns'
+import { useTranslations } from 'next-intl'
 
 interface ReturnEditStatusDialogProps {
   isOpen: boolean
@@ -25,40 +26,40 @@ interface ReturnEditStatusDialogProps {
   ret: GetOneReturnResponse | null
 }
 
-const statusOptions: {
-  value: ReturnStatus
-  label: string
-  className: string
-}[] = [
-  {
-    value: 'CANCELLED',
-    label: 'Cancelado',
-    className: 'text-[var(--badge-text-6)]'
-  },
-  {
-    value: 'PENDING',
-    label: 'Pendente',
-    className: 'text-[var(--badge-text-5)]'
-  },
-  {
-    value: 'APPROVED',
-    label: 'Aprovado',
-    className: 'text-[var(--badge-text-3)]'
-  },
-  {
-    value: 'RETURNED',
-    label: 'Devolvido',
-    className: 'text-[var(--badge-text-4)]'
-  }
-]
-
 export function ReturnEditStatusDialog({
   isOpen,
   onClose,
   onSave,
   ret
 }: ReturnEditStatusDialogProps) {
+  const t = useTranslations('ReturnEditStatusDialog')
   const [status, setStatus] = useState<ReturnStatus | ''>(ret?.status || '')
+  const statusOptions: {
+    value: ReturnStatus
+    label: string
+    className: string
+  }[] = [
+    {
+      value: 'CANCELLED',
+      label: t('statuses.CANCELLED'),
+      className: 'text-[var(--badge-text-6)]'
+    },
+    {
+      value: 'PENDING',
+      label: t('statuses.PENDING'),
+      className: 'text-[var(--badge-text-5)]'
+    },
+    {
+      value: 'APPROVED',
+      label: t('statuses.APPROVED'),
+      className: 'text-[var(--badge-text-3)]'
+    },
+    {
+      value: 'RETURNED',
+      label: t('statuses.RETURNED'),
+      className: 'text-[var(--badge-text-4)]'
+    }
+  ]
 
   // Atualiza status ao abrir dialog para o valor atual
   React.useEffect(() => {
@@ -71,7 +72,7 @@ export function ReturnEditStatusDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar status da transferência</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <Select
@@ -79,7 +80,7 @@ export function ReturnEditStatusDialog({
             onValueChange={(v) => setStatus(v as ReturnStatus)}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione o status" />
+              <SelectValue placeholder={t('selectStatus')} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -98,7 +99,7 @@ export function ReturnEditStatusDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button
             onClick={() => {
@@ -107,7 +108,7 @@ export function ReturnEditStatusDialog({
             }}
             disabled={!status || status === ret.status}
           >
-            Salvar
+            {t('save')}
           </Button>
         </DialogFooter>
       </DialogContent>

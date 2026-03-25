@@ -18,8 +18,30 @@ type JwtPayload = {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(configService: AppConfigService) {
+    const cookieName = configService.getAuthCookieName()
+
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+        (request) => {
+          const cookieHeader = request?.headers?.cookie
+
+          if (!cookieHeader || typeof cookieHeader !== 'string') {
+            return null
+          }
+
+          const cookies = cookieHeader.split(';').map((cookie) => cookie.trim())
+          const tokenCookie = cookies.find((cookie) =>
+            cookie.startsWith(`${cookieName}=`)
+          )
+
+          if (!tokenCookie) {
+            return null
+          }
+
+          return decodeURIComponent(tokenCookie.split('=').slice(1).join('='))
+        }
+      ]),
       secretOrKey: configService.getJwtSecret()
     })
   }

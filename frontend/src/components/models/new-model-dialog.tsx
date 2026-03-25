@@ -36,6 +36,7 @@ import {
 import { NewCategoryDialog } from '@/components/categories/new-category-dialog'
 
 import { v4 as uuidv4 } from 'uuid'
+import { useTranslations } from 'next-intl'
 
 export type NewModelDialogProps = {
   open: boolean
@@ -50,6 +51,7 @@ export function NewModelDialog({
   categories,
   onAdd
 }: NewModelDialogProps) {
+  const t = useTranslations('NewModelDialog')
   const queryClient = useQueryClient()
 
   const [modelName, setModelName] = useState('')
@@ -71,10 +73,11 @@ export function NewModelDialog({
   const { mutateAsync: createCategory } = useCreateCategory(queryClient)
 
   async function handleCreateCategory(data: CreateCategoryDto) {
-    const newCategory = await createCategory(data)
+    const response = await createCategory(data)
+    const newCategory = (response as any)?.data as Category
     return {
       ...newCategory,
-      status: (newCategory as Category).status || 'ACTIVE'
+      status: newCategory?.status || 'ACTIVE'
     } as Category
   }
 
@@ -86,14 +89,14 @@ export function NewModelDialog({
         const url = await upload(file)
         setPhotoUrl(url)
       } catch (err) {
-        setError('Erro ao fazer upload da imagem')
+        setError(t('uploadImageError'))
       }
     }
   }
 
   function handleSave() {
     if (!modelName || !categoryId || !suggestedPrice) {
-      setError('Preencha todos os campos obrigatórios')
+      setError(t('requiredFieldsError'))
       return
     }
     const dto = {
@@ -124,18 +127,18 @@ export function NewModelDialog({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Novo Modelo</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div>
-            <Label>Nome do modelo *</Label>
+            <Label>{t('modelName')}</Label>
             <Input
               value={modelName}
               onChange={(e) => setModelName(e.target.value)}
             />
           </div>
           <div className="space-y-2">
-            <Label>Categoria *</Label>
+            <Label>{t('category')}</Label>
             <Popover open={openCategory} onOpenChange={setOpenCategory}>
               <PopoverTrigger asChild>
                 <Button
@@ -146,19 +149,19 @@ export function NewModelDialog({
                 >
                   {selectedCategory
                     ? selectedCategory.name.value
-                    : 'Selecionar categoria'}
+                    : t('selectCategory')}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-full p-0">
                 <Command shouldFilter={false}>
                   <CommandInput
-                    placeholder="Buscar categoria..."
+                    placeholder={t('searchCategory')}
                     value={searchCategory}
                     onValueChange={setSearchCategory}
                   />
                   <CommandList>
-                    <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
+                    <CommandEmpty>{t('noCategoriesFound')}</CommandEmpty>
                     <CommandGroup>
                       {categories &&
                         categories
@@ -188,7 +191,7 @@ export function NewModelDialog({
                         onSelect={() => setShowNewCategoryDialog(true)}
                       >
                         <Plus className="mr-2 h-4 w-4" />
-                        Criar nova categoria
+                        {t('createNewCategory')}
                       </CommandItem>
                     </CommandGroup>
                   </CommandList>
@@ -208,7 +211,7 @@ export function NewModelDialog({
             />
           </div>
           <div>
-            <Label>Preço sugerido *</Label>
+            <Label>{t('suggestedPrice')}</Label>
             <Input
               type="number"
               inputMode="decimal"
@@ -216,13 +219,13 @@ export function NewModelDialog({
               onChange={(e) => {
                 setSuggestedPrice(e.target.value)
               }}
-              placeholder="123,45"
+              placeholder={t('suggestedPricePlaceholder')}
               maxLength={10}
               step={0.01}
             />
           </div>
           <div>
-            <Label>Imagem (opcional)</Label>
+            <Label>{t('optionalImage')}</Label>
             <Input
               type="file"
               accept="image/*"
@@ -232,7 +235,7 @@ export function NewModelDialog({
             {photoUrl && (
               <img
                 src={photoUrl}
-                alt="preview"
+                alt={t('imagePreviewAlt')}
                 className="mt-2 h-16 w-16 rounded object-cover"
               />
             )}
@@ -241,10 +244,10 @@ export function NewModelDialog({
         </div>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button type="button" onClick={handleSave} disabled={uploadingImage}>
-            Adicionar
+            {t('add')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/alert-dialog'
 import { GetOneReturnResponse } from '@/hooks/use-returns'
 import { format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
+import { useLocale, useTranslations } from 'next-intl'
 
 export function ReturnDeleteDialog({
   isOpen,
@@ -22,6 +23,8 @@ export function ReturnDeleteDialog({
   onDelete: (id: string) => void
   ret: GetOneReturnResponse | null
 }) {
+  const locale = useLocale()
+  const t = useTranslations('ReturnsDeleteDialog')
   const handleDelete = () => {
     if (ret) {
       onDelete(ret.id)
@@ -33,9 +36,11 @@ export function ReturnDeleteDialog({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
+      return format(parseISO(dateString), 'P', {
+        locale: locale === 'en' ? enUS : ptBR
+      })
     } catch (error) {
-      return 'Data inválida'
+      return t('invalidDate')
     }
   }
 
@@ -43,22 +48,24 @@ export function ReturnDeleteDialog({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Excluir Devolução</AlertDialogTitle>
+          <AlertDialogTitle>{t('title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            A devolução será excluída permanentemente.
+            {t('warning')}
             <br />
             <br />
-            Tem certeza que deseja excluir a devolução do revendedor{' '}
-            <strong>{ret.resellerName}</strong> de{' '}
-            <strong>{formatDate(ret.createdAt)}</strong>?
+            {t.rich('question', {
+              resellerName: ret.resellerName,
+              createdAt: formatDate(ret.createdAt),
+              strong: (chunks) => <strong>{chunks}</strong>
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button variant="secondary" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button variant="destructive" onClick={handleDelete}>
-            Excluir
+            {t('delete')}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

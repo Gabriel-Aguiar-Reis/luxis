@@ -1,6 +1,7 @@
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 // https://res.cloudinary.com/debjroorl/image/upload/v1754365472/product-models/lh4yefatenbb9rfr6lq5.jpg
 export type CloudinarySignature = {
   timestamp: number
@@ -69,6 +70,7 @@ export async function uploadImageToCloudinary(
 }
 
 export function useCloudinaryUpload() {
+  const t = useTranslations('HookFeedback.cloudinary')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [url, setUrl] = useState<string | null>(null)
@@ -83,7 +85,7 @@ export function useCloudinaryUpload() {
       setUrl(image.secure_url)
       return image.secure_url
     } catch (err: any) {
-      setError(err.message || 'Erro ao fazer upload')
+      setError(t('uploadError'))
       throw err
     } finally {
       setLoading(false)

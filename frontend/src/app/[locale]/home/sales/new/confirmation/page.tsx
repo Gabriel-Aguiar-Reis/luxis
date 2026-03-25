@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,6 +22,9 @@ import { useRouter } from '@/lib/i18n/navigation'
 import { PhoneNumberUtil } from 'google-libphonenumber'
 
 export default function SaleConfirmationPage() {
+  const t = useTranslations('SaleConfirmation')
+  const tCommon = useTranslations('Common')
+  const tSales = useTranslations('Admin-Sales')
   const router = useRouter()
   const searchParams = useSearchParams()
   const [saleId, setSaleId] = useState<string | null>(null)
@@ -70,18 +74,18 @@ export default function SaleConfirmationPage() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink onClick={() => router.push('/home')}>
-                  Dashboard
+                  {tCommon('Dashboard')}
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink onClick={() => router.push('/home/sales')}>
-                  Vendas
+                  {tSales('title')}
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Confirmação</BreadcrumbPage>
+                <BreadcrumbPage>{t('breadcrumb')}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -102,7 +106,7 @@ export default function SaleConfirmationPage() {
               className="min-w-[200px]"
             >
               <Plus className="mr-2 h-5 w-5" />
-              Criar Nova Venda
+              {t('createNewSale')}
             </Button>
 
             <Button
@@ -112,7 +116,7 @@ export default function SaleConfirmationPage() {
               className="min-w-[200px]"
             >
               <Eye className="mr-2 h-5 w-5" />
-              Preview do Comprovante
+              {t('previewReceipt')}
             </Button>
 
             {sale ? (
@@ -125,7 +129,7 @@ export default function SaleConfirmationPage() {
                 disabled
               >
                 <Receipt className="mr-2 h-5 w-5" />
-                Emitir Resumo de Venda
+                {t('issueSaleSummary')}
               </Button>
             )}
 
@@ -136,7 +140,7 @@ export default function SaleConfirmationPage() {
               className="min-w-[200px]"
             >
               <ArrowLeft className="mr-2 h-5 w-5" />
-              Voltar
+              {t('back')}
             </Button>
           </div>
         </div>

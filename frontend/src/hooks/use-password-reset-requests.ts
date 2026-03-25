@@ -4,12 +4,13 @@ import { toast } from 'sonner'
 import { apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
 import { PasswordResetRequest } from '@/lib/api-types'
+import { queryKeys } from '@/lib/query-keys'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 
 export function useGetPasswordResetRequests() {
   return useQuery({
-    queryKey: ['password-reset-requests'],
+    queryKey: queryKeys.passwordResetRequests.all(),
     queryFn: async () => {
       return await apiFetch<PasswordResetRequest[]>(
         apiPaths.auth.passwordResetRequests.base,
@@ -21,6 +22,7 @@ export function useGetPasswordResetRequests() {
 }
 
 export function useApprovePasswordResetRequest() {
+  const t = useTranslations('HookFeedback.passwordReset')
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -33,16 +35,19 @@ export function useApprovePasswordResetRequest() {
       )
     },
     onSuccess: () => {
-      toast.success('Solicitação aprovada com sucesso')
-      queryClient.invalidateQueries({ queryKey: ['password-reset-requests'] })
+      toast.success(t('approveSuccess'))
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.passwordResetRequests.all()
+      })
     },
     onError: () => {
-      toast.error('Falha ao aprovar solicitação')
+      toast.error(t('approveError'))
     }
   })
 }
 
 export function useRejectPasswordResetRequest() {
+  const t = useTranslations('HookFeedback.passwordReset')
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -55,17 +60,20 @@ export function useRejectPasswordResetRequest() {
       )
     },
     onSuccess: () => {
-      toast.success('Solicitação rejeitada')
-      queryClient.invalidateQueries({ queryKey: ['password-reset-requests'] })
+      toast.success(t('rejectSuccess'))
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.passwordResetRequests.all()
+      })
     },
     onError: () => {
-      toast.error('Falha ao rejeitar solicitação')
+      toast.error(t('rejectError'))
     }
   })
 }
 
 export function usePasswordResetHelpers() {
   const locale = useLocale()
+  const t = useTranslations('HookFeedback.passwordReset')
 
   const getResetLink = (token: string) => {
     return `${window.location.origin}/${locale}/reset-password/${token}`
@@ -75,9 +83,9 @@ export function usePasswordResetHelpers() {
     try {
       const link = getResetLink(token)
       await navigator.clipboard.writeText(link)
-      toast.success('Link copiado para a área de transferência')
+      toast.success(t('copyLinkSuccess'))
     } catch (error) {
-      toast.error('Falha ao copiar link')
+      toast.error(t('copyLinkError'))
     }
   }
   return { getResetLink, copyResetLink }

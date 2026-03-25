@@ -14,8 +14,10 @@ import { useGetCategories } from '@/hooks/use-categories'
 import { useGetModels } from '@/hooks/use-product-models'
 import { useQueryClient } from '@tanstack/react-query'
 import { Ban } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export function ProductsPage() {
+  const t = useTranslations('ProductsPage')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
@@ -42,11 +44,9 @@ export function ProductsPage() {
         <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
           <Ban className="text-primary h-6 w-6" />
         </div>
-        <h3 className="mt-4 text-lg font-semibold">
-          Nenhum produto encontrado!
-        </h3>
+        <h3 className="mt-4 text-lg font-semibold">{t('emptyTitle')}</h3>
         <p className="text-muted-foreground mt-2 text-sm">
-          Não há produtos registrados no sistema.
+          {t('emptyDescription')}
         </p>
       </div>
     )

@@ -1,50 +1,46 @@
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import { apiFetch } from '@/lib/api-client'
-import { apiPaths } from '@/lib/api-paths'
-import { GetAllCategories, GetOneCategory, PostCategory } from '@/lib/api-types'
+import {
+  useGetAllCategories as useGetAllCategoriesRaw,
+  useCreateCategory as useCreateCategoryRaw
+} from '@/api/categories/categories'
+import type {
+  Category,
+  CreateCategoryDto as OrvalCreateCategoryDto
+} from '@/api/model'
+import { queryKeys } from '@/lib/query-keys'
+import { QueryClient } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-export type GetAllCategoriesResponse =
-  GetAllCategories['responses']['200']['content']['application/json']
-
-export type GetOneCategoryResponse =
-  GetOneCategory['responses']['200']['content']['application/json']
-
-export type CreateCategoryDto =
-  PostCategory['requestBody']['content']['application/json']
-export type CreateCategoryResponse =
-  PostCategory['responses']['201']['content']['application/json']
+export type GetAllCategoriesResponse = Category[]
+export type GetOneCategoryResponse = Category
+export type CreateCategoryDto = OrvalCreateCategoryDto
+export type CreateCategoryResponse = Category
 
 export function useGetCategories() {
-  return useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      return await apiFetch<GetAllCategoriesResponse>(
-        apiPaths.categories.base,
-        {},
-        true
-      )
-    },
-    staleTime: 5 * 60 * 1000
+  const result = useGetAllCategoriesRaw({
+    query: { queryKey: queryKeys.categories.all(), staleTime: 5 * 60 * 1000 }
   })
+  return {
+    ...result,
+    data: (result.data as any)?.data as Category[] | undefined
+  }
 }
 
 export function useCreateCategory(queryClient: QueryClient) {
-  return useMutation({
-    mutationFn: async (data: CreateCategoryDto) => {
-      const res = await apiFetch<CreateCategoryResponse>(
-        apiPaths.categories.base,
-        {
-          body: JSON.stringify(data)
-        },
-        true,
-        'POST'
-      )
-      return res
-    },
-    onSuccess: () => {
-      toast.success('Categoria criada com sucesso')
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
+  const t = useTranslations('HookFeedback.categories')
+
+  const mutation = useCreateCategoryRaw({
+    mutation: {
+      onSuccess: () => {
+        toast.success(t('createSuccess'))
+        queryClient.invalidateQueries({ queryKey: queryKeys.categories.all() })
+      }
     }
   })
+
+  return {
+    ...mutation,
+    mutate: (data: CreateCategoryDto) => mutation.mutate({ data }),
+    mutateAsync: (data: CreateCategoryDto) => mutation.mutateAsync({ data })
+  }
 }

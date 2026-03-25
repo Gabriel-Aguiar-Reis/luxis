@@ -44,7 +44,7 @@ Sistema de gestão de estoque desenvolvido com NestJS, seguindo os princípios d
 
 - Node.js (versão LTS recomendada)
 - PostgreSQL
-- Yarn ou NPM
+- NPM
 - Conta no Cloudinary (para upload de imagens)
 - Conta no MailerSend (para envio de emails)
 
@@ -61,7 +61,7 @@ cd luxis
 
 ```bash
 cd backend
-yarn install
+npm install
 ```
 
 ### 3. Configure as variáveis de ambiente
@@ -75,13 +75,13 @@ Edite o arquivo `.env` com suas configurações.
 ### 4. Execute as migrações
 
 ```bash
-yarn migration:run
+npm run migration:run
 ```
 
 ### 5. Crie o superusuário
 
 ```bash
-yarn seed:superuser
+npm run seed:superuser
 ```
 
 ## 🚀 Executando o projeto
@@ -89,14 +89,14 @@ yarn seed:superuser
 ### Desenvolvimento
 
 ```bash
-yarn start:dev
+npm run start:dev
 ```
 
 ### Produção
 
 ```bash
-yarn build
-yarn start:prod
+npm run build
+npm run start:prod
 ```
 
 ## 🧪 Testes
@@ -104,38 +104,38 @@ yarn start:prod
 ### Testes Unitários
 
 ```bash
-yarn test:unit
+npm run test:unit
 ```
 
 ### Testes de Integração
 
 ```bash
-yarn test:integration
+npm run test:integration
 ```
 
 ### Testes E2E
 
 ```bash
-yarn test:e2e
+npm run test:e2e
 ```
 
 ### Cobertura de Testes
 
 ```bash
-yarn test:cov
+npm run test:cov
 ```
 
 ## 📦 Scripts Disponíveis
 
-- `yarn build`: Compila o projeto
-- `yarn start:dev`: Inicia o servidor em modo desenvolvimento
-- `yarn start:debug`: Inicia o servidor em modo debug
-- `yarn start:prod`: Inicia o servidor em modo produção
-- `yarn test`: Executa todos os testes
-- `yarn migration:generate`: Gera uma nova migração
-- `yarn migration:run`: Executa as migrações pendentes
-- `yarn migration:revert`: Reverte a última migração
-- `yarn seed:superuser`: Cria um superusuário
+- `npm run build`: Compila o projeto
+- `npm run start:dev`: Inicia o servidor em modo desenvolvimento
+- `npm run start:debug`: Inicia o servidor em modo debug
+- `npm run start:prod`: Inicia o servidor em modo produção
+- `npm run test`: Executa todos os testes
+- `npm run migration:generate`: Gera uma nova migração
+- `npm run migration:run`: Executa as migrações pendentes
+- `npm run migration:revert`: Reverte a última migração
+- `npm run seed:superuser`: Cria um superusuário
 
 ## 📚 Documentação da API
 

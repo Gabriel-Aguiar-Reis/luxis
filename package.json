@@ -6,10 +6,13 @@
   ],
   "private": true,
   "scripts": {
-    "start": "concurrently -k -n BACKEND,FRONTEND -c cyan.bgGray,green.bgGray --prefix \"[{name}:{pid}]\" \"yarn --cwd backend start:dev\" \"yarn --cwd frontend dev\""
+    "start": "docker compose up -d postgres && concurrently -k -n BACKEND,FRONTEND -c cyan.bgGray,green.bgGray --prefix \"[{name}:{pid}]\" \"npm --prefix backend run start:dev\" \"npm --prefix frontend run dev\"",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d postgres",
+    "db:logs": "docker compose logs -f postgres"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
-  },
-  "packageManager": "yarn@4.10.3"
+  }
 }

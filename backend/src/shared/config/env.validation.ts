@@ -1,12 +1,21 @@
 import { z } from 'zod'
 
 export const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']),
+  NODE_ENV: z.enum(['development', 'test', 'production', 'spec']),
   DATABASE_URL: z.string().url().optional(),
   PORT: z.string().transform(Number).default('3000'),
   JWT_SECRET: z.string().min(1),
   JWT_EXPIRATION_TIME: z.string().optional(),
+  AUTH_COOKIE_NAME: z.string().optional(),
   LOG_RULES: z.string().optional(),
+  LOG_LEVEL: z
+    .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
+    .optional(),
+  CORS_ORIGINS: z.string().optional(),
+  THROTTLE_TTL: z.string().transform(Number).optional(),
+  THROTTLE_LIMIT: z.string().transform(Number).optional(),
+  CACHE_TTL: z.string().transform(Number).optional(),
+  CACHE_MAX: z.string().transform(Number).optional(),
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),

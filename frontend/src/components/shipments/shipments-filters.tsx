@@ -15,8 +15,9 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import { ptBR } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
 import { ShipmentStatus } from '@/lib/api-types'
+import { useLocale, useTranslations } from 'next-intl'
 
 export type ShipmentFiltersType = {
   status?: ShipmentStatus
@@ -29,18 +30,20 @@ type ShipmentFiltersProps = {
   initialFilters?: ShipmentFiltersType
 }
 
-const statusOptions = [
-  { value: 'PENDING', label: 'Pendente' },
-  { value: 'APPROVED', label: 'Aprovado' },
-  { value: 'DELIVERED', label: 'Entregue' },
-  { value: 'CANCELLED', label: 'Cancelado' }
-]
-
 export function ShipmentFilters({
   onFilterChange,
   initialFilters = {}
 }: ShipmentFiltersProps) {
+  const locale = useLocale()
+  const t = useTranslations('ShipmentsFilters')
   const [filters, setFilters] = useState<ShipmentFiltersType>(initialFilters)
+
+  const statusOptions = [
+    { value: 'PENDING', label: t('statuses.PENDING') },
+    { value: 'APPROVED', label: t('statuses.APPROVED') },
+    { value: 'DELIVERED', label: t('statuses.DELIVERED') },
+    { value: 'CANCELLED', label: t('statuses.CANCELLED') }
+  ]
 
   const updateFilter = (key: keyof ShipmentFiltersType, value: any) => {
     const newFilters = { ...filters, [key]: value }
@@ -59,7 +62,7 @@ export function ShipmentFilters({
   return (
     <div className="rounded-md border p-3 sm:p-4">
       <div className="mb-3 flex items-center justify-between sm:mb-4">
-        <h3 className="text-xs font-medium sm:text-sm">Filtros</h3>
+        <h3 className="text-xs font-medium sm:text-sm">{t('title')}</h3>
         <Button
           variant="ghost"
           size="sm"
@@ -68,28 +71,28 @@ export function ShipmentFilters({
           className="h-8 text-xs sm:h-9 sm:text-sm"
         >
           <X className="mr-1 h-3 w-3 sm:mr-2" />
-          <span className="hidden sm:inline">Limpar filtros</span>
-          <span className="sm:hidden">Limpar</span>
+          <span className="hidden sm:inline">{t('clearFilters')}</span>
+          <span className="sm:hidden">{t('clear')}</span>
         </Button>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         <div className="space-y-2">
-          <label className="block text-xs font-medium">Revendedor</label>
+          <label className="block text-xs font-medium">{t('reseller')}</label>
           <Input
-            placeholder="Nome do revendedor"
+            placeholder={t('resellerPlaceholder')}
             value={filters.reseller || ''}
             onChange={(e) => updateFilter('reseller', e.target.value)}
             className="h-9 text-xs sm:h-10 sm:text-sm"
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-medium">Status</label>
+          <label className="block text-xs font-medium">{t('status')}</label>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
           >
             <SelectTrigger className="h-9 w-full text-xs sm:h-10 sm:text-sm">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t('status')} />
             </SelectTrigger>
             <SelectContent>
               {statusOptions.map((opt) => (
@@ -105,7 +108,9 @@ export function ShipmentFilters({
           </Select>
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-medium">Data da devolução</label>
+          <label className="block text-xs font-medium">
+            {t('shipmentDate')}
+          </label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -114,8 +119,8 @@ export function ShipmentFilters({
               >
                 <span className="truncate">
                   {filters.createdAt
-                    ? new Date(filters.createdAt).toLocaleDateString()
-                    : 'Selecionar data'}
+                    ? new Date(filters.createdAt).toLocaleDateString(locale)
+                    : t('selectDate')}
                 </span>
                 <ChevronDownIcon className="ml-2 h-3 w-3 shrink-0 sm:h-4 sm:w-4" />
               </Button>
@@ -126,7 +131,7 @@ export function ShipmentFilters({
             >
               <Calendar
                 mode="single"
-                locale={ptBR}
+                locale={locale === 'en' ? enUS : ptBR}
                 selected={
                   filters.createdAt ? new Date(filters.createdAt) : undefined
                 }

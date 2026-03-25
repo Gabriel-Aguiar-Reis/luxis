@@ -14,7 +14,9 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { ConfigService } from '@nestjs/config'
 import * as dotenv from 'dotenv'
 import { BadRequestException } from '@nestjs/common'
+import * as sqlite3 from 'sqlite3'
 import { Init1749406833692 } from '@/shared/infra/database/migrations/1749406833692-Init'
+import { AddPerformanceIndexes1749500000000 } from '@/shared/infra/database/migrations/1749500000000-AddPerformanceIndexes'
 import { PasswordResetRequestTypeOrmEntity } from '@/shared/infra/persistence/typeorm/auth/password-reset-requests/password-reset-requests.typeorm.entity'
 dotenv.config({ path: '.env.development' })
 
@@ -33,7 +35,7 @@ const commonConfig = {
     ReturnTypeOrmEntity,
     PasswordResetRequestTypeOrmEntity
   ],
-  migrations: [Init1749406833692],
+  migrations: [Init1749406833692, AddPerformanceIndexes1749500000000],
   synchronize: false
 }
 
@@ -57,6 +59,7 @@ switch (appConfigService.getNodeEnv()) {
   case 'test':
     AppDataSource = new DataSource({
       type: 'sqlite',
+      driver: sqlite3,
       database: 'test.sqlite',
       ...commonConfig
     })

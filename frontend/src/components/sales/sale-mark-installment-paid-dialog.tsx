@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { GetOneSaleResponse, MarkInstallmentPaidDto } from '@/hooks/use-sales'
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 export function SaleMarkInstallmentPaidDialog({
   isOpen,
@@ -23,6 +24,7 @@ export function SaleMarkInstallmentPaidDialog({
   onSave: (id: string, dto: MarkInstallmentPaidDto) => void
   sale: GetOneSaleResponse | null
 }) {
+  const t = useTranslations('SaleDialogs')
   const [installmentNumber, setInstallmentNumber] = useState<number>(1)
 
   const handleSave = () => {
@@ -51,16 +53,22 @@ export function SaleMarkInstallmentPaidDialog({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirmar Pagamento de Parcelas</AlertDialogTitle>
+          <AlertDialogTitle>{t('markInstallmentTitle')}</AlertDialogTitle>
           <AlertDialogDescription className="space-y-4">
-            Parcelas pagas: <strong>{alreadyPaid}</strong> de{' '}
-            <strong>{totalInstallments}</strong>
+            {t.rich('installmentsPaidSummary', {
+              paid: alreadyPaid,
+              total: totalInstallments,
+              strong: (chunks) => <strong>{chunks}</strong>
+            })}
             <br />
-            Restantes: <strong>{remaining}</strong>
+            {t.rich('remainingSummary', {
+              remaining,
+              strong: (chunks) => <strong>{chunks}</strong>
+            })}
           </AlertDialogDescription>
 
           <div>
-            <Label className="mb-2">Quantas parcelas deseja pagar?</Label>
+            <Label className="mb-2">{t('howManyInstallments')}</Label>
             <Input
               type="number"
               value={installmentNumber}
@@ -69,17 +77,20 @@ export function SaleMarkInstallmentPaidDialog({
               onChange={(e) => setInstallmentNumber(Number(e.target.value))}
             />
             <p className="text-muted-foreground mt-2 text-xs">
-              Isso pagará {installmentNumber} parcela(s), totalizando{' '}
-              {alreadyPaid + installmentNumber} de {totalInstallments} pagas
+              {t('installmentProjection', {
+                count: installmentNumber,
+                totalPaid: alreadyPaid + installmentNumber,
+                total: totalInstallments
+              })}
             </p>
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button variant="secondary" onClick={onClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
           <Button variant="default" onClick={handleSave}>
-            Confirmar Pagamento
+            {t('confirmPayment')}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

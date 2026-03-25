@@ -116,6 +116,7 @@ export const apiPaths = {
   // Auth
   auth: {
     login: '/auth/login',
+    logout: '/auth/logout',
     forgotPassword: '/auth/forgot-password',
     resetPassword: '/auth/reset-password',
     changePassword: '/auth/change-password',

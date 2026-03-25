@@ -13,8 +13,10 @@ import {
 import { Ban } from 'lucide-react'
 import { ModelDeleteDialog } from '@/components/models/model-delete-dialog'
 import { useQueryClient } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 
 export function ModelsPage() {
+  const t = useTranslations('ModelsPage')
   const queryClient = useQueryClient()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -49,11 +51,9 @@ export function ModelsPage() {
         <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
           <Ban className="text-primary h-6 w-6" />
         </div>
-        <h3 className="mt-4 text-lg font-semibold">
-          Nenhum modelo encontrado!
-        </h3>
+        <h3 className="mt-4 text-lg font-semibold">{t('emptyTitle')}</h3>
         <p className="text-muted-foreground mt-2 text-sm">
-          Não há modelos registrados no sistema.
+          {t('emptyDescription')}
         </p>
       </div>
     )

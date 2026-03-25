@@ -27,10 +27,7 @@ export class ResellerKpiControllerGuard implements CanActivate {
       throw new ForbiddenException('Access denied')
     }
 
-    const ability: AppAbility = this.abilityFactory.createForUser({
-      id: user.id,
-      role: user.role
-    })
+    const ability: AppAbility = this.abilityFactory.createForUser(user)
 
     if (!ability.can(Actions.Create, 'reseller-kpi')) {
       throw new ForbiddenException(

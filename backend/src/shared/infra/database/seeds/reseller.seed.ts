@@ -8,12 +8,16 @@ import { UUID } from 'crypto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { Role } from '@/modules/user/domain/enums/user-role.enum'
 import { UserStatus } from '@/modules/user/domain/enums/user-status.enum'
+import { UserRepository } from '@/modules/user/domain/repositories/user.repository'
+import { Email } from '@/shared/common/value-object/email.vo'
 
 @Injectable()
 export class ResellerSeed {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
-    private readonly updateUserRoleUseCase: UpdateUserRoleUseCase
+    private readonly updateUserRoleUseCase: UpdateUserRoleUseCase,
+    @Inject('UserRepository')
+    private readonly userRepository: UserRepository
   ) {}
 
   async run(userPayload: UserPayload): Promise<UUID[]> {
@@ -49,7 +53,11 @@ export class ResellerSeed {
     }
     const resellerIds: UUID[] = []
     for (const d of [dto, dto2]) {
-      const user = await this.createUserUseCase.execute(d)
+      const existingUser = await this.userRepository.findByEmail(
+        new Email(d.email)
+      )
+      const user = existingUser ?? (await this.createUserUseCase.execute(d))
+
       await this.updateUserRoleUseCase.execute(
         user.id,
         { role: Role.RESELLER, status: UserStatus.ACTIVE },

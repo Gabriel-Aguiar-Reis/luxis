@@ -10,5 +10,5 @@ export class RequestPasswordResetDto {
   })
   @IsEmail()
   @IsNotEmpty()
-  email: string
+  email!: string
 }

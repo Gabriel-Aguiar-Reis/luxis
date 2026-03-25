@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { AdminDashboard } from '@/components/dashboard/admin-dashboard'
 import {
   Breadcrumb,
@@ -8,7 +9,9 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const t = await getTranslations('Common')
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -21,7 +24,7 @@ export default function AdminDashboardPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                <BreadcrumbPage>{t('Dashboard')}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
