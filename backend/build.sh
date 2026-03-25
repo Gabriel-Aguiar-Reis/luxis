@@ -9,3 +9,6 @@ npm run build
 
 # Roda as migrations do TypeORM
 npm run prod:migration:run
+
+# Cria ou atualiza o superusuário inicial
+npm run prod:seed:superuser

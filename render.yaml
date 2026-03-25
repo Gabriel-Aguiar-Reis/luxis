@@ -1,0 +1,82 @@
+databases:
+  - name: luxis-db
+    databaseName: luxis
+    user: luxis_user
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: luxis-backend
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Banco de dados (preenchido automaticamente pelo Render)
+      - key: DATABASE_URL
+        fromDatabase:
+          name: luxis-db
+          property: connectionString
+
+      # App
+      - key: PORT
+        value: 3000
+      - key: THROTTLE_TTL
+        value: 10000
+      - key: THROTTLE_LIMIT
+        value: 10
+      - key: CACHE_TTL
+        value: 60000
+      - key: CACHE_MAX
+        value: 100
+      - key: LOG_LEVEL
+        value: warn
+
+      # JWT — preencher manualmente no dashboard do Render
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRATION_TIME
+        value: 1d
+      - key: AUTH_COOKIE_NAME
+        value: luxis_auth_token
+
+      # CORS — preencher com a URL do frontend no Vercel (ex: https://luxis.vercel.app)
+      - key: CORS_ORIGINS
+        sync: false
+
+      # Cloudinary — preencher manualmente no dashboard do Render
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+      # Superusuário inicial — preencher manualmente no dashboard do Render
+      - key: SUPERUSER_NAME
+        sync: false
+      - key: SUPERUSER_SURNAME
+        sync: false
+      - key: SUPERUSER_EMAIL
+        sync: false
+      - key: SUPERUSER_PHONE
+        sync: false
+      - key: SUPERUSER_PASSWORD
+        sync: false
+
+      # Email (MailerSend) — preencher manualmente no dashboard do Render
+      - key: MAILERSEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      # URL do frontend no Vercel (ex: https://luxis.vercel.app/reset-password)
+      - key: EMAIL_RESET_PASSWORD_URL
+        sync: false
