@@ -50,7 +50,7 @@ export class Product {
   @ApiProperty({
     description: 'The status of the product',
     enum: ProductStatus,
-    example: ProductStatus.IN_STOCK,
+    example: ProductStatus.IN_STOCK
   })
   public status: ProductStatus
 

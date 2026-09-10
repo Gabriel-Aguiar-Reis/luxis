@@ -87,7 +87,7 @@ export function SalesTable({
   const [filters, setFilters] = useState<SalesFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [selectedSale, setSelectedSale] = useState<GetOneSaleResponse | null>(
+  const [_selectedSale, _setSelectedSale] = useState<GetOneSaleResponse | null>(
     null
   )
   const [downloadingSaleId, setDownloadingSaleId] = useState<string | null>(
@@ -204,7 +204,7 @@ export function SalesTable({
   const formatDate = (dateString: string) => {
     try {
       return format(parseISO(dateString), 'P', { locale: dateLocale })
-    } catch (error) {
+    } catch (_error) {
       return t('invalidDate')
     }
   }

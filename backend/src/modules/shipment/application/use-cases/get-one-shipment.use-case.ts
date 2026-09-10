@@ -27,7 +27,10 @@ export class GetOneShipmentUseCase {
   ) {}
 
   async execute(id: UUID, user: UserPayload): Promise<GetShipmentDto> {
-    function getFullName(user?: { name?: { getValue?: () => string }, surname?: { getValue?: () => string } }) {
+    function getFullName(user?: {
+      name?: { getValue?: () => string }
+      surname?: { getValue?: () => string }
+    }) {
       if (!user) return ''
       const name = user.name?.getValue?.() || ''
       const surname = user.surname?.getValue?.() || ''
@@ -40,16 +43,20 @@ export class GetOneShipmentUseCase {
     }
 
     if (user.role === Role.RESELLER && shipment.resellerId !== user.id) {
-      throw new ForbiddenException('You are not allowed to access this shipment')
+      throw new ForbiddenException(
+        'You are not allowed to access this shipment'
+      )
     }
 
-    const products = await this.productRepository.findManyByIds(shipment.productIds)
+    const products = await this.productRepository.findManyByIds(
+      shipment.productIds
+    )
     const allModelIds = products.map((p) => p.modelId)
     const models = await this.productModelRepository.findManyByIds(allModelIds)
     const modelMap = new Map(models.map((m) => [m.id, m]))
 
     const reseller = await this.userRepository.findById(shipment.resellerId)
-  const resellerName = getFullName(reseller ?? undefined)
+    const resellerName = getFullName(reseller ?? undefined)
 
     return {
       id: shipment.id,
@@ -59,7 +66,7 @@ export class GetOneShipmentUseCase {
       status: shipment.status,
       products: shipment.productIds
         .map((id) => products.find((p) => p.id === id))
-        .filter((p): p is typeof products[number] => !!p)
+        .filter((p): p is (typeof products)[number] => !!p)
         .map((p) => {
           const model = modelMap.get(p.modelId)
           if (!model) return undefined

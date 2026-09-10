@@ -13,4 +13,3 @@ next-env.d.ts
 .DS_Store
 .github
 .yarn
-package-lock.json

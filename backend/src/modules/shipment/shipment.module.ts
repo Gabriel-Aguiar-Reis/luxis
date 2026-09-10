@@ -49,7 +49,10 @@ import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.
     UpdateStatusShipmentUseCase,
     DeleteShipmentUseCase,
 
-    { provide: 'ProductModelRepository', useClass: ProductModelTypeOrmRepository },
+    {
+      provide: 'ProductModelRepository',
+      useClass: ProductModelTypeOrmRepository
+    },
     { provide: 'UserRepository', useClass: UserTypeOrmRepository },
     { provide: 'InventoryService', useClass: InventoryService },
     { provide: 'InventoryRepository', useClass: InventoryTypeOrmRepository },

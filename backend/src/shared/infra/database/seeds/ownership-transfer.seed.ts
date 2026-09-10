@@ -23,7 +23,7 @@ export class OwnershipTransferSeed {
       productId,
       fromResellerId,
       toResellerId,
-      transferDate: new Date('2024-06-01'),
+      transferDate: new Date('2024-06-01')
     }
     const transfer = await this.createOwnershipTransferUseCase.execute(
       dto,

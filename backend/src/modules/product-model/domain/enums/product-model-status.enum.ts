@@ -1,5 +1,5 @@
 export enum ProductModelStatus {
   USED = 'USED',
   ACTIVE = 'ACTIVE',
-  ARCHIVED = 'ARCHIVED',
+  ARCHIVED = 'ARCHIVED'
 }

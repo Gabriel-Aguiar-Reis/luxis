@@ -28,14 +28,13 @@ import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature(
-      [
-        ReturnTypeOrmEntity,
-        InventoryTypeOrmEntity,
-        UserTypeOrmEntity,
-        ProductTypeOrmEntity,
-        ProductModelTypeOrmEntity
-      ]),
+    TypeOrmModule.forFeature([
+      ReturnTypeOrmEntity,
+      InventoryTypeOrmEntity,
+      UserTypeOrmEntity,
+      ProductTypeOrmEntity,
+      ProductModelTypeOrmEntity
+    ]),
     forwardRef(() => AppModule)
   ],
   controllers: [ReturnController],
@@ -57,7 +56,10 @@ import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product
     { provide: 'CaslAbilityFactory', useClass: CaslAbilityFactory },
     { provide: 'UserRepository', useClass: UserTypeOrmRepository },
     { provide: 'ProductRepository', useClass: ProductTypeOrmRepository },
-    { provide: 'ProductModelRepository', useClass: ProductModelTypeOrmRepository }
+    {
+      provide: 'ProductModelRepository',
+      useClass: ProductModelTypeOrmRepository
+    }
   ]
 })
 export class ReturnModule {}

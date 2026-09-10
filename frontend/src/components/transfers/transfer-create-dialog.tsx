@@ -27,7 +27,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { ChevronsUpDown, Square, SquareCheck } from 'lucide-react'
-import { GetInventoryByIdProduct, User } from '@/lib/api-types'
+import { GetInventoryByIdProduct } from '@/lib/api-types'
 import { useState } from 'react'
 
 export function TransferCreateDialog({

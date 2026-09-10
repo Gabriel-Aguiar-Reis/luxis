@@ -27,8 +27,10 @@ export class SupplierTypeOrmRepository implements SupplierRepository {
   }
 
   async update(id: UUID, supplier: Supplier): Promise<Supplier> {
-    const entity = await this.repository
-      .findOne({ where: { id }, order: { name: 'ASC' } })
+    const entity = await this.repository.findOne({
+      where: { id },
+      order: { name: 'ASC' }
+    })
     if (!entity) throw new NotFoundException('Supplier not found')
     const updatedEntity = SupplierMapper.toTypeOrm(supplier)
     await this.repository.save(updatedEntity)

@@ -34,7 +34,6 @@ import {
   PenBox
 } from 'lucide-react'
 import { SupplierCreateDialog } from '@/components/suppliers/supplier-create-dialog'
-import * as React from 'react'
 import { ChevronDownIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { ptBR } from 'date-fns/locale'

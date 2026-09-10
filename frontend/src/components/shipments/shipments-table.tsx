@@ -107,7 +107,7 @@ export function ShipmentsTable({
       return format(parseISO(dateString), 'P', {
         locale: locale === 'en' ? enUS : ptBR
       })
-    } catch (error) {
+    } catch (_error) {
       return t('invalidDate')
     }
   }

@@ -27,11 +27,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { ChevronsUpDown, Square, SquareCheck } from 'lucide-react'
-import {
-  GetInventoryByIdProduct,
-  User,
-  OwnershipTransfer
-} from '@/lib/api-types'
+import { GetInventoryByIdProduct, OwnershipTransfer } from '@/lib/api-types'
 import { useState } from 'react'
 
 type TransferDialogProps = {

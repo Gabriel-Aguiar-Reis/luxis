@@ -20,6 +20,8 @@
 
 > **Idioma**: [English](README.md) | [Português (BR)](#)
 
+> **Documentação técnica**: [Índice](docs/README.md) | [Desenvolvimento](docs/DEVELOPMENT.md) | [Arquitetura](docs/ARCHITECTURE.md) | [API](docs/API.md) | [Operação](docs/OPERATIONS.md)
+
 ## 🎯 Sobre o Luxis
 
 Luxis é uma **solução empresarial completa** projetada especificamente para revendedores e distribuidores que precisam de controle total sobre seu estoque, vendas e operações. Desenvolvido com as tecnologias mais modernas do mercado, Luxis combina **performance**, **segurança** e **escalabilidade** em uma plataforma intuitiva e poderosa.
@@ -157,12 +159,12 @@ backend/
 - ✅ Factory Pattern
 - ✅ Event-Driven Architecture
 
-### Frontend - Next.js 15 + React 19
+### Frontend - Next.js 16 + React 19
 
 ```
 frontend/
 ├── src/
-│   ├── app/                 # App Router (Next.js 15)
+│   ├── app/                 # App Router (Next.js 16)
 │   │   ├── [locale]/       # Rotas internacionalizadas
 │   │   ├── login/          # Autenticação
 │   │   ├── admin-login/    # Login administrativo
@@ -186,7 +188,7 @@ frontend/
 
 **Stack Frontend:**
 
-- ✅ Next.js 15 com App Router e Turbopack
+- ✅ Next.js 16 com App Router e Turbopack
 - ✅ React 19 com Server Components
 - ✅ TypeScript estrito
 - ✅ Tailwind CSS para estilização
@@ -202,7 +204,7 @@ frontend/
 
 ### Backend
 
-- **Framework**: NestJS 11
+- **Framework**: NestJS 12
 - **Linguagem**: TypeScript
 - **Banco de Dados**: PostgreSQL
 - **ORM**: TypeORM
@@ -218,7 +220,7 @@ frontend/
 
 ### Frontend
 
-- **Framework**: Next.js 15
+- **Framework**: Next.js 16
 - **UI Library**: React 19
 - **Linguagem**: TypeScript
 - **Estilização**: Tailwind CSS
@@ -243,7 +245,7 @@ frontend/
 
 ### Pré-requisitos
 
-- **Node.js** 18+ (LTS recomendado)
+- **Node.js** 26.8.2 (gerenciado com nvm)
 - **PostgreSQL** 14+
 - Contas em:
   - [Cloudinary](https://cloudinary.com/) (upload de imagens)

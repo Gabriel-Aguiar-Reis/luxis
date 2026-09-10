@@ -24,7 +24,6 @@ export class GetOneReturnUseCase {
     private readonly productRepository: ProductRepository,
     @Inject('ProductModelRepository')
     private readonly productModelRepository: ProductModelRepository
-
   ) {}
 
   async execute(id: UUID, user: UserPayload): Promise<GetOneReturnDto> {
@@ -37,7 +36,9 @@ export class GetOneReturnUseCase {
     }
     const reseller = await this.userRepository.findById(returnEntity.resellerId)
     // Buscar todos os produtos de uma vez
-    const products = await this.productRepository.findManyByIds(returnEntity.productIds)
+    const products = await this.productRepository.findManyByIds(
+      returnEntity.productIds
+    )
     // Buscar todos os modelos de uma vez
     const modelIds = products.map((p) => p.modelId)
     const models = await this.productModelRepository.findManyByIds(modelIds)

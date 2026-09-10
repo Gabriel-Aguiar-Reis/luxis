@@ -34,7 +34,7 @@ export default function GlobalError({
   }, [locale])
 
   return (
-    <html>
+    <html lang="pt">
       <body className="bg-background text-foreground flex min-h-screen items-center justify-center px-6 py-12">
         <div className="bg-card w-full max-w-md space-y-4 rounded-xl border p-6 shadow-sm">
           <div className="space-y-2" suppressHydrationWarning>

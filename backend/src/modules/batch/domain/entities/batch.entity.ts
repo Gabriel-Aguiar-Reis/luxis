@@ -1,4 +1,3 @@
-import { BatchItem } from '@/modules/batch/domain/entities/batch-item.entity'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 

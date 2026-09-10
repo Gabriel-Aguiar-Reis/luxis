@@ -65,7 +65,9 @@ export class ProductModelController {
   @HttpCode(200)
   @Get('cloudinary-signature')
   async getCloudinarySignature() {
-    return await this.updateProductModelUseCase['cloudinaryService'].generateUploadSignature('products-models-images')
+    return await this.updateProductModelUseCase[
+      'cloudinaryService'
+    ].generateUploadSignature('products-models-images')
   }
 
   @ApiOperation({

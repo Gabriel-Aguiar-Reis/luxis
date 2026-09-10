@@ -2,9 +2,9 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 export enum Theme {
-  'light',
-  'dark',
-  'system'
+  light,
+  dark,
+  system
 }
 
 export type AppearanceSettings = {

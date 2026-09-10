@@ -19,14 +19,13 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature(
-      [
-        InventoryTypeOrmEntity,
-        ProductTypeOrmEntity,
-        ProductModelTypeOrmEntity,
-        UserTypeOrmEntity,
-      ]),
-    forwardRef(() => AppModule),
+    TypeOrmModule.forFeature([
+      InventoryTypeOrmEntity,
+      ProductTypeOrmEntity,
+      ProductModelTypeOrmEntity,
+      UserTypeOrmEntity
+    ]),
+    forwardRef(() => AppModule)
   ],
   controllers: [InventoryController],
   providers: [

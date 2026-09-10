@@ -5,7 +5,6 @@ import { UUID } from 'crypto'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { CustomerPortfolioRepository } from '@/modules/customer-portfolio/domain/repositories/customer-portfolio.repository'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { InjectPinoLogger } from 'nestjs-pino'
 @Injectable()
 export class CustomerPortfolioService implements ICustomerPortfolioService {
   constructor(

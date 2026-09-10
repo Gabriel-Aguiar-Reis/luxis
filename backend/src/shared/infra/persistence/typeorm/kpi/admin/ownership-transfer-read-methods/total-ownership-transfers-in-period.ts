@@ -7,8 +7,7 @@ export async function totalOwnershipTransfersInPeriod(
   repo: Repository<OwnershipTransferTypeOrmEntity>,
   qParams: ParamsWithMandatoryPeriodDto
 ): Promise<number> {
-  const qb = repo
-    .createQueryBuilder('ownership_transfer')
+  const qb = repo.createQueryBuilder('ownership_transfer')
   const filtered = baseWhere(qb, qParams, 'ownership_transfer.transfer_date')
   return filtered.getCount()
 }

@@ -84,7 +84,7 @@ export function usePasswordResetHelpers() {
       const link = getResetLink(token)
       await navigator.clipboard.writeText(link)
       toast.success(t('copyLinkSuccess'))
-    } catch (error) {
+    } catch (_error) {
       toast.error(t('copyLinkError'))
     }
   }

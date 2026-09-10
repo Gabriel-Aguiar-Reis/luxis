@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { X, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { useOnboarding } from './onboarding-provider'
 
 interface FeatureSpotlightProps {

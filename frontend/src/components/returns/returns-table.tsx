@@ -44,8 +44,6 @@ import {
   GetAllReturnsResponse,
   GetOneReturnResponse
 } from '@/hooks/use-returns'
-import { useGetProducts } from '@/hooks/use-products'
-import { Badge } from '@/components/ui/badge'
 import { ReturnProductsList } from '@/components/returns/return-products-list'
 import { useLocale, useTranslations } from 'next-intl'
 
@@ -69,8 +67,8 @@ export function ReturnsTable({
   const [filters, setFilters] = useState<ReturnFiltersType>({})
   const [isFiltersVisible, setIsFiltersVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false)
-  const [selectedReturn, setSelectedReturn] =
+  const [_isProductDialogOpen, _setIsProductDialogOpen] = useState(false)
+  const [_selectedReturn, _setSelectedReturn] =
     useState<GetOneReturnResponse | null>(null)
 
   const filteredReturns = returns.filter((ret) => {
@@ -109,7 +107,7 @@ export function ReturnsTable({
       return format(parseISO(dateString), 'P', {
         locale: locale === 'en' ? enUS : ptBR
       })
-    } catch (error) {
+    } catch (_error) {
       return t('invalidDate')
     }
   }

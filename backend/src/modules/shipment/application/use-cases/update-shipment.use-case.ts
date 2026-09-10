@@ -1,5 +1,4 @@
 import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
-import { ShipmentStatus } from '@/modules/shipment/domain/enums/shipment-status.enum'
 import { ShipmentRepository } from '@/modules/shipment/domain/repositories/shipment.repository'
 import { UpdateShipmentDto } from '@/modules/shipment/application/dtos/update-shipment-dto'
 import { Injectable, Inject, NotFoundException } from '@nestjs/common'

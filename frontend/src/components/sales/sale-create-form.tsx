@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -78,11 +78,11 @@ export function SaleCreateForm() {
       saleDate: z.string(),
       paymentMethod: z.enum(['CASH', 'PIX', 'DEBIT', 'CREDIT', 'EXCHANGE']),
       numberInstallments: z
-        .number({ invalid_type_error: t('validation.installmentsRequired') })
+        .number({ error: t('validation.installmentsRequired') })
         .int(t('validation.integerNumber'))
         .min(1, t('validation.minimumOne')),
       installmentsInterval: z
-        .number({ invalid_type_error: t('validation.intervalRequired') })
+        .number({ error: t('validation.intervalRequired') })
         .int(t('validation.integerNumber'))
         .min(0, t('validation.minimumZero')),
       customerId: z.string().uuid({ message: t('validation.selectCustomer') })

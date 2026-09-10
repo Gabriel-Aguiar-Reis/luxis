@@ -54,7 +54,7 @@ export class User {
   @ApiProperty({
     description: 'The role of the user',
     enum: Role,
-    example: Role.RESELLER,
+    example: Role.RESELLER
   })
   public role: Role
 
@@ -72,7 +72,7 @@ export class User {
         },
         country: 'Brasil',
         complement: 'Sistema'
-    }
+      }
     },
     type: Residence
   })

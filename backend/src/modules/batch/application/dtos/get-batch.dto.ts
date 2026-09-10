@@ -1,7 +1,7 @@
-import { GetBatchProductDto } from "@/modules/batch/application/dtos/get-batch-product.dto"
-import { Currency } from "@/shared/common/value-object/currency.vo"
-import { ApiProperty } from "@nestjs/swagger"
-import { UUID } from "crypto"
+import { GetBatchProductDto } from '@/modules/batch/application/dtos/get-batch-product.dto'
+import { Currency } from '@/shared/common/value-object/currency.vo'
+import { ApiProperty } from '@nestjs/swagger'
+import { UUID } from 'crypto'
 
 export class GetBatchDto {
   @ApiProperty({

@@ -1,6 +1,6 @@
-import { ReturnStatus } from "@/modules/return/domain/enums/return-status.enum"
-import { ApiProperty } from "@nestjs/swagger"
-import { IsNotEmpty } from "class-validator"
+import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsNotEmpty } from 'class-validator'
 
 export class UpdateReturnStatusDto {
   @ApiProperty({

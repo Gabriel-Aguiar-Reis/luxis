@@ -95,7 +95,7 @@ export function OnboardingModal() {
     setOpen(false)
   }
 
-  const handleSkip = () => {
+  const _handleSkip = () => {
     skipOnboarding()
     setOpen(false)
   }

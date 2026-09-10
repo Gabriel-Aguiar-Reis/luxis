@@ -19,7 +19,7 @@ function validatePassword(password) {
   return Object.values(requirements).every(Boolean)
 }
 
-function handleResetPassword(token) {
+function _handleResetPassword(token) {
   const form = document.getElementById('resetForm')
   const passwordInput = document.getElementById('newPassword')
   const submitButton = form.querySelector('button[type="submit"]')
@@ -66,7 +66,7 @@ function handleResetPassword(token) {
         messageDiv.className = 'message error'
         messageDiv.textContent = data.message || 'Error resetting password'
       }
-    } catch (error) {
+    } catch (_error) {
       messageDiv.className = 'message error'
       messageDiv.textContent = 'Error resetting password'
     }

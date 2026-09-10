@@ -58,14 +58,16 @@ export class EmailService {
     const emailParams = new EmailParams()
       .setFrom(sentFrom)
       .setTo(recipients)
-      .setSubject('Recuperação de Senha').setHtml(`
+      .setSubject('Recuperação de Senha')
+      .setHtml(`
         <h1>Recuperação de Senha</h1>
         <p>Olá,</p>
         <p>Você solicitou a recuperação de senha. Clique no link abaixo para redefinir sua senha:</p>
         <p><a href="${resetUrl}">${resetUrl}</a></p>
         <p>Este link é válido por 1 hora.</p>
         <p>Se você não solicitou a recuperação de senha, ignore este email.</p>
-      `).setText(`
+      `)
+      .setText(`
         Recuperação de Senha
         
         Olá,

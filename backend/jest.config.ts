@@ -1,7 +1,6 @@
 import type { Config } from 'jest'
 
 const config: Config = {
-  preset: 'ts-jest/presets/default',
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js', 'json'],
   testMatch: [
@@ -10,16 +9,31 @@ const config: Config = {
     '**/test/**/e2e/**/*.spec.ts'
   ],
   transform: {
-    '^.+\\.ts$': [
-      'ts-jest',
+    '^.+\\.[tj]sx?$': [
+      '@swc/jest',
       {
-        tsconfig: './tsconfig.json'
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            decorators: true,
+            dynamicImport: true
+          },
+          transform: {
+            decoratorMetadata: true,
+            legacyDecorator: true
+          },
+          target: 'es2022'
+        },
+        module: {
+          type: 'commonjs'
+        }
       }
     ]
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
+  transformIgnorePatterns: ['/node_modules/(?!@nestjs/)'],
   rootDir: '.'
 }
 export default config

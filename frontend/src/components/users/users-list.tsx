@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -31,7 +30,6 @@ import { UserEditDialog } from '@/components/users/user-edit-dialog'
 import { UserDetailsDialog } from '@/components/users/user-details-dialog'
 import { UserProductsDialog } from '@/components/users/user-products-dialog'
 import {
-  Search,
   MoreHorizontal,
   ChevronLeft,
   ChevronRight,

@@ -68,25 +68,36 @@ vi.mock('@/stores/use-auth-store', () => ({
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'pt',
-  useTranslations: (namespace?: string) => (key: string, values?: Record<string, unknown>) => {
-    if (namespace === 'SaleCreateForm' && key === 'selectedCount' && values?.count) {
-      return `Selecionados: ${values.count}`
+  useTranslations:
+    (namespace?: string) => (key: string, values?: Record<string, unknown>) => {
+      if (
+        namespace === 'SaleCreateForm' &&
+        key === 'selectedCount' &&
+        values?.count
+      ) {
+        return `Selecionados: ${values.count}`
+      }
+      if (
+        namespace === 'SaleEditDialog' &&
+        key === 'selectedProducts' &&
+        values?.count
+      ) {
+        return `Produtos selecionados: ${values.count}`
+      }
+      if (namespace === 'SaleEditDialog' && key === 'groupCount') {
+        return `${values?.modelName} (${values?.count})`
+      }
+      if (namespace === 'SaleCreateForm' && key === 'groupCount') {
+        return `${values?.modelName} (${values?.count})`
+      }
+      return key
     }
-    if (namespace === 'SaleEditDialog' && key === 'selectedProducts' && values?.count) {
-      return `Produtos selecionados: ${values.count}`
-    }
-    if (namespace === 'SaleEditDialog' && key === 'groupCount') {
-      return `${values?.modelName} (${values?.count})`
-    }
-    if (namespace === 'SaleCreateForm' && key === 'groupCount') {
-      return `${values?.modelName} (${values?.count})`
-    }
-    return key
-  }
 }))
 
 vi.mock('@tanstack/react-query', async () => {
-  const actual = await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query')
+  const actual = await vi.importActual<typeof import('@tanstack/react-query')>(
+    '@tanstack/react-query'
+  )
   return {
     ...actual,
     useQueryClient: () => ({})
@@ -117,7 +128,11 @@ vi.mock('@/components/sales/add-customer-dialog', () => ({
 }))
 
 vi.mock('@/components/sales/add-product-dialog', () => ({
-  AddProductDialog: ({ toggleProduct }: { toggleProduct: (id: string) => void }) => (
+  AddProductDialog: ({
+    toggleProduct
+  }: {
+    toggleProduct: (id: string) => void
+  }) => (
     <button
       type="button"
       onClick={() => toggleProduct('11111111-1111-4111-8111-111111111111')}
@@ -129,26 +144,51 @@ vi.mock('@/components/sales/add-product-dialog', () => ({
 
 vi.mock('@/components/ui/popover', () => ({
   Popover: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  PopoverTrigger: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  PopoverContent: ({ children }: { children: ReactNode }) => <div>{children}</div>
+  PopoverTrigger: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
+  PopoverContent: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  )
 }))
 
 vi.mock('@/components/ui/command', () => ({
   Command: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  CommandEmpty: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  CommandGroup: ({ children, heading }: { children: ReactNode; heading?: string }) => (
+  CommandEmpty: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
+  CommandGroup: ({
+    children,
+    heading
+  }: {
+    children: ReactNode
+    heading?: string
+  }) => (
     <div>
       {heading ? <div>{heading}</div> : null}
       {children}
     </div>
   ),
-  CommandInput: ({ onValueChange, ...props }: InputHTMLAttributes<HTMLInputElement> & { onValueChange?: (value: string) => void }) => (
+  CommandInput: ({
+    onValueChange,
+    ...props
+  }: InputHTMLAttributes<HTMLInputElement> & {
+    onValueChange?: (value: string) => void
+  }) => (
     <input
       {...props}
       onChange={(event) => onValueChange?.(event.target.value)}
     />
   ),
-  CommandItem: ({ children, onSelect, value }: { children: ReactNode; onSelect?: (value: string) => void; value: string }) => (
+  CommandItem: ({
+    children,
+    onSelect,
+    value
+  }: {
+    children: ReactNode
+    onSelect?: (value: string) => void
+    value: string
+  }) => (
     <button type="button" onClick={() => onSelect?.(value)}>
       {children}
     </button>
@@ -158,7 +198,10 @@ vi.mock('@/components/ui/command', () => ({
 
 vi.mock('@/components/ui/calendar', () => ({
   Calendar: ({ onSelect }: { onSelect?: (date: Date) => void }) => (
-    <button type="button" onClick={() => onSelect?.(new Date('2026-03-24T00:00:00.000Z'))}>
+    <button
+      type="button"
+      onClick={() => onSelect?.(new Date('2026-03-24T00:00:00.000Z'))}
+    >
       Selecionar data de teste
     </button>
   )
@@ -166,10 +209,18 @@ vi.mock('@/components/ui/calendar', () => ({
 
 vi.mock('@/components/ui/dialog', () => ({
   Dialog: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  DialogContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  DialogDescription: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  DialogFooter: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  DialogHeader: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+  DialogContent: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DialogDescription: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DialogFooter: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DialogHeader: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
   DialogTitle: ({ children }: { children: ReactNode }) => <div>{children}</div>
 }))
 
@@ -202,7 +253,9 @@ describe('sales forms', () => {
     renderWithQueryClient(<SaleCreateForm />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Cliente Teste' }))
-    fireEvent.click(screen.getByRole('button', { name: /Adicionar produto de teste/i }))
+    fireEvent.click(
+      screen.getByRole('button', { name: /Adicionar produto de teste/i })
+    )
     fireEvent.click(screen.getByRole('button', { name: 'submit' }))
 
     await waitFor(() => {
@@ -218,7 +271,9 @@ describe('sales forms', () => {
       )
     })
 
-    expect(pushMock).toHaveBeenCalledWith('/home/sales/new/confirmation?saleId=sale-123')
+    expect(pushMock).toHaveBeenCalledWith(
+      '/home/sales/new/confirmation?saleId=sale-123'
+    )
   })
 
   it('salva edicao da venda com os produtos selecionados', async () => {
@@ -229,16 +284,18 @@ describe('sales forms', () => {
         isOpen
         onClose={vi.fn()}
         onSave={onSave}
-        sale={{
-          id: 'sale-1',
-          products: [
-            {
-              id: '11111111-1111-4111-8111-111111111111',
-              serialNumber: { value: 'SER-001' },
-              salePrice: { value: '100.00' }
-            }
-          ]
-        } as any}
+        sale={
+          {
+            id: 'sale-1',
+            products: [
+              {
+                id: '11111111-1111-4111-8111-111111111111',
+                serialNumber: { value: 'SER-001' },
+                salePrice: { value: '100.00' }
+              }
+            ]
+          } as any
+        }
       />
     )
 

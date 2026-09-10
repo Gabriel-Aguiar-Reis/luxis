@@ -58,7 +58,7 @@ export function NewModelDialog({
   const [categoryId, setCategoryId] = useState('')
   const [suggestedPrice, setSuggestedPrice] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
-  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [_photoFile, setPhotoFile] = useState<File | null>(null)
   const [error, setError] = useState<string | null>(null)
   const { upload, loading: uploadingImage } = useCloudinaryUpload()
 
@@ -88,7 +88,7 @@ export function NewModelDialog({
       try {
         const url = await upload(file)
         setPhotoUrl(url)
-      } catch (err) {
+      } catch (_err) {
         setError(t('uploadImageError'))
       }
     }

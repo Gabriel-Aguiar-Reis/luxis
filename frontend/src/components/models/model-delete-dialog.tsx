@@ -1,6 +1,5 @@
 import { useDeleteProductModel } from '@/hooks/use-product-models'
 
-import { ProductModel } from '@/lib/api-types'
 import {
   Dialog,
   DialogContent,

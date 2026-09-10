@@ -18,7 +18,9 @@ export async function ownershipTransfersInPeriod(
 ): Promise<OwnershipTransferRawResult[]> {
   const qb = repo
     .createQueryBuilder('ownership_transfer')
-    .where('ownership_transfer.transfer_date >= :start', { start: qParams.start })
+    .where('ownership_transfer.transfer_date >= :start', {
+      start: qParams.start
+    })
     .andWhere('ownership_transfer.transfer_date <= :end', { end: qParams.end })
     .select([
       'ownership_transfer.id as "id"',

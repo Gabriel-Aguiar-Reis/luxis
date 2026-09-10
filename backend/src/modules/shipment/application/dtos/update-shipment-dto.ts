@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, IsArray, IsOptional, IsUUID } from 'class-validator'
+import { IsArray, IsOptional, IsUUID } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 

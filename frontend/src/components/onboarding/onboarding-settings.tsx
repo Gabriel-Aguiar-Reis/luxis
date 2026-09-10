@@ -15,7 +15,7 @@ import { toast } from 'sonner'
 
 export function OnboardingSettings() {
   const { startOnboarding, isOnboardingComplete } = useOnboarding()
-  const t = useTranslations('Settings')
+  const _t = useTranslations('Settings')
 
   const handleStartOnboarding = () => {
     startOnboarding()

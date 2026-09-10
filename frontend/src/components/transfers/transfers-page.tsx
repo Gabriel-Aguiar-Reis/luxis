@@ -2,10 +2,7 @@
 
 import { useState } from 'react'
 import { Ban, Plus } from 'lucide-react'
-import {
-  GetAllOwnershipTransferReturn,
-  OwnershipTransfer
-} from '@/lib/api-types'
+import { GetAllOwnershipTransferReturn } from '@/lib/api-types'
 import {
   useCreateTransfer,
   useDeleteTransfer,
@@ -32,8 +29,9 @@ export function TransfersPage() {
   const { data: transfers, isLoading } = useGetTransfers()
 
   const { mutate: updateTransfer } = useUpdateTransfer(useQueryClient())
-  const { mutate: updateTransferStatus } =
-    useUpdateTransferStatus(useQueryClient())
+  const { mutate: updateTransferStatus } = useUpdateTransferStatus(
+    useQueryClient()
+  )
   const { mutate: deleteTransfer } = useDeleteTransfer(useQueryClient())
   const { mutate: createTransfer } = useCreateTransfer(useQueryClient())
 

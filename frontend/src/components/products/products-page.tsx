@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { toast } from 'sonner'
 import { ProductDialog } from '@/components/products/product-dialog'
 import { Product } from '@/lib/api-types'
 import { ProductsTable } from '@/components/products/products-table'

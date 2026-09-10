@@ -110,7 +110,7 @@ export function TransfersTable({
   const formatDate = (dateString: string) => {
     try {
       return format(parseISO(dateString), 'dd/MM/yyyy', { locale: ptBR })
-    } catch (error) {
+    } catch (_error) {
       return 'Data inválida'
     }
   }

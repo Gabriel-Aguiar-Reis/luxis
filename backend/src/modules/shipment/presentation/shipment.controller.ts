@@ -62,7 +62,7 @@ export class ShipmentController {
   @ApiResponse({
     status: 200,
     description: 'List of shipments returned successfully',
-    type: [GetShipmentDto],
+    type: [GetShipmentDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })

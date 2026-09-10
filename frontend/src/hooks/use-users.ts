@@ -11,8 +11,6 @@ import type {
   User,
   UserProductDto,
   CreateUserDto as OrvalCreateUserDto,
-  UpdateUserRoleDto as OrvalUpdateUserRoleDto,
-  UpdateUserStatusDto as OrvalUpdateUserStatusDto,
   Role,
   UserStatus
 } from '@/api/model'

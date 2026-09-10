@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/table'
 import {
   Pencil,
-  Trash2,
   ChevronLeft,
   ChevronRight,
   Ellipsis,

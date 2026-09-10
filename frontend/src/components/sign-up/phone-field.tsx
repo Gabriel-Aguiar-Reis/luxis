@@ -6,7 +6,6 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { maskPhone } from '@/components/utils/masks'
 import { UseFormReturn } from 'react-hook-form'
 
 interface PhoneFieldProps {

@@ -5,14 +5,25 @@
     "frontend"
   ],
   "private": true,
+  "engines": {
+    "node": ">=26.8.2",
+    "npm": ">=11.9.0"
+  },
   "scripts": {
     "start": "docker compose up -d postgres && concurrently -k -n BACKEND,FRONTEND -c cyan.bgGray,green.bgGray --prefix \"[{name}:{pid}]\" \"npm --prefix backend run start:dev\" \"npm --prefix frontend run dev\"",
+    "check": "biome check backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
+    "format": "biome format --write backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
+    "lint": "biome lint backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d postgres",
     "db:logs": "docker compose logs -f postgres"
   },
   "devDependencies": {
-    "concurrently": "^9.0.0"
+    "@biomejs/biome": "^2.5.13",
+    "concurrently": "^10.0.5",
+    "jest-util": "^29.7.0",
+    "typeorm": "^0.3.31",
+    "typescript": "^5.9.3"
   }
 }

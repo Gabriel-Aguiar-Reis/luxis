@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { CreateSaleUseCase } from '@/modules/sale/application/use-cases/create/create-sale.use-case'
 import { CreateSaleDto } from '@/modules/sale/application/dtos/create-sale.dto'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'

@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/dialog'
 import { useForm } from 'react-hook-form'
 import { Label } from '@/components/ui/label'
-import { CreateTransferDto } from '@/hooks/use-transfers'
 import { useGetUsers } from '@/hooks/use-users'
 import { useGetInventoryById } from '@/hooks/use-inventory'
 import * as React from 'react'
@@ -27,11 +26,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { ChevronsUpDown, Square, SquareCheck } from 'lucide-react'
-import {
-  GetInventoryByIdProduct,
-  ReturnProductDto,
-  User
-} from '@/lib/api-types'
+import { GetInventoryByIdProduct } from '@/lib/api-types'
 import { useState } from 'react'
 import { CreateReturnDto } from '@/hooks/use-returns'
 import {
@@ -62,7 +57,7 @@ export function ReturnCreateDialog({
   })
 
   const [openFrom, setOpenFrom] = React.useState(false)
-  const [openTo, setOpenTo] = React.useState(false)
+  const [_openTo, _setOpenTo] = React.useState(false)
   const [openProduct, setOpenProduct] = React.useState(false)
 
   const resellerId = watch('resellerId')
@@ -113,7 +108,7 @@ export function ReturnCreateDialog({
   }, [items, productsWithModel])
 
   const [searchFromValue, setSearchFromValue] = useState('')
-  const [searchToValue, setSearchToValue] = useState('')
+  const [_searchToValue, _setSearchToValue] = useState('')
   const [searchProductValue, setSearchProductValue] = useState('')
 
   const onSubmit = (data: CreateReturnDto) => {

@@ -49,7 +49,7 @@ export class UpdateStatusOwnershipTransferUseCase {
         `Invalid status transition: ${ownershipTransfer.status} -> ${dto.status}`
       )
     }
- 
+
     if (dto.status !== OwnershipTransferStatus.FINISHED) {
       return await this.ownershipTransferRepository.updateStatus(id, dto.status)
     }

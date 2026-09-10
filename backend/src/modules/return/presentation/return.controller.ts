@@ -26,7 +26,6 @@ import { UpdateReturnDto } from '@/modules/return/application/dtos/update-return
 import { DeleteReturnPolicy } from '@/shared/infra/auth/policies/return/delete-return.policy'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { ReturnStatus } from '@/modules/return/domain/enums/return-status.enum'
 import { UpdateReturnStatusUseCase } from '@/modules/return/application/use-cases/update-return-status.use-case'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import {

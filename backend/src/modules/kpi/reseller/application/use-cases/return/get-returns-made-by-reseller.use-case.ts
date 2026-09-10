@@ -11,6 +11,9 @@ export class GetReturnsMadeByResellerUseCase {
   ) {}
 
   async execute(resellerId: UUID, qParams: ParamsDto): Promise<number> {
-    return this.returnReadRepository.returnsMadeByResellerId(resellerId, qParams)
+    return this.returnReadRepository.returnsMadeByResellerId(
+      resellerId,
+      qParams
+    )
   }
 }

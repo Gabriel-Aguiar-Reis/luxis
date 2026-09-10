@@ -155,7 +155,7 @@ export function ProfileForm() {
         'PATCH'
       )
       toast.success('Perfil atualizado com sucesso!')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Erro ao atualizar perfil!')
     } finally {
       setIsLoading(false)
@@ -175,7 +175,7 @@ export function ProfileForm() {
           true
         )
         setData(response)
-      } catch (error) {
+      } catch (_error) {
         toast.error('Erro ao carregar os dados do usuário.')
       }
     }

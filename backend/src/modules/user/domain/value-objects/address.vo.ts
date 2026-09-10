@@ -32,7 +32,7 @@ export class Address {
   @ApiProperty({
     description: 'The federative unit of the address',
     example: FederativeUnit.SP,
-    enum: FederativeUnit,
+    enum: FederativeUnit
   })
   public federativeUnit: FederativeUnit
   @ApiProperty({
@@ -44,7 +44,7 @@ export class Address {
   @ApiProperty({
     description: 'The country of the address',
     example: Country.BRAZIL,
-    enum: Country,
+    enum: Country
   })
   public country: Country
   @ApiProperty({

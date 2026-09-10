@@ -1,7 +1,7 @@
-import { ModelName } from "@/modules/product-model/domain/value-objects/model-name.vo"
-import { SerialNumber } from "@/modules/product/domain/value-objects/serial-number.vo"
-import { ApiProperty } from "@nestjs/swagger"
-import { UUID } from "crypto"
+import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
+import { SerialNumber } from '@/modules/product/domain/value-objects/serial-number.vo'
+import { ApiProperty } from '@nestjs/swagger'
+import { UUID } from 'crypto'
 
 export class ReturnProductDto {
   @ApiProperty({

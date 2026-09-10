@@ -1,14 +1,6 @@
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { ReturnStatus } from '@/lib/api-types'
 import { X, ChevronDownIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -28,7 +20,7 @@ type BatchFiltersProps = {
   initialFilters?: BatchFiltersType
 }
 
-const statusOptions = [
+const _statusOptions = [
   { value: 'PENDING', label: 'Pendente' },
   { value: 'APPROVED', label: 'Aprovado' },
   { value: 'RETURNED', label: 'Devolvido' },

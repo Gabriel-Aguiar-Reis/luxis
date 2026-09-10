@@ -27,7 +27,7 @@ import { useGetUsers } from '@/hooks/use-users'
 import { useGetInventoryById } from '@/hooks/use-inventory'
 import * as React from 'react'
 import { useState } from 'react'
-import { GetInventoryByIdProduct, User } from '@/lib/api-types'
+import { GetInventoryByIdProduct } from '@/lib/api-types'
 import { GetOneReturnResponse, UpdateReturnDto } from '@/hooks/use-returns'
 import { useTranslations } from 'next-intl'
 

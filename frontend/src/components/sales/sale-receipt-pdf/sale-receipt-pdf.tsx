@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { Document, Page, Text, View } from '@react-pdf/renderer'
 import { format } from 'date-fns'
 import { enUS, ptBR } from 'date-fns/locale'

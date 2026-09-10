@@ -23,7 +23,6 @@ export default defineConfig({
           signal: true
         }
       },
-      prettier: true,
       clean: true
     }
   }

@@ -1,5 +1,4 @@
 import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
-import { Name } from '@/modules/user/domain/value-objects/name.vo'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 import { SupplierName } from '@/modules/supplier/domain/value-objects/supplier-name.vo'

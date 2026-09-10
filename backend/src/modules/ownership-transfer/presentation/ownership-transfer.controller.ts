@@ -1,4 +1,3 @@
-import { OwnershipTransferStatus } from '@/modules/ownership-transfer/domain/enums/ownership-transfer-status.enum'
 import { CreateOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/create-ownership-transfer.use-case'
 import { DeleteOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/delete-ownership-transfer.use-case'
 import { GetAllOwnershipTransferUseCase } from '@/modules/ownership-transfer/application/use-cases/get-all-ownership-transfer.use-case'
@@ -70,7 +69,9 @@ export class OwnershipTransferController {
   @CheckPolicies(new ReadOwnershipTransferPolicy())
   @HttpCode(200)
   @Get()
-  async getAll(@CurrentUser() user: UserPayload): Promise<OwnershipTransferWithSerialDto[]> {
+  async getAll(
+    @CurrentUser() user: UserPayload
+  ): Promise<OwnershipTransferWithSerialDto[]> {
     this.logger.log(
       `Getting all ownership transfers - Requested by user ${user.email}`,
       'OwnershipTransferController'

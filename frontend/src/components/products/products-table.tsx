@@ -16,13 +16,7 @@ import {
   TableCell
 } from '@/components/ui/table'
 import { Category, Product, ProductModel, ProductStatus } from '@/lib/api-types'
-import {
-  Filter,
-  FileEdit,
-  Trash2,
-  ChevronLeft,
-  ChevronRight
-} from 'lucide-react'
+import { Filter, FileEdit, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useAuthStore } from '@/stores/use-auth-store'
 import { useLocale, useTranslations } from 'next-intl'
 

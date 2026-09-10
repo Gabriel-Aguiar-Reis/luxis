@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/navigation'
-import { useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -53,7 +52,7 @@ export function ResetPasswordForm({
   const t = useTranslations('ResetPassword')
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-  const [token, setToken] = useState<string | null>(tokenProp)
+  const [token, _setToken] = useState<string | null>(tokenProp)
 
   useEffect(() => {
     if (!token) {

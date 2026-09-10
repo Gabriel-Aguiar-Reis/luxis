@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { X } from 'lucide-react'
-import { Category, ProductModel } from '@/lib/api-types'
+import { Category } from '@/lib/api-types'
 import { useTranslations } from 'next-intl'
 
 type ModelFilterProp = {

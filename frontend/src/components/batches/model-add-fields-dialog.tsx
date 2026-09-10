@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { ProductModel, ProductModelStatus } from '@/lib/api-types'
+import { ProductModel } from '@/lib/api-types'
 import {
   Dialog,
   DialogContent,
