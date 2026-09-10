@@ -1,4 +1,5 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
+import { setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { SessionFeedbackListener } from '@/components/auth/session-feedback-listener'
 import { routing } from '@/lib/i18n/routing'
@@ -15,6 +16,11 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound()
   }
+
+  // Ensures nested Server Components (e.g. page.tsx and PageBreadcrumbHeader)
+  // resolve getTranslations()/getLocale() to this segment's locale instead of
+  // silently falling back to the default locale.
+  setRequestLocale(locale)
 
   const messages = await getMessages(locale)
 

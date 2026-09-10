@@ -81,7 +81,6 @@ export function ProductsPage() {
       <ProductsTable
         productModels={models}
         categories={categories}
-        isLoading={isLoading}
         products={products}
         handleEditProduct={handleEditProduct}
       />

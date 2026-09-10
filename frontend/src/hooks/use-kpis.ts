@@ -1,13 +1,28 @@
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/query-keys'
+import { unwrapResponse } from '@/lib/unwrap-response'
 import type {
   ParamsWithMandatoryPeriodDto,
   ParamsDto,
   GetTotalBillingByResellerIdParams,
   ProductInStockDto,
+  ProductWithResellerDto,
   SalesInPeriodDto,
   SalesAggregatedByDayDto,
+  SalesByResellerDto,
+  TotalSalesByResellerDto,
+  TotalSalesInPeriodDto,
+  TotalBillingReturnDto,
   ReturnsInPeriodDto,
+  TotalReturnsInPeriodDto,
+  GetOwnershipTransfersByResellerId200,
+  GetOwnershipTransfersInPeriod200,
+  GetOwnershipTransfersReceivedByResellerId200,
+  GetOwnershipTransfersGivenByResellerId200,
+  GetReturnsByResellerId200,
+  GetTotalReturnsByResellerId200,
+  GetReturnsByReseller200,
+  GetTotalReturnsByReseller200,
   MonthlySalesDto,
   InventoryProductModelDto,
   SellingProductDto,
@@ -75,21 +90,24 @@ export function useTotalInStockProducts() {
   const result = useGetTotalProductsInStockRaw({} as ParamsDto, undefined, {
     query: { queryKey: queryKeys.kpis.admin.totalInStockProducts() }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<number>(result.data) }
 }
 
 export function useProductsInStock() {
   const result = useGetProductsInStockRaw({} as ParamsDto, undefined, {
     query: { queryKey: queryKeys.kpis.admin.productsInStock() }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<ProductInStockDto[]>(result.data) }
 }
 
 export function useProductsWithResellers() {
   const result = useGetProductsWithResellersRaw({} as ParamsDto, undefined, {
     query: { queryKey: queryKeys.kpis.admin.productsWithResellers() }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<ProductWithResellerDto[]>(result.data)
+  }
 }
 
 export function useTotalProductsWithResellers() {
@@ -100,7 +118,7 @@ export function useTotalProductsWithResellers() {
       query: { queryKey: queryKeys.kpis.admin.totalProductsWithResellers() }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<number>(result.data) }
 }
 
 export function useProductsInStockForMoreThanXDays(days: number) {
@@ -117,7 +135,7 @@ export function useProductsInStockForMoreThanXDays(days: number) {
   )
   return {
     ...result,
-    data: (result.data as any)?.data as ProductInStockDto[] | undefined
+    data: unwrapResponse<ProductInStockDto[]>(result.data)
   }
 }
 
@@ -133,7 +151,7 @@ export function useTotalProductsInStockForMoreThanXDays(days: number) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<number>(result.data) }
 }
 
 // --- Vendas ---
@@ -141,7 +159,7 @@ export function useSalesByResellerId(id: string) {
   const result = useGetSalesByResellerIdRaw(id, {} as ParamsDto, undefined, {
     query: { queryKey: queryKeys.kpis.admin.salesByReseller(id), enabled: !!id }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<SalesByResellerDto[]>(result.data) }
 }
 
 export function useTotalSalesByResellerId(id: string) {
@@ -156,7 +174,10 @@ export function useTotalSalesByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<TotalSalesByResellerDto>(result.data)
+  }
 }
 
 export function useSalesInPeriod(query: PeriodQuery) {
@@ -172,7 +193,7 @@ export function useSalesInPeriod(query: PeriodQuery) {
   )
   return {
     ...result,
-    data: (result.data as any)?.data as SalesInPeriodDto | undefined
+    data: unwrapResponse<SalesInPeriodDto>(result.data)
   }
 }
 
@@ -187,7 +208,7 @@ export function useTotalSalesInPeriod(query: PeriodQuery) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<TotalSalesInPeriodDto>(result.data) }
 }
 
 export function useSalesAggregatedByDay(query: PeriodQuery) {
@@ -203,7 +224,7 @@ export function useSalesAggregatedByDay(query: PeriodQuery) {
   )
   return {
     ...result,
-    data: (result.data as any)?.data as SalesAggregatedByDayDto | undefined
+    data: unwrapResponse<SalesAggregatedByDayDto>(result.data)
   }
 }
 
@@ -211,14 +232,17 @@ export function useSalesByReseller(query?: OptionalPeriodQuery) {
   const result = useGetSalesByResellerRaw({} as ParamsDto, undefined, {
     query: { queryKey: queryKeys.kpis.admin.salesByResellerList(query) }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<SalesByResellerDto[]>(result.data) }
 }
 
 export function useTotalSalesByReseller(query?: OptionalPeriodQuery) {
   const result = useGetTotalSalesByResellerRaw({} as ParamsDto, undefined, {
     query: { queryKey: queryKeys.kpis.admin.totalSalesByResellerList(query) }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<TotalSalesByResellerDto>(result.data)
+  }
 }
 
 export function useTotalBillingByBatchId(id: string) {
@@ -228,7 +252,7 @@ export function useTotalBillingByBatchId(id: string) {
       enabled: !!id
     }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<TotalBillingReturnDto>(result.data) }
 }
 
 export function useTotalBillingByResellerId(resellerId: string) {
@@ -243,7 +267,7 @@ export function useTotalBillingByResellerId(resellerId: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<TotalBillingReturnDto>(result.data) }
 }
 
 export function useTotalBillingByPeriod(query: PeriodQuery) {
@@ -257,7 +281,7 @@ export function useTotalBillingByPeriod(query: PeriodQuery) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<TotalBillingReturnDto>(result.data) }
 }
 
 // --- Ownership Transfers ---
@@ -273,7 +297,10 @@ export function useOwnershipTransfersByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetOwnershipTransfersByResellerId200>(result.data)
+  }
 }
 
 export function useTotalOwnershipTransfersByResellerId(id: string) {
@@ -288,7 +315,7 @@ export function useTotalOwnershipTransfersByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<number>(result.data) }
 }
 
 export function useOwnershipTransfersInPeriod(query: PeriodQuery) {
@@ -302,7 +329,10 @@ export function useOwnershipTransfersInPeriod(query: PeriodQuery) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetOwnershipTransfersInPeriod200>(result.data)
+  }
 }
 
 export function useTotalOwnershipTransfersInPeriod(query: PeriodQuery) {
@@ -316,7 +346,7 @@ export function useTotalOwnershipTransfersInPeriod(query: PeriodQuery) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<number>(result.data) }
 }
 
 export function useOwnershipTransfersReceivedByResellerId(id: string) {
@@ -331,7 +361,12 @@ export function useOwnershipTransfersReceivedByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetOwnershipTransfersReceivedByResellerId200>(
+      result.data
+    )
+  }
 }
 
 export function useTotalOwnershipTransfersReceivedByResellerId(id: string) {
@@ -347,7 +382,7 @@ export function useTotalOwnershipTransfersReceivedByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<number>(result.data) }
 }
 
 export function useOwnershipTransfersGivenByResellerId(id: string) {
@@ -362,7 +397,10 @@ export function useOwnershipTransfersGivenByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetOwnershipTransfersGivenByResellerId200>(result.data)
+  }
 }
 
 export function useTotalOwnershipTransfersGivenByResellerId(id: string) {
@@ -378,7 +416,7 @@ export function useTotalOwnershipTransfersGivenByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return { ...result, data: unwrapResponse<number>(result.data) }
 }
 
 // --- Returns ---
@@ -389,7 +427,10 @@ export function useReturnsByResellerId(id: string) {
       enabled: !!id
     }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetReturnsByResellerId200>(result.data)
+  }
 }
 
 export function useTotalReturnsByResellerId(id: string) {
@@ -404,7 +445,10 @@ export function useTotalReturnsByResellerId(id: string) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetTotalReturnsByResellerId200>(result.data)
+  }
 }
 
 export function useReturnsByReseller(query?: OptionalPeriodQuery) {
@@ -414,7 +458,10 @@ export function useReturnsByReseller(query?: OptionalPeriodQuery) {
       enabled: !!query
     }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetReturnsByReseller200>(result.data)
+  }
 }
 
 export function useTotalReturnsByReseller(query?: OptionalPeriodQuery) {
@@ -424,7 +471,10 @@ export function useTotalReturnsByReseller(query?: OptionalPeriodQuery) {
       enabled: !!query
     }
   })
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<GetTotalReturnsByReseller200>(result.data)
+  }
 }
 
 export function useReturnsInPeriod(query: PeriodQuery) {
@@ -440,7 +490,7 @@ export function useReturnsInPeriod(query: PeriodQuery) {
   )
   return {
     ...result,
-    data: (result.data as any)?.data as ReturnsInPeriodDto | undefined
+    data: unwrapResponse<ReturnsInPeriodDto>(result.data)
   }
 }
 
@@ -455,7 +505,10 @@ export function useTotalReturnsInPeriod(query: PeriodQuery) {
       }
     }
   )
-  return { ...result, data: (result.data as any)?.data }
+  return {
+    ...result,
+    data: unwrapResponse<TotalReturnsInPeriodDto>(result.data)
+  }
 }
 
 // --- Reseller KPIs ---
@@ -464,7 +517,7 @@ export function useMonthlySales(params?: ParamsDto) {
     queryKey: queryKeys.kpis.mySpace.monthlySales(params),
     queryFn: async () => {
       const result = await resellerSaleKpiGetMonthlySales(params ?? {})
-      return (result as any)?.data as MonthlySalesDto[]
+      return unwrapResponse<MonthlySalesDto[]>(result) ?? []
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000
@@ -476,7 +529,7 @@ export function useAverageTicket(params?: ParamsDto) {
     queryKey: queryKeys.kpis.mySpace.averageTicket(params),
     queryFn: async () => {
       const result = await resellerSaleKpiGetAverageTicket(params ?? {})
-      return ((result as any)?.data as number) ?? 0
+      return unwrapResponse<number>(result) ?? 0
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000
@@ -488,7 +541,7 @@ export function useCurrentInventory(params?: ParamsDto) {
     queryKey: queryKeys.kpis.mySpace.currentInventory(params),
     queryFn: async () => {
       const result = await resellerInventoryKpiGetCurrentInventory(params ?? {})
-      return (result as any)?.data as InventoryProductModelDto[]
+      return unwrapResponse<InventoryProductModelDto[]>(result) ?? []
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000
@@ -500,7 +553,7 @@ export function useTopSellingProducts(params?: ParamsDto) {
     queryKey: queryKeys.kpis.mySpace.topSellingProducts(params),
     queryFn: async () => {
       const result = await resellerProductKpiGetTopSellingProducts(params ?? {})
-      return (result as any)?.data as SellingProductDto[]
+      return unwrapResponse<SellingProductDto[]>(result) ?? []
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000
@@ -515,7 +568,7 @@ export function useLongestTimeInInventory(params?: ParamsDto) {
         await resellerProductKpiGetProductsWithLongestTimeInInventory(
           params ?? {}
         )
-      return (result as any)?.data as ProductInInventoryDto[]
+      return unwrapResponse<ProductInInventoryDto[]>(result) ?? []
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000
@@ -529,7 +582,7 @@ export function useReturnCount(params?: ParamsDto) {
       const result = await resellerReturnKpiGetReturnsMadeByReseller(
         params ?? {}
       )
-      return ((result as any)?.data as number) ?? 0
+      return unwrapResponse<number>(result) ?? 0
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000

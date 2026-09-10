@@ -32,7 +32,6 @@ type ProductFiltersType = {
 type ProductsTableProps = {
   productModels: ProductModel[]
   categories: Category[]
-  isLoading: boolean
   products: Product[]
   productsPerPage?: number
   handleEditProduct: (product: Product) => void
@@ -43,7 +42,6 @@ import { useState } from 'react'
 export function ProductsTable({
   productModels,
   categories,
-  isLoading,
   products,
   productsPerPage = 10,
   handleEditProduct
@@ -172,95 +170,88 @@ export function ProductsTable({
               />
             )}
 
-            {isLoading ? (
-              <div className="flex h-[400px] w-full items-center justify-center">
-                <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
-              </div>
-            ) : (
-              <>
-                <div className="overflow-x-auto rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="min-w-[100px]">
-                          {t('serialNumber')}
-                        </TableHead>
-                        <TableHead className="min-w-20">{t('photo')}</TableHead>
-                        <TableHead className="min-w-[120px]">
-                          {t('model')}
-                        </TableHead>
-                        <TableHead className="min-w-[100px]">
-                          {t('unitCost')}
-                        </TableHead>
-                        <TableHead className="min-w-[100px]">
-                          {t('salePrice')}
-                        </TableHead>
-                        <TableHead className="min-w-[100px]">
-                          {t('status')}
-                        </TableHead>
-                        <TableHead className="min-w-[100px] text-right">
-                          {t('actions')}
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {paginatedProducts.length > 0 ? (
-                        <>
-                          {paginatedProducts.map((product) => {
-                            const model = productModels.find(
-                              (m) => m.id === product.modelId
-                            )
-                            return (
-                              <TableRow key={product.id}>
-                                <TableCell className="font-medium">
-                                  {product.serialNumber.value}
-                                </TableCell>
-                                <TableCell>
-                                  {model?.photoUrl ? (
-                                    <img
-                                      src={model.photoUrl.value}
-                                      alt={model.name.value}
-                                      className="h-10 w-10 rounded object-cover"
-                                    />
-                                  ) : (
-                                    <span className="text-muted-foreground text-xs">
-                                      {t('noPhoto')}
-                                    </span>
+            <>
+              <div className="overflow-x-auto rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-[100px]">
+                        {t('serialNumber')}
+                      </TableHead>
+                      <TableHead className="min-w-20">{t('photo')}</TableHead>
+                      <TableHead className="min-w-[120px]">
+                        {t('model')}
+                      </TableHead>
+                      <TableHead className="min-w-[100px]">
+                        {t('unitCost')}
+                      </TableHead>
+                      <TableHead className="min-w-[100px]">
+                        {t('salePrice')}
+                      </TableHead>
+                      <TableHead className="min-w-[100px]">
+                        {t('status')}
+                      </TableHead>
+                      <TableHead className="min-w-[100px] text-right">
+                        {t('actions')}
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedProducts.length > 0 ? (
+                      <>
+                        {paginatedProducts.map((product) => {
+                          const model = productModels.find(
+                            (m) => m.id === product.modelId
+                          )
+                          return (
+                            <TableRow key={product.id}>
+                              <TableCell className="font-medium">
+                                {product.serialNumber.value}
+                              </TableCell>
+                              <TableCell>
+                                {model?.photoUrl ? (
+                                  <img
+                                    src={model.photoUrl.value}
+                                    alt={model.name.value}
+                                    className="h-10 w-10 rounded object-cover"
+                                  />
+                                ) : (
+                                  <span className="text-muted-foreground text-xs">
+                                    {t('noPhoto')}
+                                  </span>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {model ? model.name.value : '-'}
+                              </TableCell>
+                              <TableCell>
+                                {currencyFormatter.format(
+                                  Number(product.unitCost.value)
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {currencyFormatter.format(
+                                  Number(product.salePrice.value)
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {formatStatus(product.status)}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex justify-end gap-2">
+                                  {user?.role !== 'RESELLER' && (
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => handleEditProduct(product)}
+                                    >
+                                      <FileEdit className="h-4 w-4" />
+                                      <span className="sr-only">
+                                        {t('edit')}
+                                      </span>
+                                    </Button>
                                   )}
-                                </TableCell>
-                                <TableCell>
-                                  {model ? model.name.value : '-'}
-                                </TableCell>
-                                <TableCell>
-                                  {currencyFormatter.format(
-                                    Number(product.unitCost.value)
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {currencyFormatter.format(
-                                    Number(product.salePrice.value)
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {formatStatus(product.status)}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  <div className="flex justify-end gap-2">
-                                    {user?.role !== 'RESELLER' && (
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() =>
-                                          handleEditProduct(product)
-                                        }
-                                      >
-                                        <FileEdit className="h-4 w-4" />
-                                        <span className="sr-only">
-                                          {t('edit')}
-                                        </span>
-                                      </Button>
-                                    )}
-                                    {/* <Button
+                                  {/* <Button
                                       variant="ghost"
                                       size="icon"
                                       onClick={() =>
@@ -270,65 +261,62 @@ export function ProductsTable({
                                       <Trash2 className="h-4 w-4" />
                                       <span className="sr-only">Excluir</span>
                                     </Button> */}
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            )
-                          })}
-                          {Array.from({
-                            length: emptyRows > 0 ? emptyRows : 0
-                          }).map((_, idx) => (
-                            <TableRow key={`empty-${idx}`}>
-                              <TableCell colSpan={7} style={{ height: 57 }} />
+                                </div>
+                              </TableCell>
                             </TableRow>
-                          ))}
-                        </>
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={7} className="h-24 text-center">
-                            {t('noProductsFound')}
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-
-                {totalPages > 1 && (
-                  <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
-                    <div className="text-sm">
-                      {t('page', { current: currentPage, total: totalPages })}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          setCurrentPage((prev) => Math.max(prev - 1, 1))
-                        }
-                        disabled={currentPage === 1}
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">{t('previousPage')}</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          setCurrentPage((prev) =>
-                            Math.min(prev + 1, totalPages)
                           )
-                        }
-                        disabled={currentPage === totalPages}
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                        <span className="sr-only">{t('nextPage')}</span>
-                      </Button>
-                    </div>
+                        })}
+                        {Array.from({
+                          length: emptyRows > 0 ? emptyRows : 0
+                        }).map((_, idx) => (
+                          <TableRow key={`empty-${idx}`}>
+                            <TableCell colSpan={7} style={{ height: 57 }} />
+                          </TableRow>
+                        ))}
+                      </>
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={7} className="h-24 text-center">
+                          {t('noProductsFound')}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:justify-end">
+                  <div className="text-sm">
+                    {t('page', { current: currentPage, total: totalPages })}
                   </div>
-                )}
-              </>
-            )}
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      <span className="sr-only">{t('previousPage')}</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                      }
+                      disabled={currentPage === totalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                      <span className="sr-only">{t('nextPage')}</span>
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
           </div>
         </CardContent>
       </Card>

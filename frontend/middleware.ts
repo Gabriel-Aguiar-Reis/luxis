@@ -10,9 +10,7 @@ type JwtPayload = {
 }
 
 const intlMiddleware = createMiddleware({
-  locales: routing.locales,
-  defaultLocale: routing.defaultLocale,
-  localePrefix: 'as-needed',
+  ...routing,
   localeDetection: true
 })
 

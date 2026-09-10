@@ -36,7 +36,6 @@ type ModelsFiltersType = {
 type ModelsTableProps = {
   models: ProductModel[]
   categories: Category[]
-  isLoading: boolean
   modelsPerPage?: number
   handleEditModel: (model: ProductModel) => void
   handleDeleteProductModel: (id: string) => void
@@ -45,7 +44,6 @@ type ModelsTableProps = {
 export function ModelsTable({
   models,
   categories,
-  isLoading,
   modelsPerPage = 10,
   handleEditModel,
   handleDeleteProductModel
@@ -166,145 +164,137 @@ export function ModelsTable({
               />
             )}
 
-            {isLoading ? (
-              <div className="flex h-[400px] w-full items-center justify-center">
-                <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
-              </div>
-            ) : (
-              <>
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>{t('photo')}</TableHead>
-                        <TableHead>{t('name')}</TableHead>
-                        <TableHead>{t('categoryName')}</TableHead>
-                        <TableHead>{t('suggestedPrice')}</TableHead>
-                        <TableHead>{t('status')}</TableHead>
-                        <TableHead className="text-right">
-                          {t('actions')}
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {paginatedModels.length > 0 ? (
-                        <>
-                          {paginatedModels.map((model) => {
-                            return (
-                              <TableRow key={model.id}>
-                                <TableCell>
-                                  {model?.photoUrl ? (
-                                    <img
-                                      src={model.photoUrl.value}
-                                      alt={model.name.value}
-                                      className="h-10 w-10 rounded object-cover"
-                                    />
-                                  ) : (
-                                    <span className="text-muted-foreground text-xs">
-                                      {t('noPhoto')}
+            <>
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('photo')}</TableHead>
+                      <TableHead>{t('name')}</TableHead>
+                      <TableHead>{t('categoryName')}</TableHead>
+                      <TableHead>{t('suggestedPrice')}</TableHead>
+                      <TableHead>{t('status')}</TableHead>
+                      <TableHead className="text-right">
+                        {t('actions')}
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedModels.length > 0 ? (
+                      <>
+                        {paginatedModels.map((model) => {
+                          return (
+                            <TableRow key={model.id}>
+                              <TableCell>
+                                {model?.photoUrl ? (
+                                  <img
+                                    src={model.photoUrl.value}
+                                    alt={model.name.value}
+                                    className="h-10 w-10 rounded object-cover"
+                                  />
+                                ) : (
+                                  <span className="text-muted-foreground text-xs">
+                                    {t('noPhoto')}
+                                  </span>
+                                )}
+                              </TableCell>
+                              <TableCell>{model.name.value}</TableCell>
+                              <TableCell>
+                                {
+                                  categories.find(
+                                    (category) =>
+                                      category.id === model.categoryId
+                                  )?.name.value
+                                }
+                              </TableCell>
+                              <TableCell>
+                                {currencyFormatter.format(
+                                  Number(model.suggestedPrice.value)
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {formatStatus(model.status)}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex justify-end gap-2">
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => handleEditModel(model)}
+                                  >
+                                    <FileEdit className="h-4 w-4" />
+                                    <span className="sr-only">{t('edit')}</span>
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() =>
+                                      handleDeleteProductModel(model.id)
+                                    }
+                                    disabled={
+                                      model.status === 'ARCHIVED' ||
+                                      model.status === 'USED'
+                                    }
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                    <span className="sr-only">
+                                      {t('delete')}
                                     </span>
-                                  )}
-                                </TableCell>
-                                <TableCell>{model.name.value}</TableCell>
-                                <TableCell>
-                                  {
-                                    categories.find(
-                                      (category) =>
-                                        category.id === model.categoryId
-                                    )?.name.value
-                                  }
-                                </TableCell>
-                                <TableCell>
-                                  {currencyFormatter.format(
-                                    Number(model.suggestedPrice.value)
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {formatStatus(model.status)}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  <div className="flex justify-end gap-2">
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() => handleEditModel(model)}
-                                    >
-                                      <FileEdit className="h-4 w-4" />
-                                      <span className="sr-only">
-                                        {t('edit')}
-                                      </span>
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() =>
-                                        handleDeleteProductModel(model.id)
-                                      }
-                                      disabled={
-                                        model.status === 'ARCHIVED' ||
-                                        model.status === 'USED'
-                                      }
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                      <span className="sr-only">
-                                        {t('delete')}
-                                      </span>
-                                    </Button>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            )
-                          })}
-                          {Array.from({
-                            length: emptyRows > 0 ? emptyRows : 0
-                          }).map((_, idx) => (
-                            <TableRow key={`empty-${idx}`}>
-                              <TableCell colSpan={7} style={{ height: 57 }} />
+                                  </Button>
+                                </div>
+                              </TableCell>
                             </TableRow>
-                          ))}
-                        </>
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={7} className="h-24 text-center">
-                            {t('noModelsFound')}
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
+                          )
+                        })}
+                        {Array.from({
+                          length: emptyRows > 0 ? emptyRows : 0
+                        }).map((_, idx) => (
+                          <TableRow key={`empty-${idx}`}>
+                            <TableCell colSpan={7} style={{ height: 57 }} />
+                          </TableRow>
+                        ))}
+                      </>
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={7} className="h-24 text-center">
+                          {t('noModelsFound')}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
 
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-end space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                      }
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      <span className="sr-only">{t('previousPage')}</span>
-                    </Button>
-                    <div className="text-sm">
-                      {t('page', { current: currentPage, total: totalPages })}
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                      }
-                      disabled={currentPage === totalPages}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                      <span className="sr-only">{t('nextPage')}</span>
-                    </Button>
+              {totalPages > 1 && (
+                <div className="flex items-center justify-end space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">{t('previousPage')}</span>
+                  </Button>
+                  <div className="text-sm">
+                    {t('page', { current: currentPage, total: totalPages })}
                   </div>
-                )}
-              </>
-            )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                    <span className="sr-only">{t('nextPage')}</span>
+                  </Button>
+                </div>
+              )}
+            </>
           </div>
         </CardContent>
       </Card>

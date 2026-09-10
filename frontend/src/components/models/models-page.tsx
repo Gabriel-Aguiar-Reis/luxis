@@ -83,7 +83,6 @@ export function ModelsPage() {
       <ModelsTable
         models={models}
         categories={categories}
-        isLoading={isLoading}
         handleEditModel={handleOpenDialog}
         handleDeleteProductModel={handleDeleteProductModel}
       />
