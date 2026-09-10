@@ -206,5 +206,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/((?!api|trpc|_next|_vercel|.*\\..*).*)', '/:locale/:path*']
+  // '/:locale/:path*' was removed: it has no exclusion for _next/_vercel/api,
+  // so it matched static asset requests (e.g. /_next/static/...) and let
+  // next-intl redirect them to a locale-prefixed path that doesn't exist,
+  // causing 404s on CSS/JS chunks in production.
+  matcher: ['/((?!api|trpc|_next|_vercel|.*\\..*).*)']
 }
