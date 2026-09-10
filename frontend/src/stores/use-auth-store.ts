@@ -47,14 +47,17 @@ export const useAuthStore = create<AuthState>()(
       login: async (dto: loginDto) => {
         set({ isLoading: true, error: null })
         try {
-          await apiFetch<void>(
-            apiPaths.auth.login,
-            {
-              body: JSON.stringify(dto)
-            },
-            false,
-            'POST'
-          )
+          const loginResponse = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(dto)
+          })
+
+          if (!loginResponse.ok) {
+            const data = await loginResponse.json().catch(() => undefined)
+            throw new Error(data?.message ?? 'Erro inesperado')
+          }
 
           const session = await apiFetch<verifyDtoReturn>(
             apiPaths.auth.verify,
@@ -87,11 +90,10 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        void apiFetch<void>(apiPaths.auth.logout, {}, false, 'POST').catch(
-          () => {
-            return undefined
-          }
-        )
+        void fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        }).catch(() => undefined)
 
         set({
           user: null,

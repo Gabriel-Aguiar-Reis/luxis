@@ -11,9 +11,10 @@ export class ApiError extends Error {
   }
 }
 
-const API = (
-  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000'
-).replace(/\/+$/, '')
+// Requests go through this app's own proxy (see /api/backend) so the
+// session cookie stays scoped to the frontend's domain instead of the
+// backend's, letting middleware read it while keeping it httpOnly.
+const API = '/api/backend'
 const REQUEST_TIMEOUT_MS = 15000
 const RETRYABLE_METHODS = new Set(['GET', 'HEAD'])
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504])
