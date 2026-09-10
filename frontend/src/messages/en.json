@@ -222,7 +222,10 @@
     "SessionExpired": "Session expired",
     "Settings": "Settings",
     "Logout": "Logout",
-    "Dashboard": "Dashboard"
+    "Dashboard": "Dashboard",
+    "retry": "Try again",
+    "loadErrorTitle": "Failed to load data",
+    "loadErrorDescription": "Something went wrong while loading this information. Please try again."
   },
   "SaleConfirmation": {
     "breadcrumb": "Confirmation",
@@ -445,6 +448,30 @@
   "ModelsPage": {
     "emptyTitle": "No models found!",
     "emptyDescription": "There are no models registered in the system."
+  },
+  "BatchesPage": {
+    "title": "Supply batches",
+    "newBatch": "New batch",
+    "emptyTitle": "No batches found!",
+    "emptyDescription": "There are no batches registered in the system."
+  },
+  "CustomersPage": {
+    "title": "Customers",
+    "newCustomer": "New customer",
+    "emptyTitle": "No customers found!",
+    "emptyDescription": "There are no customers registered in the system."
+  },
+  "SuppliersPage": {
+    "title": "Suppliers",
+    "newSupplier": "New supplier",
+    "emptyTitle": "No suppliers found!",
+    "emptyDescription": "There are no suppliers registered in the system."
+  },
+  "TransfersPage": {
+    "title": "Transfers",
+    "newTransfer": "New transfer",
+    "emptyTitle": "No transfers found!",
+    "emptyDescription": "There are no transfers registered in the system."
   },
   "ModelsDeleteDialog": {
     "title": "Delete product model",

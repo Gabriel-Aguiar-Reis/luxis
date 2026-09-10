@@ -12,18 +12,34 @@ import {
 import { useGetCategories } from '@/hooks/use-categories'
 import { useGetModels } from '@/hooks/use-product-models'
 import { useQueryClient } from '@tanstack/react-query'
-import { Ban } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ErrorState } from '@/components/ui/error-state'
 
 export function ProductsPage() {
   const t = useTranslations('ProductsPage')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
-  const { data: products, isLoading: isLoadingProducts } = useGetProducts()
-  const { data: categories, isLoading: isLoadingCategories } =
-    useGetCategories()
-  const { data: models, isLoading: isLoadingModels } = useGetModels()
+  const {
+    data: products,
+    isLoading: isLoadingProducts,
+    isError: isErrorProducts,
+    refetch: refetchProducts
+  } = useGetProducts()
+  const {
+    data: categories,
+    isLoading: isLoadingCategories,
+    isError: isErrorCategories,
+    refetch: refetchCategories
+  } = useGetCategories()
+  const {
+    data: models,
+    isLoading: isLoadingModels,
+    isError: isErrorModels,
+    refetch: refetchModels
+  } = useGetModels()
   const { mutate: changeProduct } = useChangeProduct(useQueryClient())
 
   const handleEditProduct = (product: Product) => {
@@ -36,18 +52,27 @@ export function ProductsPage() {
   }
 
   const isLoading = isLoadingProducts || isLoadingCategories || isLoadingModels
+  const isError = isErrorProducts || isErrorCategories || isErrorModels
 
-  if (!products || !categories || !models || isLoading) {
+  if (isLoading) {
+    return <Skeleton className="h-[200px] w-full" />
+  }
+
+  if (isError) {
     return (
-      <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-        <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
-          <Ban className="text-primary h-6 w-6" />
-        </div>
-        <h3 className="mt-4 text-lg font-semibold">{t('emptyTitle')}</h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          {t('emptyDescription')}
-        </p>
-      </div>
+      <ErrorState
+        onRetry={() => {
+          refetchProducts()
+          refetchCategories()
+          refetchModels()
+        }}
+      />
+    )
+  }
+
+  if (!products || !categories || !models) {
+    return (
+      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
     )
   }
 

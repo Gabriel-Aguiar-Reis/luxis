@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Ban, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Supplier } from '@/lib/api-types'
 import {
   useCreateSupplier,
@@ -15,9 +15,14 @@ import { useQueryClient } from '@tanstack/react-query'
 import { SupplierDeleteDialog } from '@/components/suppliers/supplier-delete-dialog'
 import { SupplierCreateDialog } from '@/components/suppliers/supplier-create-dialog'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ErrorState } from '@/components/ui/error-state'
 import { PhoneNumberUtil } from 'google-libphonenumber'
+import { useTranslations } from 'next-intl'
 
 export function SuppliersPage() {
+  const t = useTranslations('SuppliersPage')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -27,34 +32,32 @@ export function SuppliersPage() {
 
   const phoneUtil = PhoneNumberUtil.getInstance()
 
-  const { data: suppliers, isLoading } = useGetSuppliers()
+  const { data: suppliers, isLoading, isError, refetch } = useGetSuppliers()
   const { mutate: updateSupplier } = useUpdateSupplier(useQueryClient())
   const { mutate: deleteSupplier } = useDeleteSupplier(useQueryClient())
   const { mutate: createSupplier } = useCreateSupplier(useQueryClient())
 
-  if (!suppliers || isLoading) {
+  if (isLoading) {
+    return <Skeleton className="h-[200px] w-full" />
+  }
+
+  if (isError) {
+    return <ErrorState onRetry={() => refetch()} />
+  }
+
+  if (!suppliers || suppliers.length === 0) {
     return (
-      <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-        <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
-          <Ban className="text-primary h-6 w-6" />
-        </div>
-        <h3 className="mt-4 text-lg font-semibold">
-          Nenhum fornecedor encontrado!
-        </h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          Não há fornecedores registrados no sistema.
-        </p>
-      </div>
+      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
     )
   }
 
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Fornecedores</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
         <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          Novo Fornecedor
+          {t('newSupplier')}
         </Button>
       </div>
       <SuppliersTable

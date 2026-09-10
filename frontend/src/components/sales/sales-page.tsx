@@ -1,10 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Ban, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ErrorState } from '@/components/ui/error-state'
 import {
   GetOneSaleResponse,
   useConfirmSale,
@@ -42,7 +45,7 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { data: sales, isLoading } = useGetSales()
+  const { data: sales, isLoading, isError, refetch } = useGetSales()
 
   const { mutate: updateSale } = useUpdateSale(queryClient)
   const { mutate: updateSaleStatus } = useUpdateSaleStatus(queryClient)
@@ -57,17 +60,17 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
   const canEdit = role === 'ADMIN'
   const canDelete = true
 
-  if (!sales || isLoading) {
+  if (isLoading) {
+    return <Skeleton className="h-[200px] w-full" />
+  }
+
+  if (isError) {
+    return <ErrorState onRetry={() => refetch()} />
+  }
+
+  if (!sales || sales.length === 0) {
     return (
-      <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-        <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
-          <Ban className="text-primary h-6 w-6" />
-        </div>
-        <h3 className="mt-4 text-lg font-semibold">{t('emptyTitle')}</h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          {t('emptyDescription')}
-        </p>
-      </div>
+      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
     )
   }
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Ban, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import {
   GetOneReturnResponse,
   useCreateReturn,
@@ -12,6 +12,9 @@ import {
 } from '@/hooks/use-returns'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ErrorState } from '@/components/ui/error-state'
 import { ReturnsTable } from '@/components/returns/returns-table'
 import { ReturnEditStatusDialog } from '@/components/returns/return-edit-status-dialog'
 import { ReturnDeleteDialog } from '@/components/returns/return-delete-dialog'
@@ -28,24 +31,24 @@ export function ReturnsPage() {
   const [selectedReturn, setSelectedReturn] =
     useState<GetOneReturnResponse | null>(null)
 
-  const { data: returns, isLoading } = useGetReturns()
+  const { data: returns, isLoading, isError, refetch } = useGetReturns()
 
   const { mutate: updateReturn } = useUpdateReturn(useQueryClient())
   const { mutate: updateReturnStatus } = useUpdateReturnStatus(useQueryClient())
   const { mutate: deleteReturn } = useDeleteReturn(useQueryClient())
   const { mutate: createReturn } = useCreateReturn(useQueryClient())
 
-  if (!returns || isLoading) {
+  if (isLoading) {
+    return <Skeleton className="h-[200px] w-full" />
+  }
+
+  if (isError) {
+    return <ErrorState onRetry={() => refetch()} />
+  }
+
+  if (!returns || returns.length === 0) {
     return (
-      <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-        <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
-          <Ban className="text-primary h-6 w-6" />
-        </div>
-        <h3 className="mt-4 text-lg font-semibold">{t('emptyTitle')}</h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          {t('emptyDescription')}
-        </p>
-      </div>
+      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
     )
   }
 

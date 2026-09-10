@@ -12,6 +12,7 @@ import type {
   CreateShipmentDto as OrvalCreateShipmentDto
 } from '@/api/model'
 import { queryKeys } from '@/lib/query-keys'
+import { unwrapResponse } from '@/lib/unwrap-response'
 import { QueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
@@ -32,7 +33,7 @@ export function useGetShipments() {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as GetShipmentDto[] | undefined
+    data: unwrapResponse<GetShipmentDto[]>(result.data)
   }
 }
 

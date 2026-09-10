@@ -1,6 +1,7 @@
 import { useGetInventoryById as useGetInventoryByIdRaw } from '@/api/inventory/inventory'
 import type { GetInventoryByIdReturnDto } from '@/api/model'
 import { queryKeys } from '@/lib/query-keys'
+import { unwrapResponse } from '@/lib/unwrap-response'
 
 export type GetInventoryByIdReturn = GetInventoryByIdReturnDto
 
@@ -14,6 +15,6 @@ export function useGetInventoryById(resellerId: string) {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as GetInventoryByIdReturnDto | undefined
+    data: unwrapResponse<GetInventoryByIdReturnDto>(result.data)
   }
 }

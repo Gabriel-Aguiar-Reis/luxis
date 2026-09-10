@@ -221,7 +221,10 @@
     "SessionExpired": "Sessão expirada",
     "Settings": "Configurações",
     "Logout": "Sair",
-    "Dashboard": "Dashboard"
+    "Dashboard": "Dashboard",
+    "retry": "Tentar novamente",
+    "loadErrorTitle": "Falha ao carregar dados",
+    "loadErrorDescription": "Algo deu errado ao carregar essas informações. Tente novamente."
   },
   "SaleConfirmation": {
     "breadcrumb": "Confirmação",
@@ -444,6 +447,30 @@
   "ModelsPage": {
     "emptyTitle": "Nenhum modelo encontrado!",
     "emptyDescription": "Não há modelos registrados no sistema."
+  },
+  "BatchesPage": {
+    "title": "Lotes de fornecimento",
+    "newBatch": "Novo lote",
+    "emptyTitle": "Nenhum lote encontrado!",
+    "emptyDescription": "Não há lotes registrados no sistema."
+  },
+  "CustomersPage": {
+    "title": "Clientes",
+    "newCustomer": "Novo cliente",
+    "emptyTitle": "Nenhum cliente encontrado!",
+    "emptyDescription": "Não há clientes registrados no sistema."
+  },
+  "SuppliersPage": {
+    "title": "Fornecedores",
+    "newSupplier": "Novo fornecedor",
+    "emptyTitle": "Nenhum fornecedor encontrado!",
+    "emptyDescription": "Não há fornecedores registrados no sistema."
+  },
+  "TransfersPage": {
+    "title": "Transferências",
+    "newTransfer": "Nova transferência",
+    "emptyTitle": "Nenhuma transferência encontrada!",
+    "emptyDescription": "Não há transferências registradas no sistema."
   },
   "ModelsDeleteDialog": {
     "title": "Excluir modelo de produto",

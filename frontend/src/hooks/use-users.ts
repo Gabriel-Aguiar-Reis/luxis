@@ -16,6 +16,7 @@ import type {
 } from '@/api/model'
 import { QueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/query-keys'
+import { unwrapResponse } from '@/lib/unwrap-response'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
@@ -151,14 +152,14 @@ export function useGetUsers() {
   const result = useGetAllUsersRaw({
     query: { queryKey: queryKeys.users.all(), staleTime: 2 * 60 * 1000 }
   })
-  return { ...result, data: (result.data as any)?.data as User[] | undefined }
+  return { ...result, data: unwrapResponse<User[]>(result.data) }
 }
 
 export function useGetPendingUsers() {
   const result = useGetAllPendingUsersRaw({
     query: { queryKey: queryKeys.users.pending(), staleTime: 2 * 60 * 1000 }
   })
-  return { ...result, data: (result.data as any)?.data as User[] | undefined }
+  return { ...result, data: unwrapResponse<User[]>(result.data) }
 }
 
 export function useGetUserProducts(userId: string) {
@@ -171,6 +172,6 @@ export function useGetUserProducts(userId: string) {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as UserProductDto[] | undefined
+    data: unwrapResponse<UserProductDto[]>(result.data)
   }
 }

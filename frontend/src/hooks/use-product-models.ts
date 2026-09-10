@@ -8,6 +8,7 @@ import type {
   UpdateProductModelDto as OrvalUpdateModelDto
 } from '@/api/model'
 import { queryKeys } from '@/lib/query-keys'
+import { unwrapResponse } from '@/lib/unwrap-response'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
@@ -20,7 +21,7 @@ export function useGetModels() {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as ProductModel[] | undefined
+    data: unwrapResponse<ProductModel[]>(result.data)
   }
 }
 

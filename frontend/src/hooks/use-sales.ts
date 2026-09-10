@@ -19,6 +19,7 @@ import type {
 } from '@/api/model'
 import { QueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/query-keys'
+import { unwrapResponse } from '@/lib/unwrap-response'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
@@ -46,9 +47,7 @@ export function useGetAvailableProductsToSell() {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as
-      | GetAvailableProductsToSellDto
-      | undefined
+    data: unwrapResponse<GetAvailableProductsToSellDto>(result.data)
   }
 }
 
@@ -82,7 +81,7 @@ export function useGetSales() {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as GetSaleDto[] | undefined
+    data: unwrapResponse<GetSaleDto[]>(result.data)
   }
 }
 
@@ -97,7 +96,7 @@ export function useGetSale(id: string) {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as GetSaleDto | undefined
+    data: unwrapResponse<GetSaleDto>(result.data)
   }
 }
 

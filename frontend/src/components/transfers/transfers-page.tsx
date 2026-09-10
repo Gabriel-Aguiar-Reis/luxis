@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Ban, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { GetAllOwnershipTransferReturn } from '@/lib/api-types'
 import {
   useCreateTransfer,
@@ -12,12 +13,16 @@ import {
 } from '@/hooks/use-transfers'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ErrorState } from '@/components/ui/error-state'
 import { TransferCreateDialog } from '@/components/transfers/transfer-create-dialog'
 import { TransferDeleteDialog } from '@/components/transfers/transfer-delete-dialog'
 import { TransferDialog } from '@/components/transfers/transfer-dialog'
 import { TransferEditStatusDialog } from '@/components/transfers/transfer-edit-status-dialog'
 import { TransfersTable } from '@/components/transfers/transfers-table'
 export function TransfersPage() {
+  const t = useTranslations('TransfersPage')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -26,7 +31,7 @@ export function TransfersPage() {
     GetAllOwnershipTransferReturn[0] | null
   >(null)
 
-  const { data: transfers, isLoading } = useGetTransfers()
+  const { data: transfers, isLoading, isError, refetch } = useGetTransfers()
 
   const { mutate: updateTransfer } = useUpdateTransfer(useQueryClient())
   const { mutate: updateTransferStatus } = useUpdateTransferStatus(
@@ -35,19 +40,17 @@ export function TransfersPage() {
   const { mutate: deleteTransfer } = useDeleteTransfer(useQueryClient())
   const { mutate: createTransfer } = useCreateTransfer(useQueryClient())
 
-  if (!transfers || isLoading) {
+  if (isLoading) {
+    return <Skeleton className="h-[200px] w-full" />
+  }
+
+  if (isError) {
+    return <ErrorState onRetry={() => refetch()} />
+  }
+
+  if (!transfers || transfers.length === 0) {
     return (
-      <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-        <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
-          <Ban className="text-primary h-6 w-6" />
-        </div>
-        <h3 className="mt-4 text-lg font-semibold">
-          Nenhuma transferência encontrada!
-        </h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          Não há transferências registradas no sistema.
-        </p>
-      </div>
+      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
     )
   }
 
@@ -55,14 +58,14 @@ export function TransfersPage() {
     <div className="flex-1 space-y-4 p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Transferências
+          {t('title')}
         </h2>
         <Button
           onClick={() => setIsCreateDialogOpen(true)}
           className="w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Nova Transferência
+          {t('newTransfer')}
         </Button>
       </div>
       <TransfersTable

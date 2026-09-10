@@ -8,6 +8,7 @@ import type {
   UpdateProductDto as OrvalUpdateProductDto
 } from '@/api/model'
 import { queryKeys } from '@/lib/query-keys'
+import { unwrapResponse } from '@/lib/unwrap-response'
 import { QueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
@@ -21,7 +22,7 @@ export function useGetProducts() {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as Product[] | undefined
+    data: unwrapResponse<Product[]>(result.data)
   }
 }
 
@@ -34,7 +35,7 @@ export function useGetAvailableProducts() {
   })
   return {
     ...result,
-    data: (result.data as any)?.data as Product[] | undefined
+    data: unwrapResponse<Product[]>(result.data)
   }
 }
 
