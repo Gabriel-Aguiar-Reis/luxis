@@ -1,7 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { BadRequestException } from '@nestjs/common'
-import * as sqlite3 from 'sqlite3'
 
 export const databaseConfig = (
   appConfigService: AppConfigService
@@ -33,9 +32,10 @@ export const databaseConfig = (
       }
 
     case 'test':
+      // Loaded lazily so production (Postgres) never requires the native sqlite3 binary
       return {
         type: 'sqlite',
-        driver: sqlite3,
+        driver: require('sqlite3'),
         database: ':memory:',
         entities,
         synchronize: true,

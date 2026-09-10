@@ -14,7 +14,6 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { ConfigService } from '@nestjs/config'
 import * as dotenv from 'dotenv'
 import { BadRequestException } from '@nestjs/common'
-import * as sqlite3 from 'sqlite3'
 import { Init1749406833692 } from '@/shared/infra/database/migrations/1749406833692-Init'
 import { AddPerformanceIndexes1749500000000 } from '@/shared/infra/database/migrations/1749500000000-AddPerformanceIndexes'
 import { PasswordResetRequestTypeOrmEntity } from '@/shared/infra/persistence/typeorm/auth/password-reset-requests/password-reset-requests.typeorm.entity'
@@ -66,9 +65,10 @@ switch (appConfigService.getNodeEnv()) {
     break
 
   case 'test':
+    // Loaded lazily so production (Postgres) never requires the native sqlite3 binary
     AppDataSource = new DataSource({
       type: 'sqlite',
-      driver: sqlite3,
+      driver: require('sqlite3'),
       database: 'test.sqlite',
       ...commonConfig
     })
