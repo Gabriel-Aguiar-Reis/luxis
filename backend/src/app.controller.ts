@@ -1,4 +1,4 @@
-import { Controller, Get, Head } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common'
 import { AppConfigService } from '@/shared/config/app-config.service'
 
 @Controller()
@@ -13,9 +13,6 @@ export class AppController {
       environment: this.config.getNodeEnv()
     }
   }
-
-  @Head()
-  rootHead() {}
 
   @Get('health')
   health() {
