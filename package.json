@@ -14,7 +14,7 @@
     "check": "biome check backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
     "format": "biome format --write backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
     "lint": "biome lint backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
-    "typecheck": "cd frontend && tsc --noEmit && cd ../backend && tsc --noEmit",
+    "typecheck": "cd frontend && npx tsc --noEmit && cd ../backend && npx tsc --noEmit",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d postgres",
