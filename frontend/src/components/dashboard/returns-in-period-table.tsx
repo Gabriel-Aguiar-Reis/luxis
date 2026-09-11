@@ -17,7 +17,7 @@ export function ReturnsInPeriodTable({
     return (
       <div
         key="loading"
-        className="flex h-[350px] w-full items-center justify-center"
+        className="flex h-87.5 w-full items-center justify-center"
       >
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
       </div>
@@ -31,7 +31,7 @@ export function ReturnsInPeriodTable({
 
   if (!data || !Array.isArray(data.returns) || data.returns.length === 0) {
     return (
-      <div className="flex h-[300px] w-full items-center justify-center">
+      <div className="flex h-75 w-full items-center justify-center">
         <p className="text-gray-500">Não há devoluções no período.</p>
       </div>
     )

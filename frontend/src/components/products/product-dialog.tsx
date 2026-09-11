@@ -82,7 +82,7 @@ export function ProductDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-150">
         <form onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
