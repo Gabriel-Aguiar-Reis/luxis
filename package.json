@@ -23,7 +23,7 @@
     "@biomejs/biome": "^2.5.13",
     "concurrently": "^10.0.5",
     "jest-util": "^29.7.0",
-    "typeorm": "^0.3.31",
+    "typeorm": "^1.1.1",
     "typescript": "^5.9.3"
   }
 }

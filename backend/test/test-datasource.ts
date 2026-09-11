@@ -16,6 +16,24 @@ testDb.public.registerFunction({
   implementation: () => 'PostgreSQL 14.0'
 })
 
+// Compatibilidade: TypeORM 1.x usa a função quote_ident em algumas queries
+// internas; registrar uma versão simples para os testes no pg-mem.
+testDb.public.registerFunction({
+  name: 'quote_ident',
+  args: [DataType.text],
+  returns: DataType.text,
+  implementation: (v: any) => String(v)
+})
+
+// Registrar também no schema pg_catalog, onde o Postgres normalmente expõe
+// essa função, para compatibilidade com queries internas do TypeORM.
+testDb.getSchema('pg_catalog').registerFunction({
+  name: 'quote_ident',
+  args: [DataType.text],
+  returns: DataType.text,
+  implementation: (v: any) => String(v)
+})
+
 testDb.registerExtension('uuid-ossp', (schema) => {
   schema.registerFunction({
     name: 'uuid_generate_v4',
