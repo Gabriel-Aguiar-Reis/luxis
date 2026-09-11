@@ -6,7 +6,10 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { Logger as PinoLogger } from 'nestjs-pino'
 import { SwaggerModule } from '@nestjs/swagger'
 import { swaggerConfig, swaggerOptions } from '@/shared/config/swagger.config'
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
+import {
+  FastifyAdapter,
+  NestFastifyApplication
+} from '@nestjs/platform-fastify'
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({})
@@ -40,7 +43,11 @@ async function bootstrap() {
     })
   )
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig, swaggerOptions)
+  const document = SwaggerModule.createDocument(
+    app,
+    swaggerConfig,
+    swaggerOptions
+  )
   SwaggerModule.setup('api/docs', app, document)
 
   // Register Fastify multipart plugin to handle multipart/form-data if needed
