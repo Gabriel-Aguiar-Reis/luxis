@@ -10,6 +10,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
+import fastifyCookie from '@fastify/cookie'
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({})
@@ -18,6 +19,8 @@ async function bootstrap() {
     fastifyAdapter,
     { bufferLogs: true }
   )
+
+  await app.register(fastifyCookie)
 
   const config = app.get(AppConfigService)
   const corsOrigins = config.getCorsOrigins()
@@ -49,17 +52,6 @@ async function bootstrap() {
     swaggerOptions
   )
   SwaggerModule.setup('api/docs', app, document)
-
-  // Register Fastify multipart plugin to handle multipart/form-data if needed
-  try {
-    const fastifyInstance = app.getHttpAdapter().getInstance()
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const multipart = require('@fastify/multipart')
-    await fastifyInstance.register(multipart, { addToBody: true })
-  } catch (e) {
-    // ignore if plugin is not installed in some environments
-    Logger.warn('Could not register @fastify/multipart plugin: ' + String(e))
-  }
 
   await app.listen(port, '0.0.0.0')
   Logger.log(`App running on http://localhost:${port}`, 'Bootstrap')

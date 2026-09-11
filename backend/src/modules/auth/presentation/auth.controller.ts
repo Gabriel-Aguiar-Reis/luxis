@@ -26,9 +26,9 @@ import {
 } from '@nestjs/swagger'
 import { RequestPasswordResetDto } from '@/modules/auth/application/dtos/request-password-reset-dto'
 import { ResetPasswordDto } from '@/modules/auth/application/dtos/reset-password.dto'
-import { Response } from 'express'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { FastifyReply } from 'fastify'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'
@@ -80,7 +80,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() dto: LoginDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: FastifyReply
   ): Promise<void> {
     this.logger.log(
       `Login request received for user ${dto.email}`,
@@ -88,7 +88,7 @@ export class AuthController {
     )
     const result = await this.authService.login(dto)
 
-    res.cookie(this.config.getAuthCookieName(), result.accessToken, {
+    res.setCookie(this.config.getAuthCookieName(), result.accessToken, {
       httpOnly: true,
       sameSite: this.config.isProduction() ? 'none' : 'lax',
       secure: this.config.isProduction(),
@@ -100,7 +100,7 @@ export class AuthController {
   @ApiResponse({ status: 204, description: 'Logout successful' })
   @HttpCode(204)
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response): Promise<void> {
+  async logout(@Res({ passthrough: true }) res: FastifyReply): Promise<void> {
     res.clearCookie(this.config.getAuthCookieName(), {
       httpOnly: true,
       sameSite: this.config.isProduction() ? 'none' : 'lax',
@@ -221,24 +221,31 @@ export class AuthController {
     description: 'Reset password token'
   })
   @Get('reset-password-page')
-  async resetPasswordPage(@Query('token') token: string, @Res() res: Response) {
+  async resetPasswordPage(
+    @Query('token') token: string,
+    @Res() res: FastifyReply
+  ) {
     const template = readFileSync(
       join(this.templatesPath, 'template.html'),
       'utf-8'
     )
-    res.send(template.replace('{{token}}', token))
+    return res.type('text/html').send(template.replace('{{token}}', token))
   }
 
   @UseInterceptors(ServeStaticInterceptor)
   @Get('reset-password-page/styles.css')
-  async getStyles(@Res() res: Response) {
-    res.sendFile(join(this.templatesPath, 'styles.css'))
+  async getStyles(@Res() res: FastifyReply) {
+    return res
+      .type('text/css')
+      .send(readFileSync(join(this.templatesPath, 'styles.css')))
   }
 
   @UseInterceptors(ServeStaticInterceptor)
   @Get('reset-password-page/script.js')
-  async getScript(@Res() res: Response) {
-    res.sendFile(join(this.templatesPath, 'script.js'))
+  async getScript(@Res() res: FastifyReply) {
+    return res
+      .type('application/javascript')
+      .send(readFileSync(join(this.templatesPath, 'script.js')))
   }
 
   @ApiOperation({ summary: 'Verify JWT token', operationId: 'verify-token' })
