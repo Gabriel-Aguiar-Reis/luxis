@@ -33,11 +33,35 @@ const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
+  render,
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
+  const { trigger } = useFormContext<TFieldValues>()
+
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
+      <Controller
+        {...props}
+        render={(renderProps) => {
+          const { field, fieldState } = renderProps
+          return render({
+            ...renderProps,
+            field: {
+              ...field,
+              onChange: (...args: Parameters<typeof field.onChange>) => {
+                field.onChange(...args)
+                // The zod resolver doesn't always re-run validation on
+                // change by itself once a field is already erroring, so we
+                // force it here to clear stale error messages as the user
+                // types, instead of waiting for the next blur.
+                if (fieldState.error) {
+                  trigger(props.name)
+                }
+              }
+            }
+          })
+        }}
+      />
     </FormFieldContext.Provider>
   )
 }

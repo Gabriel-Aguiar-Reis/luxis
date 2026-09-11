@@ -123,6 +123,8 @@ export function SaleCreateForm() {
 
   const form = useForm<SaleFormValues>({
     resolver: zodResolver(saleSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       productIds: [],
       saleDate: new Date().toISOString(),

@@ -63,6 +63,8 @@ export function ResetPasswordForm({
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       password: '',
       confirmPassword: ''

@@ -20,7 +20,7 @@ export function NameFields({ form, isLoading, t }: NameFieldsProps) {
       <FormField
         control={form.control}
         name="name"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>{t('name')}</FormLabel>
             <FormControl>
@@ -32,6 +32,12 @@ export function NameFields({ form, isLoading, t }: NameFieldsProps) {
                 aria-label={t('name')}
                 aria-required="true"
                 disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('name')
+                  }
+                }}
                 onBlur={(e) => {
                   field.onBlur()
                   form.trigger('name')
@@ -45,7 +51,7 @@ export function NameFields({ form, isLoading, t }: NameFieldsProps) {
       <FormField
         control={form.control}
         name="surname"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem className="mt-4">
             <FormLabel>{t('surname')}</FormLabel>
             <FormControl>
@@ -56,6 +62,12 @@ export function NameFields({ form, isLoading, t }: NameFieldsProps) {
                 aria-label={t('surname')}
                 aria-required="true"
                 disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('surname')
+                  }
+                }}
                 onBlur={(e) => {
                   field.onBlur()
                   form.trigger('surname')

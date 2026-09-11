@@ -19,7 +19,7 @@ export function PhoneField({ form, isLoading, t }: PhoneFieldProps) {
     <FormField
       control={form.control}
       name="phone"
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className="mt-4">
           <FormLabel>{t('phone')}</FormLabel>
           <FormControl>
@@ -29,6 +29,9 @@ export function PhoneField({ form, isLoading, t }: PhoneFieldProps) {
               onChange={(e) => {
                 const raw = e.target.value.replace(/\D/g, '')
                 form.setValue('phone', raw)
+                if (fieldState.error) {
+                  form.trigger('phone')
+                }
               }}
               type="tel"
               placeholder={t('phoneNumber')}

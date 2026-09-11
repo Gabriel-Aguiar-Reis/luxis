@@ -54,6 +54,8 @@ export function CustomerDialog({
 
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       name: customer?.name.value || '',
       phone: customer?.phone.value || ''

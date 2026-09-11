@@ -30,6 +30,8 @@ export function AppearanceForm() {
   const defaultTheme = localStorage.getItem('theme')
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       theme:
         defaultTheme === 'light'

@@ -39,6 +39,8 @@ export function AdminLoginForm({
 
   const form = useForm<z.infer<typeof adminLoginSchema>>({
     resolver: zodResolver(adminLoginSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       password: ''
@@ -95,7 +97,7 @@ export function AdminLoginForm({
                 <FormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
@@ -108,6 +110,12 @@ export function AdminLoginForm({
                           aria-label="Email"
                           aria-required="true"
                           disabled={isLoading}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            if (fieldState.error) {
+                              form.trigger('email')
+                            }
+                          }}
                           onBlur={(e) => {
                             field.onBlur()
                             form.trigger('email')
@@ -121,7 +129,7 @@ export function AdminLoginForm({
                 <FormField
                   control={form.control}
                   name="password"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <div className="flex items-center">
                         <FormLabel>{t('password')}</FormLabel>
@@ -142,6 +150,12 @@ export function AdminLoginForm({
                             aria-label={t('password')}
                             aria-required="true"
                             disabled={isLoading}
+                            onChange={(e) => {
+                              field.onChange(e)
+                              if (fieldState.error) {
+                                form.trigger('password')
+                              }
+                            }}
                             onBlur={(e) => {
                               field.onBlur()
                               form.trigger('password')

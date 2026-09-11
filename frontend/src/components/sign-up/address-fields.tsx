@@ -33,7 +33,7 @@ export function AddressFields({
       <FormField
         control={form.control}
         name="street"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>{t('street')}</FormLabel>
             <FormControl>
@@ -44,6 +44,12 @@ export function AddressFields({
                 aria-label={t('street')}
                 aria-required="true"
                 disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('street')
+                  }
+                }}
                 onBlur={(e) => {
                   field.onBlur()
                   form.trigger('street')
@@ -57,7 +63,7 @@ export function AddressFields({
       <FormField
         control={form.control}
         name="number"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem className="mt-4">
             <FormLabel>{t('number')}</FormLabel>
             <FormControl>
@@ -68,6 +74,12 @@ export function AddressFields({
                 aria-label={t('number')}
                 aria-required="true"
                 disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('number')
+                  }
+                }}
                 onBlur={(e) => {
                   field.onBlur()
                   form.trigger('number')
@@ -81,7 +93,7 @@ export function AddressFields({
       <FormField
         control={form.control}
         name="complement"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem className="mt-4">
             <FormLabel>{t('complement')}</FormLabel>
             <FormControl>
@@ -91,6 +103,12 @@ export function AddressFields({
                 placeholder={t('complementPlaceholder')}
                 aria-label={t('complement')}
                 disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('complement')
+                  }
+                }}
                 onBlur={(e) => {
                   field.onBlur()
                   form.trigger('complement')
@@ -104,7 +122,7 @@ export function AddressFields({
       <FormField
         control={form.control}
         name="neighborhood"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem className="mt-4">
             <FormLabel>{t('neighborhood')}</FormLabel>
             <FormControl>
@@ -115,6 +133,12 @@ export function AddressFields({
                 aria-label={t('neighborhood')}
                 aria-required="true"
                 disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('neighborhood')
+                  }
+                }}
                 onBlur={(e) => {
                   field.onBlur()
                   form.trigger('neighborhood')
@@ -128,7 +152,7 @@ export function AddressFields({
       <FormField
         control={form.control}
         name="city"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem className="mt-4">
             <FormLabel>{t('city')}</FormLabel>
             <FormControl>
@@ -139,6 +163,12 @@ export function AddressFields({
                 aria-label={t('city')}
                 aria-required="true"
                 disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('city')
+                  }
+                }}
                 onBlur={(e) => {
                   field.onBlur()
                   form.trigger('city')

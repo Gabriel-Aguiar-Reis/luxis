@@ -105,6 +105,8 @@ export function ProfileForm() {
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       name: '',
       surname: '',

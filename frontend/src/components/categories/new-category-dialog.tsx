@@ -40,7 +40,9 @@ export function NewCategoryDialog({
     formState: { errors },
     reset
   } = useForm<CategoryForm>({
-    resolver: zodResolver(categorySchema)
+    resolver: zodResolver(categorySchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange'
   })
 
   const onSubmit = async (data: CategoryForm) => {

@@ -50,6 +50,8 @@ export function ForgotPasswordForm({
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: ''
     }

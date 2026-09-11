@@ -19,7 +19,7 @@ export function CepField({ form, isLoading, t }: CepFieldProps) {
     <FormField
       control={form.control}
       name="zipCode"
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className="mt-4">
           <FormLabel>{t('postalCode')}</FormLabel>
           <FormControl>
@@ -29,6 +29,9 @@ export function CepField({ form, isLoading, t }: CepFieldProps) {
               onChange={(e) => {
                 const raw = e.target.value.replace(/\D/g, '')
                 form.setValue('zipCode', raw)
+                if (fieldState.error) {
+                  form.trigger('zipCode')
+                }
               }}
               type="text"
               placeholder={t('postalCodePlaceholder')}

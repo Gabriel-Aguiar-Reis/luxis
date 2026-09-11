@@ -24,7 +24,7 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
       <FormField
         control={form.control}
         name="password"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <div className="space-y-2 relative">
               <FormLabel>{t('password')}</FormLabel>
@@ -38,6 +38,12 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
                     aria-label={t('password')}
                     aria-required="true"
                     disabled={isLoading}
+                    onChange={(e) => {
+                      field.onChange(e)
+                      if (fieldState.error) {
+                        form.trigger('password')
+                      }
+                    }}
                     onBlur={(e) => {
                       field.onBlur()
                       form.trigger('password')
@@ -66,7 +72,7 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
       <FormField
         control={form.control}
         name="confirmPassword"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem className="mt-4">
             <div className="space-y-2 relative">
               <FormLabel>{t('confirmPassword')}</FormLabel>
@@ -80,6 +86,12 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
                     aria-label={t('confirmPassword')}
                     aria-required="true"
                     disabled={isLoading}
+                    onChange={(e) => {
+                      field.onChange(e)
+                      if (fieldState.error) {
+                        form.trigger('confirmPassword')
+                      }
+                    }}
                     onBlur={(e) => {
                       field.onBlur()
                       form.trigger('confirmPassword')

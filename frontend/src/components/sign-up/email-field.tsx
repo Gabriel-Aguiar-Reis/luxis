@@ -19,7 +19,7 @@ export function EmailField({ form, isLoading, t }: EmailFieldProps) {
     <FormField
       control={form.control}
       name="email"
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className="mt-4">
           <FormLabel>Email</FormLabel>
           <FormControl>
@@ -31,6 +31,12 @@ export function EmailField({ form, isLoading, t }: EmailFieldProps) {
               aria-label="Email"
               aria-required="true"
               disabled={isLoading}
+              onChange={(e) => {
+                field.onChange(e)
+                if (fieldState.error) {
+                  form.trigger('email')
+                }
+              }}
               onBlur={(e) => {
                 field.onBlur()
                 form.trigger('email')

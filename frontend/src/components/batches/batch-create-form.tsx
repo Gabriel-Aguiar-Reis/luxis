@@ -86,6 +86,8 @@ export function BatchCreateForm() {
 
   const form = useForm<BatchFormValues>({
     resolver: zodResolver(batchSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       supplier: '',
       arrivalDate: '',

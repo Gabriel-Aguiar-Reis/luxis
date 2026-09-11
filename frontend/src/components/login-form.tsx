@@ -37,6 +37,8 @@ export function LoginForm({
   })
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       password: ''
@@ -102,7 +104,7 @@ export function LoginForm({
                 <FormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel>{t('email')}</FormLabel>
                       <FormControl>
@@ -115,6 +117,12 @@ export function LoginForm({
                           aria-label={t('email')}
                           aria-required="true"
                           disabled={isLoading}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            if (fieldState.error) {
+                              form.trigger('email')
+                            }
+                          }}
                           onBlur={(e) => {
                             field.onBlur()
                             form.trigger('email')
@@ -129,7 +137,7 @@ export function LoginForm({
                 <FormField
                   control={form.control}
                   name="password"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <div className="relative space-y-2">
                         <div className="flex items-center">
@@ -151,6 +159,12 @@ export function LoginForm({
                               aria-label={t('password')}
                               aria-required="true"
                               disabled={isLoading}
+                              onChange={(e) => {
+                                field.onChange(e)
+                                if (fieldState.error) {
+                                  form.trigger('password')
+                                }
+                              }}
                               onBlur={(e) => {
                                 field.onBlur()
                                 form.trigger('password')

@@ -101,6 +101,8 @@ export function SignUpForm({
 
   const form = useForm<formValues>({
     resolver: zodResolver(formSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       name: '',
       surname: '',
