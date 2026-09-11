@@ -54,10 +54,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         exception instanceof Error ? exception.stack : undefined
     }
 
-    this.logger.error(
-      `Error: ${message} - Path: ${request?.url} - Status: ${status}`,
-      exception instanceof Error ? exception.stack : undefined
-    )
+    const logMessage = `Error: ${message} - Path: ${request?.url} - Status: ${status}`
+    if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      this.logger.error(
+        logMessage,
+        exception instanceof Error ? exception.stack : undefined
+      )
+    } else {
+      this.logger.warn(logMessage)
+    }
 
     httpAdapter.reply(response, responseBody, status)
   }
