@@ -1,5 +1,5 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
-import { setRequestLocale } from 'next/root-params'
+import { setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { SessionFeedbackListener } from '@/components/auth/session-feedback-listener'
 import { routing } from '@/lib/i18n/routing'
