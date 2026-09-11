@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import { UserRole, UserStatus } from '@/lib/api-types'
@@ -65,9 +65,9 @@ export function UserFilters({
       </div>
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
         <div className="space-y-2">
-          <Label htmlFor="name-filter" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="name-filter" className="text-xs sm:text-sm">
             Nome
-          </Label>
+          </FieldLabel>
           <Input
             id="name-filter"
             type="text"
@@ -78,9 +78,9 @@ export function UserFilters({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email-filter" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="email-filter" className="text-xs sm:text-sm">
             Email
-          </Label>
+          </FieldLabel>
           <Input
             id="email-filter"
             type="text"
@@ -91,9 +91,9 @@ export function UserFilters({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="phone-filter" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="phone-filter" className="text-xs sm:text-sm">
             Telefone
-          </Label>
+          </FieldLabel>
           <Input
             id="phone-filter"
             type="text"
@@ -104,9 +104,9 @@ export function UserFilters({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="role-filter" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="role-filter" className="text-xs sm:text-sm">
             Função
-          </Label>
+          </FieldLabel>
           <Select
             value={filters.role || ''}
             onValueChange={(value) => updateFilter('role', value || undefined)}
@@ -134,9 +134,9 @@ export function UserFilters({
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="status-filter" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="status-filter" className="text-xs sm:text-sm">
             Status
-          </Label>
+          </FieldLabel>
           <Select
             value={filters.status || ''}
             onValueChange={(value) =>

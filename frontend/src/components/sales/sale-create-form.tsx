@@ -53,7 +53,7 @@ import { format } from 'date-fns'
 import { AddCustomerDialog } from '@/components/sales/add-customer-dialog'
 import { AddProductDialog } from '@/components/sales/add-product-dialog'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { useAuthStore } from '@/stores/use-auth-store'
 import { useLocale, useTranslations } from 'next-intl'
 import {
@@ -570,7 +570,7 @@ export function SaleCreateForm() {
                     checked={isCashPayment}
                     onCheckedChange={() => setIsCashPayment(!isCashPayment)}
                   />
-                  <Label>{t('cashPayment')}</Label>
+                  <FieldLabel>{t('cashPayment')}</FieldLabel>
                 </div>
               )}
               {((paymentMethod === 'CASH' && !isCashPayment) ||

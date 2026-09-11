@@ -8,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
+import { FieldLabel } from '@/components/ui/field'
 import { ptBR } from 'date-fns/locale'
 
 export type BatchFiltersType = {
@@ -63,7 +64,7 @@ export function BatchesFilters({
       </div>
       <div className="flex gap-4">
         <div className="w-80 space-y-2">
-          <label className="block text-xs font-medium">Fornecedor</label>
+          <FieldLabel className="text-xs">Fornecedor</FieldLabel>
           <Input
             placeholder="Nome do fornecedor"
             value={filters.supplier || ''}
@@ -71,7 +72,7 @@ export function BatchesFilters({
           />
         </div>
         <div className="w-fit space-y-2">
-          <label className="block text-xs font-medium">Data da chegada</label>
+          <FieldLabel className="text-xs">Data da chegada</FieldLabel>
           <Popover>
             <PopoverTrigger asChild>
               <Button

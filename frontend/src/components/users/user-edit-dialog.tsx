@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import {
   Dialog,
   DialogContent,
@@ -55,7 +55,7 @@ export function UserEditDialog({ user, isOpen, onClose }: UserDialogProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg">
             Editar Função do Usuário
@@ -68,9 +68,9 @@ export function UserEditDialog({ user, isOpen, onClose }: UserDialogProps) {
 
         <div className="grid gap-3 py-3 sm:gap-4 sm:py-4">
           <div className="space-y-2">
-            <Label htmlFor="role" className="text-xs sm:text-sm">
+            <FieldLabel htmlFor="role" className="text-xs sm:text-sm">
               Função
-            </Label>
+            </FieldLabel>
             <Select value={selectedRole} onValueChange={handleRoleChange}>
               <SelectTrigger
                 id="role"

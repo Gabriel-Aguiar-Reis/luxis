@@ -9,7 +9,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog'
 import { useCloudinaryUpload } from '@/hooks/use-cloudinary-upload'
-import { Label } from '@/components/ui/label'
+import { FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Category } from '@/lib/api-types'
@@ -137,14 +137,14 @@ export function NewModelDialog({
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div>
-            <Label>{t('modelName')}</Label>
+            <FieldLabel>{t('modelName')}</FieldLabel>
             <Input
               value={modelName}
               onChange={(e) => setModelName(e.target.value)}
             />
           </div>
           <div className="space-y-2">
-            <Label>{t('category')}</Label>
+            <FieldLabel>{t('category')}</FieldLabel>
             <Popover open={openCategory} onOpenChange={setOpenCategory}>
               <PopoverTrigger asChild>
                 <Button
@@ -217,7 +217,7 @@ export function NewModelDialog({
             />
           </div>
           <div>
-            <Label>{t('suggestedPrice')}</Label>
+            <FieldLabel>{t('suggestedPrice')}</FieldLabel>
             <InputGroup>
               <InputGroupAddon>
                 <InputGroupText>R$</InputGroupText>
@@ -235,15 +235,12 @@ export function NewModelDialog({
                 aria-describedby="new-model-price-hint"
               />
             </InputGroup>
-            <p
-              id="new-model-price-hint"
-              className="text-muted-foreground text-xs"
-            >
+            <FieldDescription id="new-model-price-hint" className="text-xs">
               {fieldHints.currency}
-            </p>
+            </FieldDescription>
           </div>
           <div>
-            <Label>{t('optionalImage')}</Label>
+            <FieldLabel>{t('optionalImage')}</FieldLabel>
             <Input
               type="file"
               accept="image/*"

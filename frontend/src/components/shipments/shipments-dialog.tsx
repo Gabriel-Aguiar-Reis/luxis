@@ -9,7 +9,7 @@ import {
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -172,7 +172,7 @@ export function ShipmentDialog({
             <div className="grid grid-cols-2 gap-4">
               {/* Revendedor */}
               <div className="col-span-2 space-y-2">
-                <Label>{t('reseller')}</Label>
+                <FieldLabel>{t('reseller')}</FieldLabel>
                 <Popover open={openReseller} onOpenChange={setOpenReseller}>
                   <PopoverTrigger asChild>
                     <Button
@@ -245,7 +245,7 @@ export function ShipmentDialog({
               </div>
               {/* Produtos */}
               <div className="col-span-2 space-y-2">
-                <Label>{t('products')}</Label>
+                <FieldLabel>{t('products')}</FieldLabel>
                 <Popover open={openProducts} onOpenChange={setOpenProducts}>
                   <PopoverTrigger asChild>
                     <Button

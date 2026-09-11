@@ -17,7 +17,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { enUS, ptBR } from 'date-fns/locale'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { useLocale, useTranslations } from 'next-intl'
 
 export type SalesFiltersType = {
@@ -129,7 +129,7 @@ export function SalesFilters({
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-wrap">
         <div className="w-full space-y-2 xl:w-80" id="reseller-name-field">
-          <Label>{t('reseller')}</Label>
+          <FieldLabel>{t('reseller')}</FieldLabel>
           <Input
             placeholder={t('resellerPlaceholder')}
             value={filters.resellerName || ''}
@@ -137,7 +137,7 @@ export function SalesFilters({
           />
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="status-field">
-          <Label>{t('status')}</Label>
+          <FieldLabel>{t('status')}</FieldLabel>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
@@ -155,7 +155,7 @@ export function SalesFilters({
           </Select>
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="sale-date-field">
-          <Label>{t('saleDate')}</Label>
+          <FieldLabel>{t('saleDate')}</FieldLabel>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -190,7 +190,7 @@ export function SalesFilters({
           </Popover>
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="payment-method-field">
-          <Label>{t('paymentMethod')}</Label>
+          <FieldLabel>{t('paymentMethod')}</FieldLabel>
           <Select
             value={filters.paymentMethod || ''}
             onValueChange={(v) => updateFilter('paymentMethod', v || undefined)}
@@ -208,7 +208,7 @@ export function SalesFilters({
           </Select>
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="total-amount-min-field">
-          <Label>{t('minAmount')}</Label>
+          <FieldLabel>{t('minAmount')}</FieldLabel>
           <Input
             type="number"
             placeholder={t('amountPlaceholder')}
@@ -223,7 +223,7 @@ export function SalesFilters({
           />
         </div>
         <div className="w-full space-y-2 xl:w-fit" id="total-amount-max-field">
-          <Label>{t('maxAmount')}</Label>
+          <FieldLabel>{t('maxAmount')}</FieldLabel>
           <Input
             type="number"
             placeholder={t('amountPlaceholder')}

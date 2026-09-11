@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/popover'
 import { enUS, ptBR } from 'date-fns/locale'
 import { useLocale, useTranslations } from 'next-intl'
+import { FieldLabel } from '@/components/ui/field'
 
 export type ReturnFiltersType = {
   status?: ReturnStatus
@@ -76,7 +77,7 @@ export function ReturnsFilters({
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">{t('reseller')}</label>
+          <FieldLabel className="text-xs">{t('reseller')}</FieldLabel>
           <Input
             placeholder={t('resellerPlaceholder')}
             value={filters.reseller || ''}
@@ -84,7 +85,7 @@ export function ReturnsFilters({
           />
         </div>
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">{t('status')}</label>
+          <FieldLabel className="text-xs">{t('status')}</FieldLabel>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
@@ -102,7 +103,7 @@ export function ReturnsFilters({
           </Select>
         </div>
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">{t('returnDate')}</label>
+          <FieldLabel className="text-xs">{t('returnDate')}</FieldLabel>
           <Popover>
             <PopoverTrigger asChild>
               <Button

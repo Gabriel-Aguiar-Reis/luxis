@@ -14,7 +14,10 @@ import {
 } from 'react-hook-form'
 
 import { cn } from 'cn'
-import { Label } from '@/components/ui/label'
+import {
+  FieldDescription as BaseFieldDescription,
+  FieldLabel
+} from '@/components/ui/field'
 
 const Form = FormProvider
 
@@ -118,7 +121,7 @@ function FormLabel({
   const { error, formItemId } = useFormField()
 
   return (
-    <Label
+    <FieldLabel
       data-slot="form-label"
       data-error={!!error}
       className={cn('data-[error=true]:text-destructive', className)}
@@ -150,10 +153,10 @@ function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
   const { formDescriptionId } = useFormField()
 
   return (
-    <p
+    <BaseFieldDescription
       data-slot="form-description"
       id={formDescriptionId}
-      className={cn('text-muted-foreground text-sm', className)}
+      className={className}
       {...props}
     />
   )

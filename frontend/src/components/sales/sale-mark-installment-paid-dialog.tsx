@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { GetOneSaleResponse, MarkInstallmentPaidDto } from '@/hooks/use-sales'
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
@@ -68,7 +68,7 @@ export function SaleMarkInstallmentPaidDialog({
           </AlertDialogDescription>
 
           <div>
-            <Label className="mb-2">{t('howManyInstallments')}</Label>
+            <FieldLabel className="mb-2">{t('howManyInstallments')}</FieldLabel>
             <Input
               type="number"
               value={installmentNumber}

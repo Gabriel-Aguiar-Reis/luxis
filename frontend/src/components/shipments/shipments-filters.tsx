@@ -18,6 +18,7 @@ import {
 import { enUS, ptBR } from 'date-fns/locale'
 import { ShipmentStatus } from '@/lib/api-types'
 import { useLocale, useTranslations } from 'next-intl'
+import { FieldLabel } from '@/components/ui/field'
 
 export type ShipmentFiltersType = {
   status?: ShipmentStatus
@@ -77,7 +78,7 @@ export function ShipmentFilters({
       </div>
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         <div className="space-y-2">
-          <label className="block text-xs font-medium">{t('reseller')}</label>
+          <FieldLabel className="text-xs">{t('reseller')}</FieldLabel>
           <Input
             placeholder={t('resellerPlaceholder')}
             value={filters.reseller || ''}
@@ -86,7 +87,7 @@ export function ShipmentFilters({
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-medium">{t('status')}</label>
+          <FieldLabel className="text-xs">{t('status')}</FieldLabel>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
@@ -108,9 +109,7 @@ export function ShipmentFilters({
           </Select>
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-medium">
-            {t('shipmentDate')}
-          </label>
+          <FieldLabel className="text-xs">{t('shipmentDate')}</FieldLabel>
           <Popover>
             <PopoverTrigger asChild>
               <Button

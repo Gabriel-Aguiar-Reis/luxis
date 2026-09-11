@@ -11,7 +11,7 @@ import { CreateSupplierDto } from '@/hooks/use-suppliers'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Label } from '@/components/ui/label'
+import { FieldDescription, FieldLabel } from '@/components/ui/field'
 import {
   InputGroup,
   InputGroupAddon,
@@ -74,7 +74,7 @@ export function SupplierCreateDialog({
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nome</Label>
+                <FieldLabel htmlFor="name">Nome</FieldLabel>
                 <InputGroup>
                   <InputGroupInput
                     id="name"
@@ -87,12 +87,9 @@ export function SupplierCreateDialog({
                     <InputGroupText>2-80</InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-                <p
-                  id="supplier-name-hint"
-                  className="text-muted-foreground text-xs"
-                >
+                <FieldDescription id="supplier-name-hint" className="text-xs">
                   {fieldHints.name}
-                </p>
+                </FieldDescription>
                 {errors.name && (
                   <p className="text-destructive text-sm">
                     {errors.name.message}
@@ -100,7 +97,7 @@ export function SupplierCreateDialog({
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefone</Label>
+                <FieldLabel htmlFor="phone">Telefone</FieldLabel>
                 <InputGroup>
                   <InputGroupAddon>
                     <InputGroupText>+55</InputGroupText>
@@ -117,12 +114,9 @@ export function SupplierCreateDialog({
                     })}
                   />
                 </InputGroup>
-                <p
-                  id="supplier-phone-hint"
-                  className="text-muted-foreground text-xs"
-                >
+                <FieldDescription id="supplier-phone-hint" className="text-xs">
                   {fieldHints.phone}
-                </p>
+                </FieldDescription>
                 {errors.phone && (
                   <p className="text-destructive text-sm">
                     {errors.phone.message}

@@ -13,7 +13,7 @@ import {
   InputGroupInput,
   InputGroupText
 } from '@/components/ui/input-group'
-import { Label } from '@/components/ui/label'
+import { FieldDescription, FieldLabel } from '@/components/ui/field'
 import { useTranslations } from 'next-intl'
 import { fieldHints, onlyPhoneChars } from '@/lib/form-guidance'
 
@@ -55,7 +55,7 @@ export function AddCustomerDialog({
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="customer-name">{t('name')}</Label>
+              <FieldLabel htmlFor="customer-name">{t('name')}</FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   id="customer-name"
@@ -68,12 +68,9 @@ export function AddCustomerDialog({
                   <InputGroupText>2-80</InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-              <p
-                id="new-customer-name-hint"
-                className="text-muted-foreground text-xs"
-              >
+              <FieldDescription id="new-customer-name-hint" className="text-xs">
                 {fieldHints.name}
-              </p>
+              </FieldDescription>
               {newCustomerForm.formState.errors.name && (
                 <p className="text-destructive text-sm">
                   {newCustomerForm.formState.errors.name.message}
@@ -81,7 +78,7 @@ export function AddCustomerDialog({
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="customer-phone">{t('phone')}</Label>
+              <FieldLabel htmlFor="customer-phone">{t('phone')}</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <InputGroupText>+55</InputGroupText>
@@ -98,12 +95,12 @@ export function AddCustomerDialog({
                   })}
                 />
               </InputGroup>
-              <p
+              <FieldDescription
                 id="new-customer-phone-hint"
-                className="text-muted-foreground text-xs"
+                className="text-xs"
               >
                 {fieldHints.phone}
-              </p>
+              </FieldDescription>
               {newCustomerForm.formState.errors.phone && (
                 <p className="text-destructive text-sm">
                   {newCustomerForm.formState.errors.phone.message}

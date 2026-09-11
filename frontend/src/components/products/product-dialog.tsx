@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FieldDescription, FieldLabel } from '@/components/ui/field'
 import {
   Dialog,
   DialogContent,
@@ -92,7 +92,9 @@ export function ProductDialog({
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="serialNumber">{t('serialNumber')}</Label>
+                <FieldLabel htmlFor="serialNumber">
+                  {t('serialNumber')}
+                </FieldLabel>
                 <Input
                   id="serialNumber"
                   name="serialNumber"
@@ -102,7 +104,7 @@ export function ProductDialog({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status">{t('status')}</Label>
+                <FieldLabel htmlFor="status">{t('status')}</FieldLabel>
                 <Select value={formData.status || 'IN_STOCK'} disabled>
                   <SelectTrigger id="status">
                     <SelectValue />
@@ -121,7 +123,7 @@ export function ProductDialog({
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="modelId">{t('model')}</Label>
+                <FieldLabel htmlFor="modelId">{t('model')}</FieldLabel>
                 <Select value={product.modelId || ''} disabled>
                   <SelectTrigger id="modelId">
                     <SelectValue placeholder={t('selectModel')} />
@@ -136,7 +138,7 @@ export function ProductDialog({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="batchId">{t('batch')}</Label>
+                <FieldLabel htmlFor="batchId">{t('batch')}</FieldLabel>
                 <Input
                   id="batchId"
                   name="batchId"
@@ -148,7 +150,7 @@ export function ProductDialog({
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="unitCost">{t('unitCost')}</Label>
+                <FieldLabel htmlFor="unitCost">{t('unitCost')}</FieldLabel>
                 <InputGroup>
                   <InputGroupAddon>
                     <InputGroupText>R$</InputGroupText>
@@ -167,15 +169,15 @@ export function ProductDialog({
                     required
                   />
                 </InputGroup>
-                <p
+                <FieldDescription
                   id="product-unit-cost-hint"
-                  className="text-muted-foreground text-xs"
+                  className="text-xs"
                 >
                   {fieldHints.currency}
-                </p>
+                </FieldDescription>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="salePrice">{t('salePrice')}</Label>
+                <FieldLabel htmlFor="salePrice">{t('salePrice')}</FieldLabel>
                 <InputGroup>
                   <InputGroupAddon>
                     <InputGroupText>R$</InputGroupText>
@@ -194,12 +196,12 @@ export function ProductDialog({
                     required
                   />
                 </InputGroup>
-                <p
+                <FieldDescription
                   id="product-sale-price-hint"
-                  className="text-muted-foreground text-xs"
+                  className="text-xs"
                 >
                   {fieldHints.currency}
-                </p>
+                </FieldDescription>
               </div>
             </div>
           </div>

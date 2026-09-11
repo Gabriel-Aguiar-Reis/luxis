@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { X } from 'lucide-react'
 
 export type CustomersFiltersType = {
@@ -55,7 +55,7 @@ export function CustomersFilters({
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         <div className="space-y-2">
-          <Label htmlFor="name-filter">Nome</Label>
+          <FieldLabel htmlFor="name-filter">Nome</FieldLabel>
           <Input
             id="name-filter"
             type="text"
@@ -66,7 +66,7 @@ export function CustomersFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phone-filter">Telefone</Label>
+          <FieldLabel htmlFor="phone-filter">Telefone</FieldLabel>
           <Input
             id="phone-filter"
             type="text"

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { DialogHeader, DialogFooter } from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
+import { FieldDescription, FieldLabel } from '@/components/ui/field'
 import { UpdateSupplierDto } from '@/hooks/use-suppliers'
 import { Supplier } from '@/lib/api-types'
 import {
@@ -101,7 +101,7 @@ export function SupplierDialog({
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nome</Label>
+                <FieldLabel htmlFor="name">Nome</FieldLabel>
                 <InputGroup>
                   <InputGroupInput
                     id="name"
@@ -114,12 +114,12 @@ export function SupplierDialog({
                     <InputGroupText>2-80</InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-                <p
+                <FieldDescription
                   id="supplier-edit-name-hint"
-                  className="text-muted-foreground text-xs"
+                  className="text-xs"
                 >
                   {fieldHints.name}
-                </p>
+                </FieldDescription>
                 {errors.name && (
                   <p className="text-destructive text-sm">
                     {errors.name.message}
@@ -127,7 +127,7 @@ export function SupplierDialog({
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefone</Label>
+                <FieldLabel htmlFor="phone">Telefone</FieldLabel>
                 <InputGroup>
                   <InputGroupAddon>
                     <InputGroupText>+55</InputGroupText>
@@ -144,12 +144,12 @@ export function SupplierDialog({
                     })}
                   />
                 </InputGroup>
-                <p
+                <FieldDescription
                   id="supplier-edit-phone-hint"
-                  className="text-muted-foreground text-xs"
+                  className="text-xs"
                 >
                   {fieldHints.phone}
-                </p>
+                </FieldDescription>
                 {errors.phone && (
                   <p className="text-destructive text-sm">
                     {errors.phone.message}

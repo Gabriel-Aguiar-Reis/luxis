@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { X } from 'lucide-react'
 import { Product, Category, ProductModel } from '@/lib/api-types'
 import { useTranslations } from 'next-intl'
@@ -75,7 +75,9 @@ export function ProductFilters({
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
         <div className="space-y-2">
-          <Label htmlFor="serial-number-filter">{t('serialNumber')}</Label>
+          <FieldLabel htmlFor="serial-number-filter">
+            {t('serialNumber')}
+          </FieldLabel>
           <Input
             id="serial-number-filter"
             type="text"
@@ -85,7 +87,7 @@ export function ProductFilters({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="status-filter">{t('status')}</Label>
+          <FieldLabel htmlFor="status-filter">{t('status')}</FieldLabel>
           <Select
             value={filters.status || ''}
             onValueChange={(value) =>
@@ -104,7 +106,7 @@ export function ProductFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="category-filter">{t('category')}</Label>
+          <FieldLabel htmlFor="category-filter">{t('category')}</FieldLabel>
           <Select
             value={filters.categoryId || ''}
             onValueChange={(value) =>
@@ -125,7 +127,7 @@ export function ProductFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="model-filter">{t('model')}</Label>
+          <FieldLabel htmlFor="model-filter">{t('model')}</FieldLabel>
           <Select
             value={filters.modelId || ''}
             onValueChange={(value) =>
@@ -146,7 +148,7 @@ export function ProductFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="min-price">{t('minPrice')}</Label>
+          <FieldLabel htmlFor="min-price">{t('minPrice')}</FieldLabel>
           <Input
             id="min-price"
             type="number"
@@ -162,7 +164,7 @@ export function ProductFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="max-price">{t('maxPrice')}</Label>
+          <FieldLabel htmlFor="max-price">{t('maxPrice')}</FieldLabel>
           <Input
             id="max-price"
             type="number"

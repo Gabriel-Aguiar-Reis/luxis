@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import imageCompression from 'browser-image-compression'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import {
   Dialog,
   DialogContent,
@@ -188,7 +188,7 @@ export function ModelDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-150">
         <form onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle className="text-base sm:text-lg">
@@ -201,9 +201,9 @@ export function ModelDialog({
 
           <div className="grid gap-3 py-4 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-xs sm:text-sm">
+              <FieldLabel htmlFor="name" className="text-xs sm:text-sm">
                 {t('name')}
-              </Label>
+              </FieldLabel>
               <Input
                 id="name"
                 name="name"
@@ -215,9 +215,12 @@ export function ModelDialog({
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <div className="w-full space-y-2">
-                <Label htmlFor="suggestedPrice" className="text-xs sm:text-sm">
+                <FieldLabel
+                  htmlFor="suggestedPrice"
+                  className="text-xs sm:text-sm"
+                >
                   {t('suggestedPrice')}
-                </Label>
+                </FieldLabel>
                 <Input
                   id="suggestedPrice"
                   name="suggestedPrice"
@@ -231,9 +234,9 @@ export function ModelDialog({
                 />
               </div>
               <div className="w-full space-y-2 sm:w-auto">
-                <Label htmlFor="categoryId" className="text-xs sm:text-sm">
+                <FieldLabel htmlFor="categoryId" className="text-xs sm:text-sm">
                   {t('category')}
-                </Label>
+                </FieldLabel>
                 <Select
                   value={formData.categoryId}
                   onValueChange={(value) =>
@@ -278,9 +281,12 @@ export function ModelDialog({
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <div className="w-full space-y-2">
-                <Label htmlFor="description" className="text-xs sm:text-sm">
+                <FieldLabel
+                  htmlFor="description"
+                  className="text-xs sm:text-sm"
+                >
                   {t('descriptionField')}
-                </Label>
+                </FieldLabel>
                 <Input
                   id="description"
                   name="description"
@@ -290,9 +296,9 @@ export function ModelDialog({
                 />
               </div>
               <div className="w-full space-y-2 sm:w-auto">
-                <Label htmlFor="status" className="text-xs sm:text-sm">
+                <FieldLabel htmlFor="status" className="text-xs sm:text-sm">
                   {t('status')}
-                </Label>
+                </FieldLabel>
                 <Select
                   value={formData.status}
                   onValueChange={(value) =>
@@ -341,9 +347,12 @@ export function ModelDialog({
                   </TabsList>
                   <TabsContent value="url">
                     <div className="w-full space-y-2">
-                      <Label htmlFor="photoUrl" className="text-xs sm:text-sm">
+                      <FieldLabel
+                        htmlFor="photoUrl"
+                        className="text-xs sm:text-sm"
+                      >
                         {t('imageUrl')}
-                      </Label>
+                      </FieldLabel>
                       <div className="flex gap-2">
                         <Input
                           id="photoUrl"
@@ -359,9 +368,12 @@ export function ModelDialog({
                   </TabsContent>
                   <TabsContent value="upload">
                     <div className="w-full space-y-2">
-                      <Label htmlFor="photo" className="text-xs sm:text-sm">
+                      <FieldLabel
+                        htmlFor="photo"
+                        className="text-xs sm:text-sm"
+                      >
                         {t('imageFile')}
-                      </Label>
+                      </FieldLabel>
                       <Input
                         id="photo"
                         name="photo"

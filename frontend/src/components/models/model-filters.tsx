@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { X } from 'lucide-react'
 import { Category } from '@/lib/api-types'
 import { useTranslations } from 'next-intl'
@@ -71,9 +71,9 @@ export function ModelFilters({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <div className="space-y-2">
-          <Label htmlFor="model-id-filter" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="model-id-filter" className="text-xs sm:text-sm">
             {t('id')}
-          </Label>
+          </FieldLabel>
           <Input
             id="model-id-filter"
             type="text"
@@ -84,9 +84,12 @@ export function ModelFilters({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="model-name-filter" className="text-xs sm:text-sm">
+          <FieldLabel
+            htmlFor="model-name-filter"
+            className="text-xs sm:text-sm"
+          >
             {t('modelName')}
-          </Label>
+          </FieldLabel>
           <Input
             id="model-name-filter"
             type="text"
@@ -97,9 +100,9 @@ export function ModelFilters({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="category-filter" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="category-filter" className="text-xs sm:text-sm">
             {t('category')}
-          </Label>
+          </FieldLabel>
           <Select
             value={filters.categoryName || ''}
             onValueChange={(value) =>
@@ -127,9 +130,9 @@ export function ModelFilters({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="suggested-price" className="text-xs sm:text-sm">
+          <FieldLabel htmlFor="suggested-price" className="text-xs sm:text-sm">
             {t('suggestedPrice')}
-          </Label>
+          </FieldLabel>
           <Input
             id="suggested-price"
             type="number"

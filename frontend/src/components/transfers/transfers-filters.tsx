@@ -16,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
+import { FieldLabel } from '@/components/ui/field'
 import { ptBR } from 'date-fns/locale'
 
 export type TransfersFiltersType = {
@@ -74,7 +75,7 @@ export function TransfersFilters({
       </div>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">Doador</label>
+          <FieldLabel className="text-xs">Doador</FieldLabel>
           <Input
             placeholder="Nome do doador"
             value={filters.fromReseller || ''}
@@ -82,7 +83,7 @@ export function TransfersFilters({
           />
         </div>
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">Recebedor</label>
+          <FieldLabel className="text-xs">Recebedor</FieldLabel>
           <Input
             placeholder="Nome do recebedor"
             value={filters.toReseller || ''}
@@ -90,7 +91,7 @@ export function TransfersFilters({
           />
         </div>
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">Número de Série</label>
+          <FieldLabel className="text-xs">Número de Série</FieldLabel>
           <Input
             placeholder="Digite o número de série do produto"
             value={filters.serialNumber || ''}
@@ -98,7 +99,7 @@ export function TransfersFilters({
           />
         </div>
         <div className="w-full space-y-2">
-          <label className="block text-xs font-medium">Status</label>
+          <FieldLabel className="text-xs">Status</FieldLabel>
           <Select
             value={filters.status || ''}
             onValueChange={(v) => updateFilter('status', v || undefined)}
@@ -116,9 +117,7 @@ export function TransfersFilters({
           </Select>
         </div>
         <div className="w-fit space-y-2">
-          <label className="block text-xs font-medium">
-            Data da Transferência
-          </label>
+          <FieldLabel className="text-xs">Data da Transferência</FieldLabel>
           <Popover>
             <PopoverTrigger asChild>
               <Button

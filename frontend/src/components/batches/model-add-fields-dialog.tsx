@@ -15,6 +15,7 @@ import {
   InputGroupInput,
   InputGroupText
 } from '@/components/ui/input-group'
+import { FieldDescription, FieldLabel } from '@/components/ui/field'
 import { fieldHints } from '@/lib/form-guidance'
 
 type ModelAddFieldsProps = {
@@ -104,9 +105,7 @@ export function ModelAddFields({
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <label className="mb-2 block text-sm font-medium leading-none">
-                Quantidade (un)
-              </label>
+              <FieldLabel>Quantidade (un)</FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   type="number"
@@ -122,17 +121,12 @@ export function ModelAddFields({
                   <InputGroupText>un</InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-              <p
-                id="batch-quantity-hint"
-                className="text-muted-foreground text-xs"
-              >
+              <FieldDescription id="batch-quantity-hint" className="text-xs">
                 {fieldHints.quantity}
-              </p>
+              </FieldDescription>
             </div>
             <div className="space-y-2">
-              <label className="mb-2 block text-sm font-medium leading-none">
-                Custo Unitário R$
-              </label>
+              <FieldLabel>Custo Unitário R$</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <InputGroupText>R$</InputGroupText>
@@ -150,17 +144,12 @@ export function ModelAddFields({
                   aria-describedby="batch-unit-cost-hint"
                 />
               </InputGroup>
-              <p
-                id="batch-unit-cost-hint"
-                className="text-muted-foreground text-xs"
-              >
+              <FieldDescription id="batch-unit-cost-hint" className="text-xs">
                 {fieldHints.currency}
-              </p>
+              </FieldDescription>
             </div>
             <div className="space-y-2">
-              <label className="mb-2 block text-sm font-medium leading-none">
-                Preço de Venda R$
-              </label>
+              <FieldLabel>Preço de Venda R$</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <InputGroupText>R$</InputGroupText>
@@ -178,12 +167,9 @@ export function ModelAddFields({
                   aria-describedby="batch-sale-price-hint"
                 />
               </InputGroup>
-              <p
-                id="batch-sale-price-hint"
-                className="text-muted-foreground text-xs"
-              >
+              <FieldDescription id="batch-sale-price-hint" className="text-xs">
                 {fieldHints.currency}
-              </p>
+              </FieldDescription>
             </div>
           </CardContent>
           {error && <span className="ml-2 text-xs text-red-500">{error}</span>}

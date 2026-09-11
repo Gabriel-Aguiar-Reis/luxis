@@ -75,7 +75,7 @@ export function ShipmentEditStatusDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg">
             {t('title')}

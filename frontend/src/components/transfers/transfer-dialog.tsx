@@ -9,7 +9,7 @@ import {
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field'
 import { UpdateTransferDto } from '@/hooks/use-transfers'
 import { useGetUsers } from '@/hooks/use-users'
 import { useGetInventoryById } from '@/hooks/use-inventory'
@@ -198,7 +198,7 @@ export function TransferDialog({
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Doador */}
               <div className="space-y-2">
-                <Label>Doador</Label>
+                <FieldLabel>Doador</FieldLabel>
                 <Popover open={openFrom} onOpenChange={setOpenFrom}>
                   <PopoverTrigger asChild>
                     <Button
@@ -275,7 +275,7 @@ export function TransferDialog({
               </div>
               {/* Recebedor */}
               <div className="space-y-2">
-                <Label>Recebedor</Label>
+                <FieldLabel>Recebedor</FieldLabel>
                 <Popover open={openTo} onOpenChange={setOpenTo}>
                   <PopoverTrigger asChild>
                     <Button
@@ -345,7 +345,7 @@ export function TransferDialog({
               </div>
               {/* Produto */}
               <div className="space-y-2 sm:col-span-2">
-                <Label>Produto</Label>
+                <FieldLabel>Produto</FieldLabel>
                 <Popover open={openProduct} onOpenChange={setOpenProduct}>
                   <PopoverTrigger asChild>
                     <Button
