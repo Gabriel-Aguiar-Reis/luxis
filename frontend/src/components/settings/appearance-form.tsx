@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTheme } from 'next-themes'
+import { useTheme } from '@/components/theme-provider'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -27,24 +27,17 @@ const appearanceFormSchema = z.object({
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
 
 export function AppearanceForm() {
-  const defaultTheme = localStorage.getItem('theme')
+  const { setTheme, theme } = useTheme()
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      theme:
-        defaultTheme === 'light'
-          ? 'light'
-          : defaultTheme === 'dark'
-            ? 'dark'
-            : 'system'
+      theme
     }
   })
 
   const [isLoading, setIsLoading] = useState(false)
-
-  const { setTheme } = useTheme()
 
   const handleSubmit = (values: AppearanceFormValues) => {
     setIsLoading(true)

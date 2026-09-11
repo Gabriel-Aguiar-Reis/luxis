@@ -1,6 +1,6 @@
 'use client'
 
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider } from '@/components/theme-provider'
 import { QueryProvider } from '@/lib/providers/query-provider'
 import { ToasterProvider } from '@/components/toaster-provider'
 import { OnboardingProvider } from '@/components/onboarding/onboarding-provider'
@@ -9,12 +9,7 @@ import { MockApiProvider } from '@/components/mock-api-provider'
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <MockApiProvider>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
+      <ThemeProvider defaultTheme="system">
         <OnboardingProvider>
           <QueryProvider>
             <>{children}</>
