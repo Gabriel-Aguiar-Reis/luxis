@@ -1,12 +1,15 @@
 import { GetSaleProductDto } from '@/modules/sale/application/dtos/get-sale-product.dto'
 import { PaymentMethod } from '@/modules/sale/domain/enums/payment-method.enum'
 import { SaleStatus } from '@/modules/sale/domain/enums/sale-status.enum'
-import { Name } from '@/modules/user/domain/value-objects/name.vo'
-import { PhoneNumber } from '@/modules/user/domain/value-objects/phone-number.vo'
-import { Currency } from '@/shared/common/value-object/currency.vo'
-import { Unit } from '@/shared/common/value-object/unit.vo'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator'
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsUUID
+} from 'class-validator'
 import { UUID } from 'crypto'
 
 export class GetSaleDto {
@@ -33,20 +36,22 @@ export class GetSaleDto {
   @ApiProperty({
     description: 'The name of the customer',
     example: 'John Doe',
-    type: Name,
+    type: String,
     required: true
   })
   @IsNotEmpty()
-  customerName: Name
+  @IsString()
+  customerName: string
 
   @ApiProperty({
     description: 'The phone number of the customer',
     example: '+5511999999999',
-    type: PhoneNumber,
+    type: String,
     required: true
   })
   @IsNotEmpty()
-  customerPhone: PhoneNumber
+  @IsString()
+  customerPhone: string
 
   @ApiProperty({
     description: 'The ID of the reseller',
@@ -88,11 +93,12 @@ export class GetSaleDto {
   @ApiProperty({
     description: 'The total amount of the sale',
     example: '1000.00',
-    type: Currency,
+    type: String,
     required: true
   })
   @IsNotEmpty()
-  totalAmount: Currency
+  @IsString()
+  totalAmount: string
 
   @ApiProperty({
     description: 'The payment method of the sale',
@@ -108,11 +114,12 @@ export class GetSaleDto {
   @ApiProperty({
     description: 'The number of installments',
     example: 12,
-    type: Unit,
+    type: Number,
     required: true
   })
   @IsNotEmpty()
-  numberInstallments: Unit
+  @IsNumber()
+  numberInstallments: number
 
   @ApiProperty({
     description: 'The status of the sale',
@@ -128,18 +135,20 @@ export class GetSaleDto {
   @ApiProperty({
     description: 'The interval between installments in days',
     example: 30,
-    type: Unit,
+    type: Number,
     required: true
   })
   @IsNotEmpty()
-  installmentsInterval: Unit
+  @IsNumber()
+  installmentsInterval: number
 
   @ApiProperty({
     description: 'The number of installments paid',
     example: 3,
-    type: Unit,
+    type: Number,
     required: true
   })
   @IsNotEmpty()
-  installmentsPaid: Unit
+  @IsNumber()
+  installmentsPaid: number
 }

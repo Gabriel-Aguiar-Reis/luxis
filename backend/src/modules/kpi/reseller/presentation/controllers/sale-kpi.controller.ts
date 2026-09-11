@@ -7,7 +7,6 @@ import { MonthlySalesDto } from '@/modules/kpi/reseller/application/dtos/sale/mo
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
-import { CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { ResellerKpiEndpoint } from '@/shared/infra/auth/decorators/reseller-kpi-endpoint.decorator'
 
 @ApiTags('Reseller KPIs - Sales')
@@ -29,8 +28,6 @@ export class ResellerSaleKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheKey('monthly-sales')
-  @CacheTTL(300)
   @Post('monthly')
   async getMonthlySales(
     @Body() qParams: ParamsDto,
@@ -52,8 +49,6 @@ export class ResellerSaleKpiController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheKey('average-ticket')
-  @CacheTTL(300)
   @Post('average-ticket')
   async getAverageTicket(
     @CurrentUser() user: UserPayload,

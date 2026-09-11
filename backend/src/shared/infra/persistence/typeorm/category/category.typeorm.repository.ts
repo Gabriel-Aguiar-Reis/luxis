@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { Category } from '@/modules/category/domain/entities/category.entity'
 import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
 import { CategoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/category/category.typeorm.entity'
@@ -24,6 +24,13 @@ export class CategoryTypeOrmRepository implements CategoryRepository {
     const entity = await this.repository.findOne({ where: { id } })
     if (!entity) return null
     return CategoryMapper.toDomain(entity)
+  }
+
+  async findManyByIds(ids: UUID[]): Promise<Category[]> {
+    if (ids.length === 0) return []
+
+    const entities = await this.repository.findBy({ id: In(ids) })
+    return entities.map(CategoryMapper.toDomain)
   }
 
   async create(category: Category): Promise<Category> {

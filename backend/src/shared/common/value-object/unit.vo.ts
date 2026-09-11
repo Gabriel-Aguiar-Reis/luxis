@@ -1,8 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
 
 export class Unit {
-  @ApiProperty({ description: 'The unit value', type: Number })
   private readonly value: number
   constructor(value: number) {
     if (!this.validate(value))

@@ -4,7 +4,6 @@ import { UUID } from 'crypto'
 import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { InventoryReadRepository } from '@/modules/kpi/reseller/domain/repositories/inventory-read.repository'
 import { InventoryProductModelDto } from '@/modules/kpi/reseller/application/dtos/inventory/inventory-product-model.dto'
-import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
 import { ProductStatus } from '@/modules/product/domain/enums/product-status.enum'
@@ -14,8 +13,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 @Injectable()
 export class InventoryReadTypeormRepository implements InventoryReadRepository {
   constructor(
-    @InjectRepository(InventoryTypeOrmEntity)
-    private readonly inventoryRepo: Repository<InventoryTypeOrmEntity>,
     @InjectRepository(ProductTypeOrmEntity)
     private readonly productRepo: Repository<ProductTypeOrmEntity>,
     @InjectRepository(ProductModelTypeOrmEntity)
@@ -26,19 +23,14 @@ export class InventoryReadTypeormRepository implements InventoryReadRepository {
     resellerId: UUID,
     qParams: ParamsDto
   ): Promise<InventoryProductModelDto[]> {
-    const inventory = await this.inventoryRepo.findOne({
-      where: { resellerId }
-    })
-
-    if (!inventory || inventory.productIds.length === 0) {
-      return []
-    }
-
     const qb = this.productRepo
       .createQueryBuilder('product')
-      .where('product.id::text IN (:...productIds)', {
-        productIds: inventory.productIds
-      })
+      .innerJoin(
+        'inventory_products',
+        'inventoryProduct',
+        'inventoryProduct.product_id = product.id'
+      )
+      .where('inventoryProduct.reseller_id = :resellerId', { resellerId })
       .andWhere('product.status = :status', { status: ProductStatus.ASSIGNED })
 
     const filteredProducts = baseWhere(qb, qParams, 'product.created_at')

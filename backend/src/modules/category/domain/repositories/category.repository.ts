@@ -5,6 +5,7 @@ import { UUID } from 'crypto'
 export abstract class CategoryRepository {
   abstract findAll(): Promise<Category[]>
   abstract findById(id: UUID): Promise<Category | null>
+  abstract findManyByIds(ids: UUID[]): Promise<Category[]>
   abstract create(category: Category): Promise<Category>
   abstract update(category: Category): Promise<Category>
   abstract updateStatus(id: UUID, status: CategoryStatus): Promise<Category>

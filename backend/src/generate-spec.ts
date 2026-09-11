@@ -21,14 +21,22 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule } from '@nestjs/swagger'
+import {
+  FastifyAdapter,
+  NestFastifyApplication
+} from '@nestjs/platform-fastify'
 import { AppModule } from '@/app.module'
 import { swaggerConfig, swaggerOptions } from '@/shared/config/swagger.config'
 
 async function generateSpec() {
-  const app = await NestFactory.create(AppModule, {
-    logger: false,
-    abortOnError: false
-  })
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+    {
+      logger: false,
+      abortOnError: false
+    }
+  )
 
   const document = SwaggerModule.createDocument(
     app,

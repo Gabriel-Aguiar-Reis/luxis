@@ -37,7 +37,7 @@ export async function salesInPeriod(
       'sale.installmentsInterval as "installmentsInterval"',
       'sale.installmentsPaid as "installmentsPaid"',
       'sale.status as "status"',
-      'sale.productIds as "productIds"',
+      `COALESCE((SELECT array_agg(sale_product.product_id ORDER BY sale_product.position) FROM sale_products sale_product WHERE sale_product.sale_id = sale.id), sale.product_ids) as "productIds"`,
       'reseller.id as "resellerId"',
       `CONCAT(reseller.name, ' ', reseller.surname) as "resellerName"`,
       'reseller.phone as "resellerPhone"',

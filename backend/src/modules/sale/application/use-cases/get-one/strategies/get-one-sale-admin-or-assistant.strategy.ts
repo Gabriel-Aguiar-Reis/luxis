@@ -8,7 +8,7 @@ import { UserRepository } from '@/modules/user/domain/repositories/user.reposito
 import { ProductRepository } from '@/modules/product/domain/repositories/product.repository'
 import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
 import { ProductModelRepository } from '@/modules/product-model/domain/repositories/product-model.repository'
-import { GetSaleProductDto } from '@/modules/sale/application/dtos/get-sale-product.dto'
+import { SaleResponseMapper } from '@/modules/sale/application/mappers/sale-response.mapper'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
 
 @Injectable()
@@ -50,55 +50,28 @@ export class GetOneSaleAdminOrAssistantStrategy implements GetOneSaleStrategy {
     )
     const modelIds = [...new Set(products.map((p) => p.modelId))]
     const models = await this.productModelRepository.findManyByIds(modelIds)
-    const categories = await this.categoryRepository.findAll()
+    const categoryIds = [...new Set(models.map((m) => m.categoryId))]
+    const categories = await this.categoryRepository.findManyByIds(categoryIds)
 
     const modelMap = new Map(models.map((m) => [m.id, m]))
     const categoryMap = new Map(categories.map((c) => [c.id, c]))
 
-    function getFullName(user?: {
-      name?: { getValue?: () => string }
-      surname?: { getValue?: () => string }
-    }) {
-      if (!user) return ''
-      const name = user.name?.getValue?.() || ''
-      const surname = user.surname?.getValue?.() || ''
-      return (name + ' ' + surname).trim()
-    }
-
-    const productsForSale: GetSaleProductDto[] = (sale.productIds || [])
+    const productsForSale = (sale.productIds || [])
       .map((id) => products.find((p) => p.id === id))
       .filter((p): p is (typeof products)[0] => !!p)
       .map((p) => {
         const model = modelMap.get(p.modelId)
         const category = model ? categoryMap.get(model.categoryId) : undefined
         if (!model || !category) return null
-        return {
-          id: p.id,
-          modelId: p.modelId,
-          categoryId: model.categoryId,
-          serialNumber: p.serialNumber,
-          salePrice: p.salePrice,
-          modelName: model.name,
-          categoryName: category.name
-        }
+        return SaleResponseMapper.toProductDto(p, model, category)
       })
-      .filter((p): p is GetSaleProductDto => p !== null)
+      .filter((p): p is NonNullable<typeof p> => p !== null)
 
-    return {
-      id: sale.id,
-      customerId: sale.customerId,
-      customerName: customer.name,
-      customerPhone: customer.phone,
-      resellerId: sale.resellerId,
-      resellerName: getFullName(reseller || undefined),
-      products: productsForSale,
-      saleDate: sale.saleDate,
-      totalAmount: sale.totalAmount,
-      paymentMethod: sale.paymentMethod,
-      numberInstallments: sale.numberInstallments,
-      status: sale.status,
-      installmentsInterval: sale.installmentsInterval,
-      installmentsPaid: sale.installmentsPaid
-    }
+    return SaleResponseMapper.toDto(
+      sale,
+      customer,
+      reseller || undefined,
+      productsForSale
+    )
   }
 }

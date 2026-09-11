@@ -11,9 +11,6 @@ export class GetAvailableProductsUseCase {
   ) {}
 
   async execute(): Promise<Product[]> {
-    const allProducts = await this.productRepo.findAll()
-    return allProducts.filter(
-      (product) => product.status === ProductStatus.IN_STOCK
-    )
+    return await this.productRepo.findByStatus(ProductStatus.IN_STOCK)
   }
 }

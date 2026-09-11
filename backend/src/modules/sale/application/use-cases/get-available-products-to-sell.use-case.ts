@@ -11,6 +11,7 @@ import { GetAvailableProductsToSellDto } from '@/modules/sale/application/dtos/g
 import { GetAvailableCategoryDto } from '@/modules/sale/application/dtos/get-available-category.dto'
 import { GetAvailableProductModelDto } from '@/modules/sale/application/dtos/get-available-product-model.dto'
 import { GetSaleProductDto } from '@/modules/sale/application/dtos/get-sale-product.dto'
+import { SaleResponseMapper } from '@/modules/sale/application/mappers/sale-response.mapper'
 
 @Injectable()
 export class GetAvailableProductsToSellUseCase {
@@ -60,12 +61,8 @@ export class GetAvailableProductsToSellUseCase {
 
     // Busca somente as categorias necessárias evitando um findAll custoso
     const categoryIds = [...new Set(models.map((m) => m.categoryId))]
-    const categories = await Promise.all(
-      categoryIds.map((id) => this.categoryRepository.findById(id))
-    )
-    const validCategories = categories.filter(
-      (c): c is NonNullable<typeof c> => !!c
-    )
+    const validCategories =
+      await this.categoryRepository.findManyByIds(categoryIds)
 
     const modelMap = new Map(models.map((m) => [m.id, m]))
     const categoryMap = new Map(validCategories.map((c) => [c.id, c]))
@@ -77,15 +74,7 @@ export class GetAvailableProductsToSellUseCase {
       const model = modelMap.get(p.modelId)
       const category = model ? categoryMap.get(model.categoryId) : undefined
       if (model && category) {
-        list.push({
-          id: p.id,
-          serialNumber: p.serialNumber,
-          salePrice: p.salePrice,
-          modelId: p.modelId,
-          categoryId: model.categoryId,
-          modelName: model.name,
-          categoryName: category.name
-        })
+        list.push(SaleResponseMapper.toProductDto(p, model, category))
       }
       productsByModel.set(p.modelId as unknown as string, list)
     }
@@ -98,8 +87,8 @@ export class GetAvailableProductsToSellUseCase {
       if (modelProducts.length === 0) continue
       modelsDto.push({
         id: model.id,
-        modelName: model.name,
-        imageUrl: model.photoUrl,
+        modelName: model.name.getValue(),
+        imageUrl: model.photoUrl?.getValue(),
         products: modelProducts
       })
     }
@@ -123,7 +112,7 @@ export class GetAvailableProductsToSellUseCase {
       if (catModels.length === 0) continue
       categoriesDto.push({
         categoryId: category.id,
-        categoryName: category.name,
+        categoryName: category.name.getValue(),
         models: catModels
       })
     }

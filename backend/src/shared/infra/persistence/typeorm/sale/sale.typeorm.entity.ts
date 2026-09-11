@@ -37,4 +37,7 @@ export class SaleTypeOrmEntity {
 
   @Column('int', { name: 'installments_paid', default: 0 })
   installmentsPaid: number
+
+  @Column('simple-json', { name: 'installments', nullable: true })
+  installments?: boolean[]
 }

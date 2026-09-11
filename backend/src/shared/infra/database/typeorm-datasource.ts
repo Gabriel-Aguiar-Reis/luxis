@@ -3,8 +3,10 @@ import { UserTypeOrmEntity } from '@/shared/infra/persistence/typeorm/user/user.
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { ShipmentTypeOrmEntity } from '@/shared/infra/persistence/typeorm/shipment/shipment.typeorm.entity'
 import { InventoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory.typeorm.entity'
+import { InventoryProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/inventory/inventory-product.typeorm.entity'
 import { OwnershipTransferTypeOrmEntity } from '@/shared/infra/persistence/typeorm/ownership-transfer/ownership-transfer.typeorm.entity'
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
+import { SaleProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale-product.typeorm.entity'
 import { BatchTypeOrmEntity } from '@/shared/infra/persistence/typeorm/batch/batch.typeorm.entity'
 import { CategoryTypeOrmEntity } from '@/shared/infra/persistence/typeorm/category/category.typeorm.entity'
 import { ProductModelTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product-model/product-model.typeorm.entity'
@@ -19,7 +21,11 @@ import { AddPerformanceIndexes1749500000000 } from '@/shared/infra/database/migr
 import { PasswordResetRequestTypeOrmEntity } from '@/shared/infra/persistence/typeorm/auth/password-reset-requests/password-reset-requests.typeorm.entity'
 import { CustomerTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer/customer.typeorm.entity'
 import { CustomerPortfolioTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer-portfolio/customer-portfolio.typeorm.entity'
+import { CustomerPortfolioCustomerTypeOrmEntity } from '@/shared/infra/persistence/typeorm/customer-portfolio/customer-portfolio-customer.typeorm.entity'
 import { FixMissingColumnsAndTables1774483200000 } from '@/shared/infra/database/migrations/1774483200000-FixMissingColumnsAndTables'
+import { PersistSaleInstallments1789078500000 } from '@/shared/infra/database/migrations/1789078500000-PersistSaleInstallments'
+import { CreateSaleProducts1789078600000 } from '@/shared/infra/database/migrations/1789078600000-CreateSaleProducts'
+import { CreateInventoryAndPortfolioRelations1789078700000 } from '@/shared/infra/database/migrations/1789078700000-CreateInventoryAndPortfolioRelations'
 dotenv.config({ path: '.env.development' })
 
 const commonConfig = {
@@ -28,8 +34,10 @@ const commonConfig = {
     ProductTypeOrmEntity,
     ShipmentTypeOrmEntity,
     InventoryTypeOrmEntity,
+    InventoryProductTypeOrmEntity,
     OwnershipTransferTypeOrmEntity,
     SaleTypeOrmEntity,
+    SaleProductTypeOrmEntity,
     BatchTypeOrmEntity,
     CategoryTypeOrmEntity,
     ProductModelTypeOrmEntity,
@@ -37,12 +45,16 @@ const commonConfig = {
     ReturnTypeOrmEntity,
     PasswordResetRequestTypeOrmEntity,
     CustomerTypeOrmEntity,
-    CustomerPortfolioTypeOrmEntity
+    CustomerPortfolioTypeOrmEntity,
+    CustomerPortfolioCustomerTypeOrmEntity
   ],
   migrations: [
     Init1749406833692,
     AddPerformanceIndexes1749500000000,
-    FixMissingColumnsAndTables1774483200000
+    FixMissingColumnsAndTables1774483200000,
+    PersistSaleInstallments1789078500000,
+    CreateSaleProducts1789078600000,
+    CreateInventoryAndPortfolioRelations1789078700000
   ],
   synchronize: false
 }

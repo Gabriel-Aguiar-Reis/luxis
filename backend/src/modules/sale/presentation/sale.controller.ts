@@ -25,7 +25,6 @@ import {
   Param,
   Patch,
   Delete,
-  UseInterceptors,
   HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
@@ -38,20 +37,19 @@ import {
   ApiTags,
   ApiBearerAuth
 } from '@nestjs/swagger'
-import { Sale } from '@/modules/sale/domain/entities/sale.entity'
-import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { UpdateSaleStatusUseCase } from '@/modules/sale/application/use-cases/update-sale-status.use-case'
 import { UpdateSaleStatusDto } from '@/modules/sale/application/dtos/update-sale-status.dto'
 import { GetSaleDto } from '@/modules/sale/application/dtos/get-sale.dto'
 import { GetAvailableProductsToSellUseCase } from '@/modules/sale/application/use-cases/get-available-products-to-sell.use-case'
 import { GetAvailableProductsToSellDto } from '@/modules/sale/application/dtos/get-available-products-to-sell.dto'
 import { UpdateSaleDto } from '@/modules/sale/application/dtos/update-sale.dto'
+import { SaleResponseDto } from '@/modules/sale/application/dtos/sale-response.dto'
+import { SaleResponseMapper } from '@/modules/sale/application/mappers/sale-response.mapper'
 
 @ApiTags('Sales')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('sales')
-@UseInterceptors(CacheInterceptor)
 export class SaleController {
   constructor(
     private readonly createSaleUseCase: CreateSaleUseCase,
@@ -92,8 +90,6 @@ export class SaleController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadSalePolicy())
-  @CacheKey('all-sales')
-  @CacheTTL(300)
   @HttpCode(200)
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
@@ -154,7 +150,7 @@ export class SaleController {
   @ApiResponse({
     status: 201,
     description: 'Sale created successfully',
-    type: Sale
+    type: SaleResponseDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -166,7 +162,8 @@ export class SaleController {
       `Creating new sale - Requested by user ${user.email}`,
       'SaleController'
     )
-    return await this.createSaleUseCase.execute(dto, user)
+    const sale = await this.createSaleUseCase.execute(dto, user)
+    return SaleResponseMapper.toResponseDto(sale)
   }
 
   @ApiOperation({ summary: 'Update a sale', operationId: 'updateSale' })
@@ -175,7 +172,7 @@ export class SaleController {
   @ApiResponse({
     status: 200,
     description: 'Sale updated successfully',
-    type: Sale
+    type: SaleResponseDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -191,7 +188,8 @@ export class SaleController {
       `Updating sale ${id} - Requested by user ${user.email}`,
       'SaleController'
     )
-    return this.updateSaleUseCase.execute(id, dto, user)
+    const sale = await this.updateSaleUseCase.execute(id, dto, user)
+    return SaleResponseMapper.toResponseDto(sale)
   }
 
   @ApiOperation({ summary: 'Delete a sale', operationId: 'deleteSale' })
@@ -222,7 +220,7 @@ export class SaleController {
   @ApiResponse({
     status: 200,
     description: 'Installment marked as paid',
-    type: Sale
+    type: SaleResponseDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -238,7 +236,8 @@ export class SaleController {
       `Marking installment ${dto.installmentNumber} as paid for sale ${id} - Requested by user ${user.email}`,
       'SaleController'
     )
-    return await this.markInstallmentPaidUseCase.execute(id, dto)
+    const sale = await this.markInstallmentPaidUseCase.execute(id, dto)
+    return SaleResponseMapper.toResponseDto(sale)
   }
 
   @ApiOperation({
@@ -250,7 +249,7 @@ export class SaleController {
   @ApiResponse({
     status: 200,
     description: 'Sale status updated successfully',
-    type: Sale
+    type: SaleResponseDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -266,6 +265,7 @@ export class SaleController {
       `Updating status for sale ${id} to ${dto.status} - Requested by user ${user.email}`,
       'SaleController'
     )
-    return await this.updateSaleStatusUseCase.execute(id, dto)
+    const sale = await this.updateSaleStatusUseCase.execute(id, dto)
+    return SaleResponseMapper.toResponseDto(sale)
   }
 }

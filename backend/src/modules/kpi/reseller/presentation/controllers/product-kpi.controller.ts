@@ -8,7 +8,6 @@ import { ProductInInventoryDto } from '@/modules/kpi/reseller/application/dtos/p
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { ResellerKpiEndpoint } from '@/shared/infra/auth/decorators/reseller-kpi-endpoint.decorator'
 
 @ApiTags('Reseller KPIs - Products')
@@ -26,8 +25,6 @@ export class ResellerProductKpiController {
   @ApiResponse({ status: 200, type: [SellingProductDto] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheKey('top-selling-products')
-  @CacheTTL(300)
   @Post('top-selling')
   async getTopSellingProducts(
     @CurrentUser() user: UserPayload,
@@ -47,8 +44,6 @@ export class ResellerProductKpiController {
   @ApiResponse({ status: 200, type: [ProductInInventoryDto] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheKey('products-with-longest-time-in-inventory')
-  @CacheTTL(300)
   @Post('longest-time-in-inventory')
   async getProductsWithLongestTimeInInventory(
     @CurrentUser() user: UserPayload,

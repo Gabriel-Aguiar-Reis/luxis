@@ -8,6 +8,7 @@ import { UUID } from 'crypto'
 import { SaleRepository } from '@/modules/sale/domain/repositories/sale.repository'
 import { MarkInstallmentPaidDto } from '@/modules/sale/application/dtos/mark-installment-paid.dto'
 import { Unit } from '@/shared/common/value-object/unit.vo'
+import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 
 @Injectable()
 export class MarkInstallmentPaidUseCase {
@@ -16,7 +17,7 @@ export class MarkInstallmentPaidUseCase {
     private readonly saleRepository: SaleRepository
   ) {}
 
-  async execute(saleId: UUID, dto: MarkInstallmentPaidDto): Promise<void> {
+  async execute(saleId: UUID, dto: MarkInstallmentPaidDto): Promise<Sale> {
     const sale = await this.saleRepository.findById(saleId)
     if (!sale) {
       throw new NotFoundException('Sale not found')
@@ -40,6 +41,6 @@ export class MarkInstallmentPaidUseCase {
       sale.markInstallmentAsPaid(new Unit(installmentNumber))
     }
 
-    await this.saleRepository.update(sale)
+    return await this.saleRepository.update(sale)
   }
 }

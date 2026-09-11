@@ -1,5 +1,3 @@
-import { ImageURL } from '@/modules/product-model/domain/value-objects/image-url.vo'
-import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 import { GetSaleProductDto } from '@/modules/sale/application/dtos/get-sale-product.dto'
 import { ApiProperty } from '@nestjs/swagger'
 import { UUID } from 'crypto'
@@ -16,18 +14,18 @@ export class GetAvailableProductModelDto {
   @ApiProperty({
     description: 'The name of the product model',
     example: 'Product Model Name',
-    type: ModelName,
+    type: String,
     required: true
   })
-  modelName: ModelName
+  modelName: string
 
   @ApiProperty({
     description: 'The image URL of the product model',
     example: 'https://example.com/product-model.jpg',
-    type: ImageURL,
+    type: String,
     required: false
   })
-  imageUrl?: ImageURL
+  imageUrl?: string
 
   @ApiProperty({
     description: 'The available products for the model',

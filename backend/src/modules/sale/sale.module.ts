@@ -10,6 +10,7 @@ import { GetAllSaleUseCase } from '@/modules/sale/application/use-cases/get-all-
 import { DeleteSaleUseCase } from '@/modules/sale/application/use-cases/delete-sale.use-case'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
+import { SaleProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale-product.typeorm.entity'
 import { CreateSaleStrategyFactory } from '@/modules/sale/application/use-cases/create/strategies/create-sale.strategy.factory'
 import { GetOneSaleStrategyFactory } from '@/modules/sale/application/use-cases/get-one/strategies/get-one-sale.strategy.factory'
 import { UpdateSaleStrategyFactory } from '@/modules/sale/application/use-cases/update/strategies/update-sale.strategy.factory'
@@ -45,6 +46,7 @@ import { DataSource } from 'typeorm'
   imports: [
     TypeOrmModule.forFeature([
       SaleTypeOrmEntity,
+      SaleProductTypeOrmEntity,
       ProductTypeOrmEntity,
       InventoryTypeOrmEntity,
       CustomerTypeOrmEntity,

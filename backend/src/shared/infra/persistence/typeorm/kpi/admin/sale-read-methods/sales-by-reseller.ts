@@ -53,7 +53,7 @@ export async function salesByReseller(
       'sale.total_amount as "totalAmount"',
       'sale.payment_method as "paymentMethod"',
       'sale.number_installments as "numberInstallments"',
-      'sale.product_ids as "productIds"',
+      `COALESCE((SELECT array_agg(sale_product.product_id ORDER BY sale_product.position) FROM sale_products sale_product WHERE sale_product.sale_id = sale.id), sale.product_ids) as "productIds"`,
       'sale.status as "status"',
       'sale.customer_id as "customerId"',
       'customer.name as "customerName"',

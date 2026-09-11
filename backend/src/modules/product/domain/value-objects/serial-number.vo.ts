@@ -1,13 +1,7 @@
 import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
 import { BadRequestException } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
 
 export class SerialNumber {
-  @ApiProperty({
-    description: 'The serial number of the product',
-    example: '0424A-BR-BAB-001',
-    type: String
-  })
   private value: string
   constructor(value: string) {
     if (!SerialNumber.isValid(value)) {

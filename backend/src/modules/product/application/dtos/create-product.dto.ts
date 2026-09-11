@@ -1,5 +1,3 @@
-import { SerialNumber } from '@/modules/product/domain/value-objects/serial-number.vo'
-import { Currency } from '@/shared/common/value-object/currency.vo'
 import { IsCurrency, IsNotEmpty, IsString, IsUUID } from 'class-validator'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
@@ -8,7 +6,7 @@ export class CreateProductDto {
   @ApiProperty({
     description: 'The serial number of the product',
     example: '1234567890',
-    type: SerialNumber,
+    type: String,
     required: true
   })
   @IsString()
@@ -38,7 +36,7 @@ export class CreateProductDto {
   @ApiProperty({
     description: 'The unit cost of the product',
     example: '100.00',
-    type: Currency,
+    type: String,
     required: true
   })
   @IsString()
@@ -49,7 +47,7 @@ export class CreateProductDto {
   @ApiProperty({
     description: 'The sale price of the product',
     example: '100.00',
-    type: Currency,
+    type: String,
     required: true
   })
   @IsString()

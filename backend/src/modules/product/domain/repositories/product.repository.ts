@@ -4,6 +4,7 @@ import { UUID } from 'crypto'
 
 export abstract class ProductRepository {
   abstract findAll(): Promise<Product[]>
+  abstract findByStatus(status: ProductStatus): Promise<Product[]>
   abstract findById(id: UUID): Promise<Product | null>
   abstract findManyByIds(
     ids: UUID[],

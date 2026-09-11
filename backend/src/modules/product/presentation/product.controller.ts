@@ -21,7 +21,6 @@ import {
   Get,
   Delete,
   UseGuards,
-  UseInterceptors,
   HttpCode
 } from '@nestjs/common'
 import { UUID } from 'crypto'
@@ -34,14 +33,13 @@ import {
   ApiTags,
   ApiBearerAuth
 } from '@nestjs/swagger'
-import { Product } from '@/modules/product/domain/entities/product.entity'
-import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
+import { ProductResponseDto } from '@/modules/product/application/dtos/product-response.dto'
+import { ProductResponseMapper } from '@/modules/product/application/mappers/product-response.mapper'
 
 @ApiTags('Products')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
 @Controller('products')
-@UseInterceptors(CacheInterceptor)
 export class ProductController {
   constructor(
     private readonly updateProductUseCase: UpdateProductUseCase,
@@ -57,13 +55,11 @@ export class ProductController {
   @ApiResponse({
     status: 200,
     description: 'List of products returned successfully',
-    type: [Product]
+    type: [ProductResponseDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductPolicy())
-  @CacheKey('all-products')
-  @CacheTTL(300)
   @HttpCode(200)
   @Get()
   async getAll(@CurrentUser() user: UserPayload) {
@@ -71,7 +67,8 @@ export class ProductController {
       `Getting all products - Requested by user ${user.email}`,
       'ProductController'
     )
-    return await this.getAllProductUseCase.execute(user)
+    const products = await this.getAllProductUseCase.execute(user)
+    return ProductResponseMapper.toDtoList(products)
   }
 
   @ApiOperation({
@@ -81,13 +78,11 @@ export class ProductController {
   @ApiResponse({
     status: 200,
     description: 'List of available products returned successfully',
-    type: [Product]
+    type: [ProductResponseDto]
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
   @CheckPolicies(new ReadProductPolicy())
-  @CacheKey('available-products')
-  @CacheTTL(60)
   @HttpCode(200)
   @Get('available/in-stock')
   async getAvailable(@CurrentUser() user: UserPayload) {
@@ -95,7 +90,8 @@ export class ProductController {
       `Getting available products - Requested by user ${user.email}`,
       'ProductController'
     )
-    return await this.getAvailableProductsUseCase.execute()
+    const products = await this.getAvailableProductsUseCase.execute()
+    return ProductResponseMapper.toDtoList(products)
   }
 
   @ApiOperation({
@@ -106,7 +102,7 @@ export class ProductController {
   @ApiResponse({
     status: 200,
     description: 'Product found successfully',
-    type: Product
+    type: ProductResponseDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -119,7 +115,8 @@ export class ProductController {
       `Getting product ${id} - Requested by user ${user.email}`,
       'ProductController'
     )
-    return await this.getOneProductUseCase.execute(id, user)
+    const product = await this.getOneProductUseCase.execute(id, user)
+    return ProductResponseMapper.toDto(product)
   }
 
   @ApiOperation({ summary: 'Update a product', operationId: 'updateProduct' })
@@ -128,7 +125,7 @@ export class ProductController {
   @ApiResponse({
     status: 200,
     description: 'Product updated successfully',
-    type: Product
+    type: ProductResponseDto
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
@@ -144,7 +141,8 @@ export class ProductController {
       `Updating product ${id} - Requested by user ${user.email}`,
       'ProductController'
     )
-    return await this.updateProductUseCase.execute(id, dto)
+    const product = await this.updateProductUseCase.execute(id, dto)
+    return ProductResponseMapper.toDto(product)
   }
 
   @ApiOperation({ summary: 'Sell a product', operationId: 'sellProduct' })

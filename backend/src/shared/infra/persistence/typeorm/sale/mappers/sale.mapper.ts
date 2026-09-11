@@ -2,21 +2,23 @@ import { Sale } from '@/modules/sale/domain/entities/sale.entity'
 import { Currency } from '@/shared/common/value-object/currency.vo'
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
 import { Unit } from '@/shared/common/value-object/unit.vo'
+import { UUID } from 'crypto'
 
 export class SaleMapper {
-  static toDomain(entity: SaleTypeOrmEntity): Sale {
+  static toDomain(entity: SaleTypeOrmEntity, productIds?: UUID[]): Sale {
     const sale = new Sale(
       entity.id,
       entity.customerId,
       entity.resellerId,
-      entity.productIds,
+      productIds ?? entity.productIds,
       entity.saleDate,
       new Currency(entity.totalAmount),
       entity.paymentMethod,
       new Unit(entity.numberInstallments),
       entity.status,
       new Unit(entity.installmentsInterval),
-      new Unit(entity.installmentsPaid || 0)
+      new Unit(entity.installmentsPaid || 0),
+      entity.installments
     )
 
     return sale
@@ -34,7 +36,8 @@ export class SaleMapper {
     entity.numberInstallments = sale.numberInstallments.getValue()
     entity.status = sale.status
     entity.installmentsInterval = sale.installmentsInterval.getValue()
-    entity.installmentsPaid = sale.getInstallments().filter(Boolean).length
+    entity.installments = sale.getInstallments()
+    entity.installmentsPaid = entity.installments.filter(Boolean).length
     return entity
   }
 
@@ -50,6 +53,7 @@ export class SaleMapper {
       numberInstallments: sale.numberInstallments.getValue(),
       status: sale.status,
       installmentsInterval: sale.installmentsInterval.getValue(),
+      installments: sale.getInstallments(),
       installmentsPaid: sale.getInstallments().filter(Boolean).length
     }
   }

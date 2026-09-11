@@ -4,7 +4,6 @@ import { ParamsDto } from '@/shared/common/dtos/params.dto'
 import { GetReturnsMadeByResellerUseCase } from '@/modules/kpi/reseller/application/use-cases/return/get-returns-made-by-reseller.use-case'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { ResellerKpiEndpoint } from '@/shared/infra/auth/decorators/reseller-kpi-endpoint.decorator'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 
@@ -22,8 +21,6 @@ export class ResellerReturnKpiController {
   @ApiResponse({ status: 200, type: Number, description: 'Number of returns' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheKey('returns-count')
-  @CacheTTL(300)
   @Post('count')
   async getReturnsMadeByReseller(
     @CurrentUser() user: UserPayload,

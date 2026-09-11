@@ -3,11 +3,14 @@ import { CustomerPortfolioTypeOrmEntity } from '@/shared/infra/persistence/typeo
 import { UUID } from 'crypto'
 
 export class CustomerPortfolioMapper {
-  static toDomain(entity: CustomerPortfolioTypeOrmEntity): CustomerPortfolio {
+  static toDomain(
+    entity: CustomerPortfolioTypeOrmEntity,
+    customerIds?: UUID[]
+  ): CustomerPortfolio {
     return new CustomerPortfolio(
       entity.id as UUID,
       entity.resellerId as UUID,
-      new Set(entity.customerIds as UUID[])
+      new Set(customerIds ?? (entity.customerIds as UUID[]))
     )
   }
 

@@ -1,4 +1,7 @@
-import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify'
+import {
+  NestFastifyApplication,
+  FastifyAdapter
+} from '@nestjs/platform-fastify'
 import { Reflector } from '@nestjs/core'
 import { ConfigModule as NestConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
@@ -275,14 +278,10 @@ describe('Auth cookie flow (integration)', () => {
   it('returns 204 and sets an httpOnly auth cookie on login', async () => {
     await seedActiveAdmin('Password123!')
 
-    const response = await apiRequest(
-      'POST',
-      '/auth/login',
-      {
-        email: 'auth.admin@luxis.com',
-        password: 'Password123!'
-      }
-    )
+    const response = await apiRequest('POST', '/auth/login', {
+      email: 'auth.admin@luxis.com',
+      password: 'Password123!'
+    })
 
     expect(response.status).toBe(204)
     expect(response.body).toEqual({})
@@ -294,18 +293,19 @@ describe('Auth cookie flow (integration)', () => {
   it('verifies the session using only the auth cookie', async () => {
     await seedActiveAdmin('Password123!')
 
-    const loginResponse = await apiRequest(
-      'POST',
-      '/auth/login',
-      {
-        email: 'auth.admin@luxis.com',
-        password: 'Password123!'
-      }
-    )
+    const loginResponse = await apiRequest('POST', '/auth/login', {
+      email: 'auth.admin@luxis.com',
+      password: 'Password123!'
+    })
 
     const cookie = getCookie(loginResponse.headers)
 
-    const verifyResponse = await apiRequest('POST', '/auth/verify', undefined, cookie)
+    const verifyResponse = await apiRequest(
+      'POST',
+      '/auth/verify',
+      undefined,
+      cookie
+    )
 
     expect(verifyResponse.status).toBe(200)
     expect(verifyResponse.body.valid).toBe(true)
@@ -320,18 +320,19 @@ describe('Auth cookie flow (integration)', () => {
   it('clears the auth cookie on logout and invalidates verify', async () => {
     await seedActiveAdmin('Password123!')
 
-    const loginResponse = await apiRequest(
-      'POST',
-      '/auth/login',
-      {
-        email: 'auth.admin@luxis.com',
-        password: 'Password123!'
-      }
-    )
+    const loginResponse = await apiRequest('POST', '/auth/login', {
+      email: 'auth.admin@luxis.com',
+      password: 'Password123!'
+    })
 
     const cookie = getCookie(loginResponse.headers)
 
-    const logoutResponse = await apiRequest('POST', '/auth/logout', undefined, cookie)
+    const logoutResponse = await apiRequest(
+      'POST',
+      '/auth/logout',
+      undefined,
+      cookie
+    )
 
     expect(logoutResponse.status).toBe(204)
     expect(getCookie(logoutResponse.headers)).toContain(`${AUTH_COOKIE_NAME}=;`)
@@ -349,14 +350,10 @@ describe('Auth cookie flow (integration)', () => {
   it('changes password based on the authenticated user from the cookie', async () => {
     await seedActiveAdmin('Password123!')
 
-    const loginResponse = await apiRequest(
-      'POST',
-      '/auth/login',
-      {
-        email: 'auth.admin@luxis.com',
-        password: 'Password123!'
-      }
-    )
+    const loginResponse = await apiRequest('POST', '/auth/login', {
+      email: 'auth.admin@luxis.com',
+      password: 'Password123!'
+    })
 
     const cookie = getCookie(loginResponse.headers)
 
@@ -369,25 +366,17 @@ describe('Auth cookie flow (integration)', () => {
 
     expect(changePasswordResponse.status).toBe(204)
 
-    const oldPasswordLogin = await apiRequest(
-      'POST',
-      '/auth/login',
-      {
-        email: 'auth.admin@luxis.com',
-        password: 'Password123!'
-      }
-    )
+    const oldPasswordLogin = await apiRequest('POST', '/auth/login', {
+      email: 'auth.admin@luxis.com',
+      password: 'Password123!'
+    })
 
     expect(oldPasswordLogin.status).toBe(401)
 
-    const newPasswordLogin = await apiRequest(
-      'POST',
-      '/auth/login',
-      {
-        email: 'auth.admin@luxis.com',
-        password: 'NewPassword123!'
-      }
-    )
+    const newPasswordLogin = await apiRequest('POST', '/auth/login', {
+      email: 'auth.admin@luxis.com',
+      password: 'NewPassword123!'
+    })
 
     expect(newPasswordLogin.status).toBe(204)
     expect(getCookie(newPasswordLogin.headers)).toContain(

@@ -5,7 +5,6 @@ import { GetCurrentInventoryUseCase } from '@/modules/kpi/reseller/application/u
 import { InventoryProductModelDto } from '@/modules/kpi/reseller/application/dtos/inventory/inventory-product-model.dto'
 import { CurrentUser } from '@/shared/infra/auth/decorators/current-user.decorator'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
-import { CacheTTL, CacheKey } from '@nestjs/cache-manager'
 import { ResellerKpiEndpoint } from '@/shared/infra/auth/decorators/reseller-kpi-endpoint.decorator'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 
@@ -23,8 +22,6 @@ export class ResellerInventoryKpiController {
   @ApiResponse({ status: 200, type: [InventoryProductModelDto] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Access denied' })
-  @CacheKey('current-inventory')
-  @CacheTTL(300)
   @Post('current')
   async getCurrentInventory(
     @CurrentUser() user: UserPayload,

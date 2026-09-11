@@ -29,6 +29,7 @@ import { ResetPasswordDto } from '@/modules/auth/application/dtos/reset-password
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { FastifyReply } from 'fastify'
+import '@fastify/cookie'
 import { ServeStaticInterceptor } from '@/shared/infra/interceptors/serve-static.interceptor'
 import { CustomLogger } from '@/shared/infra/logging/logger.service'
 import { VerifyDto } from '@/modules/auth/application/dtos/verify.dto'

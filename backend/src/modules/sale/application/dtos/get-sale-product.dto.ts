@@ -1,9 +1,5 @@
-import { CategoryName } from '@/modules/category/domain/value-objects/category-name.vo'
-import { ModelName } from '@/modules/product-model/domain/value-objects/model-name.vo'
-import { SerialNumber } from '@/modules/product/domain/value-objects/serial-number.vo'
-import { Currency } from '@/shared/common/value-object/currency.vo'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsUUID, IsNotEmpty } from 'class-validator'
+import { IsUUID, IsNotEmpty, IsString } from 'class-validator'
 import { UUID } from 'crypto'
 
 export class GetSaleProductDto {
@@ -20,38 +16,42 @@ export class GetSaleProductDto {
   @ApiProperty({
     description: 'The serial number of the product',
     example: 'SN123456789',
-    type: SerialNumber,
+    type: String,
     required: true
   })
   @IsNotEmpty()
-  serialNumber: SerialNumber
+  @IsString()
+  serialNumber: string
 
   @ApiProperty({
     description: 'The sale price of the product',
     example: '500.00',
-    type: Currency,
+    type: String,
     required: true
   })
   @IsNotEmpty()
-  salePrice: Currency
+  @IsString()
+  salePrice: string
 
   @ApiProperty({
     description: 'The name of the product model',
     example: 'iPhone 13 Pro Max',
-    type: ModelName,
+    type: String,
     required: true
   })
   @IsNotEmpty()
-  modelName: ModelName
+  @IsString()
+  modelName: string
 
   @ApiProperty({
     description: 'The name of the category',
     example: 'Smartphones',
-    type: CategoryName,
+    type: String,
     required: true
   })
   @IsNotEmpty()
-  categoryName: CategoryName
+  @IsString()
+  categoryName: string
 
   @ApiProperty({
     description: 'The ID of the product model',

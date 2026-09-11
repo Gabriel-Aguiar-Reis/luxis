@@ -16,6 +16,7 @@ import { Unit } from '@/shared/common/value-object/unit.vo'
 import { SaleTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale.typeorm.entity'
 import { ProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/product/product.typeorm.entity'
 import { SaleMapper } from '@/shared/infra/persistence/typeorm/sale/mappers/sale.mapper'
+import { SaleProductTypeOrmEntity } from '@/shared/infra/persistence/typeorm/sale/sale-product.typeorm.entity'
 
 @Injectable()
 export class ConfirmSaleUseCase {
@@ -37,7 +38,14 @@ export class ConfirmSaleUseCase {
         throw new NotFoundException('Sale not found')
       }
 
-      const sale = SaleMapper.toDomain(saleEntity)
+      const saleProductEntities = await manager.find(SaleProductTypeOrmEntity, {
+        where: { saleId: saleEntity.id },
+        order: { position: 'ASC' }
+      })
+      const sale = SaleMapper.toDomain(
+        saleEntity,
+        saleProductEntities.map((saleProduct) => saleProduct.productId)
+      )
 
       if (user.role === Role.RESELLER && sale.resellerId !== user.id) {
         throw new ForbiddenException(
@@ -93,6 +101,15 @@ export class ConfirmSaleUseCase {
       }
 
       await manager.save(SaleTypeOrmEntity, SaleMapper.toTypeOrm(sale))
+      await manager.delete(SaleProductTypeOrmEntity, { saleId: sale.id })
+      await manager.save(
+        SaleProductTypeOrmEntity,
+        sale.productIds.map((productId, index) => ({
+          saleId: sale.id,
+          productId,
+          position: index
+        }))
+      )
     })
   }
 }

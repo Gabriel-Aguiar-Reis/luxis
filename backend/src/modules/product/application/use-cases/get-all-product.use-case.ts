@@ -22,14 +22,11 @@ export class GetAllProductUseCase {
 
     if (user.role === Role.RESELLER) {
       const inventory = await this.inventoryService.getInventory(user.id, user)
-      if (!inventory) {
+      if (!inventory || inventory.products.length === 0) {
         return []
       }
 
-      const allProducts = await this.productRepo.findAll()
-      return allProducts.filter((product) =>
-        inventory.products.includes(product.id)
-      )
+      return await this.productRepo.findManyByIds(inventory.products)
     }
 
     return await this.productRepo.findAll()
