@@ -1,11 +1,12 @@
-import { INestApplication } from '@nestjs/common'
+import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify'
 import { Reflector } from '@nestjs/core'
 import { ConfigModule as NestConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { Test } from '@nestjs/testing'
-import request from 'supertest'
+import fastifyCookie from '@fastify/cookie'
 import { UUID } from 'crypto'
+import { OutgoingHttpHeaders } from 'http'
 import { AuthController } from '@/modules/auth/presentation/auth.controller'
 import { AuthService } from '@/modules/auth/application/services/auth.service'
 import { AppConfigService } from '@/shared/config/app-config.service'
@@ -119,7 +120,7 @@ class InMemoryUserRepository extends UserRepository {
 }
 
 describe('Auth cookie flow (integration)', () => {
-  let app: INestApplication
+  let app: NestFastifyApplication
   let userRepository: InMemoryUserRepository
 
   beforeAll(async () => {
@@ -189,7 +190,10 @@ describe('Auth cookie flow (integration)', () => {
       ]
     }).compile()
 
-    app = moduleRef.createNestApplication()
+    app = moduleRef.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter()
+    )
+    await app.register(fastifyCookie)
     await app.init()
 
     userRepository = moduleRef.get<InMemoryUserRepository>('UserRepository')
@@ -231,41 +235,77 @@ describe('Auth cookie flow (integration)', () => {
     )
   }
 
+  async function apiRequest(
+    method: 'GET' | 'POST',
+    url: string,
+    body?: Record<string, string>,
+    cookie?: string
+  ) {
+    const response = await app.inject({
+      method,
+      url,
+      headers: {
+        ...(body ? { 'content-type': 'application/json' } : {}),
+        ...(cookie ? { cookie } : {})
+      },
+      payload: body ? JSON.stringify(body) : undefined
+    })
+
+    return {
+      status: response.statusCode,
+      body: response.body ? response.json() : {},
+      headers: response.headers
+    }
+  }
+
+  function getCookie(headers: OutgoingHttpHeaders) {
+    const cookies = headers['set-cookie']
+    if (!cookies) {
+      throw new Error('Expected Set-Cookie response header')
+    }
+    if (Array.isArray(cookies)) {
+      return cookies[0]
+    }
+    if (typeof cookies === 'string') {
+      return cookies
+    }
+    throw new Error('Expected Set-Cookie response header to be a string')
+  }
+
   it('returns 204 and sets an httpOnly auth cookie on login', async () => {
     await seedActiveAdmin('Password123!')
 
-    const response = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
+    const response = await apiRequest(
+      'POST',
+      '/auth/login',
+      {
         email: 'auth.admin@luxis.com',
         password: 'Password123!'
-      })
+      }
+    )
 
     expect(response.status).toBe(204)
     expect(response.body).toEqual({})
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([expect.stringContaining(`${AUTH_COOKIE_NAME}=`)])
-    )
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([expect.stringContaining('HttpOnly')])
-    )
+    const cookie = getCookie(response.headers)
+    expect(cookie).toContain(`${AUTH_COOKIE_NAME}=`)
+    expect(cookie).toContain('HttpOnly')
   })
 
   it('verifies the session using only the auth cookie', async () => {
     await seedActiveAdmin('Password123!')
 
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
+    const loginResponse = await apiRequest(
+      'POST',
+      '/auth/login',
+      {
         email: 'auth.admin@luxis.com',
         password: 'Password123!'
-      })
+      }
+    )
 
-    const cookie = loginResponse.headers['set-cookie'][0]
+    const cookie = getCookie(loginResponse.headers)
 
-    const verifyResponse = await request(app.getHttpServer())
-      .post('/auth/verify')
-      .set('Cookie', cookie)
+    const verifyResponse = await apiRequest('POST', '/auth/verify', undefined, cookie)
 
     expect(verifyResponse.status).toBe(200)
     expect(verifyResponse.body.valid).toBe(true)
@@ -280,27 +320,28 @@ describe('Auth cookie flow (integration)', () => {
   it('clears the auth cookie on logout and invalidates verify', async () => {
     await seedActiveAdmin('Password123!')
 
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
+    const loginResponse = await apiRequest(
+      'POST',
+      '/auth/login',
+      {
         email: 'auth.admin@luxis.com',
         password: 'Password123!'
-      })
-
-    const cookie = loginResponse.headers['set-cookie'][0]
-
-    const logoutResponse = await request(app.getHttpServer())
-      .post('/auth/logout')
-      .set('Cookie', cookie)
-
-    expect(logoutResponse.status).toBe(204)
-    expect(logoutResponse.headers['set-cookie']).toEqual(
-      expect.arrayContaining([expect.stringContaining(`${AUTH_COOKIE_NAME}=;`)])
+      }
     )
 
-    const verifyAfterLogoutResponse = await request(app.getHttpServer())
-      .post('/auth/verify')
-      .set('Cookie', `${AUTH_COOKIE_NAME}=`)
+    const cookie = getCookie(loginResponse.headers)
+
+    const logoutResponse = await apiRequest('POST', '/auth/logout', undefined, cookie)
+
+    expect(logoutResponse.status).toBe(204)
+    expect(getCookie(logoutResponse.headers)).toContain(`${AUTH_COOKIE_NAME}=;`)
+
+    const verifyAfterLogoutResponse = await apiRequest(
+      'POST',
+      '/auth/verify',
+      undefined,
+      `${AUTH_COOKIE_NAME}=`
+    )
 
     expect(verifyAfterLogoutResponse.status).toBe(401)
   })
@@ -308,43 +349,49 @@ describe('Auth cookie flow (integration)', () => {
   it('changes password based on the authenticated user from the cookie', async () => {
     await seedActiveAdmin('Password123!')
 
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
+    const loginResponse = await apiRequest(
+      'POST',
+      '/auth/login',
+      {
         email: 'auth.admin@luxis.com',
         password: 'Password123!'
-      })
+      }
+    )
 
-    const cookie = loginResponse.headers['set-cookie'][0]
+    const cookie = getCookie(loginResponse.headers)
 
-    const changePasswordResponse = await request(app.getHttpServer())
-      .post('/auth/change-password')
-      .set('Cookie', cookie)
-      .send({
-        newPassword: 'NewPassword123!'
-      })
+    const changePasswordResponse = await apiRequest(
+      'POST',
+      '/auth/change-password',
+      { newPassword: 'NewPassword123!' },
+      cookie
+    )
 
     expect(changePasswordResponse.status).toBe(204)
 
-    const oldPasswordLogin = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
+    const oldPasswordLogin = await apiRequest(
+      'POST',
+      '/auth/login',
+      {
         email: 'auth.admin@luxis.com',
         password: 'Password123!'
-      })
+      }
+    )
 
     expect(oldPasswordLogin.status).toBe(401)
 
-    const newPasswordLogin = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
+    const newPasswordLogin = await apiRequest(
+      'POST',
+      '/auth/login',
+      {
         email: 'auth.admin@luxis.com',
         password: 'NewPassword123!'
-      })
+      }
+    )
 
     expect(newPasswordLogin.status).toBe(204)
-    expect(newPasswordLogin.headers['set-cookie']).toEqual(
-      expect.arrayContaining([expect.stringContaining(`${AUTH_COOKIE_NAME}=`)])
+    expect(getCookie(newPasswordLogin.headers)).toContain(
+      `${AUTH_COOKIE_NAME}=`
     )
   })
 })

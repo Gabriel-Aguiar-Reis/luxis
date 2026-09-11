@@ -25,7 +25,7 @@ export async function salesByResellerId(
 ): Promise<SalesByResellerDto> {
   const reseller = await userRepo.findOne({
     where: { id: resellerId },
-    select: ['id', 'name', 'surname']
+    select: { id: true, name: true, surname: true }
   })
   if (!reseller) throw new NotFoundException()
   const qb = saleRepo

@@ -5,7 +5,7 @@ import { CreateBatchDto } from '@/modules/batch/application/dtos/create-batch.dt
 import { CreateCategoryDto } from '@/modules/category/application/dtos/create-category.dto'
 import { UUID } from 'crypto'
 import * as fs from 'fs'
-import 'multer'
+import { UploadedFile } from '@/shared/types/uploaded-file'
 import { UpdateProductModelUseCase } from '@/modules/product-model/application/use-cases/update-product-model.use-case'
 import { CategoryRepository } from '@/modules/category/domain/repositories/category.repository'
 import { BatchRepository } from '@/modules/batch/domain/repositories/batch.repository'
@@ -120,7 +120,7 @@ export class BatchSeed {
     try {
       const assetPath = 'src/shared/common/assets/modelo.jpg'
       if (fs.existsSync(assetPath)) {
-        const file: Express.Multer.File = {
+        const file: UploadedFile = {
           fieldname: 'photo',
           originalname: 'modelo.jpg',
           encoding: '7bit',

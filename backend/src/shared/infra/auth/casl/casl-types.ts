@@ -12,7 +12,7 @@ import { Shipment } from '@/modules/shipment/domain/entities/shipment.entity'
 import { Supplier } from '@/modules/supplier/domain/entities/supplier.entity'
 import { User } from '@/modules/user/domain/entities/user.entity'
 import { Actions } from '@/shared/infra/auth/enums/actions.enum'
-import { InferSubjects, PureAbility } from '@casl/ability'
+import { InferSubjects, Ability } from '@casl/ability'
 
 export type Subjects =
   | InferSubjects<typeof Batch>
@@ -32,4 +32,4 @@ export type Subjects =
   | 'reseller-kpi'
   | 'all'
 
-export type AppAbility = PureAbility<[Actions, Subjects]>
+export type AppAbility = Ability<[Actions, Subjects]>

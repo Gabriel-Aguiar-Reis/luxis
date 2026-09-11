@@ -33,9 +33,10 @@ export const databaseConfig = (
 
     case 'test':
       // Loaded lazily so production (Postgres) never requires the native sqlite3 binary
+      // TypeORM 1.x uses the "better-sqlite3" driver interface for sqlite-based
+      // setups. Use in-memory DB for tests.
       return {
-        type: 'sqlite',
-        driver: require('sqlite3'),
+        type: 'better-sqlite3',
         database: ':memory:',
         entities,
         synchronize: true,

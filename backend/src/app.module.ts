@@ -44,6 +44,7 @@ import { AdminKpiModule } from '@/modules/kpi/admin/admin-kpi.module'
 import { ResellerKpiModule } from '@/modules/kpi/reseller/reseller-kpi.module'
 import { InventoryCaslRule } from '@/shared/infra/auth/casl/rules/inventory.rules'
 import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/password-reset-request.rules'
+import { GlobalExceptionFilter } from '@/shared/infra/filters/http-exceptions.filter'
 
 @Module({
   imports: [
@@ -115,6 +116,7 @@ import { PasswordResetRequestCaslRule } from '@/shared/infra/auth/casl/rules/pas
   ],
   controllers: [AppController],
   providers: [
+    GlobalExceptionFilter,
     JwtStrategy,
     CaslAbilityFactory,
     SaleCaslRule,

@@ -1,10 +1,13 @@
-import { INestApplication } from '@nestjs/common'
+import {
+  NestFastifyApplication,
+  FastifyAdapter
+} from '@nestjs/platform-fastify'
 import { Reflector } from '@nestjs/core'
 import { ConfigModule as NestConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { Test } from '@nestjs/testing'
-import request from 'supertest'
+import fastifyCookie from '@fastify/cookie'
 import { randomUUID, UUID } from 'crypto'
 import { AuthController } from '@/modules/auth/presentation/auth.controller'
 import { AuthService } from '@/modules/auth/application/services/auth.service'
@@ -173,7 +176,7 @@ class InMemoryPasswordResetRequestRepository
 }
 
 describe('Password reset flow (integration)', () => {
-  let app: INestApplication
+  let app: NestFastifyApplication
   let userRepository: InMemoryUserRepository
   let passwordResetRepository: InMemoryPasswordResetRequestRepository
 
@@ -233,7 +236,10 @@ describe('Password reset flow (integration)', () => {
       ]
     }).compile()
 
-    app = moduleRef.createNestApplication()
+    app = moduleRef.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter()
+    )
+    await app.register(fastifyCookie)
     await app.init()
 
     userRepository = moduleRef.get<InMemoryUserRepository>('UserRepository')
@@ -288,15 +294,40 @@ describe('Password reset flow (integration)', () => {
   }
 
   async function loginAndGetCookie(email: string, password: string) {
-    const response = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email,
-        password
-      })
+    const response = await apiRequest('POST', '/auth/login', {
+      email,
+      password
+    })
 
     expect(response.status).toBe(204)
-    return response.headers['set-cookie'][0]
+    const cookies = response.headers['set-cookie']
+    if (!cookies) {
+      throw new Error('Expected Set-Cookie response header')
+    }
+    return Array.isArray(cookies) ? cookies[0] : cookies
+  }
+
+  async function apiRequest(
+    method: 'GET' | 'POST' | 'PATCH',
+    url: string,
+    body?: Record<string, string>,
+    cookie?: string
+  ) {
+    const response = await app.inject({
+      method,
+      url,
+      headers: {
+        ...(body ? { 'content-type': 'application/json' } : {}),
+        ...(cookie ? { cookie } : {})
+      },
+      payload: body ? JSON.stringify(body) : undefined
+    })
+
+    return {
+      status: response.statusCode,
+      body: response.body ? response.json() : {},
+      headers: response.headers
+    }
   }
 
   it('creates a pending password reset request for an existing user', async () => {
@@ -309,9 +340,9 @@ describe('Password reset flow (integration)', () => {
       role: Role.RESELLER
     })
 
-    const response = await request(app.getHttpServer())
-      .post('/auth/forgot-password')
-      .send({ email: 'reseller.user@luxis.com' })
+    const response = await apiRequest('POST', '/auth/forgot-password', {
+      email: 'reseller.user@luxis.com'
+    })
 
     expect(response.status).toBe(201)
     expect(response.body.status).toBe('PENDING')
@@ -340,9 +371,9 @@ describe('Password reset flow (integration)', () => {
       role: Role.RESELLER
     })
 
-    const requestResponse = await request(app.getHttpServer())
-      .post('/auth/forgot-password')
-      .send({ email: 'reseller.user@luxis.com' })
+    const requestResponse = await apiRequest('POST', '/auth/forgot-password', {
+      email: 'reseller.user@luxis.com'
+    })
 
     expect(requestResponse.status).toBe(201)
     const resetRequestId = requestResponse.body.id as string
@@ -353,9 +384,12 @@ describe('Password reset flow (integration)', () => {
       'Password123!'
     )
 
-    const listResponse = await request(app.getHttpServer())
-      .get('/auth/password-reset-requests')
-      .set('Cookie', adminCookie)
+    const listResponse = await apiRequest(
+      'GET',
+      '/auth/password-reset-requests',
+      undefined,
+      adminCookie
+    )
 
     expect(listResponse.status).toBe(200)
     expect(listResponse.body).toHaveLength(1)
@@ -364,35 +398,32 @@ describe('Password reset flow (integration)', () => {
       status: 'PENDING'
     })
 
-    const approveResponse = await request(app.getHttpServer())
-      .patch(`/auth/password-reset-requests/${resetRequestId}/approve`)
-      .set('Cookie', adminCookie)
+    const approveResponse = await apiRequest(
+      'PATCH',
+      `/auth/password-reset-requests/${resetRequestId}/approve`,
+      undefined,
+      adminCookie
+    )
 
     expect(approveResponse.status).toBe(204)
 
-    const resetResponse = await request(app.getHttpServer())
-      .post('/auth/reset-password')
-      .send({
-        token: resetToken,
-        newPassword: 'NewPassword123!'
-      })
+    const resetResponse = await apiRequest('POST', '/auth/reset-password', {
+      token: resetToken,
+      newPassword: 'NewPassword123!'
+    })
 
     expect(resetResponse.status).toBe(204)
 
-    const oldPasswordLogin = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: 'reseller.user@luxis.com',
-        password: 'Password123!'
-      })
+    const oldPasswordLogin = await apiRequest('POST', '/auth/login', {
+      email: 'reseller.user@luxis.com',
+      password: 'Password123!'
+    })
     expect(oldPasswordLogin.status).toBe(401)
 
-    const newPasswordLogin = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: 'reseller.user@luxis.com',
-        password: 'NewPassword123!'
-      })
+    const newPasswordLogin = await apiRequest('POST', '/auth/login', {
+      email: 'reseller.user@luxis.com',
+      password: 'NewPassword123!'
+    })
     expect(newPasswordLogin.status).toBe(204)
 
     const storedRequest = await passwordResetRepository.findById(resetRequestId)
@@ -419,9 +450,9 @@ describe('Password reset flow (integration)', () => {
       role: Role.RESELLER
     })
 
-    const requestResponse = await request(app.getHttpServer())
-      .post('/auth/forgot-password')
-      .send({ email: 'reseller.user@luxis.com' })
+    const requestResponse = await apiRequest('POST', '/auth/forgot-password', {
+      email: 'reseller.user@luxis.com'
+    })
 
     const resetRequestId = requestResponse.body.id as string
     const resetToken = requestResponse.body.token as string
@@ -430,18 +461,19 @@ describe('Password reset flow (integration)', () => {
       'Password123!'
     )
 
-    const rejectResponse = await request(app.getHttpServer())
-      .patch(`/auth/password-reset-requests/${resetRequestId}/reject`)
-      .set('Cookie', adminCookie)
+    const rejectResponse = await apiRequest(
+      'PATCH',
+      `/auth/password-reset-requests/${resetRequestId}/reject`,
+      undefined,
+      adminCookie
+    )
 
     expect(rejectResponse.status).toBe(204)
 
-    const resetResponse = await request(app.getHttpServer())
-      .post('/auth/reset-password')
-      .send({
-        token: resetToken,
-        newPassword: 'NewPassword123!'
-      })
+    const resetResponse = await apiRequest('POST', '/auth/reset-password', {
+      token: resetToken,
+      newPassword: 'NewPassword123!'
+    })
 
     expect(resetResponse.status).toBe(400)
     expect(resetResponse.body.message).toBe(

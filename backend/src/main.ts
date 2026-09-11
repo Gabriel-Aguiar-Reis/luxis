@@ -6,15 +6,26 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { Logger as PinoLogger } from 'nestjs-pino'
 import { SwaggerModule } from '@nestjs/swagger'
 import { swaggerConfig, swaggerOptions } from '@/shared/config/swagger.config'
+import {
+  FastifyAdapter,
+  NestFastifyApplication
+} from '@nestjs/platform-fastify'
+import fastifyCookie from '@fastify/cookie'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bufferLogs: true
-  })
+  const fastifyAdapter = new FastifyAdapter({})
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    fastifyAdapter,
+    { bufferLogs: true }
+  )
+
+  await app.register(fastifyCookie)
 
   const config = app.get(AppConfigService)
   const corsOrigins = config.getCorsOrigins()
-  app.useGlobalFilters(new GlobalExceptionFilter(config))
+  // Register the global exception filter using DI to provide HttpAdapterHost
+  app.useGlobalFilters(app.get(GlobalExceptionFilter))
 
   app.useLogger(app.get(PinoLogger))
   const port = config.getPort() ?? 3000

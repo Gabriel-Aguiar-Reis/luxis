@@ -45,8 +45,7 @@ export class PasswordResetRequestTypeOrmRepository
   ): Promise<PasswordResetRequest[]> {
     const entities = await this.repository.find({
       where: { status },
-      order: { createdAt: 'DESC' },
-      relations: ['user']
+      order: { createdAt: 'DESC' }
     })
     return entities.map(PasswordResetRequestMapper.toDomainEntity)
   }

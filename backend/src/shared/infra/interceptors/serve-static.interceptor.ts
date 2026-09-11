@@ -5,13 +5,15 @@ import {
   CallHandler
 } from '@nestjs/common'
 import { Observable } from 'rxjs'
-import { Response } from 'express'
 
 @Injectable()
 export class ServeStaticInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const response = context.switchToHttp().getResponse<Response>()
-    response.setHeader('Content-Type', this.getContentType(response.req.url))
+    const request = context.switchToHttp().getRequest<{ url: string }>()
+    const response = context
+      .switchToHttp()
+      .getResponse<{ type: (contentType: string) => unknown }>()
+    response.type(this.getContentType(request.url))
     return next.handle()
   }
 

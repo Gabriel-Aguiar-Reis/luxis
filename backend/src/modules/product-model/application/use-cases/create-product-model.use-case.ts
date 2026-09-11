@@ -19,14 +19,14 @@ export class CreateProductModelUseCase {
   ) {}
 
   async execute(input: CreateProductModelDto): Promise<ProductModel> {
-    const photoUrl = input.photo
-      ? new ImageURL(
-          await this.cloudinaryService.uploadImage(
-            input.photo,
-            'product-models'
-          )
-        )
-      : undefined
+    let photoUrl
+    if (input.photoUrl) {
+      photoUrl = new ImageURL(input.photoUrl)
+    } else if (input.photo) {
+      photoUrl = new ImageURL(
+        await this.cloudinaryService.uploadImage(input.photo, 'product-models')
+      )
+    }
     const model = new ProductModel(
       crypto.randomUUID(),
       new ModelName(input.name),

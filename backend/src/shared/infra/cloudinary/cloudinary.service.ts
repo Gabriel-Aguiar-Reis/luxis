@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { AppConfigService } from '@/shared/config/app-config.service'
 import { v2 as cloudinary } from 'cloudinary'
 import { Readable } from 'stream'
+import { UploadedFile } from '@/shared/types/uploaded-file'
 
 @Injectable()
 export class CloudinaryService {
@@ -18,7 +19,9 @@ export class CloudinaryService {
       timestamp,
       folder,
       signature,
-      expiresAt
+      expiresAt,
+      apiKey: this.configService.getCloudinaryApiKey(),
+      cloudName: this.configService.getCloudinaryCloudName()
     }
   }
   constructor(private configService: AppConfigService) {
@@ -30,9 +33,14 @@ export class CloudinaryService {
   }
 
   async uploadImage(
-    file: string | Express.Multer.File,
+    file: string | UploadedFile,
     folder: string = 'products-models-images'
   ): Promise<string> {
+    // If the caller already provided a remote URL (direct upload), return it unchanged
+    if (typeof file === 'string' && /^https?:\/\//i.test(file)) {
+      return Promise.resolve(file)
+    }
+
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
@@ -60,12 +68,13 @@ export class CloudinaryService {
       if (typeof file === 'string') {
         // Base64 string
         const buffer = Buffer.from(file, 'base64')
-        const stream = Readable.from(buffer)
-        stream.pipe(uploadStream)
+        Readable.from(buffer).pipe(uploadStream)
+      } else if (file && file.buffer) {
+        Readable.from(file.buffer).pipe(uploadStream)
+      } else if (file && file.stream) {
+        ;(file.stream as NodeJS.ReadableStream).pipe(uploadStream)
       } else {
-        // Multer file
-        const stream = Readable.from(file.buffer)
-        stream.pipe(uploadStream)
+        reject(new BadRequestException('Invalid file input'))
       }
     })
   }

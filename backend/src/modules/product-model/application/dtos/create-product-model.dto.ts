@@ -3,8 +3,10 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID
+  IsUUID,
+  IsUrl
 } from 'class-validator'
+import { UploadedFile } from '@/shared/types/uploaded-file'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 
@@ -56,5 +58,16 @@ export class CreateProductModelDto {
     required: false
   })
   @IsOptional()
-  photo?: Express.Multer.File
+  // Accept either a base64 string / remote URL or an uploaded file object (fallback)
+  photo?: string | UploadedFile
+
+  @ApiProperty({
+    description: 'The photo URL of the product model (direct upload)',
+    example: 'https://res.cloudinary.com/.../image.jpg',
+    type: String,
+    required: false
+  })
+  @IsUrl()
+  @IsOptional()
+  photoUrl?: string
 }
