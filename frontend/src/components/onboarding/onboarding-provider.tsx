@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
 interface OnboardingContextType {
+  isHydrated: boolean
   isOnboardingComplete: boolean
   currentStep: number
   totalSteps: number
@@ -21,6 +22,7 @@ export function OnboardingProvider({
 }: {
   children: React.ReactNode
 }) {
+  const [isHydrated, setIsHydrated] = useState(false)
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const totalSteps = 5
@@ -31,6 +33,7 @@ export function OnboardingProvider({
     if (completed === 'true') {
       setIsOnboardingComplete(true)
     }
+    setIsHydrated(true)
   }, [])
 
   const completeOnboarding = () => {
@@ -54,6 +57,7 @@ export function OnboardingProvider({
   return (
     <OnboardingContext.Provider
       value={{
+        isHydrated,
         isOnboardingComplete,
         currentStep,
         totalSteps,

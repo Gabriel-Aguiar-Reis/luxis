@@ -31,6 +31,7 @@ interface OnboardingStep {
 
 export function OnboardingModal() {
   const {
+    isHydrated,
     isOnboardingComplete,
     currentStep,
     totalSteps,
@@ -71,10 +72,10 @@ export function OnboardingModal() {
 
   useEffect(() => {
     // Abre o modal apenas se o onboarding não foi completado
-    if (!isOnboardingComplete) {
+    if (isHydrated && !isOnboardingComplete) {
       setOpen(true)
     }
-  }, [isOnboardingComplete])
+  }, [isHydrated, isOnboardingComplete])
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
