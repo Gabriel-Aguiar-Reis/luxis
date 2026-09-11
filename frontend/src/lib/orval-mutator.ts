@@ -13,6 +13,8 @@ const API = '/api/backend'
 const REQUEST_TIMEOUT_MS = 15000
 const RETRYABLE_METHODS = new Set(['GET', 'HEAD'])
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504])
+// fetch() throws synchronously if a GET/HEAD request has a body.
+const BODYLESS_METHODS = new Set(['GET', 'HEAD'])
 
 function shouldRetry(method: string, status?: number, attempt = 0) {
   if (!RETRYABLE_METHODS.has(method) || attempt >= 2) return false
@@ -40,19 +42,33 @@ export const customInstance = async <T>(
     ...((options?.headers as Record<string, string>) ?? {})
   }
 
+  // Some Orval-generated GET calls include a body (the query params are
+  // already encoded in the URL), but fetch() throws synchronously if a
+  // GET/HEAD request has a body, silently failing before any request is
+  // ever sent. Strip it here instead of touching the generated code.
+  const { body: _unusedBody, ...restOptions } = options ?? {}
+  const bodyForRequest = BODYLESS_METHODS.has(method)
+    ? undefined
+    : options?.body
+
   for (let attempt = 0; attempt <= 2; attempt++) {
+    // Combine our own timeout with the caller's signal (e.g. react-query's,
+    // used to cancel on unmount/refetch) so both can abort the request,
+    // while still letting us tell them apart afterwards.
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
-
-    const signal = options?.signal ?? controller.signal
+    const externalSignal = options?.signal
+    const onExternalAbort = () => controller.abort()
+    externalSignal?.addEventListener('abort', onExternalAbort)
 
     try {
       const response = await fetch(`${API}${url}`, {
-        ...options,
+        ...restOptions,
         method,
         headers,
+        body: bodyForRequest,
         credentials: 'include',
-        signal
+        signal: controller.signal
       })
 
       clearTimeout(timeout)
@@ -98,6 +114,13 @@ export const customInstance = async <T>(
       }
 
       if (error instanceof Error && error.name === 'AbortError') {
+        // Cancelled by the caller (e.g. react-query on unmount/refetch),
+        // not our own timeout: propagate as-is so the caller can recognize
+        // and ignore it instead of surfacing a fake error to the UI.
+        if (externalSignal?.aborted) {
+          throw error
+        }
+
         if (shouldRetry(method, 408, attempt)) {
           await wait((attempt + 1) * 300)
           continue
@@ -114,6 +137,8 @@ export const customInstance = async <T>(
       }
 
       throw error
+    } finally {
+      externalSignal?.removeEventListener('abort', onExternalAbort)
     }
   }
 
