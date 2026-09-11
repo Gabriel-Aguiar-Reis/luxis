@@ -6,6 +6,7 @@ import {
   IsUrl,
   IsUUID
 } from 'class-validator'
+import { UploadedFile } from '@/shared/types/uploaded-file'
 import { UUID } from 'crypto'
 import { ApiProperty } from '@nestjs/swagger'
 import { ProductModelStatus } from '@/modules/product-model/domain/enums/product-model-status.enum'
@@ -58,8 +59,8 @@ export class UpdateProductModelDto {
     required: false
   })
   @IsOptional()
-  // Accept either a base64 string / remote URL or a Multer file (fallback)
-  photo?: string | Express.Multer.File
+  // Accept either a base64 string / remote URL or an uploaded file object (fallback)
+  photo?: string | UploadedFile
 
   @ApiProperty({
     description: 'The photo URL of the product model',

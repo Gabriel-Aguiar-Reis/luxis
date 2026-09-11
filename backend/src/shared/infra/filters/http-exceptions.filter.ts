@@ -6,19 +6,23 @@ import {
   HttpStatus,
   Logger
 } from '@nestjs/common'
-import { Response } from 'express'
+import { HttpAdapterHost } from '@nestjs/core'
 import { AppConfigService } from '@/shared/config/app-config.service'
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name)
 
-  constructor(private readonly appConfigService: AppConfigService) {}
+  constructor(
+    private readonly appConfigService: AppConfigService,
+    private readonly httpAdapterHost: HttpAdapterHost
+  ) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
+    const { httpAdapter } = this.httpAdapterHost
     const ctx = host.switchToHttp()
-    const response = ctx.getResponse<Response>()
-    const request = ctx.getRequest<Request>()
+    const request = ctx.getRequest()
+    const response = ctx.getResponse()
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR
     let message = 'Internal server error'
@@ -42,19 +46,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message,
       error,
       timestamp: new Date().toISOString(),
-      path: request.url
+      path: request?.url
     }
 
     if (!this.appConfigService.isProduction()) {
-      responseBody['stack'] =
+      ;(responseBody as any)['stack'] =
         exception instanceof Error ? exception.stack : undefined
     }
 
     this.logger.error(
-      `Error: ${message} - Path: ${request.url} - Status: ${status}`,
+      `Error: ${message} - Path: ${request?.url} - Status: ${status}`,
       exception instanceof Error ? exception.stack : undefined
     )
 
-    response.status(status).json(responseBody)
+    httpAdapter.reply(response, responseBody, status)
   }
 }

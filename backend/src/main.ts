@@ -6,15 +6,20 @@ import { AppConfigService } from '@/shared/config/app-config.service'
 import { Logger as PinoLogger } from 'nestjs-pino'
 import { SwaggerModule } from '@nestjs/swagger'
 import { swaggerConfig, swaggerOptions } from '@/shared/config/swagger.config'
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bufferLogs: true
-  })
+  const fastifyAdapter = new FastifyAdapter({})
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    fastifyAdapter,
+    { bufferLogs: true }
+  )
 
   const config = app.get(AppConfigService)
   const corsOrigins = config.getCorsOrigins()
-  app.useGlobalFilters(new GlobalExceptionFilter(config))
+  // Register the global exception filter using DI to provide HttpAdapterHost
+  app.useGlobalFilters(app.get(GlobalExceptionFilter))
 
   app.useLogger(app.get(PinoLogger))
   const port = config.getPort() ?? 3000
@@ -35,12 +40,19 @@ async function bootstrap() {
     })
   )
 
-  const document = SwaggerModule.createDocument(
-    app,
-    swaggerConfig,
-    swaggerOptions
-  )
+  const document = SwaggerModule.createDocument(app, swaggerConfig, swaggerOptions)
   SwaggerModule.setup('api/docs', app, document)
+
+  // Register Fastify multipart plugin to handle multipart/form-data if needed
+  try {
+    const fastifyInstance = app.getHttpAdapter().getInstance()
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const multipart = require('@fastify/multipart')
+    await fastifyInstance.register(multipart, { addToBody: true })
+  } catch (e) {
+    // ignore if plugin is not installed in some environments
+    Logger.warn('Could not register @fastify/multipart plugin: ' + String(e))
+  }
 
   await app.listen(port, '0.0.0.0')
   Logger.log(`App running on http://localhost:${port}`, 'Bootstrap')
