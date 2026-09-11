@@ -9,8 +9,8 @@ export class CreateProductDto {
     type: String,
     required: true
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Numero de serie deve ser texto.' })
+  @IsNotEmpty({ message: 'Numero de serie e obrigatorio.' })
   serialNumber: string
 
   @ApiProperty({
@@ -39,9 +39,12 @@ export class CreateProductDto {
     type: String,
     required: true
   })
-  @IsString()
-  @IsNotEmpty()
-  @IsCurrency({ allow_negatives: false, require_decimal: true })
+  @IsString({ message: 'Custo unitario deve ser texto.' })
+  @IsNotEmpty({ message: 'Custo unitario e obrigatorio.' })
+  @IsCurrency(
+    { allow_negatives: false, require_decimal: true },
+    { message: 'Custo unitario deve usar decimal com ponto, como 99.90.' }
+  )
   unitCost: string
 
   @ApiProperty({
@@ -50,8 +53,11 @@ export class CreateProductDto {
     type: String,
     required: true
   })
-  @IsString()
-  @IsNotEmpty()
-  @IsCurrency({ allow_negatives: false, require_decimal: true })
+  @IsString({ message: 'Preco de venda deve ser texto.' })
+  @IsNotEmpty({ message: 'Preco de venda e obrigatorio.' })
+  @IsCurrency(
+    { allow_negatives: false, require_decimal: true },
+    { message: 'Preco de venda deve usar decimal com ponto, como 149.90.' }
+  )
   salePrice: string
 }

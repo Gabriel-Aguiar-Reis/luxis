@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
@@ -46,7 +47,6 @@ import {
   GetAllCustomersResponse,
   CreateCustomerDto
 } from '@/hooks/use-customers'
-import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { cn } from 'cn'
 import { format } from 'date-fns'
@@ -56,6 +56,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { useAuthStore } from '@/stores/use-auth-store'
 import { useLocale, useTranslations } from 'next-intl'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
+import { fieldHints, phonePattern } from '@/lib/form-guidance'
 
 export type SaleFormValues = {
   productIds: string[]
@@ -116,8 +123,10 @@ export function SaleCreateForm() {
     })
 
   const customerSchema = z.object({
-    name: z.string().trim().min(1, 'Nome obrigatório'),
-    phone: z.string().trim().min(10, 'Telefone obrigatório')
+    name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+    phone: z
+      .string()
+      .regex(phonePattern, 'Telefone inválido. Use DDD + número.')
   })
 
   const queryClient = useQueryClient()
@@ -576,17 +585,26 @@ export function SaleCreateForm() {
                         <FormItem>
                           <FormLabel>{t('numberInstallments')}</FormLabel>
                           <FormControl>
-                            <Input
-                              type="number"
-                              min={1}
-                              step={1}
-                              placeholder={t('installmentsPlaceholder')}
-                              value={field.value?.toString() ?? ''}
-                              onChange={(e) =>
-                                field.onChange(Number(e.target.value))
-                              }
-                            />
+                            <InputGroup>
+                              <InputGroupInput
+                                type="number"
+                                min={1}
+                                step={1}
+                                inputMode="numeric"
+                                placeholder={t('installmentsPlaceholder')}
+                                value={field.value?.toString() ?? ''}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value))
+                                }
+                              />
+                              <InputGroupAddon align="inline-end">
+                                <InputGroupText>parcelas</InputGroupText>
+                              </InputGroupAddon>
+                            </InputGroup>
                           </FormControl>
+                          <FormDescription>
+                            {fieldHints.installments}
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -599,17 +617,26 @@ export function SaleCreateForm() {
                         <FormItem>
                           <FormLabel>{t('installmentsInterval')}</FormLabel>
                           <FormControl>
-                            <Input
-                              type="number"
-                              min={0}
-                              step={1}
-                              placeholder={t('intervalPlaceholder')}
-                              value={field.value?.toString() ?? ''}
-                              onChange={(e) =>
-                                field.onChange(Number(e.target.value))
-                              }
-                            />
+                            <InputGroup>
+                              <InputGroupInput
+                                type="number"
+                                min={0}
+                                step={1}
+                                inputMode="numeric"
+                                placeholder={t('intervalPlaceholder')}
+                                value={field.value?.toString() ?? ''}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value))
+                                }
+                              />
+                              <InputGroupAddon align="inline-end">
+                                <InputGroupText>dias</InputGroupText>
+                              </InputGroupAddon>
+                            </InputGroup>
                           </FormControl>
+                          <FormDescription>
+                            {fieldHints.installmentInterval}
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}

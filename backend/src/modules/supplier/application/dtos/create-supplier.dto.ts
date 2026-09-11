@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsString, IsNotEmpty, Length } from 'class-validator'
+import { IsBrazilianPhone } from '@/shared/common/validators/is-brazilian-phone.validator'
 
 export class CreateSupplierDto {
   @ApiProperty({
@@ -8,8 +9,9 @@ export class CreateSupplierDto {
     type: String,
     required: true
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Nome deve ser texto.' })
+  @Length(2, 80, { message: 'Nome deve ter entre 2 e 80 caracteres.' })
+  @IsNotEmpty({ message: 'Nome e obrigatorio.' })
   name: string
 
   @ApiProperty({
@@ -18,7 +20,8 @@ export class CreateSupplierDto {
     type: String,
     required: true
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Telefone deve ser texto.' })
+  @IsBrazilianPhone()
+  @IsNotEmpty({ message: 'Telefone e obrigatorio.' })
   phone: string
 }

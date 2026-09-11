@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +29,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
+import { fieldHints, onlyPhoneChars, phonePattern } from '@/lib/form-guidance'
 
 const profileFormSchema = z.object({
   name: z
@@ -51,7 +59,7 @@ const profileFormSchema = z.object({
   email: z.string().email({
     message: 'Email inválido.'
   }),
-  phone: z.string().regex(/^(\(?[0-9]{2}\)?)?\s?([0-9]{4,5})-?\s?([0-9]{4})$/, {
+  phone: z.string().regex(phonePattern, {
     message:
       'Telefone inválido. Use o formato (XX) XXXXX-XXXX ou (XX) XXXX-XXXX.'
   }),
@@ -222,12 +230,18 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Seu nome"
-                        {...field}
-                        disabled={!isEditing}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          placeholder="Seu nome"
+                          {...field}
+                          disabled={!isEditing}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>2-50</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
+                    <FormDescription>{fieldHints.personName}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -240,12 +254,18 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Sobrenome</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Seu sobrenome"
-                        {...field}
-                        disabled={!isEditing}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          placeholder="Seu sobrenome"
+                          {...field}
+                          disabled={!isEditing}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>2-50</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
+                    <FormDescription>{fieldHints.personName}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -260,12 +280,16 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="seu.email@exemplo.com"
-                        {...field}
-                        disabled={!isEditing}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          type="email"
+                          placeholder="seu.email@exemplo.com"
+                          {...field}
+                          disabled={!isEditing}
+                        />
+                      </InputGroup>
                     </FormControl>
+                    <FormDescription>{fieldHints.email}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -278,12 +302,23 @@ export function ProfileForm() {
                   <FormItem>
                     <FormLabel>Telefone</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="00000000000"
-                        {...field}
-                        disabled={!isEditing}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <InputGroupText>+55</InputGroupText>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="tel"
+                          inputMode="tel"
+                          placeholder="(11) 98765-4321"
+                          {...field}
+                          disabled={!isEditing}
+                          onChange={(e) =>
+                            field.onChange(onlyPhoneChars(e.target.value))
+                          }
+                        />
+                      </InputGroup>
                     </FormControl>
+                    <FormDescription>{fieldHints.phone}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -324,10 +359,14 @@ export function ProfileForm() {
                       <FormControl>
                         <Input
                           placeholder="Número"
+                          inputMode="numeric"
                           {...field}
                           disabled={!isEditing}
                         />
                       </FormControl>
+                      <FormDescription>
+                        {fieldHints.addressNumber}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -361,11 +400,12 @@ export function ProfileForm() {
                       <FormLabel>CEP</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="00000000"
+                          placeholder="01234567"
                           {...field}
                           disabled={!isEditing}
                         />
                       </FormControl>
+                      <FormDescription>{fieldHints.postalCode}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

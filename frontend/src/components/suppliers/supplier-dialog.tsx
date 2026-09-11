@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
 import { DialogHeader, DialogFooter } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { UpdateSupplierDto } from '@/hooks/use-suppliers'
 import { Supplier } from '@/lib/api-types'
@@ -14,10 +13,17 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
+import { fieldHints, onlyPhoneChars, phonePattern } from '@/lib/form-guidance'
 
 const supplierSchema = z.object({
-  name: z.string().trim().min(1, 'Nome obrigatório'),
-  phone: z.string().trim().min(10, 'Telefone obrigatório')
+  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  phone: z.string().regex(phonePattern, 'Telefone inválido. Use DDD + número.')
 })
 
 type SupplierFormValues = z.infer<typeof supplierSchema>
@@ -96,12 +102,24 @@ export function SupplierDialog({
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome</Label>
-                <Input
-                  id="name"
-                  placeholder="Nome do Fornecedor"
-                  aria-invalid={!!errors.name}
-                  {...register('name')}
-                />
+                <InputGroup>
+                  <InputGroupInput
+                    id="name"
+                    placeholder="Nome do Fornecedor"
+                    aria-invalid={!!errors.name}
+                    aria-describedby="supplier-edit-name-hint"
+                    {...register('name')}
+                  />
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupText>2-80</InputGroupText>
+                  </InputGroupAddon>
+                </InputGroup>
+                <p
+                  id="supplier-edit-name-hint"
+                  className="text-muted-foreground text-xs"
+                >
+                  {fieldHints.name}
+                </p>
                 {errors.name && (
                   <p className="text-destructive text-sm">
                     {errors.name.message}
@@ -110,14 +128,28 @@ export function SupplierDialog({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefone</Label>
-                <Input
-                  id="phone"
-                  placeholder="Telefone do Fornecedor"
-                  type="tel"
-                  inputMode="tel"
-                  aria-invalid={!!errors.phone}
-                  {...register('phone')}
-                />
+                <InputGroup>
+                  <InputGroupAddon>
+                    <InputGroupText>+55</InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="phone"
+                    placeholder="(12) 98123-4567"
+                    type="tel"
+                    inputMode="tel"
+                    aria-invalid={!!errors.phone}
+                    aria-describedby="supplier-edit-phone-hint"
+                    {...register('phone', {
+                      setValueAs: (value: string) => onlyPhoneChars(value)
+                    })}
+                  />
+                </InputGroup>
+                <p
+                  id="supplier-edit-phone-hint"
+                  className="text-muted-foreground text-xs"
+                >
+                  {fieldHints.phone}
+                </p>
                 {errors.phone && (
                   <p className="text-destructive text-sm">
                     {errors.phone.message}

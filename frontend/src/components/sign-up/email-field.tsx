@@ -3,10 +3,17 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { UseFormReturn } from 'react-hook-form'
+import { Mail } from 'lucide-react'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 interface EmailFieldProps {
   form: UseFormReturn<any>
@@ -23,26 +30,32 @@ export function EmailField({ form, isLoading, t }: EmailFieldProps) {
         <FormItem className="mt-4">
           <FormLabel>Email</FormLabel>
           <FormControl>
-            <Input
-              {...field}
-              type="email"
-              placeholder="email@luxis.com"
-              autoComplete="email"
-              aria-label="Email"
-              aria-required="true"
-              disabled={isLoading}
-              onChange={(e) => {
-                field.onChange(e)
-                if (fieldState.error) {
+            <InputGroup>
+              <InputGroupAddon>
+                <Mail aria-hidden="true" />
+              </InputGroupAddon>
+              <InputGroupInput
+                {...field}
+                type="email"
+                placeholder="email@luxis.com"
+                autoComplete="email"
+                aria-label="Email"
+                aria-required="true"
+                disabled={isLoading}
+                onChange={(e) => {
+                  field.onChange(e)
+                  if (fieldState.error) {
+                    form.trigger('email')
+                  }
+                }}
+                onBlur={(e) => {
+                  field.onBlur()
                   form.trigger('email')
-                }
-              }}
-              onBlur={(e) => {
-                field.onBlur()
-                form.trigger('email')
-              }}
-            />
+                }}
+              />
+            </InputGroup>
           </FormControl>
+          <FormDescription>{fieldHints.email}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

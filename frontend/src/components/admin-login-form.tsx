@@ -2,7 +2,6 @@
 import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { useRouter } from '@/lib/i18n/navigation'
@@ -14,12 +13,20 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthStore } from '@/stores/use-auth-store'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Mail } from 'lucide-react'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 export function AdminLoginForm({
   className,
@@ -101,27 +108,33 @@ export function AdminLoginForm({
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="email"
-                          placeholder="admin@luxis.com"
-                          autoComplete="email"
-                          autoFocus
-                          aria-label="Email"
-                          aria-required="true"
-                          disabled={isLoading}
-                          onChange={(e) => {
-                            field.onChange(e)
-                            if (fieldState.error) {
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Mail aria-hidden="true" />
+                          </InputGroupAddon>
+                          <InputGroupInput
+                            {...field}
+                            type="email"
+                            placeholder="admin@luxis.com"
+                            autoComplete="email"
+                            autoFocus
+                            aria-label="Email"
+                            aria-required="true"
+                            disabled={isLoading}
+                            onChange={(e) => {
+                              field.onChange(e)
+                              if (fieldState.error) {
+                                form.trigger('email')
+                              }
+                            }}
+                            onBlur={(e) => {
+                              field.onBlur()
                               form.trigger('email')
-                            }
-                          }}
-                          onBlur={(e) => {
-                            field.onBlur()
-                            form.trigger('email')
-                          }}
-                        />
+                            }}
+                          />
+                        </InputGroup>
                       </FormControl>
+                      <FormDescription>{fieldHints.email}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -141,8 +154,8 @@ export function AdminLoginForm({
                         </a>
                       </div>
                       <FormControl>
-                        <div className="relative">
-                          <Input
+                        <InputGroup>
+                          <InputGroupInput
                             {...field}
                             type={showPassword ? 'text' : 'password'}
                             placeholder={t('passwordPlaceholder')}
@@ -161,21 +174,19 @@ export function AdminLoginForm({
                               form.trigger('password')
                             }}
                           />
-                          <button
-                            type="button"
-                            className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
-                            aria-label={t('showPassword')}
-                            disabled={isLoading}
-                            onClick={() => setShowPassword((v) => !v)}
-                          >
-                            {showPassword ? (
-                              <Eye className="h-4 w-4" />
-                            ) : (
-                              <EyeOff className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
+                          <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                              size="icon-xs"
+                              aria-label={t('showPassword')}
+                              disabled={isLoading}
+                              onClick={() => setShowPassword((v) => !v)}
+                            >
+                              {showPassword ? <Eye /> : <EyeOff />}
+                            </InputGroupButton>
+                          </InputGroupAddon>
+                        </InputGroup>
                       </FormControl>
+                      <FormDescription>{fieldHints.password}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

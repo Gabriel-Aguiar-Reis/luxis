@@ -9,6 +9,7 @@ import {
 } from 'class-validator'
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsBrazilianPhone } from '@/shared/common/validators/is-brazilian-phone.validator'
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -19,8 +20,8 @@ export class UpdateUserDto {
     type: String,
     required: false
   })
-  @IsString()
-  @Length(2, 50)
+  @IsString({ message: 'Nome deve ser texto.' })
+  @Length(2, 50, { message: 'Nome deve ter entre 2 e 50 caracteres.' })
   @IsOptional()
   name?: string
 
@@ -32,8 +33,8 @@ export class UpdateUserDto {
     type: String,
     required: false
   })
-  @IsString()
-  @Length(2, 50)
+  @IsString({ message: 'Sobrenome deve ser texto.' })
+  @Length(2, 50, { message: 'Sobrenome deve ter entre 2 e 50 caracteres.' })
   @IsOptional()
   surname?: string
 
@@ -43,7 +44,8 @@ export class UpdateUserDto {
     type: String,
     required: false
   })
-  @IsString()
+  @IsString({ message: 'Telefone deve ser texto.' })
+  @IsBrazilianPhone()
   @IsOptional()
   phone?: string
 
@@ -53,7 +55,7 @@ export class UpdateUserDto {
     type: String,
     required: false
   })
-  @IsEmail()
+  @IsEmail({}, { message: 'Informe um email valido.' })
   @IsOptional()
   email?: string
 

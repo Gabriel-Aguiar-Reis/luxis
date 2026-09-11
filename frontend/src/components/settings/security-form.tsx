@@ -11,13 +11,20 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { Eye, EyeOff, Key } from 'lucide-react'
 import { useAuthStore } from '@/stores/use-auth-store'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 const passwordFormSchema = z
   .object({
@@ -130,30 +137,28 @@ export function SecurityForm() {
                     <FormItem>
                       <FormLabel>Nova senha</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
+                        <InputGroup>
+                          <InputGroupInput
                             type={showNewPassword ? 'text' : 'password'}
                             placeholder="Digite sua nova senha"
                             {...field}
                           />
-                          <button
-                            type="button"
-                            className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
-                            aria-label={
-                              showNewPassword
-                                ? 'Ocultar senha'
-                                : 'Mostrar senha'
-                            }
-                            onClick={() => setShowNewPassword((v) => !v)}
-                          >
-                            {showNewPassword ? (
-                              <Eye className="h-4 w-4" />
-                            ) : (
-                              <EyeOff className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
+                          <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                              size="icon-xs"
+                              aria-label={
+                                showNewPassword
+                                  ? 'Ocultar senha'
+                                  : 'Mostrar senha'
+                              }
+                              onClick={() => setShowNewPassword((v) => !v)}
+                            >
+                              {showNewPassword ? <Eye /> : <EyeOff />}
+                            </InputGroupButton>
+                          </InputGroupAddon>
+                        </InputGroup>
                       </FormControl>
+                      <FormDescription>{fieldHints.password}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -166,30 +171,28 @@ export function SecurityForm() {
                     <FormItem>
                       <FormLabel>Confirmar nova senha</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
+                        <InputGroup>
+                          <InputGroupInput
                             type={showConfirmPassword ? 'text' : 'password'}
                             placeholder="Confirme sua nova senha"
                             {...field}
                           />
-                          <button
-                            type="button"
-                            className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
-                            aria-label={
-                              showConfirmPassword
-                                ? 'Ocultar senha'
-                                : 'Mostrar senha'
-                            }
-                            onClick={() => setShowConfirmPassword((v) => !v)}
-                          >
-                            {showConfirmPassword ? (
-                              <Eye className="h-4 w-4" />
-                            ) : (
-                              <EyeOff className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
+                          <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                              size="icon-xs"
+                              aria-label={
+                                showConfirmPassword
+                                  ? 'Ocultar senha'
+                                  : 'Mostrar senha'
+                              }
+                              onClick={() => setShowConfirmPassword((v) => !v)}
+                            >
+                              {showConfirmPassword ? <Eye /> : <EyeOff />}
+                            </InputGroupButton>
+                          </InputGroupAddon>
+                        </InputGroup>
                       </FormControl>
+                      <FormDescription>{fieldHints.password}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

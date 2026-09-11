@@ -22,6 +22,13 @@ import {
 import { Product, ProductModel } from '@/lib/api-types'
 import { UpdateProductDto } from '@/hooks/use-products'
 import { useTranslations } from 'next-intl'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 type ProductDialogProps = {
   product: Product | null
@@ -142,31 +149,57 @@ export function ProductDialog({
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="unitCost">{t('unitCost')}</Label>
-                <Input
-                  id="unitCost"
-                  name="unitCost"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.unitCost || ''}
-                  onChange={handleChange}
-                  placeholder={t('pricePlaceholder')}
-                  required
-                />
+                <InputGroup>
+                  <InputGroupAddon>
+                    <InputGroupText>R$</InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="unitCost"
+                    name="unitCost"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    inputMode="decimal"
+                    value={formData.unitCost || ''}
+                    onChange={handleChange}
+                    placeholder={t('pricePlaceholder')}
+                    aria-describedby="product-unit-cost-hint"
+                    required
+                  />
+                </InputGroup>
+                <p
+                  id="product-unit-cost-hint"
+                  className="text-muted-foreground text-xs"
+                >
+                  {fieldHints.currency}
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="salePrice">{t('salePrice')}</Label>
-                <Input
-                  id="salePrice"
-                  name="salePrice"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.salePrice || ''}
-                  onChange={handleChange}
-                  placeholder={t('pricePlaceholder')}
-                  required
-                />
+                <InputGroup>
+                  <InputGroupAddon>
+                    <InputGroupText>R$</InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="salePrice"
+                    name="salePrice"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    inputMode="decimal"
+                    value={formData.salePrice || ''}
+                    onChange={handleChange}
+                    placeholder={t('pricePlaceholder')}
+                    aria-describedby="product-sale-price-hint"
+                    required
+                  />
+                </InputGroup>
+                <p
+                  id="product-sale-price-hint"
+                  className="text-muted-foreground text-xs"
+                >
+                  {fieldHints.currency}
+                </p>
               </div>
             </div>
           </div>

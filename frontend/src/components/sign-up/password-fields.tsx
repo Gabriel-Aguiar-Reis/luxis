@@ -3,12 +3,19 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { UseFormReturn } from 'react-hook-form'
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 interface PasswordFieldsProps {
   form: UseFormReturn<any>
@@ -29,8 +36,8 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
             <div className="space-y-2 relative">
               <FormLabel>{t('password')}</FormLabel>
               <FormControl>
-                <div className="relative">
-                  <Input
+                <InputGroup>
+                  <InputGroupInput
                     {...field}
                     type={showPassword ? 'text' : 'password'}
                     placeholder={t('passwordPlaceholder')}
@@ -49,21 +56,19 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
                       form.trigger('password')
                     }}
                   />
-                  <button
-                    type="button"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
-                    aria-label={t('showPassword')}
-                    disabled={isLoading}
-                    onClick={() => setShowPassword((v) => !v)}
-                  >
-                    {showPassword ? (
-                      <Eye className="h-4 w-4" />
-                    ) : (
-                      <EyeOff className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                      size="icon-xs"
+                      aria-label={t('showPassword')}
+                      disabled={isLoading}
+                      onClick={() => setShowPassword((v) => !v)}
+                    >
+                      {showPassword ? <Eye /> : <EyeOff />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
               </FormControl>
+              <FormDescription>{fieldHints.password}</FormDescription>
               <FormMessage />
             </div>
           </FormItem>
@@ -77,8 +82,8 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
             <div className="space-y-2 relative">
               <FormLabel>{t('confirmPassword')}</FormLabel>
               <FormControl>
-                <div className="relative">
-                  <Input
+                <InputGroup>
+                  <InputGroupInput
                     {...field}
                     type={showConfirmPassword ? 'text' : 'password'}
                     placeholder={t('confirmPasswordPlaceholder')}
@@ -97,21 +102,19 @@ export function PasswordFields({ form, isLoading, t }: PasswordFieldsProps) {
                       form.trigger('confirmPassword')
                     }}
                   />
-                  <button
-                    type="button"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent focus:bg-transparent"
-                    aria-label={t('showPassword')}
-                    disabled={isLoading}
-                    onClick={() => setShowConfirmPassword((v) => !v)}
-                  >
-                    {showConfirmPassword ? (
-                      <Eye className="h-4 w-4" />
-                    ) : (
-                      <EyeOff className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                      size="icon-xs"
+                      aria-label={t('showPassword')}
+                      disabled={isLoading}
+                      onClick={() => setShowConfirmPassword((v) => !v)}
+                    >
+                      {showConfirmPassword ? <Eye /> : <EyeOff />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
               </FormControl>
+              <FormDescription>{fieldHints.password}</FormDescription>
               <FormMessage />
             </div>
           </FormItem>

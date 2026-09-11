@@ -25,8 +25,8 @@ export class CreateSaleDto {
     type: [String],
     required: true
   })
-  @IsArray()
-  @ArrayNotEmpty()
+  @IsArray({ message: 'Produtos devem ser enviados como lista.' })
+  @ArrayNotEmpty({ message: 'Selecione pelo menos um produto.' })
   productIds: UUID[] = []
 
   @ApiProperty({
@@ -36,8 +36,8 @@ export class CreateSaleDto {
     required: true
   })
   @Type(() => Date)
-  @IsDate()
-  @IsNotEmpty()
+  @IsDate({ message: 'Data da venda deve ser uma data valida.' })
+  @IsNotEmpty({ message: 'Data da venda e obrigatoria.' })
   saleDate: Date
 
   @ApiProperty({
@@ -47,8 +47,8 @@ export class CreateSaleDto {
     enumName: 'PaymentMethod',
     required: true
   })
-  @IsEnum(PaymentMethod)
-  @IsNotEmpty()
+  @IsEnum(PaymentMethod, { message: 'Forma de pagamento invalida.' })
+  @IsNotEmpty({ message: 'Forma de pagamento e obrigatoria.' })
   paymentMethod: PaymentMethod
 
   @ApiProperty({
@@ -58,10 +58,10 @@ export class CreateSaleDto {
     required: true
   })
   @Type(() => Number)
-  @IsNumber()
-  @IsPositive()
-  @IsInt()
-  @Min(1)
+  @IsNumber({}, { message: 'Numero de parcelas deve ser numerico.' })
+  @IsPositive({ message: 'Numero de parcelas deve ser maior que zero.' })
+  @IsInt({ message: 'Numero de parcelas deve ser inteiro.' })
+  @Min(1, { message: 'Numero de parcelas deve ser no minimo 1.' })
   numberInstallments: number = 1
 
   @ApiProperty({
@@ -71,9 +71,9 @@ export class CreateSaleDto {
     required: true
   })
   @Type(() => Number)
-  @IsNumber()
-  @IsInt()
-  @Min(0)
+  @IsNumber({}, { message: 'Intervalo de parcelas deve ser numerico.' })
+  @IsInt({ message: 'Intervalo de parcelas deve ser inteiro.' })
+  @Min(0, { message: 'Intervalo de parcelas deve ser no minimo 0 dias.' })
   installmentsInterval: number = 0
 
   @ApiProperty({

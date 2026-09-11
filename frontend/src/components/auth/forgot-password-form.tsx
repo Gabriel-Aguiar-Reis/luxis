@@ -9,7 +9,6 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { cn } from 'cn'
 import {
   Form,
@@ -17,10 +16,18 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
 import { ApiError, apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
+import { Mail } from 'lucide-react'
 
 /**
  * Password Reset Flow (Manual Approval):
@@ -106,13 +113,20 @@ export function ForgotPasswordForm({
                     <FormItem className="grid gap-3">
                       <FormLabel>{t('email')}</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="email"
-                          placeholder="m@example.com"
-                          disabled={isLoading}
-                        />
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Mail aria-hidden="true" />
+                          </InputGroupAddon>
+                          <InputGroupInput
+                            {...field}
+                            type="email"
+                            placeholder="nome@dominio.com"
+                            autoComplete="email"
+                            disabled={isLoading}
+                          />
+                        </InputGroup>
                       </FormControl>
+                      <FormDescription>{fieldHints.email}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

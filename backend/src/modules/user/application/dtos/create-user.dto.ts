@@ -10,6 +10,7 @@ import {
 import { FederativeUnit } from '@/modules/user/domain/enums/federative-unit.enum'
 import { Country } from '@/modules/user/domain/enums/country.enum'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsBrazilianPhone } from '@/shared/common/validators/is-brazilian-phone.validator'
 
 export class CreateUserDto {
   @ApiProperty({
@@ -20,9 +21,9 @@ export class CreateUserDto {
     example: 'John Doe',
     required: true
   })
-  @IsString()
-  @Length(2, 50)
-  @IsNotEmpty()
+  @IsString({ message: 'Nome deve ser texto.' })
+  @Length(2, 50, { message: 'Nome deve ter entre 2 e 50 caracteres.' })
+  @IsNotEmpty({ message: 'Nome e obrigatorio.' })
   name: string
 
   @ApiProperty({
@@ -33,9 +34,9 @@ export class CreateUserDto {
     example: 'Jones',
     required: true
   })
-  @IsString()
-  @Length(2, 50)
-  @IsNotEmpty()
+  @IsString({ message: 'Sobrenome deve ser texto.' })
+  @Length(2, 50, { message: 'Sobrenome deve ter entre 2 e 50 caracteres.' })
+  @IsNotEmpty({ message: 'Sobrenome e obrigatorio.' })
   surname: string
 
   @ApiProperty({
@@ -44,8 +45,9 @@ export class CreateUserDto {
     type: String,
     required: true
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Telefone deve ser texto.' })
+  @IsBrazilianPhone()
+  @IsNotEmpty({ message: 'Telefone e obrigatorio.' })
   phone: string
 
   @ApiProperty({
@@ -54,8 +56,8 @@ export class CreateUserDto {
     type: String,
     required: true
   })
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Informe um email valido.' })
+  @IsNotEmpty({ message: 'Email e obrigatorio.' })
   email: string
 
   @ApiProperty({

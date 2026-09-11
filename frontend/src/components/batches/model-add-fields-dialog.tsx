@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ProductModel } from '@/lib/api-types'
 import {
@@ -10,6 +9,13 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 type ModelAddFieldsProps = {
   dto: {
@@ -96,51 +102,88 @@ export function ModelAddFields({
           <CardHeader>
             <CardTitle>{dto.name}</CardTitle>
           </CardHeader>
-          <CardContent className="flex gap-4">
-            <div>
+          <CardContent className="grid gap-4 sm:grid-cols-3">
+            <div className="space-y-2">
               <label className="mb-2 block text-sm font-medium leading-none">
                 Quantidade (un)
               </label>
-              <Input
-                type="number"
-                min={1}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                placeholder="Qtd"
-                step={1}
-              />
+              <InputGroup>
+                <InputGroupInput
+                  type="number"
+                  min={1}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  placeholder="Qtd"
+                  step={1}
+                  inputMode="numeric"
+                  aria-describedby="batch-quantity-hint"
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupText>un</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+              <p
+                id="batch-quantity-hint"
+                className="text-muted-foreground text-xs"
+              >
+                {fieldHints.quantity}
+              </p>
             </div>
-            <div>
+            <div className="space-y-2">
               <label className="mb-2 block text-sm font-medium leading-none">
                 Custo Unitário R$
               </label>
-              <Input
-                type="number"
-                inputMode="decimal"
-                value={unitCost}
-                onChange={(e) => {
-                  setUnitCost(e.target.value)
-                }}
-                placeholder="123,45"
-                maxLength={10}
-                step={0.01}
-              />
+              <InputGroup>
+                <InputGroupAddon>
+                  <InputGroupText>R$</InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput
+                  type="number"
+                  inputMode="decimal"
+                  value={unitCost}
+                  onChange={(e) => {
+                    setUnitCost(e.target.value)
+                  }}
+                  placeholder="123.45"
+                  maxLength={10}
+                  step={0.01}
+                  aria-describedby="batch-unit-cost-hint"
+                />
+              </InputGroup>
+              <p
+                id="batch-unit-cost-hint"
+                className="text-muted-foreground text-xs"
+              >
+                {fieldHints.currency}
+              </p>
             </div>
-            <div>
+            <div className="space-y-2">
               <label className="mb-2 block text-sm font-medium leading-none">
                 Preço de Venda R$
               </label>
-              <Input
-                type="number"
-                inputMode="decimal"
-                value={salePrice}
-                onChange={(e) => {
-                  setSalePrice(e.target.value)
-                }}
-                placeholder="123,45"
-                maxLength={10}
-                step={0.01}
-              />
+              <InputGroup>
+                <InputGroupAddon>
+                  <InputGroupText>R$</InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput
+                  type="number"
+                  inputMode="decimal"
+                  value={salePrice}
+                  onChange={(e) => {
+                    setSalePrice(e.target.value)
+                  }}
+                  placeholder="123.45"
+                  maxLength={10}
+                  step={0.01}
+                  aria-describedby="batch-sale-price-hint"
+                />
+              </InputGroup>
+              <p
+                id="batch-sale-price-hint"
+                className="text-muted-foreground text-xs"
+              >
+                {fieldHints.currency}
+              </p>
             </div>
           </CardContent>
           {error && <span className="ml-2 text-xs text-red-500">{error}</span>}

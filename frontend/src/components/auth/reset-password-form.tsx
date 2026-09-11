@@ -9,7 +9,6 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { cn } from 'cn'
 import {
   Form,
@@ -17,10 +16,19 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
 import { ApiError, apiFetch } from '@/lib/api-client'
 import { apiPaths } from '@/lib/api-paths'
+import { Eye, EyeOff } from 'lucide-react'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 const formSchema = z
   .object({
@@ -53,6 +61,8 @@ export function ResetPasswordForm({
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [token, _setToken] = useState<string | null>(tokenProp)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
     if (!token) {
@@ -130,12 +140,28 @@ export function ResetPasswordForm({
                     <FormItem className="grid gap-3">
                       <FormLabel>{t('password')}</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
-                          disabled={isLoading}
-                        />
+                        <InputGroup>
+                          <InputGroupInput
+                            {...field}
+                            type={showPassword ? 'text' : 'password'}
+                            autoComplete="new-password"
+                            disabled={isLoading}
+                          />
+                          <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                              size="icon-xs"
+                              aria-label={
+                                showPassword ? 'Ocultar senha' : 'Mostrar senha'
+                              }
+                              disabled={isLoading}
+                              onClick={() => setShowPassword((v) => !v)}
+                            >
+                              {showPassword ? <Eye /> : <EyeOff />}
+                            </InputGroupButton>
+                          </InputGroupAddon>
+                        </InputGroup>
                       </FormControl>
+                      <FormDescription>{fieldHints.password}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -147,12 +173,30 @@ export function ResetPasswordForm({
                     <FormItem className="grid gap-3">
                       <FormLabel>{t('confirmPassword')}</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
-                          disabled={isLoading}
-                        />
+                        <InputGroup>
+                          <InputGroupInput
+                            {...field}
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            autoComplete="new-password"
+                            disabled={isLoading}
+                          />
+                          <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                              size="icon-xs"
+                              aria-label={
+                                showConfirmPassword
+                                  ? 'Ocultar senha'
+                                  : 'Mostrar senha'
+                              }
+                              disabled={isLoading}
+                              onClick={() => setShowConfirmPassword((v) => !v)}
+                            >
+                              {showConfirmPassword ? <Eye /> : <EyeOff />}
+                            </InputGroupButton>
+                          </InputGroupAddon>
+                        </InputGroup>
                       </FormControl>
+                      <FormDescription>{fieldHints.password}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

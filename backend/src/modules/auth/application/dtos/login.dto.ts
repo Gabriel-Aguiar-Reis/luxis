@@ -14,8 +14,8 @@ export class LoginDto {
     type: String,
     required: true
   })
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Informe um email valido.' })
+  @IsNotEmpty({ message: 'Email e obrigatorio.' })
   email!: string
 
   @ApiProperty({
@@ -26,14 +26,14 @@ export class LoginDto {
     required: true
   })
   @IsString()
-  @MinLength(10)
+  @MinLength(10, { message: 'Senha deve ter pelo menos 10 caracteres.' })
   @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s"'`;=\\-]).{10,}$/,
     {
       message:
-        'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character'
+        'Senha deve conter ao menos 1 letra maiuscula, 1 minuscula, 1 numero e 1 caractere especial.'
     }
   )
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Senha e obrigatoria.' })
   password!: string
 }

@@ -3,10 +3,17 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormDescription,
   FormMessage
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { UseFormReturn } from 'react-hook-form'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 interface CepFieldProps {
   form: UseFormReturn<any>
@@ -23,27 +30,35 @@ export function CepField({ form, isLoading, t }: CepFieldProps) {
         <FormItem className="mt-4">
           <FormLabel>{t('postalCode')}</FormLabel>
           <FormControl>
-            <Input
-              {...field}
-              value={field.value || ''}
-              onChange={(e) => {
-                const raw = e.target.value.replace(/\D/g, '')
-                form.setValue('zipCode', raw)
-                if (fieldState.error) {
+            <InputGroup>
+              <InputGroupInput
+                {...field}
+                value={field.value || ''}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, '')
+                  form.setValue('zipCode', raw)
+                  if (fieldState.error) {
+                    form.trigger('zipCode')
+                  }
+                }}
+                type="text"
+                inputMode="numeric"
+                placeholder="01234567"
+                aria-label={t('postalCode')}
+                aria-required="true"
+                disabled={isLoading}
+                maxLength={8}
+                onBlur={(e) => {
+                  field.onBlur()
                   form.trigger('zipCode')
-                }
-              }}
-              type="text"
-              placeholder={t('postalCodePlaceholder')}
-              aria-label={t('postalCode')}
-              aria-required="true"
-              disabled={isLoading}
-              onBlur={(e) => {
-                field.onBlur()
-                form.trigger('zipCode')
-              }}
-            />
+                }}
+              />
+              <InputGroupAddon align="inline-end">
+                <InputGroupText>8 digitos</InputGroupText>
+              </InputGroupAddon>
+            </InputGroup>
           </FormControl>
+          <FormDescription>{fieldHints.postalCode}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

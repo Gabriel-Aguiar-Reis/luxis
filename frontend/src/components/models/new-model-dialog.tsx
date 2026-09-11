@@ -37,6 +37,13 @@ import { NewCategoryDialog } from '@/components/categories/new-category-dialog'
 
 import { v4 as uuidv4 } from 'uuid'
 import { useTranslations } from 'next-intl'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
+import { fieldHints } from '@/lib/form-guidance'
 
 export type NewModelDialogProps = {
   open: boolean
@@ -211,17 +218,29 @@ export function NewModelDialog({
           </div>
           <div>
             <Label>{t('suggestedPrice')}</Label>
-            <Input
-              type="number"
-              inputMode="decimal"
-              value={suggestedPrice}
-              onChange={(e) => {
-                setSuggestedPrice(e.target.value)
-              }}
-              placeholder={t('suggestedPricePlaceholder')}
-              maxLength={10}
-              step={0.01}
-            />
+            <InputGroup>
+              <InputGroupAddon>
+                <InputGroupText>R$</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput
+                type="number"
+                inputMode="decimal"
+                value={suggestedPrice}
+                onChange={(e) => {
+                  setSuggestedPrice(e.target.value)
+                }}
+                placeholder="149.90"
+                maxLength={10}
+                step={0.01}
+                aria-describedby="new-model-price-hint"
+              />
+            </InputGroup>
+            <p
+              id="new-model-price-hint"
+              className="text-muted-foreground text-xs"
+            >
+              {fieldHints.currency}
+            </p>
           </div>
           <div>
             <Label>{t('optionalImage')}</Label>

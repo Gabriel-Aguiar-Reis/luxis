@@ -1,25 +1,29 @@
 import { z } from 'zod'
+import { phonePattern } from '@/lib/form-guidance'
+
+const personNamePattern =
+  /^([A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+|de|da|do|dos|das|e)([- ]([A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+|de|da|do|dos|das|e))*$/
 
 export const signUpSchema = z
   .object({
     name: z
       .string()
       .regex(
-        /^([A-Z][a-z]+|de|da|do|dos|das|e)(\s([A-Z][a-z]+|de|da|do|dos|das|e))*$/,
-        'Nome inválido. Deve começar com letra maiúscula e conter apenas letras e espaços.'
+        personNamePattern,
+        'Nome inválido. Comece com letra maiúscula; acentos, cedilha, hífen e espaços são aceitos.'
       ),
     surname: z
       .string()
       .regex(
-        /^([A-Z][a-z]+|de|da|do|dos|das|e)(\s([A-Z][a-z]+|de|da|do|dos|das|e))*$/,
-        'Sobrenome inválido. Deve começar com letra maiúscula e conter apenas letras e espaços.'
+        personNamePattern,
+        'Sobrenome inválido. Comece com letra maiúscula; acentos, cedilha, hífen e espaços são aceitos.'
       ),
     email: z.string().email('Email inválido'),
     phone: z
       .string()
       .regex(
-        /^(\(?[0-9]{2}\)?)?\s?([0-9]{4,5})-?\s?([0-9]{4})$/,
-        'Telefone inválido. Formato esperado: 12987654321 ou (00) 00000-0000'
+        phonePattern,
+        'Telefone inválido. Use DDD + número, como (11) 98765-4321.'
       ),
     street: z
       .string()

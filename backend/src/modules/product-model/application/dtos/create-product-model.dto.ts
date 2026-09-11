@@ -17,8 +17,8 @@ export class CreateProductModelDto {
     type: String,
     required: true
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Nome do modelo deve ser texto.' })
+  @IsNotEmpty({ message: 'Nome do modelo e obrigatorio.' })
   name: string
 
   @ApiProperty({
@@ -37,8 +37,11 @@ export class CreateProductModelDto {
     type: String,
     required: true
   })
-  @IsCurrency()
-  @IsNotEmpty()
+  @IsCurrency(
+    { allow_negatives: false, require_decimal: true },
+    { message: 'Preco sugerido deve usar decimal com ponto, como 149.90.' }
+  )
+  @IsNotEmpty({ message: 'Preco sugerido e obrigatorio.' })
   suggestedPrice: string
 
   @ApiProperty({

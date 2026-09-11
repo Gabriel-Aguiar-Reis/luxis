@@ -2,7 +2,12 @@
 
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText
+} from '@/components/ui/input-group'
 import {
   Dialog,
   DialogContent,
@@ -14,6 +19,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,6 +33,7 @@ import {
   CreateCustomerDto,
   UpdateCustomerDto
 } from '@/hooks/use-customers'
+import { fieldHints, onlyPhoneChars, phonePattern } from '@/lib/form-guidance'
 
 type CustomerDialogProps = {
   customer: GetAllCustomersResponse[0] | null
@@ -40,8 +47,8 @@ type CustomerDialogProps = {
 
 // Schema de validação baseado na estrutura real da API
 const customerSchema = z.object({
-  name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
-  phone: z.string().min(10, 'Telefone deve ter pelo menos 10 dígitos')
+  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  phone: z.string().regex(phonePattern, 'Telefone inválido. Use DDD + número.')
 })
 
 export function CustomerDialog({
@@ -112,8 +119,17 @@ export function CustomerDialog({
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nome completo do cliente" {...field} />
+                    <InputGroup>
+                      <InputGroupInput
+                        placeholder="Nome completo do cliente"
+                        {...field}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupText>2-80</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
                   </FormControl>
+                  <FormDescription>{fieldHints.name}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -126,16 +142,22 @@ export function CustomerDialog({
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="+5511999999999"
-                      {...field}
-                      onChange={(e) => {
-                        // Remove caracteres não numéricos exceto '+'
-                        const value = e.target.value.replace(/[^\d+]/g, '')
-                        field.onChange(value)
-                      }}
-                    />
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <InputGroupText>+55</InputGroupText>
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type="tel"
+                        inputMode="tel"
+                        placeholder="(11) 98765-4321"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(onlyPhoneChars(e.target.value))
+                        }}
+                      />
+                    </InputGroup>
                   </FormControl>
+                  <FormDescription>{fieldHints.phone}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
