@@ -55,20 +55,6 @@ export function CustomersPage() {
     }
   }
 
-  if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />
-  }
-
-  if (!customers || customers.length === 0) {
-    return (
-      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
-    )
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
@@ -79,11 +65,22 @@ export function CustomersPage() {
         </Button>
       </div>
 
-      <CustomersTable
-        customers={customers}
-        onEdit={handleEditCustomer}
-        phoneUtil={phoneUtil}
-      />
+      {isLoading ? (
+        <Skeleton className="h-[200px] w-full" />
+      ) : isError ? (
+        <ErrorState onRetry={() => refetch()} />
+      ) : !customers || customers.length === 0 ? (
+        <EmptyState
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+        />
+      ) : (
+        <CustomersTable
+          customers={customers}
+          onEdit={handleEditCustomer}
+          phoneUtil={phoneUtil}
+        />
+      )}
 
       <CustomerDialog
         customer={selectedCustomer}

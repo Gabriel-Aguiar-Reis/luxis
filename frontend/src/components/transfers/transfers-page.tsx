@@ -40,20 +40,6 @@ export function TransfersPage() {
   const { mutate: deleteTransfer } = useDeleteTransfer(useQueryClient())
   const { mutate: createTransfer } = useCreateTransfer(useQueryClient())
 
-  if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />
-  }
-
-  if (!transfers || transfers.length === 0) {
-    return (
-      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
-    )
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -68,21 +54,34 @@ export function TransfersPage() {
           {t('newTransfer')}
         </Button>
       </div>
-      <TransfersTable
-        transfers={transfers}
-        onEdit={(transfer) => {
-          setSelectedTransfer(transfer)
-          setIsDialogOpen(true)
-        }}
-        onEditStatus={(transfer) => {
-          setSelectedTransfer(transfer)
-          setIsEditStatusDialogOpen(true)
-        }}
-        onDelete={(transfer) => {
-          setSelectedTransfer(transfer)
-          setIsDeleteDialogOpen(true)
-        }}
-      />
+
+      {isLoading ? (
+        <Skeleton className="h-[200px] w-full" />
+      ) : isError ? (
+        <ErrorState onRetry={() => refetch()} />
+      ) : !transfers || transfers.length === 0 ? (
+        <EmptyState
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+        />
+      ) : (
+        <TransfersTable
+          transfers={transfers}
+          onEdit={(transfer) => {
+            setSelectedTransfer(transfer)
+            setIsDialogOpen(true)
+          }}
+          onEditStatus={(transfer) => {
+            setSelectedTransfer(transfer)
+            setIsEditStatusDialogOpen(true)
+          }}
+          onDelete={(transfer) => {
+            setSelectedTransfer(transfer)
+            setIsDeleteDialogOpen(true)
+          }}
+        />
+      )}
+
       <TransferDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}

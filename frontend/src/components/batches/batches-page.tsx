@@ -29,20 +29,6 @@ export function BatchesPage() {
 
   const router = useRouter()
 
-  if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />
-  }
-
-  if (!batches || batches.length === 0) {
-    return (
-      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
-    )
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
@@ -52,13 +38,26 @@ export function BatchesPage() {
           {t('newBatch')}
         </Button>
       </div>
-      <BatchesTable
-        batches={batches}
-        onDelete={(batch) => {
-          setSelectedBatch(batch)
-          setIsDeleteDialogOpen(true)
-        }}
-      />
+
+      {isLoading ? (
+        <Skeleton className="h-[200px] w-full" />
+      ) : isError ? (
+        <ErrorState onRetry={() => refetch()} />
+      ) : !batches || batches.length === 0 ? (
+        <EmptyState
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+        />
+      ) : (
+        <BatchesTable
+          batches={batches}
+          onDelete={(batch) => {
+            setSelectedBatch(batch)
+            setIsDeleteDialogOpen(true)
+          }}
+        />
+      )}
+
       <BatchDeleteDialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}

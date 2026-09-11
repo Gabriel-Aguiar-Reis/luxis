@@ -49,20 +49,6 @@ export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
   const canEdit = role === 'ADMIN'
   const canDelete = role === 'ADMIN'
 
-  if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />
-  }
-
-  if (!shipments || shipments.length === 0) {
-    return (
-      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
-    )
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
@@ -74,34 +60,47 @@ export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
           </Button>
         )}
       </div>
-      <ShipmentsTable
-        shipments={shipments}
-        role={role}
-        onEdit={
-          canEdit
-            ? (shipment) => {
-                setSelectedShipment(shipment)
-                setIsDialogOpen(true)
-              }
-            : undefined
-        }
-        onEditStatus={
-          canEdit
-            ? (shipment) => {
-                setSelectedShipment(shipment)
-                setIsEditStatusDialogOpen(true)
-              }
-            : undefined
-        }
-        onDelete={
-          canDelete
-            ? (shipment) => {
-                setSelectedShipment(shipment)
-                setIsDeleteDialogOpen(true)
-              }
-            : undefined
-        }
-      />
+
+      {isLoading ? (
+        <Skeleton className="h-[200px] w-full" />
+      ) : isError ? (
+        <ErrorState onRetry={() => refetch()} />
+      ) : !shipments || shipments.length === 0 ? (
+        <EmptyState
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+        />
+      ) : (
+        <ShipmentsTable
+          shipments={shipments}
+          role={role}
+          onEdit={
+            canEdit
+              ? (shipment) => {
+                  setSelectedShipment(shipment)
+                  setIsDialogOpen(true)
+                }
+              : undefined
+          }
+          onEditStatus={
+            canEdit
+              ? (shipment) => {
+                  setSelectedShipment(shipment)
+                  setIsEditStatusDialogOpen(true)
+                }
+              : undefined
+          }
+          onDelete={
+            canDelete
+              ? (shipment) => {
+                  setSelectedShipment(shipment)
+                  setIsDeleteDialogOpen(true)
+                }
+              : undefined
+          }
+        />
+      )}
+
       <ShipmentDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}

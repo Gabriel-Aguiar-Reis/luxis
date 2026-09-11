@@ -37,20 +37,6 @@ export function SuppliersPage() {
   const { mutate: deleteSupplier } = useDeleteSupplier(useQueryClient())
   const { mutate: createSupplier } = useCreateSupplier(useQueryClient())
 
-  if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />
-  }
-
-  if (!suppliers || suppliers.length === 0) {
-    return (
-      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
-    )
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
@@ -60,21 +46,34 @@ export function SuppliersPage() {
           {t('newSupplier')}
         </Button>
       </div>
-      <SuppliersTable
-        suppliers={suppliers}
-        onEdit={(supplier) => {
-          setSelectedSupplier(supplier)
-          setIsDialogOpen(true)
-        }}
-        onDelete={(supplier) => {
-          setSelectedSupplier(supplier)
-          setIsDeleteDialogOpen(true)
-        }}
-        onCreate={() => {
-          setIsCreateDialogOpen(true)
-        }}
-        phoneUtil={phoneUtil}
-      />
+
+      {isLoading ? (
+        <Skeleton className="h-[200px] w-full" />
+      ) : isError ? (
+        <ErrorState onRetry={() => refetch()} />
+      ) : !suppliers || suppliers.length === 0 ? (
+        <EmptyState
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+        />
+      ) : (
+        <SuppliersTable
+          suppliers={suppliers}
+          onEdit={(supplier) => {
+            setSelectedSupplier(supplier)
+            setIsDialogOpen(true)
+          }}
+          onDelete={(supplier) => {
+            setSelectedSupplier(supplier)
+            setIsDeleteDialogOpen(true)
+          }}
+          onCreate={() => {
+            setIsCreateDialogOpen(true)
+          }}
+          phoneUtil={phoneUtil}
+        />
+      )}
+
       <SupplierDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}

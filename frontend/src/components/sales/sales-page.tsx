@@ -60,20 +60,6 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
   const canEdit = role === 'ADMIN'
   const canDelete = true
 
-  if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />
-  }
-
-  if (!sales || sales.length === 0) {
-    return (
-      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
-    )
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
@@ -90,42 +76,54 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
           {t('newSale')}
         </Button>
       </div>
-      <SalesTable
-        sales={sales}
-        phoneUtil={phoneUtil}
-        onEdit={
-          canEdit
-            ? (sale) => {
-                setSelectedSale(sale)
-                setIsDialogOpen(true)
-              }
-            : undefined
-        }
-        onEditStatus={
-          canEdit
-            ? (sale) => {
-                setSelectedSale(sale)
-                setIsEditStatusDialogOpen(true)
-              }
-            : undefined
-        }
-        onDelete={
-          canDelete
-            ? (sale) => {
-                setSelectedSale(sale)
-                setIsDeleteDialogOpen(true)
-              }
-            : undefined
-        }
-        onMarkInstallmentPaid={(sale) => {
-          setSelectedSale(sale)
-          setIsMarkInstallmentPaidDialogOpen(true)
-        }}
-        onConfirm={(sale) => {
-          setSelectedSale(sale)
-          setIsConfirmDialogOpen(true)
-        }}
-      />
+
+      {isLoading ? (
+        <Skeleton className="h-[200px] w-full" />
+      ) : isError ? (
+        <ErrorState onRetry={() => refetch()} />
+      ) : !sales || sales.length === 0 ? (
+        <EmptyState
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+        />
+      ) : (
+        <SalesTable
+          sales={sales}
+          phoneUtil={phoneUtil}
+          onEdit={
+            canEdit
+              ? (sale) => {
+                  setSelectedSale(sale)
+                  setIsDialogOpen(true)
+                }
+              : undefined
+          }
+          onEditStatus={
+            canEdit
+              ? (sale) => {
+                  setSelectedSale(sale)
+                  setIsEditStatusDialogOpen(true)
+                }
+              : undefined
+          }
+          onDelete={
+            canDelete
+              ? (sale) => {
+                  setSelectedSale(sale)
+                  setIsDeleteDialogOpen(true)
+                }
+              : undefined
+          }
+          onMarkInstallmentPaid={(sale) => {
+            setSelectedSale(sale)
+            setIsMarkInstallmentPaidDialogOpen(true)
+          }}
+          onConfirm={(sale) => {
+            setSelectedSale(sale)
+            setIsConfirmDialogOpen(true)
+          }}
+        />
+      )}
 
       <SaleDialog
         isOpen={isDialogOpen}

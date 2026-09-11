@@ -38,20 +38,6 @@ export function ReturnsPage() {
   const { mutate: deleteReturn } = useDeleteReturn(useQueryClient())
   const { mutate: createReturn } = useCreateReturn(useQueryClient())
 
-  if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />
-  }
-
-  if (!returns || returns.length === 0) {
-    return (
-      <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
-    )
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
@@ -61,21 +47,34 @@ export function ReturnsPage() {
           {t('newReturn')}
         </Button>
       </div>
-      <ReturnsTable
-        returns={returns}
-        onEdit={(ret) => {
-          setSelectedReturn(ret)
-          setIsDialogOpen(true)
-        }}
-        onEditStatus={(ret) => {
-          setSelectedReturn(ret)
-          setIsEditStatusDialogOpen(true)
-        }}
-        onDelete={(ret) => {
-          setSelectedReturn(ret)
-          setIsDeleteDialogOpen(true)
-        }}
-      />
+
+      {isLoading ? (
+        <Skeleton className="h-[200px] w-full" />
+      ) : isError ? (
+        <ErrorState onRetry={() => refetch()} />
+      ) : !returns || returns.length === 0 ? (
+        <EmptyState
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+        />
+      ) : (
+        <ReturnsTable
+          returns={returns}
+          onEdit={(ret) => {
+            setSelectedReturn(ret)
+            setIsDialogOpen(true)
+          }}
+          onEditStatus={(ret) => {
+            setSelectedReturn(ret)
+            setIsEditStatusDialogOpen(true)
+          }}
+          onDelete={(ret) => {
+            setSelectedReturn(ret)
+            setIsDeleteDialogOpen(true)
+          }}
+        />
+      )}
+
       <ReturnDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
