@@ -36,7 +36,7 @@ export class InventoryReadTypeormRepository implements InventoryReadRepository {
 
     const qb = this.productRepo
       .createQueryBuilder('product')
-      .where('product.id IN (:...productIds)', {
+      .where('product.id::text IN (:...productIds)', {
         productIds: inventory.productIds
       })
       .andWhere('product.status = :status', { status: ProductStatus.ASSIGNED })
@@ -53,7 +53,7 @@ export class InventoryReadTypeormRepository implements InventoryReadRepository {
 
     const productModels = await this.productModelRepo
       .createQueryBuilder('model')
-      .where('model.id IN (:...modelIds)', { modelIds })
+      .where('model.id::text IN (:...modelIds)', { modelIds })
       .getMany()
 
     const productsByModel = products.reduce(

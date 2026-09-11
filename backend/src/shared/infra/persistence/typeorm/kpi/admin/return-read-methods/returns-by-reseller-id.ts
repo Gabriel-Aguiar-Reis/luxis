@@ -56,7 +56,9 @@ export async function returnsByResellerId(
       'productModel',
       'productModel.id = product.model_id'
     )
-    .where('product.id IN (:...productIds)', { productIds: allProductIds })
+    .where('product.id::text IN (:...productIds)', {
+      productIds: allProductIds
+    })
     .select([
       'product.id as "productId"',
       'productModel.id as "productModelId"',

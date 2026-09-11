@@ -67,7 +67,9 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
 
     const products = await this.productRepo
       .createQueryBuilder('product')
-      .where('product.id IN (:...productIds)', { productIds: topProductIds })
+      .where('product.id::text IN (:...productIds)', {
+        productIds: topProductIds
+      })
       .getMany()
 
     if (products.length === 0) {
@@ -77,7 +79,7 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
     const modelIds = [...new Set(products.map((product) => product.modelId))]
     const productModels = await this.productModelRepo
       .createQueryBuilder('model')
-      .where('model.id IN (:...modelIds)', { modelIds })
+      .where('model.id::text IN (:...modelIds)', { modelIds })
       .getMany()
 
     const modelsById = productModels.reduce(
@@ -136,7 +138,7 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
       .createQueryBuilder('product')
       .innerJoin(BatchTypeOrmEntity, 'batch', 'batch.id = product.batch_id')
       .addSelect('batch.arrival_date')
-      .where('product.id IN (:...productIds)', {
+      .where('product.id::text IN (:...productIds)', {
         productIds: inventory.productIds
       })
       .andWhere('product.status = :status', { status: ProductStatus.ASSIGNED })
@@ -155,7 +157,7 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
     const modelIds = [...new Set(products.map((product) => product.modelId))]
     const productModels = await this.productModelRepo
       .createQueryBuilder('model')
-      .where('model.id IN (:...modelIds)', { modelIds })
+      .where('model.id::text IN (:...modelIds)', { modelIds })
       .getMany()
 
     const modelsById = productModels.reduce(
