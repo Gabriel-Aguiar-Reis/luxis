@@ -231,7 +231,7 @@ function CarouselNext({
   )
 }
 
-function CarouselDots({ className }: React.ComponentProps<'div'>) {
+export function CarouselDots({ className }: React.ComponentProps<'div'>) {
   const { api } = useCarousel()
   const [selectedIndex, setSelectedIndex] = React.useState(0)
   const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
@@ -287,6 +287,5 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  CarouselDots,
   useCarousel
 }

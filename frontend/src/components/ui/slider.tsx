@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { cn } from "cn"
-import { Slider as SliderPrimitive } from "radix-ui"
+import * as React from 'react'
+import { cn } from 'cn'
+import { Slider as SliderPrimitive } from 'radix-ui'
 
 function Slider({
   className,
@@ -30,7 +30,7 @@ function Slider({
       min={min}
       max={max}
       className={cn(
-        "relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col",
+        'relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col',
         className
       )}
       {...props}

@@ -81,6 +81,13 @@ function withLocalePrefix(request: NextRequest, targetPath: string) {
   return new URL(localizedPath, request.url)
 }
 
+function isMockApiEnabled() {
+  return (
+    process.env.NODE_ENV !== 'production' &&
+    process.env.NEXT_PUBLIC_LUXIS_MOCK_API === 'true'
+  )
+}
+
 interface MiddlewareContext {
   request: NextRequest
   pathname: string
@@ -177,6 +184,10 @@ const strategies: RouteStrategy[] = [
 ]
 
 export function middleware(request: NextRequest) {
+  if (isMockApiEnabled()) {
+    return intlMiddleware(request)
+  }
+
   const pathname = stripLocaleFromPath(request.nextUrl.pathname)
   const rawToken = request.cookies.get(AUTH_TOKEN_COOKIE)?.value
   const token = rawToken ? decodeURIComponent(rawToken) : null

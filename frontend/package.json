@@ -5,6 +5,7 @@
   "packageManager": "npm@11.9.0",
   "scripts": {
     "dev": "next dev --turbopack -p 3001 -H 0.0.0.0",
+    "dev:mock": "NEXT_PUBLIC_LUXIS_MOCK_API=true next dev --turbopack -p 3001 -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "check": "biome check src *.ts *.mts *.mjs",
@@ -80,6 +81,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "^5.0.0",
     "jsdom": "^30.0.1",
+    "msw": "^2.15.0",
     "openapi-typescript": "^7.13.0",
     "orval": "^8.31.0",
     "postcss": "^8.5.28",
@@ -89,5 +91,10 @@
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.0"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

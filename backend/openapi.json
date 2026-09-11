@@ -32,9 +32,7 @@
           }
         ],
         "summary": "Get all batches",
-        "tags": [
-          "Batches"
-        ]
+        "tags": ["Batches"]
       },
       "post": {
         "operationId": "createBatch",
@@ -73,9 +71,7 @@
           }
         ],
         "summary": "Create a new batch",
-        "tags": [
-          "Batches"
-        ]
+        "tags": ["Batches"]
       }
     },
     "/batches/{id}": {
@@ -119,9 +115,7 @@
           }
         ],
         "summary": "Get a specific batch",
-        "tags": [
-          "Batches"
-        ]
+        "tags": ["Batches"]
       },
       "delete": {
         "operationId": "deleteBatch",
@@ -153,9 +147,7 @@
           }
         ],
         "summary": "Delete a batch",
-        "tags": [
-          "Batches"
-        ]
+        "tags": ["Batches"]
       }
     },
     "/categories": {
@@ -189,9 +181,7 @@
           }
         ],
         "summary": "Get all categories",
-        "tags": [
-          "Categories"
-        ]
+        "tags": ["Categories"]
       },
       "post": {
         "operationId": "createCategory",
@@ -230,9 +220,7 @@
           }
         ],
         "summary": "Create a new category",
-        "tags": [
-          "Categories"
-        ]
+        "tags": ["Categories"]
       }
     },
     "/categories/{id}": {
@@ -276,9 +264,7 @@
           }
         ],
         "summary": "Get a specific category",
-        "tags": [
-          "Categories"
-        ]
+        "tags": ["Categories"]
       },
       "patch": {
         "operationId": "updateCategory",
@@ -327,9 +313,7 @@
           }
         ],
         "summary": "Update a category",
-        "tags": [
-          "Categories"
-        ]
+        "tags": ["Categories"]
       },
       "delete": {
         "operationId": "deleteCategory",
@@ -368,9 +352,7 @@
           }
         ],
         "summary": "Delete a category",
-        "tags": [
-          "Categories"
-        ]
+        "tags": ["Categories"]
       }
     },
     "/categories/{id}/status": {
@@ -421,9 +403,7 @@
           }
         ],
         "summary": "Update the status of a category",
-        "tags": [
-          "Categories"
-        ]
+        "tags": ["Categories"]
       }
     },
     "/ownership-transfers": {
@@ -457,9 +437,7 @@
           }
         ],
         "summary": "Get all ownership transfers",
-        "tags": [
-          "Ownership Transfers"
-        ]
+        "tags": ["Ownership Transfers"]
       },
       "post": {
         "operationId": "createOwnershipTransfer",
@@ -498,9 +476,7 @@
           }
         ],
         "summary": "Create a new ownership transfer",
-        "tags": [
-          "Ownership Transfers"
-        ]
+        "tags": ["Ownership Transfers"]
       }
     },
     "/ownership-transfers/{id}": {
@@ -544,9 +520,7 @@
           }
         ],
         "summary": "Get a specific ownership transfer",
-        "tags": [
-          "Ownership Transfers"
-        ]
+        "tags": ["Ownership Transfers"]
       },
       "patch": {
         "operationId": "updateOwnershipTransfer",
@@ -595,9 +569,7 @@
           }
         ],
         "summary": "Update a ownership transfer",
-        "tags": [
-          "Ownership Transfers"
-        ]
+        "tags": ["Ownership Transfers"]
       },
       "delete": {
         "operationId": "deleteOwnershipTransfer",
@@ -629,9 +601,7 @@
           }
         ],
         "summary": "Delete a ownership transfer",
-        "tags": [
-          "Ownership Transfers"
-        ]
+        "tags": ["Ownership Transfers"]
       }
     },
     "/ownership-transfers/{id}/status": {
@@ -675,9 +645,7 @@
           }
         ],
         "summary": "Update the status of a ownership transfer",
-        "tags": [
-          "Ownership Transfers"
-        ]
+        "tags": ["Ownership Transfers"]
       }
     },
     "/products": {
@@ -711,9 +679,7 @@
           }
         ],
         "summary": "Get all products",
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       }
     },
     "/products/available/in-stock": {
@@ -747,9 +713,7 @@
           }
         ],
         "summary": "Get available products (IN_STOCK)",
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       }
     },
     "/products/{id}": {
@@ -793,9 +757,7 @@
           }
         ],
         "summary": "Get a specific product",
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       },
       "patch": {
         "operationId": "updateProduct",
@@ -844,9 +806,7 @@
           }
         ],
         "summary": "Update a product",
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       },
       "delete": {
         "operationId": "deleteProduct",
@@ -878,9 +838,7 @@
           }
         ],
         "summary": "Delete a product",
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       }
     },
     "/products/{id}/sell": {
@@ -914,9 +872,7 @@
           }
         ],
         "summary": "Sell a product",
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       }
     },
     "/product-models/cloudinary-signature": {
@@ -940,9 +896,7 @@
           }
         ],
         "summary": "Get Cloudinary upload signature",
-        "tags": [
-          "Product Models"
-        ]
+        "tags": ["Product Models"]
       }
     },
     "/product-models": {
@@ -976,9 +930,7 @@
           }
         ],
         "summary": "Get all product models",
-        "tags": [
-          "Product Models"
-        ]
+        "tags": ["Product Models"]
       },
       "post": {
         "operationId": "createProductModel",
@@ -1017,9 +969,7 @@
           }
         ],
         "summary": "Create a new product model",
-        "tags": [
-          "Product Models"
-        ]
+        "tags": ["Product Models"]
       }
     },
     "/product-models/{id}": {
@@ -1063,9 +1013,7 @@
           }
         ],
         "summary": "Get a specific product model",
-        "tags": [
-          "Product Models"
-        ]
+        "tags": ["Product Models"]
       },
       "patch": {
         "operationId": "updateProductModel",
@@ -1114,9 +1062,7 @@
           }
         ],
         "summary": "Update a product model",
-        "tags": [
-          "Product Models"
-        ]
+        "tags": ["Product Models"]
       },
       "delete": {
         "operationId": "deleteProductModel",
@@ -1148,9 +1094,7 @@
           }
         ],
         "summary": "Delete a product model",
-        "tags": [
-          "Product Models"
-        ]
+        "tags": ["Product Models"]
       }
     },
     "/sales/{id}/confirm": {
@@ -1178,9 +1122,7 @@
           }
         ],
         "summary": "Confirm a sale",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       }
     },
     "/sales": {
@@ -1214,9 +1156,7 @@
           }
         ],
         "summary": "Get all sales",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       },
       "post": {
         "operationId": "createSale",
@@ -1255,9 +1195,7 @@
           }
         ],
         "summary": "Create a new sale",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       }
     },
     "/sales/available-products": {
@@ -1288,9 +1226,7 @@
           }
         ],
         "summary": "Get available products to sell",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       }
     },
     "/sales/{id}": {
@@ -1334,9 +1270,7 @@
           }
         ],
         "summary": "Get a specific sale",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       },
       "patch": {
         "operationId": "updateSale",
@@ -1385,9 +1319,7 @@
           }
         ],
         "summary": "Update a sale",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       },
       "delete": {
         "operationId": "deleteSale",
@@ -1419,9 +1351,7 @@
           }
         ],
         "summary": "Delete a sale",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       }
     },
     "/sales/{id}/installments/mark-paid": {
@@ -1472,9 +1402,7 @@
           }
         ],
         "summary": "Mark installment as paid",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       }
     },
     "/sales/{id}/status": {
@@ -1525,9 +1453,7 @@
           }
         ],
         "summary": "Update sale status",
-        "tags": [
-          "Sales"
-        ]
+        "tags": ["Sales"]
       }
     },
     "/shipments": {
@@ -1561,9 +1487,7 @@
           }
         ],
         "summary": "Get all shipments",
-        "tags": [
-          "Shipments"
-        ]
+        "tags": ["Shipments"]
       },
       "post": {
         "operationId": "createShipment",
@@ -1602,9 +1526,7 @@
           }
         ],
         "summary": "Create a new shipment",
-        "tags": [
-          "Shipments"
-        ]
+        "tags": ["Shipments"]
       }
     },
     "/shipments/{id}": {
@@ -1648,9 +1570,7 @@
           }
         ],
         "summary": "Get a specific shipment",
-        "tags": [
-          "Shipments"
-        ]
+        "tags": ["Shipments"]
       },
       "patch": {
         "operationId": "updateShipment",
@@ -1699,9 +1619,7 @@
           }
         ],
         "summary": "Update a shipment",
-        "tags": [
-          "Shipments"
-        ]
+        "tags": ["Shipments"]
       },
       "delete": {
         "operationId": "deleteShipment",
@@ -1733,9 +1651,7 @@
           }
         ],
         "summary": "Delete a shipment",
-        "tags": [
-          "Shipments"
-        ]
+        "tags": ["Shipments"]
       }
     },
     "/shipments/{id}/status": {
@@ -1786,9 +1702,7 @@
           }
         ],
         "summary": "Update the status of a shipment",
-        "tags": [
-          "Shipments"
-        ]
+        "tags": ["Shipments"]
       }
     },
     "/users": {
@@ -1822,9 +1736,7 @@
           }
         ],
         "summary": "Get all users",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/pending": {
@@ -1858,9 +1770,7 @@
           }
         ],
         "summary": "Get all pending users",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/{id}": {
@@ -1904,9 +1814,7 @@
           }
         ],
         "summary": "Get a specific user",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "operationId": "updateUser",
@@ -1958,9 +1866,7 @@
           }
         ],
         "summary": "Update a user",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "delete": {
         "operationId": "deleteUser",
@@ -1995,9 +1901,7 @@
           }
         ],
         "summary": "Delete a user",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/signup": {
@@ -2035,9 +1939,7 @@
           }
         ],
         "summary": "Create a new user",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/{id}/role": {
@@ -2091,9 +1993,7 @@
           }
         ],
         "summary": "Update a user role",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/{id}/disable": {
@@ -2137,9 +2037,7 @@
           }
         ],
         "summary": "Disable a user",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/{id}/status": {
@@ -2193,9 +2091,7 @@
           }
         ],
         "summary": "Update a user status",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/{id}/products": {
@@ -2242,9 +2138,7 @@
           }
         ],
         "summary": "Get user products",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/suppliers": {
@@ -2285,9 +2179,7 @@
           }
         ],
         "summary": "Create a new supplier",
-        "tags": [
-          "Suppliers"
-        ]
+        "tags": ["Suppliers"]
       },
       "get": {
         "operationId": "getAllSuppliers",
@@ -2319,9 +2211,7 @@
           }
         ],
         "summary": "Get all suppliers",
-        "tags": [
-          "Suppliers"
-        ]
+        "tags": ["Suppliers"]
       }
     },
     "/suppliers/{id}": {
@@ -2365,9 +2255,7 @@
           }
         ],
         "summary": "Get a specific supplier",
-        "tags": [
-          "Suppliers"
-        ]
+        "tags": ["Suppliers"]
       },
       "patch": {
         "operationId": "updateSupplier",
@@ -2416,9 +2304,7 @@
           }
         ],
         "summary": "Update a supplier",
-        "tags": [
-          "Suppliers"
-        ]
+        "tags": ["Suppliers"]
       },
       "delete": {
         "operationId": "deleteSupplier",
@@ -2450,9 +2336,7 @@
           }
         ],
         "summary": "Delete a supplier",
-        "tags": [
-          "Suppliers"
-        ]
+        "tags": ["Suppliers"]
       }
     },
     "/returns": {
@@ -2493,9 +2377,7 @@
           }
         ],
         "summary": "Create a new return",
-        "tags": [
-          "Returns"
-        ]
+        "tags": ["Returns"]
       },
       "get": {
         "operationId": "getAllReturns",
@@ -2527,9 +2409,7 @@
           }
         ],
         "summary": "Get all returns",
-        "tags": [
-          "Returns"
-        ]
+        "tags": ["Returns"]
       }
     },
     "/returns/{id}": {
@@ -2573,9 +2453,7 @@
           }
         ],
         "summary": "Get a specific return",
-        "tags": [
-          "Returns"
-        ]
+        "tags": ["Returns"]
       },
       "patch": {
         "operationId": "updateReturn",
@@ -2624,9 +2502,7 @@
           }
         ],
         "summary": "Update a return",
-        "tags": [
-          "Returns"
-        ]
+        "tags": ["Returns"]
       },
       "delete": {
         "operationId": "deleteReturn",
@@ -2665,9 +2541,7 @@
           }
         ],
         "summary": "Delete a return",
-        "tags": [
-          "Returns"
-        ]
+        "tags": ["Returns"]
       }
     },
     "/returns/{id}/status": {
@@ -2718,9 +2592,7 @@
           }
         ],
         "summary": "Update the status of a return",
-        "tags": [
-          "Returns"
-        ]
+        "tags": ["Returns"]
       }
     },
     "/returns/reseller/{resellerId}": {
@@ -2767,9 +2639,7 @@
           }
         ],
         "summary": "Get returns by reseller ID",
-        "tags": [
-          "Returns"
-        ]
+        "tags": ["Returns"]
       }
     },
     "/customers": {
@@ -2810,9 +2680,7 @@
           }
         ],
         "summary": "Create a new customer",
-        "tags": [
-          "Customers"
-        ]
+        "tags": ["Customers"]
       },
       "get": {
         "operationId": "getAllCustomers",
@@ -2844,9 +2712,7 @@
           }
         ],
         "summary": "Get all customers",
-        "tags": [
-          "Customers"
-        ]
+        "tags": ["Customers"]
       }
     },
     "/customers/{id}": {
@@ -2890,9 +2756,7 @@
           }
         ],
         "summary": "Get a specific customer",
-        "tags": [
-          "Customers"
-        ]
+        "tags": ["Customers"]
       },
       "patch": {
         "operationId": "updateCustomer",
@@ -2941,9 +2805,7 @@
           }
         ],
         "summary": "Update a customer",
-        "tags": [
-          "Customers"
-        ]
+        "tags": ["Customers"]
       }
     },
     "/customers/{id}/from/{fromResellerId}": {
@@ -2986,9 +2848,7 @@
           }
         ],
         "summary": "Delete a customer",
-        "tags": [
-          "Customers"
-        ]
+        "tags": ["Customers"]
       }
     },
     "/customers/{id}/transfer": {
@@ -3032,9 +2892,7 @@
           }
         ],
         "summary": "Transfer a customer",
-        "tags": [
-          "Customers"
-        ]
+        "tags": ["Customers"]
       }
     },
     "/auth/login": {
@@ -3060,9 +2918,7 @@
           }
         },
         "summary": "Login",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/logout": {
@@ -3075,9 +2931,7 @@
           }
         },
         "summary": "Logout",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/forgot-password": {
@@ -3110,9 +2964,7 @@
           }
         },
         "summary": "Forgot password",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/password-reset-requests": {
@@ -3140,9 +2992,7 @@
           }
         ],
         "summary": "List password reset requests (Admin only)",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/password-reset-requests/{id}/approve": {
@@ -3172,9 +3022,7 @@
           }
         ],
         "summary": "Approve password reset request (Admin only)",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/password-reset-requests/{id}/reject": {
@@ -3204,9 +3052,7 @@
           }
         ],
         "summary": "Reject password reset request (Admin only)",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/reset-password": {
@@ -3232,9 +3078,7 @@
           }
         },
         "summary": "Reset password",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/change-password": {
@@ -3269,9 +3113,7 @@
           }
         ],
         "summary": "Change password",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/reset-password-page": {
@@ -3294,9 +3136,7 @@
           }
         },
         "summary": "Reset password page (Development only)",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/reset-password-page/styles.css": {
@@ -3308,9 +3148,7 @@
             "description": ""
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/reset-password-page/script.js": {
@@ -3322,9 +3160,7 @@
             "description": ""
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/verify": {
@@ -3366,9 +3202,7 @@
           }
         },
         "summary": "Verify JWT token",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/inventory/{id}": {
@@ -3408,9 +3242,7 @@
           }
         ],
         "summary": "Get inventory by ID",
-        "tags": [
-          "Inventory"
-        ]
+        "tags": ["Inventory"]
       }
     },
     "/kpi/admin/products/in-stock/total": {
@@ -3490,9 +3322,7 @@
           }
         ],
         "summary": "Get Total Products In Stock",
-        "tags": [
-          "Admins KPIs - Products"
-        ]
+        "tags": ["Admins KPIs - Products"]
       }
     },
     "/kpi/admin/products/in-stock": {
@@ -3575,9 +3405,7 @@
           }
         ],
         "summary": "Get Products In Stock",
-        "tags": [
-          "Admins KPIs - Products"
-        ]
+        "tags": ["Admins KPIs - Products"]
       }
     },
     "/kpi/admin/products/with-resellers": {
@@ -3660,9 +3488,7 @@
           }
         ],
         "summary": "Get Products With Resellers",
-        "tags": [
-          "Admins KPIs - Products"
-        ]
+        "tags": ["Admins KPIs - Products"]
       }
     },
     "/kpi/admin/products/with-resellers/total": {
@@ -3742,9 +3568,7 @@
           }
         ],
         "summary": "Get Total Products With Resellers",
-        "tags": [
-          "Admins KPIs - Products"
-        ]
+        "tags": ["Admins KPIs - Products"]
       }
     },
     "/kpi/admin/products/in-stock/for-more-than/{days}": {
@@ -3835,9 +3659,7 @@
           }
         ],
         "summary": "Get Products In Stock For More Than X Days",
-        "tags": [
-          "Admins KPIs - Products"
-        ]
+        "tags": ["Admins KPIs - Products"]
       }
     },
     "/kpi/admin/products/in-stock/for-more-than/{days}/total": {
@@ -3925,9 +3747,7 @@
           }
         ],
         "summary": "Get Total Products In Stock For More Than X Days",
-        "tags": [
-          "Admins KPIs - Products"
-        ]
+        "tags": ["Admins KPIs - Products"]
       }
     },
     "/kpi/admin/sales/resellers/{id}": {
@@ -4018,9 +3838,7 @@
           }
         ],
         "summary": "Get Sales By Reseller Id",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/resellers/{id}/total": {
@@ -4108,9 +3926,7 @@
           }
         ],
         "summary": "Get Total Sales By Reseller Id",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales": {
@@ -4190,9 +4006,7 @@
           }
         ],
         "summary": "Get Sales In Period",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/total": {
@@ -4272,9 +4086,7 @@
           }
         ],
         "summary": "Get Total Sales In Period",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/aggregated-by-day": {
@@ -4354,9 +4166,7 @@
           }
         ],
         "summary": "Get Sales Aggregated By Day",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/resellers": {
@@ -4439,9 +4249,7 @@
           }
         ],
         "summary": "Get Sales By Reseller",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/resellers/total": {
@@ -4521,9 +4329,7 @@
           }
         ],
         "summary": "Get Total Sales By Reseller",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/billing/batch/{id}": {
@@ -4563,9 +4369,7 @@
           }
         ],
         "summary": "Get Total Billing By Batch Id",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/billing/resellers/{resellerId}": {
@@ -4653,9 +4457,7 @@
           }
         ],
         "summary": "Get Total Billing By Reseller Id",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/sales/billing/period": {
@@ -4735,9 +4537,7 @@
           }
         ],
         "summary": "Get Total Billing By Period",
-        "tags": [
-          "Admins KPIs - Sales"
-        ]
+        "tags": ["Admins KPIs - Sales"]
       }
     },
     "/kpi/admin/returns/by-reseller/{id}": {
@@ -4825,9 +4625,7 @@
           }
         ],
         "summary": "Get Returns By Reseller Id",
-        "tags": [
-          "Admins KPIs - Returns"
-        ]
+        "tags": ["Admins KPIs - Returns"]
       }
     },
     "/kpi/admin/returns/by-reseller/{id}/total": {
@@ -4915,9 +4713,7 @@
           }
         ],
         "summary": "Get Total Returns By Reseller Id",
-        "tags": [
-          "Admins KPIs - Returns"
-        ]
+        "tags": ["Admins KPIs - Returns"]
       }
     },
     "/kpi/admin/returns/by-reseller": {
@@ -4997,9 +4793,7 @@
           }
         ],
         "summary": "Get Returns By Reseller",
-        "tags": [
-          "Admins KPIs - Returns"
-        ]
+        "tags": ["Admins KPIs - Returns"]
       }
     },
     "/kpi/admin/returns/by-reseller/total": {
@@ -5079,9 +4873,7 @@
           }
         ],
         "summary": "Get Total Returns By Reseller",
-        "tags": [
-          "Admins KPIs - Returns"
-        ]
+        "tags": ["Admins KPIs - Returns"]
       }
     },
     "/kpi/admin/returns/in-period": {
@@ -5161,9 +4953,7 @@
           }
         ],
         "summary": "Get Returns In Period",
-        "tags": [
-          "Admins KPIs - Returns"
-        ]
+        "tags": ["Admins KPIs - Returns"]
       }
     },
     "/kpi/admin/returns/in-period/total": {
@@ -5243,9 +5033,7 @@
           }
         ],
         "summary": "Get Total Returns In Period",
-        "tags": [
-          "Admins KPIs - Returns"
-        ]
+        "tags": ["Admins KPIs - Returns"]
       }
     },
     "/kpi/admin/ownership-transfers/by-reseller/{id}": {
@@ -5333,9 +5121,7 @@
           }
         ],
         "summary": "Get Ownership Transfers By Reseller Id",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/admin/ownership-transfers/by-reseller/{id}/total": {
@@ -5423,9 +5209,7 @@
           }
         ],
         "summary": "Get Total Ownership Transfers By Reseller Id",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/admin/ownership-transfers/in-period": {
@@ -5505,9 +5289,7 @@
           }
         ],
         "summary": "Get Ownership Transfers In Period",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/admin/ownership-transfers/in-period/total": {
@@ -5587,9 +5369,7 @@
           }
         ],
         "summary": "Get Total Ownership Transfers In Period",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/admin/ownership-transfers/received/by-reseller/{id}": {
@@ -5677,9 +5457,7 @@
           }
         ],
         "summary": "Get Ownership Transfers Received By Reseller Id",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/admin/ownership-transfers/received/by-reseller/{id}/total": {
@@ -5767,9 +5545,7 @@
           }
         ],
         "summary": "Get Total Ownership Transfers Received By Reseller Id",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/admin/ownership-transfers/given/by-reseller/{id}": {
@@ -5857,9 +5633,7 @@
           }
         ],
         "summary": "Get Ownership Transfers Given By Reseller Id",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/admin/ownership-transfers/given/by-reseller/{id}/total": {
@@ -5947,9 +5721,7 @@
           }
         ],
         "summary": "Get Total Ownership Transfers Given By Reseller Id",
-        "tags": [
-          "Admins KPIs - Ownership Transfers"
-        ]
+        "tags": ["Admins KPIs - Ownership Transfers"]
       }
     },
     "/kpi/my-space/sales/monthly": {
@@ -5993,9 +5765,7 @@
           }
         ],
         "summary": "Get monthly sales for a reseller",
-        "tags": [
-          "Reseller KPIs - Sales"
-        ]
+        "tags": ["Reseller KPIs - Sales"]
       }
     },
     "/kpi/my-space/sales/average-ticket": {
@@ -6036,9 +5806,7 @@
           }
         ],
         "summary": "Get average ticket for a reseller",
-        "tags": [
-          "Reseller KPIs - Sales"
-        ]
+        "tags": ["Reseller KPIs - Sales"]
       }
     },
     "/kpi/my-space/inventory/current": {
@@ -6082,9 +5850,7 @@
           }
         ],
         "summary": "Get current inventory for a reseller",
-        "tags": [
-          "Reseller KPIs - Inventory"
-        ]
+        "tags": ["Reseller KPIs - Inventory"]
       }
     },
     "/kpi/my-space/products/top-selling": {
@@ -6128,9 +5894,7 @@
           }
         ],
         "summary": "Get top selling products for a reseller",
-        "tags": [
-          "Reseller KPIs - Products"
-        ]
+        "tags": ["Reseller KPIs - Products"]
       }
     },
     "/kpi/my-space/products/longest-time-in-inventory": {
@@ -6174,9 +5938,7 @@
           }
         ],
         "summary": "Get products with longest time in inventory for a reseller",
-        "tags": [
-          "Reseller KPIs - Products"
-        ]
+        "tags": ["Reseller KPIs - Products"]
       }
     },
     "/kpi/my-space/returns/count": {
@@ -6217,9 +5979,7 @@
           }
         ],
         "summary": "Get number of returns made by a reseller",
-        "tags": [
-          "Reseller KPIs - Returns"
-        ]
+        "tags": ["Reseller KPIs - Returns"]
       }
     },
     "/health": {
@@ -6231,9 +5991,7 @@
             "description": ""
           }
         },
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       }
     }
   },
@@ -6263,9 +6021,7 @@
             "example": "100.00"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "ModelName": {
         "type": "object",
@@ -6276,9 +6032,7 @@
             "example": "iPhone 13 Pro Max"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "GetBatchProductDto": {
         "type": "object",
@@ -6298,10 +6052,7 @@
             "example": 100
           }
         },
-        "required": [
-          "modelName",
-          "quantity"
-        ]
+        "required": ["modelName", "quantity"]
       },
       "GetBatchDto": {
         "type": "object",
@@ -6398,11 +6149,7 @@
             "example": "https://example.com/image.jpg"
           }
         },
-        "required": [
-          "quantity",
-          "unitCost",
-          "salePrice"
-        ]
+        "required": ["quantity", "unitCost", "salePrice"]
       },
       "CreateBatchDto": {
         "type": "object",
@@ -6436,11 +6183,7 @@
             }
           }
         },
-        "required": [
-          "arrivalDate",
-          "supplierId",
-          "entries"
-        ]
+        "required": ["arrivalDate", "supplierId", "entries"]
       },
       "Batch": {
         "type": "object",
@@ -6462,11 +6205,7 @@
             "example": "123e4567-e89b-12d3-a456-426614174000"
           }
         },
-        "required": [
-          "id",
-          "arrivalDate",
-          "supplierId"
-        ]
+        "required": ["id", "arrivalDate", "supplierId"]
       },
       "CategoryName": {
         "type": "object",
@@ -6477,9 +6216,7 @@
             "example": "Smartphones"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "Description": {
         "type": "object",
@@ -6491,9 +6228,7 @@
             "maxLength": 500
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "Category": {
         "type": "object",
@@ -6524,18 +6259,11 @@
           "status": {
             "type": "string",
             "description": "The status of the category",
-            "enum": [
-              "ACTIVE",
-              "INACTIVE"
-            ],
+            "enum": ["ACTIVE", "INACTIVE"],
             "example": "ACTIVE"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "status"
-        ]
+        "required": ["id", "name", "status"]
       },
       "CreateCategoryDto": {
         "type": "object",
@@ -6551,9 +6279,7 @@
             "example": "Category Description"
           }
         },
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "UpdateCategoryDto": {
         "type": "object",
@@ -6609,12 +6335,7 @@
           "status": {
             "type": "string",
             "description": "The status of the ownership transfer",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "FINISHED",
-              "CANCELLED"
-            ]
+            "enum": ["PENDING", "APPROVED", "FINISHED", "CANCELLED"]
           }
         },
         "required": [
@@ -6654,10 +6375,7 @@
             "example": "2023-10-01T12:00:00Z"
           }
         },
-        "required": [
-          "productId",
-          "toResellerId"
-        ]
+        "required": ["productId", "toResellerId"]
       },
       "OwnershipTransfer": {
         "type": "object",
@@ -6691,12 +6409,7 @@
           "status": {
             "type": "string",
             "description": "The status of the ownership transfer",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "FINISHED",
-              "CANCELLED"
-            ],
+            "enum": ["PENDING", "APPROVED", "FINISHED", "CANCELLED"],
             "example": "PENDING"
           }
         },
@@ -6737,12 +6450,7 @@
       },
       "OwnershipTransferStatus": {
         "type": "string",
-        "enum": [
-          "PENDING",
-          "APPROVED",
-          "FINISHED",
-          "CANCELLED"
-        ],
+        "enum": ["PENDING", "APPROVED", "FINISHED", "CANCELLED"],
         "description": "The new status of the ownership transfer"
       },
       "UpdateOwnershipTransferStatusDto": {
@@ -6758,9 +6466,7 @@
             ]
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "ProductResponseDto": {
         "type": "object",
@@ -6791,11 +6497,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "IN_STOCK",
-              "ASSIGNED",
-              "SOLD"
-            ],
+            "enum": ["IN_STOCK", "ASSIGNED", "SOLD"],
             "example": "IN_STOCK"
           }
         },
@@ -6838,9 +6540,7 @@
             "example": "https://example.com/iphone13.jpg"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "ProductModel": {
         "type": "object",
@@ -6894,21 +6594,11 @@
           "status": {
             "type": "string",
             "description": "The status of the product model",
-            "enum": [
-              "USED",
-              "ACTIVE",
-              "ARCHIVED"
-            ],
+            "enum": ["USED", "ACTIVE", "ARCHIVED"],
             "example": "ACTIVE"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "categoryId",
-          "suggestedPrice",
-          "status"
-        ]
+        "required": ["id", "name", "categoryId", "suggestedPrice", "status"]
       },
       "CreateProductModelDto": {
         "type": "object",
@@ -6944,11 +6634,7 @@
             "example": "https://res.cloudinary.com/.../image.jpg"
           }
         },
-        "required": [
-          "name",
-          "categoryId",
-          "suggestedPrice"
-        ]
+        "required": ["name", "categoryId", "suggestedPrice"]
       },
       "UpdateProductModelDto": {
         "type": "object",
@@ -6986,11 +6672,7 @@
           "status": {
             "type": "string",
             "description": "The status of the product model",
-            "enum": [
-              "USED",
-              "ACTIVE",
-              "ARCHIVED"
-            ],
+            "enum": ["USED", "ACTIVE", "ARCHIVED"],
             "example": "ACTIVE"
           }
         }
@@ -7098,13 +6780,7 @@
           "paymentMethod": {
             "type": "string",
             "description": "The payment method of the sale",
-            "enum": [
-              "CASH",
-              "PIX",
-              "DEBIT",
-              "CREDIT",
-              "EXCHANGE"
-            ],
+            "enum": ["CASH", "PIX", "DEBIT", "CREDIT", "EXCHANGE"],
             "example": "DEBIT"
           },
           "numberInstallments": {
@@ -7179,11 +6855,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "modelName",
-          "products"
-        ]
+        "required": ["id", "modelName", "products"]
       },
       "GetAvailableCategoryDto": {
         "type": "object",
@@ -7206,11 +6878,7 @@
             }
           }
         },
-        "required": [
-          "categoryId",
-          "categoryName",
-          "models"
-        ]
+        "required": ["categoryId", "categoryName", "models"]
       },
       "GetAvailableProductsToSellDto": {
         "type": "object",
@@ -7223,19 +6891,11 @@
             }
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "PaymentMethod": {
         "type": "string",
-        "enum": [
-          "CASH",
-          "PIX",
-          "DEBIT",
-          "CREDIT",
-          "EXCHANGE"
-        ],
+        "enum": ["CASH", "PIX", "DEBIT", "CREDIT", "EXCHANGE"],
         "description": "The payment method of the sale"
       },
       "CreateSaleDto": {
@@ -7308,9 +6968,7 @@
             "example": "123e4567-e89b-12d3-a456-426614174002"
           },
           "productIds": {
-            "example": [
-              "123e4567-e89b-12d3-a456-426614174003"
-            ],
+            "example": ["123e4567-e89b-12d3-a456-426614174003"],
             "type": "array",
             "items": {
               "type": "string"
@@ -7327,13 +6985,7 @@
           },
           "paymentMethod": {
             "type": "string",
-            "enum": [
-              "CASH",
-              "PIX",
-              "DEBIT",
-              "CREDIT",
-              "EXCHANGE"
-            ],
+            "enum": ["CASH", "PIX", "DEBIT", "CREDIT", "EXCHANGE"],
             "example": "DEBIT"
           },
           "numberInstallments": {
@@ -7390,9 +7042,7 @@
             }
           }
         },
-        "required": [
-          "productIds"
-        ]
+        "required": ["productIds"]
       },
       "MarkInstallmentPaidDto": {
         "type": "object",
@@ -7403,9 +7053,7 @@
             "example": 2
           }
         },
-        "required": [
-          "installmentNumber"
-        ]
+        "required": ["installmentNumber"]
       },
       "UpdateSaleStatusDto": {
         "type": "object",
@@ -7424,9 +7072,7 @@
             ]
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "SerialNumber": {
         "type": "object",
@@ -7473,13 +7119,7 @@
             ]
           }
         },
-        "required": [
-          "id",
-          "modelId",
-          "modelName",
-          "serialNumber",
-          "salePrice"
-        ]
+        "required": ["id", "modelId", "modelName", "serialNumber", "salePrice"]
       },
       "GetShipmentDto": {
         "type": "object",
@@ -7508,12 +7148,7 @@
           "status": {
             "type": "string",
             "description": "The status of the shipment",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "DELIVERED",
-              "CANCELLED"
-            ],
+            "enum": ["PENDING", "APPROVED", "DELIVERED", "CANCELLED"],
             "example": "PENDING"
           },
           "products": {
@@ -7553,10 +7188,7 @@
             }
           }
         },
-        "required": [
-          "resellerId",
-          "productIds"
-        ]
+        "required": ["resellerId", "productIds"]
       },
       "Shipment": {
         "type": "object",
@@ -7580,12 +7212,7 @@
           "status": {
             "type": "string",
             "description": "The status of the shipment",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "DELIVERED",
-              "CANCELLED"
-            ],
+            "enum": ["PENDING", "APPROVED", "DELIVERED", "CANCELLED"],
             "example": "PENDING"
           },
           "productIds": {
@@ -7600,13 +7227,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "resellerId",
-          "createdAt",
-          "status",
-          "productIds"
-        ]
+        "required": ["id", "resellerId", "createdAt", "status", "productIds"]
       },
       "UpdateShipmentDto": {
         "type": "object",
@@ -7636,17 +7257,10 @@
             "type": "string",
             "description": "The status of the shipment",
             "example": "DELIVERED",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "DELIVERED",
-              "CANCELLED"
-            ]
+            "enum": ["PENDING", "APPROVED", "DELIVERED", "CANCELLED"]
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "Name": {
         "type": "object",
@@ -7656,9 +7270,7 @@
             "description": "The name of the user"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "PhoneNumber": {
         "type": "object",
@@ -7669,9 +7281,7 @@
             "example": "11987654321"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "Email": {
         "type": "object",
@@ -7681,9 +7291,7 @@
             "description": "The email address of the user"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "PostalCode": {
         "type": "object",
@@ -7694,9 +7302,7 @@
             "example": "01001000"
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "Address": {
         "type": "object",
@@ -7768,9 +7374,7 @@
             "type": "string",
             "description": "The country of the address",
             "example": "Brasil",
-            "enum": [
-              "Brasil"
-            ]
+            "enum": ["Brasil"]
           },
           "complement": {
             "type": "string",
@@ -7801,9 +7405,7 @@
             ]
           }
         },
-        "required": [
-          "address"
-        ]
+        "required": ["address"]
       },
       "User": {
         "type": "object",
@@ -7857,12 +7459,7 @@
           "role": {
             "type": "string",
             "description": "The role of the user",
-            "enum": [
-              "ADMIN",
-              "RESELLER",
-              "ASSISTANT",
-              "UNASSIGNED"
-            ],
+            "enum": ["ADMIN", "RESELLER", "ASSISTANT", "UNASSIGNED"],
             "example": "RESELLER"
           },
           "residence": {
@@ -7890,11 +7487,7 @@
           "status": {
             "type": "string",
             "description": "The status of the user",
-            "enum": [
-              "ACTIVE",
-              "DISABLED",
-              "PENDING"
-            ],
+            "enum": ["ACTIVE", "DISABLED", "PENDING"],
             "example": "ACTIVE"
           }
         },
@@ -7945,9 +7538,7 @@
       },
       "Country": {
         "type": "string",
-        "enum": [
-          "Brasil"
-        ],
+        "enum": ["Brasil"],
         "description": "Country"
       },
       "CreateUserDto": {
@@ -8132,21 +7723,12 @@
       },
       "Role": {
         "type": "string",
-        "enum": [
-          "ADMIN",
-          "RESELLER",
-          "ASSISTANT",
-          "UNASSIGNED"
-        ],
+        "enum": ["ADMIN", "RESELLER", "ASSISTANT", "UNASSIGNED"],
         "description": "The new role for the user"
       },
       "UserStatus": {
         "type": "string",
-        "enum": [
-          "ACTIVE",
-          "DISABLED",
-          "PENDING"
-        ],
+        "enum": ["ACTIVE", "DISABLED", "PENDING"],
         "description": "The new status for the user"
       },
       "UpdateUserRoleDto": {
@@ -8171,9 +7753,7 @@
             ]
           }
         },
-        "required": [
-          "role"
-        ]
+        "required": ["role"]
       },
       "UpdateUserStatusDto": {
         "type": "object",
@@ -8188,9 +7768,7 @@
             ]
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "UserProductDto": {
         "type": "object",
@@ -8227,11 +7805,7 @@
             "type": "string",
             "description": "Product status",
             "example": "IN_STOCK",
-            "enum": [
-              "IN_STOCK",
-              "ASSIGNED",
-              "SOLD"
-            ]
+            "enum": ["IN_STOCK", "ASSIGNED", "SOLD"]
           },
           "salePrice": {
             "description": "Product price",
@@ -8266,10 +7840,7 @@
             "example": "+5511999999999"
           }
         },
-        "required": [
-          "name",
-          "phone"
-        ]
+        "required": ["name", "phone"]
       },
       "SupplierName": {
         "type": "object",
@@ -8280,9 +7851,7 @@
             "example": "Apple Inc."
           }
         },
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       },
       "Supplier": {
         "type": "object",
@@ -8311,11 +7880,7 @@
             ]
           }
         },
-        "required": [
-          "id",
-          "name",
-          "phone"
-        ]
+        "required": ["id", "name", "phone"]
       },
       "UpdateSupplierDto": {
         "type": "object",
@@ -8380,12 +7945,7 @@
           "status": {
             "type": "string",
             "description": "The status of the return",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "RETURNED",
-              "CANCELLED"
-            ],
+            "enum": ["PENDING", "APPROVED", "RETURNED", "CANCELLED"],
             "example": "PENDING"
           },
           "createdAt": {
@@ -8395,13 +7955,7 @@
             "example": "2024-01-01"
           }
         },
-        "required": [
-          "id",
-          "resellerId",
-          "productIds",
-          "status",
-          "createdAt"
-        ]
+        "required": ["id", "resellerId", "productIds", "status", "createdAt"]
       },
       "ReturnProductDto": {
         "type": "object",
@@ -8430,11 +7984,7 @@
             ]
           }
         },
-        "required": [
-          "productId",
-          "productModelName",
-          "serialNumber"
-        ]
+        "required": ["productId", "productModelName", "serialNumber"]
       },
       "GetAllReturnDto": {
         "type": "object",
@@ -8474,12 +8024,7 @@
           "status": {
             "type": "string",
             "description": "The status of the return",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "RETURNED",
-              "CANCELLED"
-            ],
+            "enum": ["PENDING", "APPROVED", "RETURNED", "CANCELLED"],
             "example": "PENDING"
           },
           "createdAt": {
@@ -8536,12 +8081,7 @@
           "status": {
             "type": "string",
             "description": "The status of the return",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "RETURNED",
-              "CANCELLED"
-            ],
+            "enum": ["PENDING", "APPROVED", "RETURNED", "CANCELLED"],
             "example": "PENDING"
           },
           "createdAt": {
@@ -8588,17 +8128,10 @@
             "type": "string",
             "description": "The status of the return",
             "example": "CANCELLED",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "RETURNED",
-              "CANCELLED"
-            ]
+            "enum": ["PENDING", "APPROVED", "RETURNED", "CANCELLED"]
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "CreateCustomerDto": {
         "type": "object",
@@ -8614,10 +8147,7 @@
             "example": "+5511999999999"
           }
         },
-        "required": [
-          "name",
-          "phone"
-        ]
+        "required": ["name", "phone"]
       },
       "Customer": {
         "type": "object",
@@ -8646,11 +8176,7 @@
             ]
           }
         },
-        "required": [
-          "id",
-          "name",
-          "phone"
-        ]
+        "required": ["id", "name", "phone"]
       },
       "UpdateCustomerDto": {
         "type": "object",
@@ -8681,10 +8207,7 @@
             "example": "123e4567-e89b-12d3-a456-426614174000"
           }
         },
-        "required": [
-          "fromResellerId",
-          "toResellerId"
-        ]
+        "required": ["fromResellerId", "toResellerId"]
       },
       "LoginDto": {
         "type": "object",
@@ -8700,10 +8223,7 @@
             "example": "Test@123456"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "RequestPasswordResetDto": {
         "type": "object",
@@ -8714,9 +8234,7 @@
             "example": "john.doe@example.com"
           }
         },
-        "required": [
-          "email"
-        ]
+        "required": ["email"]
       },
       "PasswordResetRequestResponseDto": {
         "type": "object",
@@ -8741,12 +8259,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "PENDING",
-              "APPROVED",
-              "REJECTED",
-              "COMPLETED"
-            ]
+            "enum": ["PENDING", "APPROVED", "REJECTED", "COMPLETED"]
           },
           "createdAt": {
             "format": "date-time",
@@ -8794,10 +8307,7 @@
             "minLength": 10
           }
         },
-        "required": [
-          "token",
-          "newPassword"
-        ]
+        "required": ["token", "newPassword"]
       },
       "ChangePasswordDto": {
         "type": "object",
@@ -8809,9 +8319,7 @@
             "minLength": 10
           }
         },
-        "required": [
-          "newPassword"
-        ]
+        "required": ["newPassword"]
       },
       "UserPayloadDto": {
         "type": "object",
@@ -8830,23 +8338,14 @@
             "type": "string",
             "description": "The role of the user",
             "example": "ADMIN",
-            "enum": [
-              "ADMIN",
-              "RESELLER",
-              "ASSISTANT",
-              "UNASSIGNED"
-            ],
+            "enum": ["ADMIN", "RESELLER", "ASSISTANT", "UNASSIGNED"],
             "default": "ADMIN"
           },
           "status": {
             "type": "string",
             "description": "The status of the user",
             "example": "ACTIVE",
-            "enum": [
-              "ACTIVE",
-              "DISABLED",
-              "PENDING"
-            ],
+            "enum": ["ACTIVE", "DISABLED", "PENDING"],
             "default": "ACTIVE"
           },
           "name": {
@@ -8855,13 +8354,7 @@
             "example": "John Doe"
           }
         },
-        "required": [
-          "id",
-          "email",
-          "role",
-          "status",
-          "name"
-        ]
+        "required": ["id", "email", "role", "status", "name"]
       },
       "VerifyDto": {
         "type": "object",
@@ -8887,10 +8380,7 @@
             ]
           }
         },
-        "required": [
-          "valid",
-          "user"
-        ]
+        "required": ["valid", "user"]
       },
       "Product": {
         "type": "object",
@@ -8946,12 +8436,7 @@
             }
           }
         },
-        "required": [
-          "resellerId",
-          "resellerName",
-          "products",
-          "productModels"
-        ]
+        "required": ["resellerId", "resellerName", "products", "productModels"]
       },
       "ParamsDto": {
         "type": "object",
@@ -9017,11 +8502,7 @@
           "status": {
             "type": "string",
             "description": "The status of the product",
-            "enum": [
-              "IN_STOCK",
-              "ASSIGNED",
-              "SOLD"
-            ],
+            "enum": ["IN_STOCK", "ASSIGNED", "SOLD"],
             "example": "IN_STOCK"
           }
         },
@@ -9168,13 +8649,7 @@
           "paymentMethod": {
             "type": "string",
             "description": "The payment method of the sale",
-            "enum": [
-              "CASH",
-              "PIX",
-              "DEBIT",
-              "CREDIT",
-              "EXCHANGE"
-            ],
+            "enum": ["CASH", "PIX", "DEBIT", "CREDIT", "EXCHANGE"],
             "example": "DEBIT"
           },
           "numberInstallments": {
@@ -9267,11 +8742,7 @@
             "example": 10
           }
         },
-        "required": [
-          "resellerId",
-          "resellerName",
-          "salesCount"
-        ]
+        "required": ["resellerId", "resellerName", "salesCount"]
       },
       "ParamsWithMandatoryPeriodDto": {
         "type": "object",
@@ -9295,10 +8766,7 @@
             "example": 1
           }
         },
-        "required": [
-          "start",
-          "end"
-        ]
+        "required": ["start", "end"]
       },
       "SaleReturnDto": {
         "type": "object",
@@ -9367,13 +8835,7 @@
           "paymentMethod": {
             "type": "string",
             "description": "The payment method of the sale",
-            "enum": [
-              "CASH",
-              "PIX",
-              "DEBIT",
-              "CREDIT",
-              "EXCHANGE"
-            ],
+            "enum": ["CASH", "PIX", "DEBIT", "CREDIT", "EXCHANGE"],
             "example": "DEBIT"
           },
           "numberInstallments": {
@@ -9446,11 +8908,7 @@
             }
           }
         },
-        "required": [
-          "start",
-          "end",
-          "sales"
-        ]
+        "required": ["start", "end", "sales"]
       },
       "TotalSalesInPeriodDto": {
         "type": "object",
@@ -9473,11 +8931,7 @@
             "example": 1000
           }
         },
-        "required": [
-          "start",
-          "end",
-          "totalSales"
-        ]
+        "required": ["start", "end", "totalSales"]
       },
       "SaleAggregatedByDayDto": {
         "type": "object",
@@ -9496,11 +8950,7 @@
             "example": "15000.50"
           }
         },
-        "required": [
-          "date",
-          "sales",
-          "totalAmount"
-        ]
+        "required": ["date", "sales", "totalAmount"]
       },
       "SalesAggregatedByDayDto": {
         "type": "object",
@@ -9520,11 +8970,7 @@
             }
           }
         },
-        "required": [
-          "start",
-          "end",
-          "data"
-        ]
+        "required": ["start", "end", "data"]
       },
       "TotalBillingReturnDto": {
         "type": "object",
@@ -9547,11 +8993,7 @@
             "example": "100.00"
           }
         },
-        "required": [
-          "start",
-          "end",
-          "total"
-        ]
+        "required": ["start", "end", "total"]
       },
       "ReturnProduct": {
         "type": "object",
@@ -9610,12 +9052,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "resellerId",
-          "resellerName",
-          "products"
-        ]
+        "required": ["id", "resellerId", "resellerName", "products"]
       },
       "ReturnsInPeriodDto": {
         "type": "object",
@@ -9640,11 +9077,7 @@
             }
           }
         },
-        "required": [
-          "start",
-          "end",
-          "returns"
-        ]
+        "required": ["start", "end", "returns"]
       },
       "TotalReturnsInPeriodDto": {
         "type": "object",
@@ -9666,11 +9099,7 @@
             "description": "The total returns in the period"
           }
         },
-        "required": [
-          "start",
-          "end",
-          "totalReturns"
-        ]
+        "required": ["start", "end", "totalReturns"]
       },
       "MonthlySalesDto": {
         "type": "object",
@@ -9696,11 +9125,7 @@
             "description": "Year of sales"
           }
         },
-        "required": [
-          "month",
-          "countSales",
-          "totalAmount"
-        ]
+        "required": ["month", "countSales", "totalAmount"]
       },
       "InventoryProductDto": {
         "type": "object",
@@ -9721,11 +9146,7 @@
             "example": "150.00"
           }
         },
-        "required": [
-          "id",
-          "serialNumber",
-          "salePrice"
-        ]
+        "required": ["id", "serialNumber", "salePrice"]
       },
       "InventoryProductModelDto": {
         "type": "object",
@@ -9753,12 +9174,7 @@
             }
           }
         },
-        "required": [
-          "modelId",
-          "modelName",
-          "quantity",
-          "products"
-        ]
+        "required": ["modelId", "modelName", "quantity", "products"]
       },
       "SellingProductDto": {
         "type": "object",
