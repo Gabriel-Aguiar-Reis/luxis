@@ -95,15 +95,19 @@ export function OnboardingModal() {
     setOpen(false)
   }
 
-  const _handleSkip = () => {
-    skipOnboarding()
-    setOpen(false)
+  const handleOpenChange = (next: boolean) => {
+    if (!next) {
+      // Closing via the X button, Escape, or an outside click should also
+      // mark the tour as seen, otherwise it reopens on every navigation.
+      skipOnboarding()
+    }
+    setOpen(next)
   }
 
   const progress = ((currentStep + 1) / totalSteps) * 100
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl overflow-hidden p-0">
         <DialogTitle className="sr-only">
           {steps[currentStep].title}
