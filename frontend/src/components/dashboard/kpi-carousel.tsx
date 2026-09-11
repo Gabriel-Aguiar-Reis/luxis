@@ -5,7 +5,8 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
-  CarouselNext
+  CarouselNext,
+  CarouselDots
 } from '@/components/ui/carousel'
 import { KpiCard } from '@/components/dashboard/kpi-card'
 
@@ -57,6 +58,7 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
         </CarouselContent>
         <CarouselPrevious className="hidden md:flex" />
         <CarouselNext className="hidden md:flex" />
+        {!isLoading && <CarouselDots />}
       </Carousel>
     </div>
   )

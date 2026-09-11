@@ -5,16 +5,60 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 function Table({ className, ...props }: React.ComponentProps<'table'>) {
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const tableRef = React.useRef<HTMLTableElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false)
+  const [canScrollRight, setCanScrollRight] = React.useState(false)
+
+  const updateScrollState = React.useCallback(() => {
+    const el = containerRef.current
+    if (!el) return
+    setCanScrollLeft(el.scrollLeft > 0)
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1)
+  }, [])
+
+  React.useEffect(() => {
+    updateScrollState()
+    const container = containerRef.current
+    const table = tableRef.current
+    if (!container || !table) return
+
+    // Table width can change after mount (e.g. data loading in), so watch
+    // both the scroll container and the table itself for size changes.
+    const resizeObserver = new ResizeObserver(updateScrollState)
+    resizeObserver.observe(container)
+    resizeObserver.observe(table)
+
+    return () => resizeObserver.disconnect()
+  }, [updateScrollState])
+
   return (
-    <div
-      data-slot="table-container"
-      className="relative w-full overflow-x-auto"
-    >
-      <table
-        data-slot="table"
-        className={cn('w-full caption-bottom text-sm', className)}
-        {...props}
-      />
+    <div className="relative">
+      <div
+        ref={containerRef}
+        data-slot="table-container"
+        className="relative w-full overflow-x-auto"
+        onScroll={updateScrollState}
+      >
+        <table
+          ref={tableRef}
+          data-slot="table"
+          className={cn('w-full caption-bottom text-sm', className)}
+          {...props}
+        />
+      </div>
+      {canScrollLeft && (
+        <div
+          aria-hidden="true"
+          className="from-background pointer-events-none absolute inset-y-0 left-0 w-6 bg-linear-to-r to-transparent"
+        />
+      )}
+      {canScrollRight && (
+        <div
+          aria-hidden="true"
+          className="from-background pointer-events-none absolute inset-y-0 right-0 w-6 bg-linear-to-l to-transparent"
+        />
+      )}
     </div>
   )
 }
