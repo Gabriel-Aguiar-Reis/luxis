@@ -29,7 +29,7 @@ export function RecentSalesTable({
 
   if (isLoading) {
     return (
-      <div className="flex h-[350px] w-full items-center justify-center">
+      <div className="flex h-87.5 w-full items-center justify-center">
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
       </div>
     )
@@ -37,7 +37,7 @@ export function RecentSalesTable({
 
   if (isError) {
     return (
-      <div className="text-destructive flex h-[350px] w-full items-center justify-center">
+      <div className="text-destructive flex h-87.5 w-full items-center justify-center">
         Erro ao carregar vendas recentes
       </div>
     )
@@ -45,7 +45,7 @@ export function RecentSalesTable({
   const sales = data?.sales || []
   if (!sales || sales.length === 0) {
     return (
-      <div className="text-muted-foreground flex h-[350px] w-full items-center justify-center">
+      <div className="text-muted-foreground flex h-87.5 w-full items-center justify-center">
         Nenhuma venda recente encontrada
       </div>
     )
@@ -123,7 +123,7 @@ export function RecentSalesTable({
                 {sales.length === 1 ? 'venda' : 'vendas'}
               </DialogDescription>
             </DialogHeader>
-            <ScrollArea className="h-[500px] pr-4">
+            <ScrollArea className="h-125 pr-4">
               <div className="space-y-6">{sales.map(renderSaleItem)}</div>
             </ScrollArea>
           </DialogContent>

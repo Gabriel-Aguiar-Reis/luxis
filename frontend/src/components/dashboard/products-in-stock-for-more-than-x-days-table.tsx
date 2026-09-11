@@ -12,7 +12,7 @@ export function ProductsInStockForMoreThanXDaysTable() {
     return (
       <div
         key="loading"
-        className="flex h-[350px] w-full items-center justify-center"
+        className="flex h-87.5 w-full items-center justify-center"
       >
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
       </div>
@@ -26,7 +26,7 @@ export function ProductsInStockForMoreThanXDaysTable() {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex h-[300px] w-full items-center justify-center">
+      <div className="flex h-75 w-full items-center justify-center">
         <p className="text-gray-500">Nenhum produto em estoque.</p>
       </div>
     )
@@ -77,7 +77,7 @@ export function ProductsInStockForMoreThanXDaysTable() {
                 ))}
               </div>
             </div>
-            <div className="ml-auto min-w-[90px] text-right">
+            <div className="ml-auto min-w-22.5 text-right">
               <p className="text-sm font-medium">
                 R${' '}
                 {(Number(group.salePrice) * group.products.length)

@@ -55,7 +55,7 @@ export function ProductsPage() {
   const isError = isErrorProducts || isErrorCategories || isErrorModels
 
   if (isLoading) {
-    return <Skeleton className="h-[200px] w-full" />
+    return <Skeleton className="h-50 w-full" />
   }
 
   if (isError) {

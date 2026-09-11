@@ -43,7 +43,7 @@ export function SalesChart({
 
   if (isLoading) {
     return (
-      <div className="flex h-[350px] w-full items-center justify-center">
+      <div className="flex h-87.5 w-full items-center justify-center">
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
       </div>
     )
@@ -51,7 +51,7 @@ export function SalesChart({
 
   if (isError) {
     return (
-      <div className="text-destructive flex h-[350px] w-full items-center justify-center">
+      <div className="text-destructive flex h-87.5 w-full items-center justify-center">
         Erro ao carregar vendas
       </div>
     )
@@ -59,7 +59,7 @@ export function SalesChart({
 
   if (!salesData || salesData.length === 0) {
     return (
-      <div className="text-muted-foreground flex h-[350px] w-full items-center justify-center">
+      <div className="text-muted-foreground flex h-87.5 w-full items-center justify-center">
         Nenhuma venda encontrada no período selecionado
       </div>
     )

@@ -62,7 +62,7 @@ export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
       </div>
 
       {isLoading ? (
-        <Skeleton className="h-[200px] w-full" />
+        <Skeleton className="h-50 w-full" />
       ) : isError ? (
         <ErrorState onRetry={() => refetch()} />
       ) : !shipments || shipments.length === 0 ? (

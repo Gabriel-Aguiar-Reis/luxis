@@ -317,29 +317,23 @@ export function SalesTable({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="min-w-[100px]">
-                      {t('saleDate')}
-                    </TableHead>
-                    <TableHead className="min-w-[120px]">
-                      {t('reseller')}
-                    </TableHead>
-                    <TableHead className="min-w-[150px]">
+                    <TableHead className="min-w-25">{t('saleDate')}</TableHead>
+                    <TableHead className="min-w-30">{t('reseller')}</TableHead>
+                    <TableHead className="min-w-37.5">
                       {t('customer')}
                     </TableHead>
                     <TableHead className="min-w-20">{t('products')}</TableHead>
-                    <TableHead className="min-w-[100px]">
+                    <TableHead className="min-w-25">
                       {t('paymentMethod')}
                     </TableHead>
-                    <TableHead className="min-w-[120px]">
-                      {t('status')}
-                    </TableHead>
-                    <TableHead className="min-w-[140px]">
+                    <TableHead className="min-w-30">{t('status')}</TableHead>
+                    <TableHead className="min-w-35">
                       {t('installments')}
                     </TableHead>
-                    <TableHead className="min-w-[100px]">
+                    <TableHead className="min-w-25">
                       {t('totalAmount')}
                     </TableHead>
-                    <TableHead className="min-w-[100px] text-right">
+                    <TableHead className="min-w-25 text-right">
                       {t('actions')}
                     </TableHead>
                   </TableRow>

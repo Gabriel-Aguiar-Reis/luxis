@@ -66,7 +66,7 @@ export function CustomersPage() {
       </div>
 
       {isLoading ? (
-        <Skeleton className="h-[200px] w-full" />
+        <Skeleton className="h-50 w-full" />
       ) : isError ? (
         <ErrorState onRetry={() => refetch()} />
       ) : !customers || customers.length === 0 ? (

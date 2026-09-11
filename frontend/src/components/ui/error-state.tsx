@@ -23,7 +23,7 @@ export function ErrorState({
   return (
     <div
       className={cn(
-        'flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center',
+        'flex h-50 flex-col items-center justify-center rounded-md border border-dashed p-8 text-center',
         className
       )}
     >

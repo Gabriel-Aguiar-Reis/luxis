@@ -49,7 +49,7 @@ export function ReturnsPage() {
       </div>
 
       {isLoading ? (
-        <Skeleton className="h-[200px] w-full" />
+        <Skeleton className="h-50 w-full" />
       ) : isError ? (
         <ErrorState onRetry={() => refetch()} />
       ) : !returns || returns.length === 0 ? (

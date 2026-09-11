@@ -186,7 +186,7 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent className="pl-2">
             {salesKpi.isLoading ? (
-              <Skeleton className="h-[350px] w-full" />
+              <Skeleton className="h-87.5 w-full" />
             ) : (
               <SalesChart
                 start={dateRange.start.toISOString()}
@@ -203,7 +203,7 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             {salesKpi.isLoading ? (
-              <Skeleton className="h-[350px] w-full" />
+              <Skeleton className="h-87.5 w-full" />
             ) : (
               <RecentSalesTable
                 start={dateRange.start.toISOString()}
@@ -224,7 +224,7 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             {productsKpi.isLoading ? (
-              <Skeleton className="h-[300px] w-full" />
+              <Skeleton className="h-75 w-full" />
             ) : (
               <ProductsInStockForMoreThanXDaysTable />
             )}
@@ -236,7 +236,7 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             {ownershipTransfersKpi.isLoading ? (
-              <Skeleton className="h-[300px] w-full" />
+              <Skeleton className="h-75 w-full" />
             ) : (
               <div className="mt-6">
                 <ReturnsInPeriodTable

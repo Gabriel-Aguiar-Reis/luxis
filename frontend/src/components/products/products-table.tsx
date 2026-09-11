@@ -175,23 +175,19 @@ export function ProductsTable({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[100px]">
+                      <TableHead className="min-w-25">
                         {t('serialNumber')}
                       </TableHead>
                       <TableHead className="min-w-20">{t('photo')}</TableHead>
-                      <TableHead className="min-w-[120px]">
-                        {t('model')}
-                      </TableHead>
-                      <TableHead className="min-w-[100px]">
+                      <TableHead className="min-w-30">{t('model')}</TableHead>
+                      <TableHead className="min-w-25">
                         {t('unitCost')}
                       </TableHead>
-                      <TableHead className="min-w-[100px]">
+                      <TableHead className="min-w-25">
                         {t('salePrice')}
                       </TableHead>
-                      <TableHead className="min-w-[100px]">
-                        {t('status')}
-                      </TableHead>
-                      <TableHead className="min-w-[100px] text-right">
+                      <TableHead className="min-w-25">{t('status')}</TableHead>
+                      <TableHead className="min-w-25 text-right">
                         {t('actions')}
                       </TableHead>
                     </TableRow>

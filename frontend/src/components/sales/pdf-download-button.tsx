@@ -82,7 +82,7 @@ export function PDFDownloadButton({ sale, phoneUtil }: PDFDownloadButtonProps) {
 
   if (!isClient) {
     return (
-      <Button variant="outline" size="lg" className="min-w-[200px]" disabled>
+      <Button variant="outline" size="lg" className="min-w-50" disabled>
         <Download className="mr-2 h-5 w-5" />
         {t('downloadPdf')}
       </Button>
@@ -94,7 +94,7 @@ export function PDFDownloadButton({ sale, phoneUtil }: PDFDownloadButtonProps) {
       onClick={handleDownload}
       variant="outline"
       size="lg"
-      className="min-w-[200px]"
+      className="min-w-50"
       disabled={isGenerating}
     >
       {isGenerating ? (
