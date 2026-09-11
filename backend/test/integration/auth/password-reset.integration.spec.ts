@@ -1,4 +1,7 @@
-import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify'
+import {
+  NestFastifyApplication,
+  FastifyAdapter
+} from '@nestjs/platform-fastify'
 import { Reflector } from '@nestjs/core'
 import { ConfigModule as NestConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
@@ -291,7 +294,10 @@ describe('Password reset flow (integration)', () => {
   }
 
   async function loginAndGetCookie(email: string, password: string) {
-    const response = await apiRequest('POST', '/auth/login', { email, password })
+    const response = await apiRequest('POST', '/auth/login', {
+      email,
+      password
+    })
 
     expect(response.status).toBe(204)
     const cookies = response.headers['set-cookie']
