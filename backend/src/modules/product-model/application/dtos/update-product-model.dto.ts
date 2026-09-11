@@ -58,7 +58,8 @@ export class UpdateProductModelDto {
     required: false
   })
   @IsOptional()
-  photo?: Express.Multer.File
+  // Accept either a base64 string / remote URL or a Multer file (fallback)
+  photo?: string | Express.Multer.File
 
   @ApiProperty({
     description: 'The photo URL of the product model',

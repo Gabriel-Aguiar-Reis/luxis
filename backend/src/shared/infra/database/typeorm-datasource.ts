@@ -67,8 +67,7 @@ switch (appConfigService.getNodeEnv()) {
   case 'test':
     // Loaded lazily so production (Postgres) never requires the native sqlite3 binary
     AppDataSource = new DataSource({
-      type: 'sqlite',
-      driver: require('sqlite3'),
+      type: 'better-sqlite3',
       database: 'test.sqlite',
       ...commonConfig
     })

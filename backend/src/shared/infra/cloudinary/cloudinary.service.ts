@@ -18,7 +18,9 @@ export class CloudinaryService {
       timestamp,
       folder,
       signature,
-      expiresAt
+      expiresAt,
+      apiKey: this.configService.getCloudinaryApiKey(),
+      cloudName: this.configService.getCloudinaryCloudName()
     }
   }
   constructor(private configService: AppConfigService) {
@@ -33,6 +35,11 @@ export class CloudinaryService {
     file: string | Express.Multer.File,
     folder: string = 'products-models-images'
   ): Promise<string> {
+    // If the caller already provided a remote URL (direct upload), return it unchanged
+    if (typeof file === 'string' && /^https?:\/\//i.test(file)) {
+      return Promise.resolve(file)
+    }
+
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {

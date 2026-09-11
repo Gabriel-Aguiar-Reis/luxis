@@ -14,6 +14,7 @@
     "check": "biome check backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
     "format": "biome format --write backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
     "lint": "biome lint backend/src backend/test frontend/src frontend/*.ts frontend/*.mts frontend/*.mjs",
+    "typecheck": "cd frontend && tsc --noEmit && cd ../backend && tsc --noEmit",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d postgres",
@@ -22,8 +23,8 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",
     "concurrently": "^10.0.5",
-    "jest-util": "^29.7.0",
+    "jest-util": "^30.5.1",
     "typeorm": "^1.1.1",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   }
 }

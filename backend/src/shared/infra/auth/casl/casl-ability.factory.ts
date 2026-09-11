@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common'
-import { AbilityBuilder, PureAbility, ExtractSubjectType } from '@casl/ability'
+import { AbilityBuilder, Ability, ExtractSubjectType } from '@casl/ability'
 import { CaslRuleBuilder } from '@/shared/infra/auth/casl/interfaces/casl-rules.builder'
 import { AppAbility, Subjects } from '@/shared/infra/auth/casl/casl-types'
 import { UserPayload } from '@/shared/infra/auth/interfaces/user-payload.interface'
@@ -14,7 +14,7 @@ export class CaslAbilityFactory {
   ) {}
 
   createForUser(user: UserPayload): AppAbility {
-    const builder = new AbilityBuilder<AppAbility>(PureAbility)
+    const builder = new AbilityBuilder<AppAbility>(Ability)
 
     for (const builderFn of this.ruleBuilders) {
       builderFn.buildFor(user, builder)
