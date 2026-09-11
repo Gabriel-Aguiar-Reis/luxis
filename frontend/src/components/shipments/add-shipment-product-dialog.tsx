@@ -7,7 +7,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import {
   Accordion,
   AccordionItem,
@@ -73,7 +73,7 @@ export function AddShipmentProductDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-[1000px] p-0">
+      <DialogContent className="w-[95vw] max-w-250 p-0">
         <div className="flex h-[70vh] flex-col">
           <DialogHeader className="px-6 pt-6">
             <DialogTitle>{t('title')}</DialogTitle>

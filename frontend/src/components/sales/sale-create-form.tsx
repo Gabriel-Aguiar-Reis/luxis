@@ -48,7 +48,7 @@ import {
 } from '@/hooks/use-customers'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { format } from 'date-fns'
 import { AddCustomerDialog } from '@/components/sales/add-customer-dialog'
 import { AddProductDialog } from '@/components/sales/add-product-dialog'
