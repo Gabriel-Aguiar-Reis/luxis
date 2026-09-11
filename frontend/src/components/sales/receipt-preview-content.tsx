@@ -39,7 +39,7 @@ export function ReceiptPreviewContent({
     return (
       <div className="container mx-auto space-y-4 p-6">
         <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-[800px] w-full" />
+        <Skeleton className="h-200 w-full" />
       </div>
     )
   }

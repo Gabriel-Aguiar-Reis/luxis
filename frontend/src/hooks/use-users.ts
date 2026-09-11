@@ -38,9 +38,9 @@ export function useDeleteUser(queryClient: QueryClient) {
 
   const mutation = useDeleteUserRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('deleteSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+        await queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
       },
       onError: () => {
         toast.error(t('deleteError'))
@@ -60,11 +60,11 @@ export function useCreateUser(queryClient: QueryClient) {
 
   const mutation = useCreateUserRaw({
     mutation: {
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         toast.success(
           t('createSuccess', { email: (response as any)?.data?.email?.value })
         )
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
+        await queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
       },
       onError: () => {
         toast.error(t('createError'))
@@ -93,7 +93,7 @@ export function useUpdateUserRole(queryClient: QueryClient) {
 
   const mutation = useUpdateUserRoleRaw({
     mutation: {
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         const data = (response as any)?.data
         toast.success(
           t('updateRoleSuccess', {
@@ -102,8 +102,10 @@ export function useUpdateUserRole(queryClient: QueryClient) {
             role: userRoles[data?.role as keyof typeof userRoles]
           })
         )
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.users.all() }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
+        ])
       },
       onError: () => {
         toast.error(t('updateRoleError'))
@@ -125,13 +127,15 @@ export function useUpdateUserStatus(queryClient: QueryClient) {
 
   const mutation = useUpdateUserStatusRaw({
     mutation: {
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         const data = (response as any)?.data
         toast.success(
           t('updateStatusSuccess', { id: data?.id, status: data?.status })
         )
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.all() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.users.all() }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.users.pending() })
+        ])
       },
       onError: () => {
         toast.error(t('updateStatusError'))

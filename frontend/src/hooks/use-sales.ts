@@ -56,9 +56,14 @@ export function useConfirmSale(queryClient: QueryClient) {
 
   const mutation = useConfirmSaleRaw({
     mutation: {
-      onSuccess: async () => {
+      onSuccess: async (_response, variables) => {
         toast.success(t('confirmSuccess'))
-        await queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.sales.detail(variables.id)
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -105,9 +110,14 @@ export function useCreateSale(queryClient: QueryClient) {
 
   const mutation = useCreateSaleRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('createSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.sales.availableProducts()
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -137,9 +147,17 @@ export function useDeleteSale(queryClient: QueryClient) {
 
   const mutation = useDeleteSaleRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async (_response, variables) => {
         toast.success(t('deleteSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.sales.availableProducts()
+          })
+        ])
+        queryClient.removeQueries({
+          queryKey: queryKeys.sales.detail(variables.id)
+        })
       },
       onError: (e: Error) => {
         toast.error(
@@ -161,9 +179,17 @@ export function useUpdateSale(queryClient: QueryClient) {
 
   const mutation = useUpdateSaleRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async (_response, variables) => {
         toast.success(t('updateSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.sales.detail(variables.id)
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.sales.availableProducts()
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -187,9 +213,14 @@ export function useUpdateMarkInstallmentPaid(queryClient: QueryClient) {
 
   const mutation = useMarkInstallmentPaidRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async (_response, variables) => {
         toast.success(t('markInstallmentPaidSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.sales.detail(variables.id)
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -215,9 +246,14 @@ export function useUpdateSaleStatus(queryClient: QueryClient) {
 
   const mutation = useUpdateSaleStatusRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async (_response, variables) => {
         toast.success(t('updateStatusSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.sales.all() }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.sales.detail(variables.id)
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(

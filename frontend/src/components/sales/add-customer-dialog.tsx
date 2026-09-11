@@ -36,7 +36,7 @@ export function AddCustomerDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-125">
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -53,16 +53,28 @@ export function AddCustomerDialog({
               <Input
                 id="customer-name"
                 placeholder={t('namePlaceholder')}
+                aria-invalid={!!newCustomerForm.formState.errors.name}
                 {...newCustomerForm.register('name')}
               />
+              {newCustomerForm.formState.errors.name && (
+                <p className="text-destructive text-sm">
+                  {newCustomerForm.formState.errors.name.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="customer-phone">{t('phone')}</Label>
               <Input
                 id="customer-phone"
                 placeholder={t('phonePlaceholder')}
+                aria-invalid={!!newCustomerForm.formState.errors.phone}
                 {...newCustomerForm.register('phone')}
               />
+              {newCustomerForm.formState.errors.phone && (
+                <p className="text-destructive text-sm">
+                  {newCustomerForm.formState.errors.phone.message}
+                </p>
+              )}
             </div>
           </div>
           <DialogFooter>

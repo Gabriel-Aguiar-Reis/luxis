@@ -6,7 +6,9 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { Label } from '@/components/ui/label'
 import { UpdateTransferDto } from '@/hooks/use-transfers'
 import { useGetUsers } from '@/hooks/use-users'
@@ -30,6 +32,19 @@ import { ChevronsUpDown, Square, SquareCheck } from 'lucide-react'
 import { GetInventoryByIdProduct, OwnershipTransfer } from '@/lib/api-types'
 import { useState } from 'react'
 
+const transferSchema = z
+  .object({
+    productId: z.string().trim().min(1, 'Selecione um produto'),
+    fromResellerId: z.string().trim().min(1, 'Selecione um doador'),
+    toResellerId: z.string().trim().min(1, 'Selecione um recebedor')
+  })
+  .refine((data) => data.fromResellerId !== data.toResellerId, {
+    path: ['toResellerId'],
+    message: 'O recebedor deve ser diferente do doador'
+  })
+
+type TransferFormValues = z.infer<typeof transferSchema>
+
 type TransferDialogProps = {
   isOpen: boolean
   onClose: () => void
@@ -43,7 +58,16 @@ export function TransferDialog({
   onSave,
   transfer
 }: TransferDialogProps) {
-  const { handleSubmit, reset, setValue, watch } = useForm<UpdateTransferDto>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<TransferFormValues>({
+    resolver: zodResolver(transferSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       productId: transfer?.productId || '',
       fromResellerId: transfer?.fromResellerId || '',
@@ -55,9 +79,9 @@ export function TransferDialog({
   const [openTo, setOpenTo] = React.useState(false)
   const [openProduct, setOpenProduct] = React.useState(false)
 
-  const fromResellerId = watch('fromResellerId')
-  const toResellerId = watch('toResellerId')
-  const productId = watch('productId')
+  const fromResellerId = useWatch({ control, name: 'fromResellerId' })
+  const toResellerId = useWatch({ control, name: 'toResellerId' })
+  const productId = useWatch({ control, name: 'productId' })
 
   const { data: users } = useGetUsers()
   const resellers = React.useMemo(
@@ -146,9 +170,10 @@ export function TransferDialog({
     onClose()
   }
 
-  const onSubmit = (data: UpdateTransferDto) => {
+  const onSubmit = (data: TransferFormValues) => {
+    const dto: UpdateTransferDto = data
     if (transfer) {
-      onSave(transfer.id, data)
+      onSave(transfer.id, dto)
     }
     onClose()
     reset()
@@ -160,7 +185,7 @@ export function TransferDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-150">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Editar Transferência</DialogTitle>
@@ -213,8 +238,17 @@ export function TransferDialog({
                                 key={reseller.id}
                                 value={reseller.id}
                                 onSelect={(value) => {
-                                  setValue('fromResellerId', value)
-                                  setValue('productId', '')
+                                  setValue('fromResellerId', value, {
+                                    shouldValidate: true
+                                  })
+                                  if (value === toResellerId) {
+                                    setValue('toResellerId', '', {
+                                      shouldValidate: true
+                                    })
+                                  }
+                                  setValue('productId', '', {
+                                    shouldValidate: true
+                                  })
                                   setOpenFrom(false)
                                   setSearchFromValue('')
                                 }}
@@ -233,6 +267,11 @@ export function TransferDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.fromResellerId && (
+                  <p className="text-destructive text-sm">
+                    {errors.fromResellerId.message}
+                  </p>
+                )}
               </div>
               {/* Recebedor */}
               <div className="space-y-2">
@@ -277,7 +316,9 @@ export function TransferDialog({
                                 value={reseller.id}
                                 className="flex justify-between"
                                 onSelect={(value) => {
-                                  setValue('toResellerId', value)
+                                  setValue('toResellerId', value, {
+                                    shouldValidate: true
+                                  })
                                   setOpenTo(false)
                                   setSearchToValue('')
                                 }}
@@ -296,6 +337,11 @@ export function TransferDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.toResellerId && (
+                  <p className="text-destructive text-sm">
+                    {errors.toResellerId.message}
+                  </p>
+                )}
               </div>
               {/* Produto */}
               <div className="space-y-2 sm:col-span-2">
@@ -340,7 +386,9 @@ export function TransferDialog({
                                 value={product.id}
                                 className="flex justify-between"
                                 onSelect={() => {
-                                  setValue('productId', product.id)
+                                  setValue('productId', product.id, {
+                                    shouldValidate: true
+                                  })
                                   setOpenProduct(false)
                                   setSearchProductValue('')
                                 }}
@@ -358,6 +406,11 @@ export function TransferDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.productId && (
+                  <p className="text-destructive text-sm">
+                    {errors.productId.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>

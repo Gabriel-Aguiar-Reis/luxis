@@ -44,9 +44,17 @@ export function useUpdateShipment(queryClient: QueryClient) {
     mutation: {
       onSuccess: async () => {
         toast.success(t('updateSuccess'))
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.shipments.all()
-        })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.shipments.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.inventory.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.products.available()
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -72,9 +80,17 @@ export function useDeleteShipment(queryClient: QueryClient) {
     mutation: {
       onSuccess: async () => {
         toast.success(t('deleteSuccess'))
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.shipments.all()
-        })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.shipments.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.inventory.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.products.available()
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -98,9 +114,17 @@ export function useCreateShipment(queryClient: QueryClient) {
     mutation: {
       onSuccess: async () => {
         toast.success(t('createSuccess'))
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.shipments.all()
-        })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.shipments.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.inventory.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.products.available()
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -124,9 +148,17 @@ export function useUpdateShipmentStatus(queryClient: QueryClient) {
     mutation: {
       onSuccess: async () => {
         toast.success(t('updateStatusSuccess'))
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.shipments.all()
-        })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.shipments.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.inventory.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.products.available()
+          })
+        ])
       },
       onError: (e: Error) => {
         toast.error(

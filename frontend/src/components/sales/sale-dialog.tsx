@@ -6,7 +6,9 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -26,6 +28,14 @@ import {
 } from '@/hooks/use-sales'
 import { useLocale, useTranslations } from 'next-intl'
 
+const saleSchema = z.object({
+  productIds: z
+    .array(z.string().trim().min(1))
+    .min(1, 'Selecione ao menos um produto')
+})
+
+type SaleFormValues = z.infer<typeof saleSchema>
+
 type SaleDialogProps = {
   isOpen: boolean
   onClose: () => void
@@ -36,7 +46,16 @@ type SaleDialogProps = {
 export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
   const locale = useLocale()
   const t = useTranslations('SaleEditDialog')
-  const { handleSubmit, reset, setValue, watch } = useForm<UpdateSaleDto>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<SaleFormValues>({
+    resolver: zodResolver(saleSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       productIds: sale?.products.map((p) => p.id) || []
     }
@@ -63,7 +82,7 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
     }
   }, [sale, setValue, reset])
 
-  const productIds = watch('productIds')
+  const productIds = useWatch({ control, name: 'productIds' }) ?? []
 
   const handleClose = () => {
     reset({
@@ -73,9 +92,10 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
     onClose()
   }
 
-  const onSubmit = (data: UpdateSaleDto) => {
+  const onSubmit = (data: SaleFormValues) => {
+    const dto: UpdateSaleDto = data
     if (sale) {
-      onSave(sale.id, data)
+      onSave(sale.id, dto)
     }
     handleClose()
   }
@@ -87,39 +107,46 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
   const categories = res?.data || []
 
   // Produtos disponíveis
-  const allProductsFlat = categories.flatMap((c) =>
-    c.models.flatMap((m) => m.products)
+  const allProductsFlat = React.useMemo(
+    () => categories.flatMap((c) => c.models.flatMap((m) => m.products)),
+    [categories]
   )
 
   // Produtos selecionados
-  const selectedProducts = allProductsFlat.filter((p) =>
-    productIds.includes(p.id as string)
+  const selectedProducts = React.useMemo(
+    () => allProductsFlat.filter((p) => productIds.includes(p.id as string)),
+    [allProductsFlat, productIds]
   )
 
   // Calcula o total
-  const totalAmount = selectedProducts.reduce((acc, p) => {
-    const valueRaw: any = (p.salePrice as any).value
-    const numeric =
-      typeof valueRaw === 'string' ? parseFloat(valueRaw) : Number(valueRaw)
-    return acc + (isNaN(numeric) ? 0 : numeric)
-  }, 0)
+  const totalAmount = React.useMemo(
+    () =>
+      selectedProducts.reduce((acc, p) => {
+        const valueRaw: any = (p.salePrice as any).value
+        const numeric =
+          typeof valueRaw === 'string' ? parseFloat(valueRaw) : Number(valueRaw)
+        return acc + (isNaN(numeric) ? 0 : numeric)
+      }, 0),
+    [selectedProducts]
+  )
 
   function toggleProduct(id: string) {
-    const current = watch('productIds') || []
+    const current = productIds
     if (current.includes(id)) {
       setValue(
         'productIds',
-        current.filter((p) => p !== id)
+        current.filter((p) => p !== id),
+        { shouldValidate: true }
       )
     } else {
-      setValue('productIds', [...current, id])
+      setValue('productIds', [...current, id], { shouldValidate: true })
     }
   }
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[700px]">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-175">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>{t('title')}</DialogTitle>
@@ -140,6 +167,11 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
                     : t('selectProducts')}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
+                {errors.productIds && (
+                  <p className="text-destructive text-sm">
+                    {errors.productIds.message}
+                  </p>
+                )}
               </div>
 
               {/* Lista de produtos selecionados */}
@@ -229,7 +261,7 @@ export function SaleDialog({ isOpen, onClose, onSave, sale }: SaleDialogProps) {
       </Dialog>
 
       <Dialog open={showProductsDialog} onOpenChange={setShowProductsDialog}>
-        <DialogContent className="max-h-[85vh] sm:max-w-[700px]">
+        <DialogContent className="max-h-[85vh] sm:max-w-175">
           <DialogHeader>
             <DialogTitle>{t('productPickerTitle')}</DialogTitle>
             <DialogDescription>

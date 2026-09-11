@@ -34,8 +34,10 @@ export function useCreateCustomer(queryClient: QueryClient) {
 
   const mutation = useCreateCustomerRaw({
     mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.customers.all() })
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.customers.all()
+        })
         toast.success(t('createSuccess'))
       },
       onError: () => {
@@ -64,8 +66,10 @@ export function useUpdateCustomer(queryClient: QueryClient) {
 
   const mutation = useUpdateCustomerRaw({
     mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.customers.all() })
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.customers.all()
+        })
         toast.success(t('updateSuccess'))
       },
       onError: () => {

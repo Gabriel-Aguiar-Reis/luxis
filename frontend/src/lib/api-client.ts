@@ -18,6 +18,7 @@ const API = '/api/backend'
 const REQUEST_TIMEOUT_MS = 15000
 const RETRYABLE_METHODS = new Set(['GET', 'HEAD'])
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504])
+const BODYLESS_METHODS = new Set(['GET', 'HEAD'])
 
 function buildHeaders(options: RequestInit): Record<string, string> {
   let headers: Record<string, string> = {
@@ -51,24 +52,36 @@ async function wait(ms: number) {
   await new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export async function apiFetch<T>(
+export type ApiResponse<T> = {
+  data: T
+  status: number
+  headers: Headers
+}
+
+export async function apiRequest<T>(
   url: string,
   options: RequestInit = {},
   requireAuth = false,
   method?: string
-): Promise<T> {
+): Promise<ApiResponse<T>> {
   const requestMethod = (method ?? options.method ?? 'GET').toUpperCase()
   const headers = buildHeaders(options)
+  const { body: _unusedBody, ...restOptions } = options
+  const body = BODYLESS_METHODS.has(requestMethod) ? undefined : options.body
 
   for (let attempt = 0; attempt <= 2; attempt++) {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+    const externalSignal = options.signal
+    const onExternalAbort = () => controller.abort()
+    externalSignal?.addEventListener('abort', onExternalAbort)
 
     try {
       const response = await fetch(`${API}${url}`, {
-        ...options,
+        ...restOptions,
         method: requestMethod,
         headers,
+        body,
         credentials: options.credentials ?? 'include',
         signal: controller.signal
       })
@@ -100,7 +113,11 @@ export async function apiFetch<T>(
         )
       }
 
-      return data as T
+      return {
+        data: data as T,
+        status: response.status,
+        headers: response.headers
+      }
     } catch (error) {
       clearTimeout(timeout)
 
@@ -112,6 +129,10 @@ export async function apiFetch<T>(
       }
 
       if (error instanceof Error && error.name === 'AbortError') {
+        if (externalSignal?.aborted) {
+          throw error
+        }
+
         if (shouldRetry(requestMethod, 408, attempt)) {
           await wait((attempt + 1) * 300)
           continue
@@ -130,8 +151,20 @@ export async function apiFetch<T>(
       }
 
       throw new ApiError('Falha de conexão com a API', 0, error)
+    } finally {
+      externalSignal?.removeEventListener('abort', onExternalAbort)
     }
   }
 
   throw new ApiError('Erro inesperado', 500)
+}
+
+export async function apiFetch<T>(
+  url: string,
+  options: RequestInit = {},
+  requireAuth = false,
+  method?: string
+): Promise<T> {
+  const response = await apiRequest<T>(url, options, requireAuth, method)
+  return response.data
 }

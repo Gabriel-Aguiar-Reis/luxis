@@ -1,6 +1,6 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -95,6 +95,10 @@ export function BatchCreateForm() {
     }
   })
 
+  const supplier = useWatch({ control: form.control, name: 'supplier' })
+  const arrivalDate = useWatch({ control: form.control, name: 'arrivalDate' })
+  const entries = useWatch({ control: form.control, name: 'entries' }) ?? []
+
   const { data: suppliers } = useGetSuppliers()
   const [openSupplier, setOpenSupplier] = useState(false)
   const [searchSupplier, setSearchSupplier] = useState('')
@@ -119,6 +123,8 @@ export function BatchCreateForm() {
   const [step, setStep] = useState(1)
 
   const router = useRouter()
+  const editingEntry =
+    typeof editingEntryIdx === 'number' ? entries[editingEntryIdx] : undefined
 
   function onSubmit(data: BatchFormValues) {
     const dto: CreateBatchDto = {
@@ -318,9 +324,7 @@ export function BatchCreateForm() {
                     <Button
                       type="button"
                       onClick={() => setStep(2)}
-                      disabled={
-                        !form.watch('supplier') || !form.watch('arrivalDate')
-                      }
+                      disabled={!supplier || !arrivalDate}
                     >
                       Próximo
                     </Button>
@@ -396,17 +400,11 @@ export function BatchCreateForm() {
                         dto={{
                           name: selectedModel.name.value,
                           ...(typeof editingEntryIdx === 'number' &&
-                          form.getValues('entries')[editingEntryIdx]
+                          editingEntry
                             ? {
-                                quantity:
-                                  form.getValues('entries')[editingEntryIdx]
-                                    .quantity,
-                                unitCost:
-                                  form.getValues('entries')[editingEntryIdx]
-                                    .unitCost,
-                                salePrice:
-                                  form.getValues('entries')[editingEntryIdx]
-                                    .salePrice
+                                quantity: editingEntry.quantity,
+                                unitCost: editingEntry.unitCost,
+                                salePrice: editingEntry.salePrice
                               }
                             : {})
                         }}
@@ -444,7 +442,7 @@ export function BatchCreateForm() {
                         setSelectedModel={setSelectedModel}
                       />
                     )}
-                    {form.watch('entries').length > 0 && (
+                    {entries.length > 0 && (
                       <div className="mt-6">
                         <h3 className="mb-2 text-lg font-semibold">
                           Modelos adicionados
@@ -462,7 +460,7 @@ export function BatchCreateForm() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {form.watch('entries').map((entry, idx) => {
+                              {entries.map((entry, idx) => {
                                 const model = models?.find(
                                   (m) => m.id === entry.modelId
                                 )

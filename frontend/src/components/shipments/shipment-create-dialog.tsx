@@ -6,7 +6,9 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { Label } from '@/components/ui/label'
 import { useGetUsers } from '@/hooks/use-users'
 import { useGetAvailableProducts } from '@/hooks/use-products'
@@ -32,6 +34,15 @@ import { CreateShipmentDto } from '@/hooks/use-shipments'
 import { AddShipmentProductDialog } from '@/components/shipments/add-shipment-product-dialog'
 import { useTranslations } from 'next-intl'
 
+const shipmentSchema = z.object({
+  resellerId: z.string().trim().min(1, 'Selecione um revendedor'),
+  productIds: z
+    .array(z.string().trim().min(1))
+    .min(1, 'Selecione ao menos um produto')
+})
+
+type ShipmentFormValues = z.infer<typeof shipmentSchema>
+
 export function ShipmentCreateDialog({
   isOpen,
   onClose,
@@ -42,7 +53,16 @@ export function ShipmentCreateDialog({
   onCreate: (dto: CreateShipmentDto) => void
 }) {
   const t = useTranslations('ShipmentCreateDialog')
-  const { handleSubmit, reset, setValue, watch } = useForm<CreateShipmentDto>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<ShipmentFormValues>({
+    resolver: zodResolver(shipmentSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       resellerId: '',
       productIds: []
@@ -52,8 +72,8 @@ export function ShipmentCreateDialog({
   const [openFrom, setOpenFrom] = React.useState(false)
   const [showProductsDialog, setShowProductsDialog] = React.useState(false)
 
-  const resellerId = watch('resellerId')
-  const productIds = watch('productIds')
+  const resellerId = useWatch({ control, name: 'resellerId' })
+  const productIds = useWatch({ control, name: 'productIds' }) ?? []
 
   const { data: users } = useGetUsers()
   const { data: availableProducts } = useGetAvailableProducts()
@@ -99,19 +119,21 @@ export function ShipmentCreateDialog({
   const [searchProductValue, setSearchProductValue] = useState('')
 
   function toggleProduct(id: string) {
-    const current = productIds || []
+    const current = productIds
     if (current.includes(id)) {
       setValue(
         'productIds',
-        current.filter((p) => p !== id)
+        current.filter((p) => p !== id),
+        { shouldValidate: true }
       )
     } else {
-      setValue('productIds', [...current, id])
+      setValue('productIds', [...current, id], { shouldValidate: true })
     }
   }
 
-  const onSubmit = (data: CreateShipmentDto) => {
-    onCreate(data)
+  const onSubmit = (data: ShipmentFormValues) => {
+    const dto: CreateShipmentDto = data
+    onCreate(dto)
     onClose()
     reset()
   }
@@ -123,7 +145,7 @@ export function ShipmentCreateDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-150">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle className="text-base sm:text-lg">
@@ -187,8 +209,12 @@ export function ShipmentCreateDialog({
                                 key={reseller.id}
                                 value={reseller.id}
                                 onSelect={(value) => {
-                                  setValue('resellerId', value)
-                                  setValue('productIds', [])
+                                  setValue('resellerId', value, {
+                                    shouldValidate: true
+                                  })
+                                  setValue('productIds', [], {
+                                    shouldValidate: true
+                                  })
                                   setOpenFrom(false)
                                   setSearchFromValue('')
                                 }}
@@ -209,6 +235,11 @@ export function ShipmentCreateDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.resellerId && (
+                  <p className="text-destructive text-xs sm:text-sm">
+                    {errors.resellerId.message}
+                  </p>
+                )}
               </div>
               {/* Produtos */}
               <div className="space-y-2 sm:col-span-2">
@@ -230,6 +261,11 @@ export function ShipmentCreateDialog({
                 {productIds && productIds.length > 0 && (
                   <p className="text-muted-foreground text-[10px] sm:text-xs">
                     {t('selectedProductsCount', { count: productIds.length })}
+                  </p>
+                )}
+                {errors.productIds && (
+                  <p className="text-destructive text-xs sm:text-sm">
+                    {errors.productIds.message}
                   </p>
                 )}
               </div>
@@ -260,7 +296,7 @@ export function ShipmentCreateDialog({
           open={showProductsDialog}
           onOpenChange={setShowProductsDialog}
           inventory={availableInventory}
-          selectedProductIds={productIds || []}
+          selectedProductIds={productIds}
           onToggleProduct={toggleProduct}
           searchValue={searchProductValue}
           onSearchChange={setSearchProductValue}

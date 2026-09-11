@@ -39,9 +39,14 @@ export function useCreateReturn(queryClient: QueryClient) {
 
   const mutation = useCreateReturnRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('createSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.returns.all()
+          }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.inventory.all() })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -63,9 +68,14 @@ export function useDeleteReturn(queryClient: QueryClient) {
 
   const mutation = useDeleteReturnRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('deleteSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.returns.all()
+          }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.inventory.all() })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -87,9 +97,14 @@ export function useUpdateReturn(queryClient: QueryClient) {
 
   const mutation = useUpdateReturnRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('updateSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.returns.all()
+          }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.inventory.all() })
+        ])
       },
       onError: (e: Error) => {
         toast.error(
@@ -113,9 +128,14 @@ export function useUpdateReturnStatus(queryClient: QueryClient) {
 
   const mutation = useUpdateReturnStatusRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('updateStatusSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.returns.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.returns.all()
+          }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.inventory.all() })
+        ])
       },
       onError: (e: Error) => {
         toast.error(

@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -43,9 +43,9 @@ import { useGetAvailableProductsToSell, useCreateSale } from '@/hooks/use-sales'
 import {
   useGetCustomers,
   useCreateCustomer,
-  GetAllCustomersResponse
+  GetAllCustomersResponse,
+  CreateCustomerDto
 } from '@/hooks/use-customers'
-import { GetAvailableProductDto } from '@/lib/api-types'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
@@ -64,6 +64,11 @@ export type SaleFormValues = {
   numberInstallments: number
   installmentsInterval: number
   customerId: string
+}
+
+type CustomerFormValues = {
+  name: string
+  phone: string
 }
 
 export function SaleCreateForm() {
@@ -110,6 +115,11 @@ export function SaleCreateForm() {
       }
     })
 
+  const customerSchema = z.object({
+    name: z.string().trim().min(1, 'Nome obrigatório'),
+    phone: z.string().trim().min(10, 'Telefone obrigatório')
+  })
+
   const queryClient = useQueryClient()
   const { data: res } = useGetAvailableProductsToSell()
   const { data: customers } = useGetCustomers()
@@ -133,6 +143,17 @@ export function SaleCreateForm() {
       installmentsInterval: 0,
       customerId: ''
     }
+  })
+
+  const selectedProductIds =
+    useWatch({ control: form.control, name: 'productIds' }) ?? []
+  const selectedCustomerId = useWatch({
+    control: form.control,
+    name: 'customerId'
+  })
+  const paymentMethod = useWatch({
+    control: form.control,
+    name: 'paymentMethod'
   })
 
   const [openCustomer, setOpenCustomer] = useState(false)
@@ -179,53 +200,53 @@ export function SaleCreateForm() {
     }
   }
 
-  const newCustomerForm = useForm<{ name: string; phone: string }>({
+  const newCustomerForm = useForm<CustomerFormValues>({
+    resolver: zodResolver(customerSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: { name: '', phone: '' }
   })
 
-  function handleCreateCustomer() {
-    const values = newCustomerForm.getValues()
-    if (!values.name) return
-    createCustomer(
-      { name: values.name, phone: values.phone },
-      {
-        onSuccess: (cust) => {
-          form.setValue('customerId', cust.id, { shouldValidate: true })
-          setShowNewCustomerDialog(false)
-          newCustomerForm.reset()
-        }
+  const handleCreateCustomer = newCustomerForm.handleSubmit((values) => {
+    const dto: CreateCustomerDto = values
+    createCustomer(dto, {
+      onSuccess: (cust) => {
+        form.setValue('customerId', cust.id, { shouldValidate: true })
+        setShowNewCustomerDialog(false)
+        newCustomerForm.reset()
       }
-    )
-  }
-
-  const categories = res?.data || []
-
-  const groupedProducts: [string, GetAvailableProductDto][] = []
-  categories.forEach((c) => {
-    c.models.forEach((m) => {
-      groupedProducts.push([m.modelName.value, m.products])
     })
   })
 
-  // Calcula o total dos produtos selecionados
-  const selectedProductIds = form.watch('productIds')
-  const allProductsFlat = categories.flatMap((c) =>
-    c.models.flatMap((m) => m.products)
-  )
-  const selectedProducts = allProductsFlat.filter((p) =>
-    selectedProductIds.includes(p.id as string)
-  )
-  const totalAmount = selectedProducts.reduce((acc, p) => {
-    const valueRaw: any = (p.salePrice as any).value
-    const numeric =
-      typeof valueRaw === 'string' ? parseFloat(valueRaw) : Number(valueRaw)
-    return acc + (isNaN(numeric) ? 0 : numeric)
-  }, 0)
+  const categories = res?.data || []
 
-  const selectedCustomer = (customers || []).find(
-    (c) => c.id === form.watch('customerId')
+  // Calcula o total dos produtos selecionados
+  const allProductsFlat = useMemo(
+    () => categories.flatMap((c) => c.models.flatMap((m) => m.products)),
+    [categories]
   )
-  const paymentMethod = form.watch('paymentMethod')
+  const selectedProducts = useMemo(
+    () =>
+      allProductsFlat.filter((p) =>
+        selectedProductIds.includes(p.id as string)
+      ),
+    [allProductsFlat, selectedProductIds]
+  )
+  const totalAmount = useMemo(
+    () =>
+      selectedProducts.reduce((acc, p) => {
+        const valueRaw: any = (p.salePrice as any).value
+        const numeric =
+          typeof valueRaw === 'string' ? parseFloat(valueRaw) : Number(valueRaw)
+        return acc + (isNaN(numeric) ? 0 : numeric)
+      }, 0),
+    [selectedProducts]
+  )
+
+  const selectedCustomer = useMemo(
+    () => (customers || []).find((c) => c.id === selectedCustomerId),
+    [customers, selectedCustomerId]
+  )
 
   function getCustomerName(c: GetAllCustomersResponse[0] | undefined) {
     if (!c) return ''
@@ -402,9 +423,9 @@ export function SaleCreateForm() {
                         type="button"
                         onClick={() => setShowProductsDialog(true)}
                       >
-                        {form.watch('productIds').length > 0
+                        {selectedProductIds.length > 0
                           ? t('selectedCount', {
-                              count: form.watch('productIds').length
+                              count: selectedProductIds.length
                             })
                           : t('selectProducts')}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

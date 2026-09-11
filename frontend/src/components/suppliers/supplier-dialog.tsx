@@ -12,6 +12,15 @@ import {
 } from '@/components/ui/dialog'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
+const supplierSchema = z.object({
+  name: z.string().trim().min(1, 'Nome obrigatório'),
+  phone: z.string().trim().min(10, 'Telefone obrigatório')
+})
+
+type SupplierFormValues = z.infer<typeof supplierSchema>
 
 type SupplierDialogProps = {
   isOpen: boolean
@@ -25,13 +34,21 @@ export function SupplierDialog({
   onSave,
   supplier
 }: SupplierDialogProps) {
-  const { register, handleSubmit, reset, setValue } =
-    useForm<UpdateSupplierDto>({
-      defaultValues: {
-        name: supplier?.name.value || '',
-        phone: supplier?.phone.value || ''
-      }
-    })
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<SupplierFormValues>({
+    resolver: zodResolver(supplierSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      name: supplier?.name.value || '',
+      phone: supplier?.phone.value || ''
+    }
+  })
 
   // Atualiza valores do formulário ao abrir/alterar supplier
   React.useEffect(() => {
@@ -51,9 +68,10 @@ export function SupplierDialog({
     onClose()
   }
 
-  const onSubmit = (data: UpdateSupplierDto) => {
+  const onSubmit = (data: SupplierFormValues) => {
+    const dto: UpdateSupplierDto = data
     if (supplier) {
-      onSave(supplier.id, data)
+      onSave(supplier.id, dto)
     }
     onClose()
     reset()
@@ -65,7 +83,7 @@ export function SupplierDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-150">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Editar Fornecedor</DialogTitle>
@@ -81,8 +99,14 @@ export function SupplierDialog({
                 <Input
                   id="name"
                   placeholder="Nome do Fornecedor"
+                  aria-invalid={!!errors.name}
                   {...register('name')}
                 />
+                {errors.name && (
+                  <p className="text-destructive text-sm">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefone</Label>
@@ -91,8 +115,14 @@ export function SupplierDialog({
                   placeholder="Telefone do Fornecedor"
                   type="tel"
                   inputMode="tel"
+                  aria-invalid={!!errors.phone}
                   {...register('phone')}
                 />
+                {errors.phone && (
+                  <p className="text-destructive text-sm">
+                    {errors.phone.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>

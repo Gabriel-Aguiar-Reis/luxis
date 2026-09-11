@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/accordion'
 import { SquareCheck, Square } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { UseFormReturn } from 'react-hook-form'
+import { UseFormReturn, useWatch } from 'react-hook-form'
 import { SaleFormValues } from '@/components/sales/sale-create-form'
 import { GetAvailableCategoriesDto } from '@/lib/api-types'
 import { useEffect } from 'react'
@@ -59,9 +59,12 @@ export function AddProductDialog({
       currency: 'BRL'
     }
   )
+  const selectedProductIds =
+    useWatch({ control: form.control, name: 'productIds' }) ?? []
+
   return (
     <Dialog open={showProductsDialog} onOpenChange={setShowProductsDialog}>
-      <DialogContent className="w-[95vw] max-w-[1000px] p-0">
+      <DialogContent className="w-[95vw] max-w-250 p-0">
         <div className="flex h-[70vh] flex-col">
           <DialogHeader className="px-6 pt-6">
             <DialogTitle>{t('title')}</DialogTitle>
@@ -193,9 +196,9 @@ export function AddProductDialog({
                                   <span className="text-muted-foreground shrink-0 text-xs">
                                     {
                                       m._displayProducts.filter((p) =>
-                                        form
-                                          .watch('productIds')
-                                          .includes(p.id as string)
+                                        selectedProductIds.includes(
+                                          p.id as string
+                                        )
                                       ).length
                                     }
                                     /{m._displayProducts.length}
@@ -205,9 +208,10 @@ export function AddProductDialog({
                               <AccordionContent>
                                 <ul className="space-y-1">
                                   {m._displayProducts.map((p) => {
-                                    const selected = form
-                                      .watch('productIds')
-                                      .includes(p.id as string)
+                                    const selected =
+                                      selectedProductIds.includes(
+                                        p.id as string
+                                      )
                                     const priceRaw: any = (p.salePrice as any)
                                       .value
                                     const priceNum =
@@ -309,7 +313,7 @@ export function AddProductDialog({
               <div className="flex flex-col gap-1">
                 <span className="text-muted-foreground text-xs">
                   {t('selectedProducts', {
-                    count: form.watch('productIds').length
+                    count: selectedProductIds.length
                   })}
                 </span>
                 <span className="text-xs font-medium">

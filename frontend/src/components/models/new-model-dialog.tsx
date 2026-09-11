@@ -111,7 +111,6 @@ export function NewModelDialog({
           ? photoUrl
           : 'https://dummyimage.com/500x500/cccccc/000000.png&text=Luxis'
     }
-    console.log(dto)
     onAdd(dto)
     setModelName('')
     setCategoryId('')

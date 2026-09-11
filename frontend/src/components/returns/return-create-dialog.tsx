@@ -6,7 +6,9 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { Label } from '@/components/ui/label'
 import { useGetUsers } from '@/hooks/use-users'
 import { useGetInventoryById } from '@/hooks/use-inventory'
@@ -39,6 +41,15 @@ import {
 } from '@/components/ui/table'
 import { useTranslations } from 'next-intl'
 
+const returnSchema = z.object({
+  resellerId: z.string().trim().min(1, 'Selecione um revendedor'),
+  items: z
+    .array(z.string().trim().min(1))
+    .min(1, 'Selecione ao menos um produto')
+})
+
+type ReturnFormValues = z.infer<typeof returnSchema>
+
 export function ReturnCreateDialog({
   isOpen,
   onClose,
@@ -49,7 +60,16 @@ export function ReturnCreateDialog({
   onCreate: (dto: CreateReturnDto) => void
 }) {
   const t = useTranslations('ReturnCreateDialog')
-  const { handleSubmit, reset, setValue, watch } = useForm<CreateReturnDto>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<ReturnFormValues>({
+    resolver: zodResolver(returnSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       resellerId: '',
       items: []
@@ -60,8 +80,8 @@ export function ReturnCreateDialog({
   const [_openTo, _setOpenTo] = React.useState(false)
   const [openProduct, setOpenProduct] = React.useState(false)
 
-  const resellerId = watch('resellerId')
-  const items = watch('items')
+  const resellerId = useWatch({ control, name: 'resellerId' })
+  const items = useWatch({ control, name: 'items' }) ?? []
 
   const { data: users } = useGetUsers()
   const resellers = React.useMemo(
@@ -111,8 +131,9 @@ export function ReturnCreateDialog({
   const [_searchToValue, _setSearchToValue] = useState('')
   const [searchProductValue, setSearchProductValue] = useState('')
 
-  const onSubmit = (data: CreateReturnDto) => {
-    onCreate(data)
+  const onSubmit = (data: ReturnFormValues) => {
+    const dto: CreateReturnDto = data
+    onCreate(dto)
     onClose()
     reset()
   }
@@ -124,7 +145,7 @@ export function ReturnCreateDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-150">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
@@ -175,8 +196,12 @@ export function ReturnCreateDialog({
                                 key={reseller.id}
                                 value={reseller.id}
                                 onSelect={(value) => {
-                                  setValue('resellerId', value)
-                                  setValue('items', [])
+                                  setValue('resellerId', value, {
+                                    shouldValidate: true
+                                  })
+                                  setValue('items', [], {
+                                    shouldValidate: true
+                                  })
                                   setOpenFrom(false)
                                   setSearchFromValue('')
                                 }}
@@ -195,6 +220,11 @@ export function ReturnCreateDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.resellerId && (
+                  <p className="text-destructive text-sm">
+                    {errors.resellerId.message}
+                  </p>
+                )}
               </div>
               {/* Produtos */}
               <div className="space-y-2 sm:col-span-2">
@@ -245,9 +275,7 @@ export function ReturnCreateDialog({
                                   value={product.id}
                                   className="flex justify-between"
                                   onSelect={() => {
-                                    let newItems = Array.isArray(items)
-                                      ? [...items]
-                                      : []
+                                    let newItems = [...items]
                                     if (checked) {
                                       newItems = newItems.filter(
                                         (id) => id !== product.id
@@ -255,7 +283,9 @@ export function ReturnCreateDialog({
                                     } else {
                                       newItems.push(product.id)
                                     }
-                                    setValue('items', newItems)
+                                    setValue('items', newItems, {
+                                      shouldValidate: true
+                                    })
                                   }}
                                 >
                                   {`${product.serialNumber} - ${product.label}`}
@@ -272,6 +302,11 @@ export function ReturnCreateDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.items && (
+                  <p className="text-destructive text-sm">
+                    {errors.items.message}
+                  </p>
+                )}
                 {/* Lista de produtos selecionados */}
                 {selectedProducts.length > 0 && (
                   <div className="text-muted-foreground mt-2 text-sm">
@@ -279,7 +314,7 @@ export function ReturnCreateDialog({
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead className="min-w-[200px]">
+                            <TableHead className="min-w-50">
                               {t('selectedProductsTitle')}
                             </TableHead>
                           </TableRow>

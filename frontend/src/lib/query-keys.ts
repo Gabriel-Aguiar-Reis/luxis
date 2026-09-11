@@ -9,6 +9,7 @@ export const queryKeys = {
     all: () => ['customers'] as const
   },
   inventory: {
+    all: () => ['inventory'] as const,
     detail: (resellerId: string) => ['inventory', resellerId] as const
   },
   kpis: {

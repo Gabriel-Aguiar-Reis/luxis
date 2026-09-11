@@ -6,7 +6,9 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import {
@@ -34,6 +36,15 @@ import {
 } from '@/hooks/use-shipments'
 import { useTranslations } from 'next-intl'
 
+const shipmentSchema = z.object({
+  resellerId: z.string().trim().min(1, 'Selecione um revendedor'),
+  productIds: z
+    .array(z.string().trim().min(1))
+    .min(1, 'Selecione ao menos um produto')
+})
+
+type ShipmentFormValues = z.infer<typeof shipmentSchema>
+
 type ShipmentDialogProps = {
   isOpen: boolean
   onClose: () => void
@@ -48,7 +59,16 @@ export function ShipmentDialog({
   shipment
 }: ShipmentDialogProps) {
   const t = useTranslations('ShipmentDialog')
-  const { handleSubmit, reset, setValue, watch } = useForm<UpdateShipmentDto>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<ShipmentFormValues>({
+    resolver: zodResolver(shipmentSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       productIds: shipment?.products.map((p) => p.id) || [],
       resellerId: shipment?.resellerId || ''
@@ -73,8 +93,8 @@ export function ShipmentDialog({
     }
   }, [shipment, setValue, reset])
 
-  const resellerId = watch('resellerId')
-  const productIds = watch('productIds')
+  const resellerId = useWatch({ control, name: 'resellerId' })
+  const productIds = useWatch({ control, name: 'productIds' }) ?? []
 
   const [openReseller, setOpenReseller] = useState(false)
   const [openProducts, setOpenProducts] = useState(false)
@@ -126,9 +146,10 @@ export function ShipmentDialog({
     onClose()
   }
 
-  const onSubmit = (data: UpdateShipmentDto) => {
+  const onSubmit = (data: ShipmentFormValues) => {
+    const dto: UpdateShipmentDto = data
     if (shipment) {
-      onSave(shipment.id, data)
+      onSave(shipment.id, dto)
     }
     onClose()
     reset()
@@ -140,7 +161,7 @@ export function ShipmentDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-150">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
@@ -192,8 +213,12 @@ export function ShipmentDialog({
                                 key={reseller.id}
                                 value={reseller.id}
                                 onSelect={(value) => {
-                                  setValue('resellerId', value)
-                                  setValue('productIds', [])
+                                  setValue('resellerId', value, {
+                                    shouldValidate: true
+                                  })
+                                  setValue('productIds', [], {
+                                    shouldValidate: true
+                                  })
                                   setOpenReseller(false)
                                   setSearchResellerValue('')
                                 }}
@@ -212,6 +237,11 @@ export function ShipmentDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.resellerId && (
+                  <p className="text-destructive text-sm">
+                    {errors.resellerId.message}
+                  </p>
+                )}
               </div>
               {/* Produtos */}
               <div className="col-span-2 space-y-2">
@@ -258,19 +288,21 @@ export function ShipmentDialog({
                                 value={product.id}
                                 className="flex justify-between"
                                 onSelect={() => {
-                                  const current = watch('productIds') || []
+                                  const current = productIds
                                   if (current.includes(product.id)) {
                                     setValue(
                                       'productIds',
                                       current.filter(
                                         (id: string) => id !== product.id
-                                      )
+                                      ),
+                                      { shouldValidate: true }
                                     )
                                   } else {
-                                    setValue('productIds', [
-                                      ...current,
-                                      product.id
-                                    ])
+                                    setValue(
+                                      'productIds',
+                                      [...current, product.id],
+                                      { shouldValidate: true }
+                                    )
                                   }
                                 }}
                               >
@@ -288,6 +320,11 @@ export function ShipmentDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.productIds && (
+                  <p className="text-destructive text-sm">
+                    {errors.productIds.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>

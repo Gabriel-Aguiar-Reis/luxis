@@ -32,9 +32,11 @@ export function useCreateBatch(queryClient: QueryClient) {
 
   const mutation = useCreateBatchRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('createSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.batches.all() })
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.batches.all()
+        })
       },
       onError: (e: Error) => {
         toast.error(e.message || t('createError'))
@@ -54,9 +56,11 @@ export function useDeleteBatch(queryClient: QueryClient) {
 
   const mutation = useDeleteBatchRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('deleteSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.batches.all() })
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.batches.all()
+        })
       },
       onError: (e: Error) => {
         toast.error(e.message || t('deleteError'))

@@ -30,9 +30,11 @@ export function useChangeProductModel(qClient: QueryClient) {
 
   const mutation = useUpdateProductModelRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('updateSuccess'))
-        qClient.invalidateQueries({ queryKey: queryKeys.productModels.all() })
+        await qClient.invalidateQueries({
+          queryKey: queryKeys.productModels.all()
+        })
       },
       onError: () => {
         toast.error(t('updateError'))
@@ -55,10 +57,12 @@ export function useDeleteProductModel(qClient?: QueryClient) {
 
   const mutation = useDeleteProductModelRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('deleteSuccess'))
         const active = qClient ?? queryClient
-        active.invalidateQueries({ queryKey: queryKeys.productModels.all() })
+        await active.invalidateQueries({
+          queryKey: queryKeys.productModels.all()
+        })
       },
       onError: () => {
         toast.error(t('deleteError'))

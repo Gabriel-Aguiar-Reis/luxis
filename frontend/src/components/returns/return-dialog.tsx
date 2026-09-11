@@ -6,7 +6,9 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import {
@@ -31,6 +33,15 @@ import { GetInventoryByIdProduct } from '@/lib/api-types'
 import { GetOneReturnResponse, UpdateReturnDto } from '@/hooks/use-returns'
 import { useTranslations } from 'next-intl'
 
+const returnSchema = z.object({
+  resellerId: z.string().trim().min(1, 'Selecione um revendedor'),
+  items: z
+    .array(z.string().trim().min(1))
+    .min(1, 'Selecione ao menos um produto')
+})
+
+type ReturnFormValues = z.infer<typeof returnSchema>
+
 type ReturnDialogProps = {
   isOpen: boolean
   onClose: () => void
@@ -45,7 +56,16 @@ export function ReturnDialog({
   ret
 }: ReturnDialogProps) {
   const t = useTranslations('ReturnDialog')
-  const { handleSubmit, reset, setValue, watch } = useForm<UpdateReturnDto>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<ReturnFormValues>({
+    resolver: zodResolver(returnSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       items: ret?.products.map((p) => p.productId) || [],
       resellerId: ret?.resellerId || ''
@@ -70,8 +90,8 @@ export function ReturnDialog({
     }
   }, [ret, setValue, reset])
 
-  const resellerId = watch('resellerId')
-  const items = watch('items')
+  const resellerId = useWatch({ control, name: 'resellerId' })
+  const items = useWatch({ control, name: 'items' }) ?? []
 
   const [openReseller, setOpenReseller] = useState(false)
   const [openProducts, setOpenProducts] = useState(false)
@@ -123,9 +143,10 @@ export function ReturnDialog({
     onClose()
   }
 
-  const onSubmit = (data: UpdateReturnDto) => {
+  const onSubmit = (data: ReturnFormValues) => {
+    const dto: UpdateReturnDto = data
     if (ret) {
-      onSave(ret.id, data)
+      onSave(ret.id, dto)
     }
     onClose()
     reset()
@@ -137,7 +158,7 @@ export function ReturnDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-150">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
@@ -189,8 +210,12 @@ export function ReturnDialog({
                                 key={reseller.id}
                                 value={reseller.id}
                                 onSelect={(value) => {
-                                  setValue('resellerId', value)
-                                  setValue('items', [])
+                                  setValue('resellerId', value, {
+                                    shouldValidate: true
+                                  })
+                                  setValue('items', [], {
+                                    shouldValidate: true
+                                  })
                                   setOpenReseller(false)
                                   setSearchResellerValue('')
                                 }}
@@ -209,6 +234,11 @@ export function ReturnDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.resellerId && (
+                  <p className="text-destructive text-sm">
+                    {errors.resellerId.message}
+                  </p>
+                )}
               </div>
               {/* Produtos */}
               <div className="col-span-2 space-y-2">
@@ -253,16 +283,23 @@ export function ReturnDialog({
                                 value={product.id}
                                 className="flex justify-between"
                                 onSelect={() => {
-                                  const current = watch('items') || []
+                                  const current = items
                                   if (current.includes(product.id)) {
                                     setValue(
                                       'items',
                                       current.filter(
                                         (id: string) => id !== product.id
-                                      )
+                                      ),
+                                      { shouldValidate: true }
                                     )
                                   } else {
-                                    setValue('items', [...current, product.id])
+                                    setValue(
+                                      'items',
+                                      [...current, product.id],
+                                      {
+                                        shouldValidate: true
+                                      }
+                                    )
                                   }
                                 }}
                               >
@@ -279,6 +316,11 @@ export function ReturnDialog({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {errors.items && (
+                  <p className="text-destructive text-sm">
+                    {errors.items.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>

@@ -44,9 +44,16 @@ export function useChangeProduct(queryClient: QueryClient) {
 
   const mutation = useUpdateProductRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('updateSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.products.all() })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.products.all()
+          }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.products.available()
+          })
+        ])
       },
       onError: () => {
         toast.error(t('updateError'))

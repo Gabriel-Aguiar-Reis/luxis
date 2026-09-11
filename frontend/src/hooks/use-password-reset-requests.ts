@@ -34,9 +34,9 @@ export function useApprovePasswordResetRequest() {
         'PATCH'
       )
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(t('approveSuccess'))
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: queryKeys.passwordResetRequests.all()
       })
     },
@@ -59,9 +59,9 @@ export function useRejectPasswordResetRequest() {
         'PATCH'
       )
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(t('rejectSuccess'))
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: queryKeys.passwordResetRequests.all()
       })
     },

@@ -299,12 +299,11 @@ describe('sales forms', () => {
       />
     )
 
-    fireEvent.click(screen.getAllByRole('button', { name: /Modelo X/i })[0])
     fireEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => {
       expect(onSave).toHaveBeenCalledWith('sale-1', {
-        productIds: []
+        productIds: ['11111111-1111-4111-8111-111111111111']
       })
     })
   })

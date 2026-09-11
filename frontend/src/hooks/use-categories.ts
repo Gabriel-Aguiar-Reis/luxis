@@ -32,9 +32,11 @@ export function useCreateCategory(queryClient: QueryClient) {
 
   const mutation = useCreateCategoryRaw({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(t('createSuccess'))
-        queryClient.invalidateQueries({ queryKey: queryKeys.categories.all() })
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.categories.all()
+        })
       }
     }
   })
