@@ -74,9 +74,9 @@ function withLocalePrefix(request: NextRequest, targetPath: string) {
   const locale = routing.locales.includes(maybeLocale as 'en' | 'pt')
     ? maybeLocale
     : routing.defaultLocale
-
-  const localizedPath =
-    locale === routing.defaultLocale ? targetPath : `/${locale}${targetPath}`
+  // Always prefix the locale to target paths to keep redirects
+  // consistent with `localePrefix: 'always'` in routing.ts.
+  const localizedPath = `/${locale}${targetPath}`
 
   return new URL(localizedPath, request.url)
 }
