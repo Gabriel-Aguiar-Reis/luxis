@@ -16,6 +16,7 @@
     "restrictedAreaReseller": "Essa área é restrita para revendedores, se deseja acessar a área de administradores, clique aqui",
     "restrictedAreaHrefReseller": "Área de administradores",
     "resellerOnlyBadge": "Acesso exclusivo para revendedores",
+    "adminOnlyBadge": "Acesso exclusivo para administradores",
     "authErrorReseller": "Você precisa estar autenticado como revendedor para acessar esta área",
     "dontHaveAccount": "Você não possui uma conta?",
     "signUp": "Registre-se",

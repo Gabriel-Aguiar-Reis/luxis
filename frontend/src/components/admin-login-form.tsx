@@ -100,6 +100,11 @@ export function AdminLoginForm({
                   <p className="text-muted-foreground text-balance">
                     {t('description')}
                   </p>
+                  <div className="mt-3">
+                    <span className="inline-flex items-center rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset dark:bg-purple-400/10 dark:text-purple-400 dark:ring-purple-400/20">
+                      {t('adminOnlyBadge')}
+                    </span>
+                  </div>
                 </div>
                 <FormField
                   control={form.control}

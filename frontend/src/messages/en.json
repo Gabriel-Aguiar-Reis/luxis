@@ -16,6 +16,7 @@
     "restrictedAreaReseller": "This area is restricted for resellers, if you want to access the admin area, click here",
     "restrictedAreaHrefReseller": "Admin Area",
     "resellerOnlyBadge": "Exclusive access for resellers",
+    "adminOnlyBadge": "Exclusive access for administrators",
 
     "authErrorReseller": "You need to be authenticated as a reseller to access this area",
     "dontHaveAccount": "Don't have an account?",
