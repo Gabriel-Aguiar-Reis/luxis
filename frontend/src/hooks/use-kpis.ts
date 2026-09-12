@@ -490,7 +490,11 @@ export function useReturnsInPeriod(query: PeriodQuery) {
   )
   return {
     ...result,
-    data: unwrapResponse<ReturnsInPeriodDto>(result.data)
+    data: unwrapResponse<ReturnsInPeriodDto>(result.data) ?? {
+      start: query.start,
+      end: query.end,
+      returns: []
+    }
   }
 }
 
