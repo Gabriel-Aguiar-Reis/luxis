@@ -223,6 +223,7 @@
     "Settings": "Settings",
     "Logout": "Logout",
     "Dashboard": "Dashboard",
+    "back": "Back",
     "retry": "Try again",
     "loadErrorTitle": "Failed to load data",
     "loadErrorDescription": "Something went wrong while loading this information. Please try again."

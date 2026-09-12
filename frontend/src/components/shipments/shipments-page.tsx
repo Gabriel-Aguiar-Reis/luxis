@@ -21,6 +21,7 @@ import { ShipmentEditStatusDialog } from '@/components/shipments/shipment-edit-s
 import { ShipmentDeleteDialog } from '@/components/shipments/shipment-delete-dialog'
 import { ShipmentCreateDialog } from '@/components/shipments/shipment-create-dialog'
 import { useTranslations } from 'next-intl'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 
 type ShipmentsPageProps = {
   role?: 'ADMIN' | 'RESELLER'
@@ -53,12 +54,15 @@ export function ShipmentsPage({ role = 'ADMIN' }: ShipmentsPageProps) {
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
-        {canCreate && (
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            {t('newShipment')}
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          <BusinessRulesHelp topic="shipments" />
+          {canCreate && (
+            <Button onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              {t('newShipment')}
+            </Button>
+          )}
+        </div>
       </div>
 
       {isLoading ? (

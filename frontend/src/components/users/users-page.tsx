@@ -8,6 +8,7 @@ import { PasswordResetRequestsList } from '@/components/password-reset/password-
 import { Badge } from '@/components/ui/badge'
 import { useGetUsers } from '@/hooks/use-users'
 import { PhoneNumberUtil } from 'google-libphonenumber'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 
 export function UsersPage() {
   const [activeTab, setActiveTab] = useState('all')
@@ -16,6 +17,10 @@ export function UsersPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">Usuários</h2>
+        <BusinessRulesHelp topic="users" />
+      </div>
       <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="all">Todos</TabsTrigger>

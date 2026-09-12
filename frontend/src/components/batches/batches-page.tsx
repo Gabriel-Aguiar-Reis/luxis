@@ -16,6 +16,7 @@ import {
 import { BatchesTable } from '@/components/batches/batches-table'
 import { BatchDeleteDialog } from '@/components/batches/batch-delete-dialog'
 import { useRouter } from '@/lib/i18n/navigation'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 
 export function BatchesPage() {
   const t = useTranslations('BatchesPage')
@@ -33,10 +34,13 @@ export function BatchesPage() {
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
-        <Button onClick={() => router.push('/home/batches/create')}>
-          <Plus className="mr-2 h-4 w-4" />
-          {t('newBatch')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <BusinessRulesHelp topic="batches" />
+          <Button onClick={() => router.push('/home/batches/create')}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t('newBatch')}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

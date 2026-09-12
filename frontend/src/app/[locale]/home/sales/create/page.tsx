@@ -13,6 +13,9 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useRouter } from '@/lib/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
 
 export default function AdminSaleCreatePage() {
   const router = useRouter()
@@ -22,6 +25,15 @@ export default function AdminSaleCreatePage() {
       <header className="flex h-16 shrink-0 items-center gap-2">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
+          <Button
+            variant="ghost"
+            size="icon"
+            title="Voltar para vendas"
+            aria-label="Voltar para vendas"
+            onClick={() => router.push('/home/sales')}
+          >
+            <ArrowLeft />
+          </Button>
           <Separator
             orientation="vertical"
             className="mr-2 data-[orientation=vertical]:h-4"
@@ -53,6 +65,7 @@ export default function AdminSaleCreatePage() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          <BusinessRulesHelp topic="sales" />
         </div>
       </header>
       <SaleCreateForm />

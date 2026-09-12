@@ -19,6 +19,7 @@ import { CustomersTable } from '@/components/customers/customers-table'
 import { CustomerDialog } from '@/components/customers/customer-edit-dialog'
 import { GetAllCustomersResponse } from '@/hooks/use-customers'
 import { PhoneNumberUtil } from 'google-libphonenumber'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 
 export function CustomersPage() {
   const t = useTranslations('CustomersPage')
@@ -59,10 +60,13 @@ export function CustomersPage() {
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
-        <Button onClick={handleNewCustomer}>
-          <Plus className="mr-2 h-4 w-4" />
-          {t('newCustomer')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <BusinessRulesHelp topic="customers" />
+          <Button onClick={handleNewCustomer}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t('newCustomer')}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

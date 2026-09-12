@@ -16,6 +16,7 @@ import { useTranslations } from 'next-intl'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorState } from '@/components/ui/error-state'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 
 export function ModelsPage() {
   const t = useTranslations('ModelsPage')
@@ -80,6 +81,10 @@ export function ModelsPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">Modelos</h2>
+        <BusinessRulesHelp topic="models" />
+      </div>
       <ModelsTable
         models={models}
         categories={categories}

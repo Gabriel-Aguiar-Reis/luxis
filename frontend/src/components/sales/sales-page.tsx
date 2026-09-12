@@ -25,6 +25,7 @@ import { SaleEditStatusDialog } from '@/components/sales/sale-edit-status-dialog
 import { SaleMarkInstallmentPaidDialog } from '@/components/sales/sale-mark-installment-paid-dialog'
 import { SaleDialog } from '@/components/sales/sale-dialog'
 import { SaleConfirmDialog } from '@/components/sales/sale-confirm-dialog'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 
 type SalesPageProps = {
   role?: 'ADMIN' | 'RESELLER'
@@ -65,16 +66,19 @@ export function SalesPage({ role = 'ADMIN' }: SalesPageProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
 
-        <Button
-          onClick={() =>
-            router.push(
-              `/${role === 'ADMIN' ? 'home' : 'my-space'}/sales/create`
-            )
-          }
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          {t('newSale')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <BusinessRulesHelp topic="sales" />
+          <Button
+            onClick={() =>
+              router.push(
+                `/${role === 'ADMIN' ? 'home' : 'my-space'}/sales/create`
+              )
+            }
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            {t('newSale')}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

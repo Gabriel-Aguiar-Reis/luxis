@@ -222,6 +222,7 @@
     "Settings": "Configurações",
     "Logout": "Sair",
     "Dashboard": "Dashboard",
+    "back": "Voltar",
     "retry": "Tentar novamente",
     "loadErrorTitle": "Falha ao carregar dados",
     "loadErrorDescription": "Algo deu errado ao carregar essas informações. Tente novamente."

@@ -21,6 +21,7 @@ import { TransferDeleteDialog } from '@/components/transfers/transfer-delete-dia
 import { TransferDialog } from '@/components/transfers/transfer-dialog'
 import { TransferEditStatusDialog } from '@/components/transfers/transfer-edit-status-dialog'
 import { TransfersTable } from '@/components/transfers/transfers-table'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 export function TransfersPage() {
   const t = useTranslations('TransfersPage')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -46,13 +47,16 @@ export function TransfersPage() {
         <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
           {t('title')}
         </h2>
-        <Button
-          onClick={() => setIsCreateDialogOpen(true)}
-          className="w-full sm:w-auto"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          {t('newTransfer')}
-        </Button>
+        <div className="flex w-full items-center justify-end gap-2 sm:w-auto">
+          <BusinessRulesHelp topic="transfers" />
+          <Button
+            onClick={() => setIsCreateDialogOpen(true)}
+            className="w-full sm:w-auto"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            {t('newTransfer')}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

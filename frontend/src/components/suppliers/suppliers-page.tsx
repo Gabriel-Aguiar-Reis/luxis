@@ -20,6 +20,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorState } from '@/components/ui/error-state'
 import { PhoneNumberUtil } from 'google-libphonenumber'
 import { useTranslations } from 'next-intl'
+import { BusinessRulesHelp } from '@/components/business-rules/business-rules-help'
 
 export function SuppliersPage() {
   const t = useTranslations('SuppliersPage')
@@ -41,10 +42,13 @@ export function SuppliersPage() {
     <div className="flex-1 space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          {t('newSupplier')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <BusinessRulesHelp topic="suppliers" />
+          <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t('newSupplier')}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
