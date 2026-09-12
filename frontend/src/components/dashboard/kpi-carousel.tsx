@@ -42,7 +42,7 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
             ? Array.from({ length: Math.max(1, kpis.length) }).map((_, i) => (
                 <CarouselItem
                   key={i}
-                  className="basis-full pl-2 sm:basis-1/2 sm:pl-3 md:basis-1/3 md:pl-4 lg:basis-1/4"
+                  className="basis-full pl-2 sm:basis-1/2 sm:pl-3 md:basis-1/3 md:pl-4 2xl:basis-1/4"
                 >
                   <Skeleton className="h-36 w-full sm:h-40 md:h-44" />
                 </CarouselItem>
@@ -50,14 +50,14 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
             : kpis.map((kpi, i) => (
                 <CarouselItem
                   key={kpi.title}
-                  className="basis-full pl-2 sm:basis-1/2 sm:pl-3 md:basis-1/3 md:pl-4 lg:basis-1/4"
+                  className="basis-full pl-2 sm:basis-1/2 sm:pl-3 md:basis-1/3 md:pl-4 2xl:basis-1/4"
                 >
                   <KpiCard {...kpi} />
                 </CarouselItem>
               ))}
         </CarouselContent>
-        <CarouselPrevious className="hidden md:flex" />
-        <CarouselNext className="hidden md:flex" />
+        <CarouselPrevious className="z-10 left-2 bg-background/90 md:-left-12" />
+        <CarouselNext className="z-10 right-2 bg-background/90 md:-right-12" />
         {!isLoading && <CarouselDots />}
       </Carousel>
     </div>
