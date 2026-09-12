@@ -311,7 +311,7 @@ export function AdminSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/home">
-                <div className="bg-foreground text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <div className="bg-background text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Sparkle className="fill-accent size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
