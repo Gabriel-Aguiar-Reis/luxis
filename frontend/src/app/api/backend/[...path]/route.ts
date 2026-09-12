@@ -18,22 +18,26 @@ async function proxy(request: NextRequest, { params }: RouteParams) {
   const cookieStore = await cookies()
   const token = cookieStore.get(AUTH_TOKEN_COOKIE)?.value
 
-  const headers: Record<string, string> = {
-    'Content-Type': request.headers.get('content-type') ?? 'application/json'
+  const body = ['GET', 'HEAD'].includes(request.method)
+    ? undefined
+    : await request.text()
+  const headers: Record<string, string> = {}
+  const contentType = request.headers.get('content-type')
+
+  if (body && contentType) {
+    headers['Content-Type'] = contentType
   }
 
   if (token) {
     headers.Authorization = `Bearer ${token}`
   }
 
-  const hasBody = !['GET', 'HEAD'].includes(request.method)
-
   const backendResponse = await fetch(
     `${API_URL}${targetPath}${request.nextUrl.search}`,
     {
       method: request.method,
       headers,
-      body: hasBody ? await request.text() : undefined
+      body
     }
   )
 
