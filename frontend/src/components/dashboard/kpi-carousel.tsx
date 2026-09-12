@@ -33,7 +33,7 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
   return (
     <div className="w-full">
       <Carousel
-        className="mx-auto w-full max-w-6xl"
+        className="mx-auto w-[calc(100%-4rem)] max-w-6xl md:w-[calc(100%-6rem)] md:max-w-264"
         opts={{ loop: true, align: 'center' }}
         plugins={[Autoplay({ delay: 6000 })]}
       >
@@ -56,8 +56,8 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
                 </CarouselItem>
               ))}
         </CarouselContent>
-        <CarouselPrevious className="z-10 left-2 bg-background/90 md:-left-12" />
-        <CarouselNext className="z-10 right-2 bg-background/90 md:-right-12" />
+        <CarouselPrevious className="z-10 -left-8 bg-background/90 md:-left-12" />
+        <CarouselNext className="z-10 -right-8 bg-background/90 md:-right-12" />
         {!isLoading && <CarouselDots />}
       </Carousel>
     </div>
