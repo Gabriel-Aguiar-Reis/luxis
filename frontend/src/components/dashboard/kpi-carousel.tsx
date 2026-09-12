@@ -44,7 +44,7 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
                   key={i}
                   className="basis-full pl-2 sm:basis-1/2 sm:pl-3 md:basis-1/3 md:pl-4 2xl:basis-1/4"
                 >
-                  <Skeleton className="h-36 w-full sm:h-40 md:h-44" />
+                  <Skeleton className="h-32 w-full sm:h-32 md:h-36" />
                 </CarouselItem>
               ))
             : kpis.map((kpi, i) => (
