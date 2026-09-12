@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Card,
   CardHeader,
@@ -183,17 +184,15 @@ export function ReturnsTable({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="min-w-[130px]">
+                    <TableHead className="min-w-32.5">
                       {t('returnDate')}
                     </TableHead>
-                    <TableHead className="min-w-[150px]">
+                    <TableHead className="min-w-37.5">
                       {t('reseller')}
                     </TableHead>
                     <TableHead className="min-w-20">{t('products')}</TableHead>
-                    <TableHead className="min-w-[100px]">
-                      {t('status')}
-                    </TableHead>
-                    <TableHead className="min-w-[100px] text-right">
+                    <TableHead className="min-w-25">{t('status')}</TableHead>
+                    <TableHead className="min-w-25 text-right">
                       {t('actions')}
                     </TableHead>
                   </TableRow>
@@ -281,30 +280,34 @@ export function ReturnsTable({
                 <div className="text-sm">
                   {t('page', { current: currentPage, total: totalPages })}
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
-                    disabled={currentPage === 1}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    <span className="sr-only">{t('previousPage')}</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                    disabled={currentPage === totalPages}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                    <span className="sr-only">{t('nextPage')}</span>
-                  </Button>
-                </div>
+                <ButtonGroup>
+                  <ButtonGroup>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      <span className="sr-only">{t('previousPage')}</span>
+                    </Button>
+                  </ButtonGroup>
+                  <ButtonGroup>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                      }
+                      disabled={currentPage === totalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                      <span className="sr-only">{t('nextPage')}</span>
+                    </Button>
+                  </ButtonGroup>
+                </ButtonGroup>
               </div>
             )}
           </CardContent>

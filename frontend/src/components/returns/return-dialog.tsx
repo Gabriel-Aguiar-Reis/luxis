@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FieldLabel } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Command,
   CommandEmpty,
@@ -326,10 +327,16 @@ export function ReturnDialog({
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
-              {t('cancel')}
-            </Button>
-            <Button type="submit">{t('saveChanges')}</Button>
+            <ButtonGroup className="w-full justify-end sm:w-fit">
+              <ButtonGroup>
+                <Button type="button" variant="outline" onClick={handleClose}>
+                  {t('cancel')}
+                </Button>
+              </ButtonGroup>
+              <ButtonGroup>
+                <Button type="submit">{t('saveChanges')}</Button>
+              </ButtonGroup>
+            </ButtonGroup>
           </DialogFooter>
         </form>
       </DialogContent>

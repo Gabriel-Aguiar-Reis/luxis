@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Card,
   CardHeader,
@@ -185,20 +186,20 @@ export function ShipmentsTable({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="min-w-[130px] text-xs sm:text-sm">
+                    <TableHead className="min-w-32.5 text-xs sm:text-sm">
                       {t('shipmentDate')}
                     </TableHead>
-                    <TableHead className="min-w-[150px] text-xs sm:text-sm">
+                    <TableHead className="min-w-37.5 text-xs sm:text-sm">
                       {t('reseller')}
                     </TableHead>
                     <TableHead className="min-w-20 text-xs sm:text-sm">
                       {t('products')}
                     </TableHead>
-                    <TableHead className="min-w-[100px] text-xs sm:text-sm">
+                    <TableHead className="min-w-25 text-xs sm:text-sm">
                       {t('status')}
                     </TableHead>
                     {role === 'ADMIN' && (
-                      <TableHead className="min-w-[100px] text-right text-xs sm:text-sm">
+                      <TableHead className="min-w-25 text-right text-xs sm:text-sm">
                         {t('actions')}
                       </TableHead>
                     )}
@@ -316,32 +317,36 @@ export function ShipmentsTable({
                 <div className="text-xs sm:text-sm">
                   {t('page', { current: currentPage, total: totalPages })}
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
-                    disabled={currentPage === 1}
-                    className="h-8 text-xs sm:h-9 sm:text-sm"
-                  >
-                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="sr-only">{t('previousPage')}</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="h-8 text-xs sm:h-9 sm:text-sm"
-                  >
-                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="sr-only">{t('nextPage')}</span>
-                  </Button>
-                </div>
+                <ButtonGroup>
+                  <ButtonGroup>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      disabled={currentPage === 1}
+                      className="h-8 text-xs sm:h-9 sm:text-sm"
+                    >
+                      <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="sr-only">{t('previousPage')}</span>
+                    </Button>
+                  </ButtonGroup>
+                  <ButtonGroup>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="h-8 text-xs sm:h-9 sm:text-sm"
+                    >
+                      <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="sr-only">{t('nextPage')}</span>
+                    </Button>
+                  </ButtonGroup>
+                </ButtonGroup>
               </div>
             )}
           </CardContent>

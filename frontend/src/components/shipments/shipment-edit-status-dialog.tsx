@@ -7,6 +7,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Select,
   SelectContent,
@@ -105,23 +106,29 @@ export function ShipmentEditStatusDialog({
           </Select>
         </div>
         <DialogFooter className="flex-col gap-2 sm:flex-row sm:gap-0">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            className="w-full text-xs sm:w-auto sm:text-sm"
-          >
-            {t('cancel')}
-          </Button>
-          <Button
-            onClick={() => {
-              if (status) onSave(shipment.id, { status })
-              onClose()
-            }}
-            disabled={!status || status === shipment.status}
-            className="w-full text-xs sm:w-auto sm:text-sm"
-          >
-            {t('save')}
-          </Button>
+          <ButtonGroup className="w-full justify-end sm:w-fit">
+            <ButtonGroup>
+              <Button
+                variant="outline"
+                onClick={onClose}
+                className="w-full text-xs sm:w-auto sm:text-sm"
+              >
+                {t('cancel')}
+              </Button>
+            </ButtonGroup>
+            <ButtonGroup>
+              <Button
+                onClick={() => {
+                  if (status) onSave(shipment.id, { status })
+                  onClose()
+                }}
+                disabled={!status || status === shipment.status}
+                className="w-full text-xs sm:w-auto sm:text-sm"
+              >
+                {t('save')}
+              </Button>
+            </ButtonGroup>
+          </ButtonGroup>
         </DialogFooter>
       </DialogContent>
     </Dialog>

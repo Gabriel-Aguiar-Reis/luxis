@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import imageCompression from 'browser-image-compression'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { Input } from '@/components/ui/input'
 import { FieldLabel } from '@/components/ui/field'
 import {
@@ -421,20 +422,26 @@ export function ModelDialog({
           </div>
 
           <DialogFooter className="flex-col gap-2 sm:flex-row">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              className="w-full text-xs sm:w-auto sm:text-sm"
-            >
-              {t('cancel')}
-            </Button>
-            <Button
-              type="submit"
-              className="w-full text-xs sm:w-auto sm:text-sm"
-            >
-              {t('saveChanges')}
-            </Button>
+            <ButtonGroup className="w-full justify-end sm:w-fit">
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                  className="w-full text-xs sm:w-auto sm:text-sm"
+                >
+                  {t('cancel')}
+                </Button>
+              </ButtonGroup>
+              <ButtonGroup>
+                <Button
+                  type="submit"
+                  className="w-full text-xs sm:w-auto sm:text-sm"
+                >
+                  {t('saveChanges')}
+                </Button>
+              </ButtonGroup>
+            </ButtonGroup>
           </DialogFooter>
         </form>
       </DialogContent>

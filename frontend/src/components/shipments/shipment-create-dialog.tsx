@@ -15,6 +15,7 @@ import { useGetAvailableProducts } from '@/hooks/use-products'
 import { useGetModels } from '@/hooks/use-product-models'
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Command,
   CommandEmpty,
@@ -277,20 +278,26 @@ export function ShipmentCreateDialog({
           </div>
 
           <DialogFooter className="flex-col gap-2 sm:flex-row sm:gap-0">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              className="w-full text-xs sm:w-auto sm:text-sm"
-            >
-              {t('cancel')}
-            </Button>
-            <Button
-              type="submit"
-              className="w-full text-xs sm:w-auto sm:text-sm"
-            >
-              {t('createShipment')}
-            </Button>
+            <ButtonGroup className="w-full justify-end sm:w-fit">
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                  className="w-full text-xs sm:w-auto sm:text-sm"
+                >
+                  {t('cancel')}
+                </Button>
+              </ButtonGroup>
+              <ButtonGroup>
+                <Button
+                  type="submit"
+                  className="w-full text-xs sm:w-auto sm:text-sm"
+                >
+                  {t('createShipment')}
+                </Button>
+              </ButtonGroup>
+            </ButtonGroup>
           </DialogFooter>
         </form>
       </DialogContent>

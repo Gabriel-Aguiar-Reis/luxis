@@ -15,6 +15,7 @@ import { useGetUsers } from '@/hooks/use-users'
 import { useGetInventoryById } from '@/hooks/use-inventory'
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Command,
   CommandEmpty,
@@ -389,17 +390,23 @@ export function TransferCreateDialog({
           </div>
 
           <DialogFooter className="flex-col gap-2 sm:flex-row">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              className="w-full sm:w-auto"
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" className="w-full sm:w-auto">
-              Criar Transferência
-            </Button>
+            <ButtonGroup className="w-full justify-end sm:w-fit">
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                  className="w-full sm:w-auto"
+                >
+                  Cancelar
+                </Button>
+              </ButtonGroup>
+              <ButtonGroup>
+                <Button type="submit" className="w-full sm:w-auto">
+                  Criar Transferência
+                </Button>
+              </ButtonGroup>
+            </ButtonGroup>
           </DialogFooter>
         </form>
       </DialogContent>

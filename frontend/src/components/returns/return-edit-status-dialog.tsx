@@ -7,6 +7,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { ReturnStatus, UpdateReturnStatusDto } from '@/lib/api-types'
 import {
   Select,
@@ -98,18 +99,24 @@ export function ReturnEditStatusDialog({
           </Select>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            {t('cancel')}
-          </Button>
-          <Button
-            onClick={() => {
-              if (status) onSave(ret.id, { status })
-              onClose()
-            }}
-            disabled={!status || status === ret.status}
-          >
-            {t('save')}
-          </Button>
+          <ButtonGroup className="w-full justify-end sm:w-fit">
+            <ButtonGroup>
+              <Button variant="outline" onClick={onClose}>
+                {t('cancel')}
+              </Button>
+            </ButtonGroup>
+            <ButtonGroup>
+              <Button
+                onClick={() => {
+                  if (status) onSave(ret.id, { status })
+                  onClose()
+                }}
+                disabled={!status || status === ret.status}
+              >
+                {t('save')}
+              </Button>
+            </ButtonGroup>
+          </ButtonGroup>
         </DialogFooter>
       </DialogContent>
     </Dialog>

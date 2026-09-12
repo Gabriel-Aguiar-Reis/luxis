@@ -187,16 +187,14 @@ export function TransfersTable({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-[130px]">
+                  <TableHead className="min-w-32.5">
                     Data da transferência
                   </TableHead>
-                  <TableHead className="min-w-[120px]">Produto</TableHead>
-                  <TableHead className="min-w-[120px]">Doador</TableHead>
-                  <TableHead className="min-w-[120px]">Recebedor</TableHead>
-                  <TableHead className="min-w-[100px]">Status</TableHead>
-                  <TableHead className="min-w-[100px] text-right">
-                    Ações
-                  </TableHead>
+                  <TableHead className="min-w-30">Produto</TableHead>
+                  <TableHead className="min-w-30">Doador</TableHead>
+                  <TableHead className="min-w-30">Recebedor</TableHead>
+                  <TableHead className="min-w-25">Status</TableHead>
+                  <TableHead className="min-w-25 text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -7,6 +7,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { OwnershipTransfer, OwnershipTransferStatus } from '@/lib/api-types'
 import {
   Select,
@@ -98,18 +99,24 @@ export function TransferEditStatusDialog({
           </Select>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button
-            onClick={() => {
-              if (status) onSave(transfer.id, status)
-              onClose()
-            }}
-            disabled={!status || status === transfer.status}
-          >
-            Salvar
-          </Button>
+          <ButtonGroup className="w-full justify-end sm:w-fit">
+            <ButtonGroup>
+              <Button variant="outline" onClick={onClose}>
+                Cancelar
+              </Button>
+            </ButtonGroup>
+            <ButtonGroup>
+              <Button
+                onClick={() => {
+                  if (status) onSave(transfer.id, status)
+                  onClose()
+                }}
+                disabled={!status || status === transfer.status}
+              >
+                Salvar
+              </Button>
+            </ButtonGroup>
+          </ButtonGroup>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,5 +1,6 @@
 import { ProductFilters } from '@/components/products/product-filters'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Card,
   CardHeader,
@@ -286,30 +287,36 @@ export function ProductsTable({
                   <div className="text-sm">
                     {t('page', { current: currentPage, total: totalPages })}
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                      }
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      <span className="sr-only">{t('previousPage')}</span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                      }
-                      disabled={currentPage === totalPages}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                      <span className="sr-only">{t('nextPage')}</span>
-                    </Button>
-                  </div>
+                  <ButtonGroup>
+                    <ButtonGroup>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        <span className="sr-only">{t('previousPage')}</span>
+                      </Button>
+                    </ButtonGroup>
+                    <ButtonGroup>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setCurrentPage((prev) =>
+                            Math.min(prev + 1, totalPages)
+                          )
+                        }
+                        disabled={currentPage === totalPages}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                        <span className="sr-only">{t('nextPage')}</span>
+                      </Button>
+                    </ButtonGroup>
+                  </ButtonGroup>
                 </div>
               )}
             </>
