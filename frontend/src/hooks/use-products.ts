@@ -16,13 +16,32 @@ import { toast } from 'sonner'
 export type UpdateProductDto = OrvalUpdateProductDto
 export type UpdateProductResponse = Product
 
+function normalizeValue(value: unknown): { value: string } {
+  if (value && typeof value === 'object' && 'value' in value) {
+    return { value: String(value.value) }
+  }
+
+  return { value: String(value ?? '') }
+}
+
+function normalizeProducts(
+  products: Product[] | undefined
+): Product[] | undefined {
+  return products?.map((product) => ({
+    ...product,
+    serialNumber: normalizeValue(product.serialNumber),
+    unitCost: normalizeValue(product.unitCost),
+    salePrice: normalizeValue(product.salePrice)
+  }))
+}
+
 export function useGetProducts() {
   const result = useGetAllProductsRaw({
     query: { queryKey: queryKeys.products.all(), staleTime: 5 * 60 * 1000 }
   })
   return {
     ...result,
-    data: unwrapResponse<Product[]>(result.data)
+    data: normalizeProducts(unwrapResponse<Product[]>(result.data))
   }
 }
 
@@ -35,7 +54,7 @@ export function useGetAvailableProducts() {
   })
   return {
     ...result,
-    data: unwrapResponse<Product[]>(result.data)
+    data: normalizeProducts(unwrapResponse<Product[]>(result.data))
   }
 }
 
