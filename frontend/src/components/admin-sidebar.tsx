@@ -311,8 +311,11 @@ export function AdminSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/home">
-                <div className="bg-background text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Sparkle className="fill-accent size-4" />
+                <div className="flex aspect-square border size-8 items-center justify-center rounded-lg">
+                  <Sparkle
+                    className="fill-primary dark:fill-foreground size-4 stroke-primary dark:stroke-foreground"
+                    strokeWidth={1}
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">Luxis</span>
