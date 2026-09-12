@@ -37,7 +37,7 @@ export function KpiCarousel({ isLoading, kpis }: KpiCarouselProps) {
         opts={{ loop: true, align: 'center' }}
         plugins={[Autoplay({ delay: 6000 })]}
       >
-        <CarouselContent className="-ml-2 sm:-ml-3 md:-ml-4">
+        <CarouselContent className="-ml-2 py-2 sm:-ml-3 md:-ml-4">
           {isLoading
             ? Array.from({ length: Math.max(1, kpis.length) }).map((_, i) => (
                 <CarouselItem
