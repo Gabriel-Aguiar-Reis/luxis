@@ -106,7 +106,7 @@ export class ProductReadTypeormRepository implements ProductReadRepository {
     const modelIds = [...new Set(products.map((product) => product.modelId))]
     const productModels = await this.productModelRepo
       .createQueryBuilder('model')
-      .where('model.id::text IN (:...modelIds)', { modelIds })
+      .where('CAST(model.id AS text) IN (:...modelIds)', { modelIds })
       .getMany()
 
     const modelsById = productModels.reduce(

@@ -40,10 +40,8 @@ export class ProductTypeOrmRepository implements ProductRepository {
     ids: UUID[],
     status?: ProductStatus[]
   ): Promise<Product[]> {
-    const entities = await this.repository.findBy({
-      id: In(ids),
-      status: status ? In(status) : undefined
-    })
+    const where = status ? { id: In(ids), status: In(status) } : { id: In(ids) }
+    const entities = await this.repository.findBy(where)
     return entities.map(ProductMapper.toDomain)
   }
 

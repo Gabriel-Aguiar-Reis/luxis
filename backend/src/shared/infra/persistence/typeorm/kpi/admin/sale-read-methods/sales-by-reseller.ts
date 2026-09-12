@@ -46,7 +46,9 @@ export async function salesByReseller(
       'customer',
       'customer.id = sale.customer_id'
     )
-    .where('sale.reseller_id::text IN (:...resellerIds)', { resellerIds })
+    .where('CAST(sale.reseller_id AS text) IN (:...resellerIds)', {
+      resellerIds
+    })
     .select([
       'sale.id as "id"',
       'sale.sale_date as "saleDate"',
@@ -74,7 +76,7 @@ export async function salesByReseller(
   const allProducts = await productRepo
     .createQueryBuilder('product')
     .innerJoin(ProductModelTypeOrmEntity, 'pm', 'pm.id = product.model_id')
-    .where('product.id::text IN (:...productIds)', {
+    .where('CAST(product.id AS text) IN (:...productIds)', {
       productIds: allProductIds
     })
     .select([

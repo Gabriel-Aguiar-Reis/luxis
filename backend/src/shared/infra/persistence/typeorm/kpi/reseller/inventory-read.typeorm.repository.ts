@@ -45,7 +45,7 @@ export class InventoryReadTypeormRepository implements InventoryReadRepository {
 
     const productModels = await this.productModelRepo
       .createQueryBuilder('model')
-      .where('model.id::text IN (:...modelIds)', { modelIds })
+      .where('CAST(model.id AS text) IN (:...modelIds)', { modelIds })
       .getMany()
 
     const productsByModel = products.reduce(

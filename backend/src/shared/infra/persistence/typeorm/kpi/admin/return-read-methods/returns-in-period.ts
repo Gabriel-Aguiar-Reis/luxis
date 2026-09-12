@@ -17,7 +17,11 @@ export async function returnsInPeriod(
 ): Promise<ReturnsInPeriodDto> {
   const qb = returnRepo
     .createQueryBuilder('return')
-    .innerJoin(UserTypeOrmEntity, 'user', 'user.id = return.reseller_id')
+    .innerJoin(
+      UserTypeOrmEntity,
+      'user',
+      'CAST(user.id AS text) = CAST(return.reseller_id AS text)'
+    )
     .select([
       'return.id as "id"',
       'user.id as "resellerId"',
@@ -49,9 +53,9 @@ export async function returnsInPeriod(
     .innerJoin(
       ProductModelTypeOrmEntity,
       'productModel',
-      'productModel.id = product.model_id'
+      'CAST(productModel.id AS text) = CAST(product.model_id AS text)'
     )
-    .where('product.id::text IN (:...productIds)', {
+    .where('CAST(product.id AS text) IN (:...productIds)', {
       productIds: allProductIds
     })
     .select([

@@ -59,7 +59,7 @@ export async function salesInPeriod(
   const allProducts = await productRepo
     .createQueryBuilder('product')
     .innerJoin(ProductModelTypeOrmEntity, 'pm', 'pm.id = product.modelId')
-    .where('product.id::text IN (:...productIds)', {
+    .where('CAST(product.id AS text) IN (:...productIds)', {
       productIds: allProductIds
     })
     .select([
