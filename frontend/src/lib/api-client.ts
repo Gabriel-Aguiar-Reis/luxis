@@ -21,8 +21,14 @@ const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504])
 const BODYLESS_METHODS = new Set(['GET', 'HEAD'])
 
 function buildHeaders(options: RequestInit): Record<string, string> {
-  let headers: Record<string, string> = {
-    'Content-Type': 'application/json'
+  let headers: Record<string, string> = {}
+
+  if (
+    options.body !== undefined &&
+    options.body !== null &&
+    options.body !== ''
+  ) {
+    headers['Content-Type'] = 'application/json'
   }
 
   if (

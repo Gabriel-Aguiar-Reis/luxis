@@ -67,4 +67,23 @@ describe('apiFetch', () => {
     expect(logoutMock).not.toHaveBeenCalled()
     expect(notifySessionExpiredMock).not.toHaveBeenCalled()
   })
+
+  it('nao envia content-type JSON quando a requisicao nao tem corpo', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      status: 204,
+      json: async () => undefined
+    } as Response)
+
+    await apiFetch('/auth/verify', {}, false, 'POST')
+
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith(
+      '/api/backend/auth/verify',
+      expect.objectContaining({
+        method: 'POST',
+        body: undefined,
+        headers: {}
+      })
+    )
+  })
 })
