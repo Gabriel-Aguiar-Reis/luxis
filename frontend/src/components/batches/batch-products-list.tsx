@@ -40,7 +40,7 @@ export function BatchProductsList({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="max-h-[70vh] max-w-3xl overflow-y-auto">
+      <DialogContent className="max-h-[70vh] max-w-4/5 min-w-3/5 overflow-y-auto">
         <DialogTitle>Produtos do Lote</DialogTitle>
         {Object.entries(grouped).map(([model, items]) => (
           <div key={model} className="mb-4">

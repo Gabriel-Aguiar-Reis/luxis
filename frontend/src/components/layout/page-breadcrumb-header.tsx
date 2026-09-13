@@ -45,7 +45,7 @@ async function PageBreadcrumbHeaderContent({
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2">
-      <div className="flex items-center gap-2 px-4">
+      <div className="flex items-center gap-2 px-4 align-middle">
         <SidebarTrigger className="-ml-1" />
         <Button asChild variant="ghost" size="icon" title={t('back')}>
           <Link href={homeHref} aria-label={t('back')}>
@@ -54,7 +54,7 @@ async function PageBreadcrumbHeaderContent({
         </Button>
         <Separator
           orientation="vertical"
-          className="mr-2 data-[orientation=vertical]:h-4"
+          className="h-4 data-[orientation=vertical]:self-center!"
         />
         <Breadcrumb>
           <BreadcrumbList>
