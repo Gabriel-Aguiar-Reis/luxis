@@ -482,7 +482,8 @@ export function ProfileForm() {
           </Button>
           <Button
             type="submit"
-            disabled={isLoading || !isEditing}
+            loading={isLoading}
+            disabled={!isEditing}
             className="w-full sm:w-auto"
           >
             {isLoading ? 'Salvando...' : 'Salvar alterações'}

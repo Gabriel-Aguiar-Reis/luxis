@@ -63,7 +63,7 @@ export function TransferDialog({
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<TransferFormValues>({
     resolver: zodResolver(transferSchema),
     mode: 'onSubmit',
@@ -419,7 +419,9 @@ export function TransferDialog({
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit">Salvar Alterações</Button>
+            <Button type="submit" loading={isSubmitting}>
+              Salvar Alterações
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

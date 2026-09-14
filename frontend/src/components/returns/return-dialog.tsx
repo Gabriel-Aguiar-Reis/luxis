@@ -62,7 +62,7 @@ export function ReturnDialog({
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<ReturnFormValues>({
     resolver: zodResolver(returnSchema),
     mode: 'onSubmit',
@@ -334,7 +334,9 @@ export function ReturnDialog({
                 </Button>
               </ButtonGroup>
               <ButtonGroup>
-                <Button type="submit">{t('saveChanges')}</Button>
+                <Button type="submit" loading={isSubmitting}>
+                  {t('saveChanges')}
+                </Button>
               </ButtonGroup>
             </ButtonGroup>
           </DialogFooter>

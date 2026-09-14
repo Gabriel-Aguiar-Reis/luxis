@@ -650,7 +650,7 @@ export function SaleCreateForm() {
                 type="button"
                 variant="outline"
                 onClick={() => router.back()}
-                disabled={isSubmitting}
+                loading={isSubmitting}
                 className="w-full sm:w-auto"
               >
                 {t('cancel')}

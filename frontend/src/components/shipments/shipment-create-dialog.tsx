@@ -59,7 +59,7 @@ export function ShipmentCreateDialog({
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<ShipmentFormValues>({
     resolver: zodResolver(shipmentSchema),
     mode: 'onSubmit',
@@ -292,6 +292,7 @@ export function ShipmentCreateDialog({
               <ButtonGroup>
                 <Button
                   type="submit"
+                  loading={isSubmitting}
                   className="w-full text-xs sm:w-auto sm:text-sm"
                 >
                   {t('createShipment')}

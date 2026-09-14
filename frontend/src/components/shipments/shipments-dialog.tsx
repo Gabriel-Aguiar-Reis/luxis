@@ -64,7 +64,7 @@ export function ShipmentDialog({
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<ShipmentFormValues>({
     resolver: zodResolver(shipmentSchema),
     mode: 'onSubmit',
@@ -333,7 +333,9 @@ export function ShipmentDialog({
             <Button type="button" variant="outline" onClick={handleClose}>
               {t('cancel')}
             </Button>
-            <Button type="submit">{t('saveChanges')}</Button>
+            <Button type="submit" loading={isSubmitting}>
+              {t('saveChanges')}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

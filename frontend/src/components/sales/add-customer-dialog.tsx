@@ -119,7 +119,12 @@ export function AddCustomerDialog({
             >
               {t('cancel')}
             </Button>
-            <Button type="submit">{t('create')}</Button>
+            <Button
+              type="submit"
+              loading={newCustomerForm.formState.isSubmitting}
+            >
+              {t('create')}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

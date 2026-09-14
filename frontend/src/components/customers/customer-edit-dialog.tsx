@@ -167,7 +167,7 @@ export function CustomerDialog({
               <Button type="button" variant="outline" onClick={handleClose}>
                 Cancelar
               </Button>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Button type="submit" loading={form.formState.isSubmitting}>
                 {form.formState.isSubmitting
                   ? 'Salvando...'
                   : isEditing

@@ -47,6 +47,7 @@ export function ProductDialog({
   onSave
 }: ProductDialogProps) {
   const t = useTranslations('ProductDialog')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState<Partial<UpdateProductDto>>({
     unitCost: product?.unitCost.value || '',
     salePrice: product?.salePrice.value || ''
@@ -70,11 +71,16 @@ export function ProductDialog({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitting(true)
     const dto = {
       ...formData
     }
-    onSave(product!.id, dto)
-    onClose()
+    try {
+      await onSave(product!.id, dto)
+      onClose()
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (!product) {
@@ -215,7 +221,9 @@ export function ProductDialog({
                 </Button>
               </ButtonGroup>
               <ButtonGroup>
-                <Button type="submit">{t('saveChanges')}</Button>
+                <Button type="submit" loading={isSubmitting}>
+                  {t('saveChanges')}
+                </Button>
               </ButtonGroup>
             </ButtonGroup>
           </DialogFooter>

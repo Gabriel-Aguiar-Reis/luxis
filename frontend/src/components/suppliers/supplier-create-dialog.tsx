@@ -40,7 +40,7 @@ export function SupplierCreateDialog({
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<SupplierFormValues>({
     resolver: zodResolver(supplierSchema),
     mode: 'onBlur',
@@ -130,7 +130,9 @@ export function SupplierCreateDialog({
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit">Criar Fornecedor</Button>
+            <Button type="submit" loading={isSubmitting}>
+              Criar Fornecedor
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

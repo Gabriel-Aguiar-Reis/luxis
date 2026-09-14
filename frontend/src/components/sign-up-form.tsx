@@ -238,7 +238,7 @@ export function SignUpForm({
                       {t('next')}
                     </Button>
                   ) : (
-                    <Button type="submit" disabled={isLoading}>
+                    <Button type="submit" loading={isLoading}>
                       {isLoading ? t('loading') : t('signUp')}
                     </Button>
                   )}

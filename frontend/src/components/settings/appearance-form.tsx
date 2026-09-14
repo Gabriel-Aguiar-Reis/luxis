@@ -129,7 +129,7 @@ export function AppearanceForm() {
         <div className="flex justify-end">
           <Button
             type="submit"
-            disabled={isLoading}
+            loading={isLoading}
             className="w-full sm:w-auto"
           >
             {isLoading ? 'Salvando...' : 'Salvar preferências'}

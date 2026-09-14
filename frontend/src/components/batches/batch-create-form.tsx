@@ -543,7 +543,9 @@ export function BatchCreateForm() {
                     >
                       Voltar
                     </Button>
-                    <Button type="submit">Criar lote</Button>
+                    <Button type="submit" loading={form.formState.isSubmitting}>
+                      Criar lote
+                    </Button>
                   </div>
                 </>
               )}

@@ -131,7 +131,7 @@ export function ForgotPasswordForm({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full" loading={isLoading}>
                   {isLoading ? t('loading') : t('button')}
                 </Button>
                 <div className="text-center text-sm">

@@ -60,7 +60,7 @@ export function TransferCreateDialog({
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<TransferFormValues>({
     resolver: zodResolver(transferSchema),
     mode: 'onSubmit',
@@ -402,7 +402,11 @@ export function TransferCreateDialog({
                 </Button>
               </ButtonGroup>
               <ButtonGroup>
-                <Button type="submit" className="w-full sm:w-auto">
+                <Button
+                  type="submit"
+                  loading={isSubmitting}
+                  className="w-full sm:w-auto"
+                >
                   Criar Transferência
                 </Button>
               </ButtonGroup>

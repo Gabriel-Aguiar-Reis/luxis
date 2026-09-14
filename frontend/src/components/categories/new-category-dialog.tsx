@@ -89,7 +89,7 @@ export function NewCategoryDialog({
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" loading={loading}>
               {loading ? 'Criando...' : 'Criar'}
             </Button>
           </DialogFooter>

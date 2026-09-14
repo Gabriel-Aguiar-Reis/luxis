@@ -66,6 +66,7 @@ export function ModelDialog({
     photoFile: undefined
   })
   const { upload, loading: uploadingImage } = useCloudinaryUpload()
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [photoError, setPhotoError] = useState<string | null>(null)
   const statusOptions = [
     { value: 'ACTIVE', label: t('statuses.ACTIVE') },
@@ -155,31 +156,36 @@ export function ModelDialog({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData.photoFile && formData.photoUrl) {
-      setPhotoError(t('selectSingleImageSource'))
-      return
-    }
-    setPhotoError(null)
-    let photoUrl = formData.photoUrl
-    // Se houver arquivo novo, faz compressão/crop antes do upload
-    if (formData.photoFile) {
-      try {
-        photoUrl = await upload(formData.photoFile)
-      } catch (err: any) {
-        setPhotoError(`${t('uploadImageError')}: ${err.message || ''}`)
+    setIsSubmitting(true)
+    try {
+      if (formData.photoFile && formData.photoUrl) {
+        setPhotoError(t('selectSingleImageSource'))
         return
       }
-    }
-    const dto: UpdateModelDto = {
-      name: formData.name,
-      categoryId: formData.categoryId,
-      suggestedPrice: formData.suggestedPrice,
-      description: formData.description,
-      ...(photoUrl ? { photoUrl } : {})
-    }
-    if (model?.id) {
-      await onSave(model.id, dto)
-      onClose()
+      setPhotoError(null)
+      let photoUrl = formData.photoUrl
+      // Se houver arquivo novo, faz compressão/crop antes do upload
+      if (formData.photoFile) {
+        try {
+          photoUrl = await upload(formData.photoFile)
+        } catch (err: any) {
+          setPhotoError(`${t('uploadImageError')}: ${err.message || ''}`)
+          return
+        }
+      }
+      const dto: UpdateModelDto = {
+        name: formData.name,
+        categoryId: formData.categoryId,
+        suggestedPrice: formData.suggestedPrice,
+        description: formData.description,
+        ...(photoUrl ? { photoUrl } : {})
+      }
+      if (model?.id) {
+        await onSave(model.id, dto)
+        onClose()
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -436,6 +442,7 @@ export function ModelDialog({
               <ButtonGroup>
                 <Button
                   type="submit"
+                  loading={isSubmitting}
                   className="w-full text-xs sm:w-auto sm:text-sm"
                 >
                   {t('saveChanges')}

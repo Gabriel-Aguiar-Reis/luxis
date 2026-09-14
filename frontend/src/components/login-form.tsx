@@ -201,7 +201,7 @@ export function LoginForm({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full" loading={isLoading}>
                   {isLoading ? t('loading') : t('button')}
                 </Button>
               </div>

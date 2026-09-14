@@ -209,7 +209,7 @@ export function SecurityForm() {
                   </Button>
                   <Button
                     type="submit"
-                    disabled={isLoading}
+                    loading={isLoading}
                     className="w-full sm:w-auto"
                   >
                     {isLoading ? 'Salvando...' : 'Salvar nova senha'}
