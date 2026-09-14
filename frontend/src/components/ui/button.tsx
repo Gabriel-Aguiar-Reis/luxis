@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'cn'
-import { Slot } from 'radix-ui'
+import { Slot, Slottable } from '@radix-ui/react-slot'
 import { Spinner } from '@/components/ui/spinner'
 
 const buttonVariants = cva(
@@ -55,7 +55,7 @@ function Button({
     asChild?: boolean
     loading?: boolean
   }) {
-  const Comp = asChild ? Slot.Root : 'button'
+  const Comp = asChild ? Slot : 'button'
 
   return (
     <Comp
@@ -67,7 +67,7 @@ function Button({
       {...props}
     >
       {loading && <Spinner aria-hidden="true" />}
-      {children}
+      <Slottable>{children}</Slottable>
     </Comp>
   )
 }
